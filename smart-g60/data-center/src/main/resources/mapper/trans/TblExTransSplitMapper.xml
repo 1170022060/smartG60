@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.datacenter.mapper.trans.TblExTransSplitMapper">
+
+    <resultMap type="com.pingok.datacenter.domain.trans.TblExTransSplit" id="TblExTransSplitResult">
+        <id     property="id"  column="id"   />
+        <result property="passId"  column="pass_id"   />
+        <result property="provIndex"  column="prov_index"   />
+        <result property="provId"  column="prov_id"   />
+        <result property="tollFee"  column="toll_fee"   />
+        <result property="enPointIdGb"  column="en_point_id_gb"   />
+        <result property="exPointIdGb"  column="ex_point_id_gb"   />
+        <result property="enTollStationName"  column="en_toll_station_name"   />
+        <result property="exTollStationName"  column="ex_toll_station_name"   />
+        <result property="enTime"  column="en_time"   />
+        <result property="exTime"  column="ex_time"   />
+        <result property="tollInterVals"  column="toll_inter_vals"   />
+        <result property="tollPayFee"  column="toll_pay_fee"   />
+        <result property="tollDiscountFee"  column="toll_discount_fee"   />
+        <result property="tollRateVersion"  column="toll_rate_version"   />
+        <result property="tollTransTime"  column="toll_trans_time"   />
+    </resultMap>
+
+    <insert id="insertExTransSplit" parameterType="com.pingok.datacenter.domain.trans.TblExTransSplit">
+        insert into ${tableName}(
+            <if test="passId != null ">pass_id,</if>
+            <if test="provIndex != null ">prov_index,</if>
+            <if test="provId != null ">prov_id,</if>
+            <if test="tollFee != null ">toll_fee,</if>
+            <if test="enPointIdGb != null ">en_point_id_gb,</if>
+            <if test="exPointIdGb != null ">ex_point_id_gb,</if>
+            <if test="enTollStationName != null ">en_toll_station_name,</if>
+            <if test="exTollStationName != null ">ex_toll_station_name,</if>
+            <if test="enTime != null ">en_time,</if>
+            <if test="exTime != null ">ex_time,</if>
+            <if test="tollInterVals != null ">toll_inter_vals,</if>
+            <if test="tollPayFee != null ">toll_pay_fee,</if>
+            <if test="tollDiscountFee != null ">toll_discount_fee,</if>
+            <if test="tollRateVersion != null ">toll_rate_version,</if>
+            <if test="tollTransTime != null ">toll_trans_time,</if>
+            id
+        )values(
+            <if test="passId != null ">#{passId},</if>
+            <if test="provIndex != null ">#{provIndex},</if>
+            <if test="provId != null ">#{provId},</if>
+            <if test="tollFee != null ">#{tollFee},</if>
+            <if test="enPointIdGb != null ">#{enPointIdGb},</if>
+            <if test="exPointIdGb != null ">#{exPointIdGb},</if>
+            <if test="enTollStationName != null ">#{enTollStationName},</if>
+            <if test="exTollStationName != null ">#{exTollStationName},</if>
+            <if test="enTime != null ">#{enTime},</if>
+            <if test="exTime != null ">#{exTime},</if>
+            <if test="tollInterVals != null ">#{tollInterVals},</if>
+            <if test="tollPayFee != null ">#{tollPayFee},</if>
+            <if test="tollDiscountFee != null ">#{tollDiscountFee},</if>
+            <if test="tollRateVersion != null ">#{tollRateVersion},</if>
+            <if test="tollTransTime != null ">#{tollTransTime},</if>
+            #{id}
+        )
+    </insert>
+</mapper>

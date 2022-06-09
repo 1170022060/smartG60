@@ -1,0 +1,1393 @@
+Index: smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/Impl/GantryUpperStoreServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.charge.service.gantry.Impl;\r\n\r\nimport com.alibaba.fastjson.JSON;\r\nimport com.alibaba.fastjson.JSONArray;\r\nimport com.alibaba.fastjson.JSONObject;\r\nimport com.pingok.charge.domain.gantry.*;\r\nimport com.pingok.charge.mapper.gantry.*;\r\nimport com.pingok.charge.service.gantry.IGantryUpperStoreService;\r\nimport lombok.extern.slf4j.Slf4j;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.stereotype.Service;\r\nimport tk.mybatis.mapper.entity.Example;\r\n\r\n/**\r\n * @author\r\n * @time 2022/5/20 11:52\r\n */\r\n@Slf4j\r\n@Service\r\npublic class GantryUpperStoreServiceImpl implements IGantryUpperStoreService {\r\n\r\n    @Autowired\r\n    private TblGantryBaseInfoStoreMapper tblGantryBaseInfoStoreMapper;\r\n    @Autowired\r\n    private TblGantryPictureMapper tblGantryPictureMapper;\r\n    @Autowired\r\n    private TblGantryPictureFailMapper tblGantryPictureFailMapper;\r\n    @Autowired\r\n    private TblGantryMonitorStoreMapper tblGantryMonitorStoreMapper;\r\n    @Autowired\r\n    private TblGantrySumTransactionMapper tblGantrySumTransactionMapper;\r\n    @Autowired\r\n    private TblGantrySumTravelImageMapper tblGantrySumTravelImageMapper;\r\n    @Autowired\r\n    private TblGantryTransactionMapper tblGantryTransactionMapper;\r\n    @Autowired\r\n    private TblGantryTravelImageMapper tblGantryTravelImageMapper;\r\n    @Autowired\r\n    private TblGantryErrorInfoMapper tblGantryErrorInfoMapper;\r\n\r\n    @Override\r\n    public void saveViu(String data) {\r\n        TblGantryTravelImage tblGantryTravelImage = JSON.parseObject(data, TblGantryTravelImage.class);\r\n        try{\r\n            tblGantryTravelImageMapper.insert(tblGantryTravelImage);\r\n        }catch (Exception ex){\r\n            log.error(\"暂存门架报文异常：\" + ex.getMessage());\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void saveVipu(String data) {\r\n        TblGantryPicture tblGantryPicture = JSON.parseObject(data, TblGantryPicture.class);\r\n        try{\r\n            tblGantryPictureMapper.insert(tblGantryPicture);\r\n        }catch (Exception ex){\r\n            log.error(\"暂存门架报文异常：\" + ex.getMessage());\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void saveSvipu(String data) {\r\n        TblGantryPictureFail tblGantryPictureFail = JSON.parseObject(data, TblGantryPictureFail.class);\r\n        try{\r\n            tblGantryPictureFailMapper.insert(tblGantryPictureFail);\r\n        }catch (Exception ex){\r\n            log.error(\"暂存门架报文异常：\" + ex.getMessage());\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void saveEtctu(String data) {\r\n        TblGantryTransaction tblGantryTransaction = JSON.parseObject(data, TblGantryTransaction.class);\r\n        try{\r\n            tblGantryTransactionMapper.insert(tblGantryTransaction);\r\n        }catch (Exception ex){\r\n            log.error(\"暂存门架报文异常：\" + ex.getMessage());\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void saveEtcsu(String data) {\r\n        TblGantrySumTransaction tblGantrySumTransaction = JSON.parseObject(data, TblGantrySumTransaction.class);\r\n        try{\r\n            tblGantrySumTransactionMapper.insert(tblGantrySumTransaction);\r\n        }catch (Exception ex){\r\n            log.error(\"暂存门架报文异常：\" + ex.getMessage());\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void saveVisu(String data) {\r\n        TblGantrySumTravelImage tblGantrySumTravelImage = JSON.parseObject(data, TblGantrySumTravelImage.class);\r\n        try{\r\n            tblGantrySumTravelImageMapper.insert(tblGantrySumTravelImage);\r\n        }catch (Exception ex){\r\n            log.error(\"暂存门架报文异常：\" + ex.getMessage());\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void saveBaseInfo(String data) {\r\n        JSONObject jo = JSONObject.parseObject(data);\r\n        JSONObject joStore = new JSONObject();\r\n        joStore.put(\"chargeUnitId\", jo.getString(\"chargeUnitId\"));\r\n        joStore.put(\"infoVersion\", jo.getString(\"infoVersion\"));\r\n        joStore.put(\"gantryInfoList\", jo.getJSONArray(\"gantryInfoList\").toJSONString());\r\n        joStore.put(\"chargeUnitInfoList\", jo.getJSONArray(\"chargeUnitInfoList\").toJSONString());\r\n        joStore.put(\"cameraInfoList\", jo.getJSONArray(\"cameraInfoList\").toJSONString());\r\n        joStore.put(\"RSUInfoList\", jo.getJSONArray(\"RSUInfoList\").toJSONString());\r\n        joStore.put(\"vehicleDetectorInfoList\", jo.getJSONArray(\"vehicleDetectorInfoList\").toJSONString());\r\n        joStore.put(\"vehicleCountCollect\", jo.getJSONArray(\"vehicleCountCollect\").toJSONString());\r\n        joStore.put(\"otherInfoList\", jo.getJSONArray(\"otherInfoList\").toJSONString());\r\n\r\n        try{\r\n            TblGantryBaseInfoStore tblGantryBaseInfoStore = JSONObject.parseObject(joStore.toJSONString(), TblGantryBaseInfoStore.class);\r\n            tblGantryBaseInfoStoreMapper.insert(tblGantryBaseInfoStore);\r\n        }catch (Exception ex){\r\n            log.error(\"暂存门架报文异常：\" + ex.getMessage());\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void saveTghbu(String data) {\r\n        JSONObject jo = JSONObject.parseObject(data);\r\n        JSONObject joStore = new JSONObject();\r\n        joStore.put(\"chargeUnitId\", jo.getString(\"chargeUnitId\"));\r\n        joStore.put(\"heatVersion\", jo.getString(\"heatVersion\"));\r\n        joStore.put(\"gantryHeartbeatList\", jo.getJSONArray(\"gantryHeartbeatList\").toJSONString());\r\n        joStore.put(\"transProFitList\", jo.getJSONArray(\"transProFitList\").toJSONString());\r\n        joStore.put(\"chargeUnitHeartbeatList\", jo.getJSONArray(\"chargeUnitHeartbeatList\").toJSONString());\r\n        joStore.put(\"vehicleDetectorHeartbeatList\", jo.getJSONArray(\"vehicleDetectorHeartbeatList\").toJSONString());\r\n        joStore.put(\"otherHeartbeatList\", jo.getJSONArray(\"otherHeartbeatList\").toJSONString());\r\n        joStore.put(\"vehicleCountCollect\", jo.getJSONArray(\"vehicleCountCollect\").toJSONString());\r\n        joStore.put(\"cameraHeartbeatList\", jo.getJSONArray(\"cameraHeartbeatList\").toJSONString());\r\n        joStore.put(\"RSUHeartbeatList\", jo.getJSONArray(\"RSUHeartbeatList\").toJSONString());\r\n        joStore.put(\"PSAMInfoList\", jo.getJSONArray(\"PSAMInfoList\").toJSONString());\r\n        joStore.put(\"antennalInfoList\", jo.getJSONArray(\"antennalInfoList\").toJSONString());\r\n\r\n        try{\r\n            TblGantryMonitorStore tblGantryMonitorStore = JSONObject.parseObject(joStore.toJSONString(), TblGantryMonitorStore.class);\r\n            tblGantryMonitorStoreMapper.insert(tblGantryMonitorStore);\r\n        }catch (Exception ex){\r\n            log.error(\"暂存门架报文异常：\" + ex.getMessage());\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void saveSpecialEvent(String data) {\r\n        TblGantryErrorInfo tblGantryErrorInfo = JSON.parseObject(data, TblGantryErrorInfo.class);\r\n        try{\r\n            tblGantryErrorInfoMapper.insert(tblGantryErrorInfo);\r\n        }catch (Exception ex){\r\n            log.error(\"暂存门架报文异常：\" + ex.getMessage());\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/Impl/GantryUpperStoreServiceImpl.java b/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/Impl/GantryUpperStoreServiceImpl.java
+--- a/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/Impl/GantryUpperStoreServiceImpl.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/Impl/GantryUpperStoreServiceImpl.java	(date 1654398417628)
+@@ -9,7 +9,9 @@
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Service;
+-import tk.mybatis.mapper.entity.Example;
++
++import java.util.ArrayList;
++import java.util.List;
+ 
+ /**
+  * @author
+@@ -39,63 +41,111 @@
+     private TblGantryErrorInfoMapper tblGantryErrorInfoMapper;
+ 
+     @Override
+-    public void saveViu(String data) {
+-        TblGantryTravelImage tblGantryTravelImage = JSON.parseObject(data, TblGantryTravelImage.class);
+-        try{
+-            tblGantryTravelImageMapper.insert(tblGantryTravelImage);
+-        }catch (Exception ex){
+-            log.error("暂存门架报文异常：" + ex.getMessage());
++    public List<TblGantryTravelImage> saveViu(String reqFileName, JSONObject data) {
++        List<TblGantryTravelImage> list = new ArrayList<>();
++        try {
++            if (data.containsKey("picInfoList")) {
++                JSONArray picInfoList = data.getJSONArray("picInfoList");
++                TblGantryTravelImage tblGantryTravelImage;
++                int size = picInfoList.size();
++                for (int i = 0; i < size; i++) {
++                    tblGantryTravelImage = JSON.parseObject(picInfoList.getString(i), TblGantryTravelImage.class);
++                    tblGantryTravelImageMapper.insert(tblGantryTravelImage);
++                    list.add(tblGantryTravelImage);
++                }
++            }
++        } catch (Exception ex) {
++            log.error(reqFileName + "暂存牌识流水异常：" + ex.getMessage());
+         }
++        return list;
+     }
+ 
+     @Override
+-    public void saveVipu(String data) {
+-        TblGantryPicture tblGantryPicture = JSON.parseObject(data, TblGantryPicture.class);
+-        try{
+-            tblGantryPictureMapper.insert(tblGantryPicture);
+-        }catch (Exception ex){
+-            log.error("暂存门架报文异常：" + ex.getMessage());
++    public List<TblGantryPicture> saveVipu(String reqFileName, JSONArray data) {
++        List<TblGantryPicture> list = new ArrayList<>();
++        try {
++            TblGantryPicture gantryPicture;
++            int size = data.size();
++            for (int i = 0; i < size; i++) {
++                gantryPicture = JSON.parseObject(data.getString(i), TblGantryPicture.class);
++                tblGantryPictureMapper.insert(gantryPicture);
++                list.add(gantryPicture);
++            }
++        } catch (Exception ex) {
++            log.error("暂存牌识图片异常：" + ex.getMessage());
+         }
++        return list;
+     }
+ 
+     @Override
+-    public void saveSvipu(String data) {
+-        TblGantryPictureFail tblGantryPictureFail = JSON.parseObject(data, TblGantryPictureFail.class);
+-        try{
+-            tblGantryPictureFailMapper.insert(tblGantryPictureFail);
+-        }catch (Exception ex){
+-            log.error("暂存门架报文异常：" + ex.getMessage());
++    public List<TblGantryPictureFail> saveSvipu(String reqFileName, JSONArray data) {
++        List<TblGantryPictureFail> list = new ArrayList<>();
++        try {
++            TblGantryPictureFail gantryPictureFail;
++            int size = data.size();
++            for (int i = 0; i < size; i++) {
++                gantryPictureFail = JSON.parseObject(data.getString(i), TblGantryPictureFail.class);
++                tblGantryPictureFailMapper.insert(gantryPictureFail);
++                list.add(gantryPictureFail);
++            }
++        } catch (Exception ex) {
++            log.error("暂存牌识图片（交易失败或未匹配）异常：" + ex.getMessage());
+         }
++        return list;
+     }
+ 
+     @Override
+-    public void saveEtctu(String data) {
+-        TblGantryTransaction tblGantryTransaction = JSON.parseObject(data, TblGantryTransaction.class);
+-        try{
+-            tblGantryTransactionMapper.insert(tblGantryTransaction);
+-        }catch (Exception ex){
+-            log.error("暂存门架报文异常：" + ex.getMessage());
++    public List<TblGantryTransaction> saveEtctu(String reqFileName, JSONObject data) {
++        List<TblGantryTransaction> list = new ArrayList<>();
++        try {
++            if (data.containsKey("tradeInfoList")) {
++                JSONArray tradeInfoList = data.getJSONArray("tradeInfoList");
++                TblGantryTransaction gantryTransaction;
++                int size = tradeInfoList.size();
++                for (int i = 0; i < size; i++) {
++                    gantryTransaction = JSON.parseObject(tradeInfoList.getString(i), TblGantryTransaction.class);
++                    tblGantryTransactionMapper.insert(gantryTransaction);
++                    list.add(gantryTransaction);
++                }
++            }
++        } catch (Exception ex) {
++            log.error(reqFileName + "暂存交易流水异常：" + ex.getMessage());
+         }
++        return list;
+     }
+ 
+     @Override
+-    public void saveEtcsu(String data) {
+-        TblGantrySumTransaction tblGantrySumTransaction = JSON.parseObject(data, TblGantrySumTransaction.class);
+-        try{
+-            tblGantrySumTransactionMapper.insert(tblGantrySumTransaction);
+-        }catch (Exception ex){
+-            log.error("暂存门架报文异常：" + ex.getMessage());
++    public List<TblGantrySumTransaction> saveEtcsu(String reqFileName, JSONArray data) {
++        List<TblGantrySumTransaction> list = new ArrayList<>();
++        try {
++            TblGantrySumTransaction gantrySumTransaction;
++            int size = data.size();
++            for (int i = 0; i < size; i++) {
++                gantrySumTransaction = JSON.parseObject(data.getString(i), TblGantrySumTransaction.class);
++                tblGantrySumTransactionMapper.insert(gantrySumTransaction);
++                list.add(gantrySumTransaction);
++            }
++        } catch (Exception ex) {
++            log.error("暂存ETC 门架交易小时批次汇总异常：" + ex.getMessage());
+         }
++        return list;
+     }
+ 
+     @Override
+-    public void saveVisu(String data) {
+-        TblGantrySumTravelImage tblGantrySumTravelImage = JSON.parseObject(data, TblGantrySumTravelImage.class);
+-        try{
+-            tblGantrySumTravelImageMapper.insert(tblGantrySumTravelImage);
+-        }catch (Exception ex){
+-            log.error("暂存门架报文异常：" + ex.getMessage());
++    public List<TblGantrySumTravelImage> saveVisu(String reqFileName, JSONArray data) {
++        List<TblGantrySumTravelImage> list = new ArrayList<>();
++        try {
++            TblGantrySumTravelImage gantrySumTravelImage;
++            int size = data.size();
++            for (int i = 0; i < size; i++) {
++                gantrySumTravelImage = JSON.parseObject(data.getString(i), TblGantrySumTravelImage.class);
++                tblGantrySumTravelImageMapper.insert(gantrySumTravelImage);
++                list.add(gantrySumTravelImage);
++            }
++        } catch (Exception ex) {
++            log.error("暂存ETC 门架牌识小时批次汇总异常：" + ex.getMessage());
+         }
++        return list;
+     }
+ 
+     @Override
+@@ -112,10 +162,10 @@
+         joStore.put("vehicleCountCollect", jo.getJSONArray("vehicleCountCollect").toJSONString());
+         joStore.put("otherInfoList", jo.getJSONArray("otherInfoList").toJSONString());
+ 
+-        try{
++        try {
+             TblGantryBaseInfoStore tblGantryBaseInfoStore = JSONObject.parseObject(joStore.toJSONString(), TblGantryBaseInfoStore.class);
+             tblGantryBaseInfoStoreMapper.insert(tblGantryBaseInfoStore);
+-        }catch (Exception ex){
++        } catch (Exception ex) {
+             log.error("暂存门架报文异常：" + ex.getMessage());
+         }
+     }
+@@ -137,10 +187,10 @@
+         joStore.put("PSAMInfoList", jo.getJSONArray("PSAMInfoList").toJSONString());
+         joStore.put("antennalInfoList", jo.getJSONArray("antennalInfoList").toJSONString());
+ 
+-        try{
++        try {
+             TblGantryMonitorStore tblGantryMonitorStore = JSONObject.parseObject(joStore.toJSONString(), TblGantryMonitorStore.class);
+             tblGantryMonitorStoreMapper.insert(tblGantryMonitorStore);
+-        }catch (Exception ex){
++        } catch (Exception ex) {
+             log.error("暂存门架报文异常：" + ex.getMessage());
+         }
+     }
+@@ -148,9 +198,9 @@
+     @Override
+     public void saveSpecialEvent(String data) {
+         TblGantryErrorInfo tblGantryErrorInfo = JSON.parseObject(data, TblGantryErrorInfo.class);
+-        try{
++        try {
+             tblGantryErrorInfoMapper.insert(tblGantryErrorInfo);
+-        }catch (Exception ex){
++        } catch (Exception ex) {
+             log.error("暂存门架报文异常：" + ex.getMessage());
+         }
+     }
+Index: smart-g60/charge-communication/src/main/java/com/pingok/charge/controller/gantry/GantryUpperController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.charge.controller.gantry;\r\n\r\nimport cn.hutool.core.net.multipart.MultipartFormData;\r\nimport com.alibaba.fastjson.JSON;\r\nimport com.alibaba.fastjson.JSONArray;\r\nimport com.alibaba.fastjson.JSONObject;\r\nimport com.pingok.charge.service.gantry.IGantryUpperService;\r\nimport com.pingok.charge.service.gantry.IGantryUpperStoreService;\r\nimport com.ruoyi.common.core.utils.DateUtils;\r\nimport com.ruoyi.common.core.web.controller.BaseController;\r\nimport lombok.extern.slf4j.Slf4j;\r\nimport okhttp3.Request;\r\nimport okhttp3.Response;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.http.HttpRequest;\r\nimport org.springframework.util.MultiValueMap;\r\nimport org.springframework.web.HttpRequestHandler;\r\nimport org.springframework.web.bind.annotation.*;\r\nimport org.springframework.web.multipart.MultipartFile;\r\n\r\nimport javax.servlet.ServletOutputStream;\r\nimport javax.servlet.http.HttpServletRequest;\r\nimport javax.servlet.http.HttpServletResponse;\r\nimport java.io.*;\r\nimport java.nio.charset.StandardCharsets;\r\nimport java.util.stream.Stream;\r\n\r\n/**\r\n * @author\r\n * @time 2022/5/19 20:40\r\n */\r\n@Slf4j\r\n@RestController\r\n@RequestMapping(\"/sdfs/G0060310010\")\r\npublic class GantryUpperController extends BaseController {\r\n\r\n    @Autowired\r\n    private IGantryUpperService iGantryUpperService;\r\n\r\n    @PostMapping(value = \"/bin/{reqFileName}\")\r\n    public void handleRequest(@PathVariable String reqFileName, HttpServletRequest request, HttpServletResponse response) {\r\n\r\n        String reqType = iGantryUpperService.getReqType(reqFileName);\r\n        JSONObject ret = iGantryUpperService.genResponse(reqType, 200);\r\n        // 设置headers（）\r\n        String resFileName = reqFileName.replace(\"REQ\", \"RES\").replace(\"@_@\", \".\");\r\n        response.setContentType(\"application/octet-stream\");\r\n        response.setHeader(\"Content-Disposition\", \"attachment;filename=\" + resFileName);\r\n\r\n        try {\r\n            BufferedReader reader = request.getReader();\r\n            StringBuffer sb = new StringBuffer();\r\n            String str = null;\r\n            while(null != (str = reader.readLine())) {\r\n                sb.append(str);\r\n            }\r\n            if(sb != null) {\r\n                JSONObject jo = JSONObject.parseObject(sb.toString());\r\n                iGantryUpperService.handleRequest(reqType, jo);\r\n            }\r\n        } catch (Exception e) {\r\n            ret = iGantryUpperService.genResponse(reqType, 500);\r\n        } finally {\r\n            try {\r\n                OutputStream os = response.getOutputStream();\r\n                os.write(ret.toJSONString().getBytes(StandardCharsets.UTF_8));\r\n                os.close();\r\n            } catch (IOException e) {\r\n                log.error(\"门架请求返回失败，请求类型：\" + reqType + \"，\"+ e.getMessage());\r\n            }\r\n\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/charge-communication/src/main/java/com/pingok/charge/controller/gantry/GantryUpperController.java b/smart-g60/charge-communication/src/main/java/com/pingok/charge/controller/gantry/GantryUpperController.java
+--- a/smart-g60/charge-communication/src/main/java/com/pingok/charge/controller/gantry/GantryUpperController.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/charge-communication/src/main/java/com/pingok/charge/controller/gantry/GantryUpperController.java	(date 1654408174051)
+@@ -1,29 +1,25 @@
+ package com.pingok.charge.controller.gantry;
+ 
+-import cn.hutool.core.net.multipart.MultipartFormData;
+-import com.alibaba.fastjson.JSON;
+ import com.alibaba.fastjson.JSONArray;
+ import com.alibaba.fastjson.JSONObject;
++import com.pingok.charge.domain.gantry.*;
+ import com.pingok.charge.service.gantry.IGantryUpperService;
+ import com.pingok.charge.service.gantry.IGantryUpperStoreService;
+-import com.ruoyi.common.core.utils.DateUtils;
+ import com.ruoyi.common.core.web.controller.BaseController;
+ import lombok.extern.slf4j.Slf4j;
+-import okhttp3.Request;
+-import okhttp3.Response;
+ import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.http.HttpRequest;
+-import org.springframework.util.MultiValueMap;
+-import org.springframework.web.HttpRequestHandler;
+-import org.springframework.web.bind.annotation.*;
+-import org.springframework.web.multipart.MultipartFile;
++import org.springframework.web.bind.annotation.PathVariable;
++import org.springframework.web.bind.annotation.PostMapping;
++import org.springframework.web.bind.annotation.RequestMapping;
++import org.springframework.web.bind.annotation.RestController;
+ 
+-import javax.servlet.ServletOutputStream;
+ import javax.servlet.http.HttpServletRequest;
+ import javax.servlet.http.HttpServletResponse;
+-import java.io.*;
++import java.io.BufferedReader;
++import java.io.IOException;
++import java.io.OutputStream;
+ import java.nio.charset.StandardCharsets;
+-import java.util.stream.Stream;
++import java.util.List;
+ 
+ /**
+  * @author
+@@ -37,26 +33,75 @@
+     @Autowired
+     private IGantryUpperService iGantryUpperService;
+ 
++    @Autowired
++    private IGantryUpperStoreService iGantryUpperStoreService;
++
+     @PostMapping(value = "/bin/{reqFileName}")
+     public void handleRequest(@PathVariable String reqFileName, HttpServletRequest request, HttpServletResponse response) {
+-
+-        String reqType = iGantryUpperService.getReqType(reqFileName);
+-        JSONObject ret = iGantryUpperService.genResponse(reqType, 200);
+         // 设置headers（）
+         String resFileName = reqFileName.replace("REQ", "RES").replace("@_@", ".");
+         response.setContentType("application/octet-stream");
+         response.setHeader("Content-Disposition", "attachment;filename=" + resFileName);
+ 
++        String reqType = iGantryUpperService.getReqType(reqFileName);
++        JSONObject ret = iGantryUpperService.genResponse(reqType, 200);
+         try {
+             BufferedReader reader = request.getReader();
+             StringBuffer sb = new StringBuffer();
+             String str = null;
+-            while(null != (str = reader.readLine())) {
++            while (null != (str = reader.readLine())) {
+                 sb.append(str);
+             }
+-            if(sb != null) {
+-                JSONObject jo = JSONObject.parseObject(sb.toString());
+-                iGantryUpperService.handleRequest(reqType, jo);
++            if (sb != null) {
++                switch (reqType) {
++                    case "GBUPLOAD_VIU":
++                        List<TblGantryTravelImage> gantryTravelImages = iGantryUpperStoreService.saveViu(reqFileName, JSONObject.parseObject(sb.toString()));
++                        if (gantryTravelImages != null && gantryTravelImages.size() > 0) {
++                            iGantryUpperService.updateViu(reqFileName, gantryTravelImages);
++                        }
++                        break; //牌识流水
++                    case "GBUPLOAD_VIPU":
++                        List<TblGantryPicture> gantryPictures = iGantryUpperStoreService.saveVipu(reqFileName, JSONArray.parseArray(sb.toString()));
++                        if (gantryPictures != null && gantryPictures.size() > 0) {
++                            iGantryUpperService.updateVipu(reqFileName, gantryPictures);
++                        }
++                        break; //牌识图片（按需、全量）
++                    case "GBUPLOAD_SVIPU":
++                        List<TblGantryPictureFail> gantryPictureFails = iGantryUpperStoreService.saveSvipu(reqFileName, JSONArray.parseArray(sb.toString()));
++                        if (gantryPictureFails != null && gantryPictureFails.size() > 0) {
++                            iGantryUpperService.updateSvipu(reqFileName, gantryPictureFails);
++                        }
++                        break; //牌识图片（失败或未匹配）
++                    case "GBUPLOAD_ETCTU":
++                        List<TblGantryTransaction> gantryTransactions = iGantryUpperStoreService.saveEtctu(reqFileName, JSONObject.parseObject(sb.toString()));
++                        if (gantryTransactions != null && gantryTransactions.size() > 0) {
++                            iGantryUpperService.updateEtctu(reqFileName, gantryTransactions);
++                        }
++                        break; //交易上传
++                    case "GBUPLOAD_ETCSU":
++                        List<TblGantrySumTransaction> gantrySumTransactions = iGantryUpperStoreService.saveEtcsu(reqFileName,JSONArray.parseArray(sb.toString()));
++                        if (gantrySumTransactions != null && gantrySumTransactions.size() > 0) {
++                            iGantryUpperService.updateEtcsu(reqFileName, gantrySumTransactions);
++                        }
++                        break; //交易小时汇总上传
++                    case "GBUPLOAD_VISU":
++                        List<TblGantrySumTravelImage> gantrySumTravelImages = iGantryUpperStoreService.saveVisu(reqFileName,JSONArray.parseArray(sb.toString()));
++                        if (gantrySumTravelImages != null && gantrySumTravelImages.size() > 0) {
++                            iGantryUpperService.updateVisu(reqFileName, gantrySumTravelImages);
++                        }
++                        break; //牌识小时汇总上传
++                    case "GBUPLOAD_LOGBUPLOAD":
++
++                        break; //日志文件按需调取
++                    case "GBUPLOAD_VEHICLEMONITOR":
++                        break; //车检器数据
++                    case "RM_BASEINFOUPLOAD":
++                        break;//基础信息数据
++                    case "RM_TGHBU":
++                        break; //运行状态数据
++                    case "RM_SPECIALEVENTUPLOAD":
++                        break; //异常事件
++                }
+             }
+         } catch (Exception e) {
+             ret = iGantryUpperService.genResponse(reqType, 500);
+@@ -66,7 +111,7 @@
+                 os.write(ret.toJSONString().getBytes(StandardCharsets.UTF_8));
+                 os.close();
+             } catch (IOException e) {
+-                log.error("门架请求返回失败，请求类型：" + reqType + "，"+ e.getMessage());
++                log.error("门架请求返回失败，请求类型：" + reqType + "，" + e.getMessage());
+             }
+ 
+         }
+Index: ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteBaiDuService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ruoyi.system.api;\r\n\r\nimport com.ruoyi.common.core.constant.ServiceNameConstants;\r\nimport com.ruoyi.common.core.domain.R;\r\nimport com.ruoyi.system.api.domain.baidu.TblBaiDuMapRecord;\r\nimport com.ruoyi.system.api.factory.RemoteBaiDuFallbackFactory;\r\nimport org.springframework.cloud.openfeign.FeignClient;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.PutMapping;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\nimport org.springframework.web.bind.annotation.RequestParam;\r\n\r\n/**\r\n * 百度服务\r\n *\r\n * @author qiumin\r\n */\r\n@FeignClient(contextId = \"remoteBaiDuService\", value = ServiceNameConstants.EXTERNAL_SERVICE, fallbackFactory = RemoteBaiDuFallbackFactory.class)\r\npublic interface RemoteBaiDuService {\r\n\r\n\r\n    @PostMapping(\"/baidu\")\r\n    R eventPublish(@RequestBody TblBaiDuMapRecord tblBaiDuMapRecord);\r\n\r\n    @PutMapping(\"/baidu\")\r\n    R eventRelieve(@RequestParam Long id);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteBaiDuService.java b/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteBaiDuService.java
+--- a/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteBaiDuService.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteBaiDuService.java	(date 1654162131458)
+@@ -23,5 +23,5 @@
+     R eventPublish(@RequestBody TblBaiDuMapRecord tblBaiDuMapRecord);
+ 
+     @PutMapping("/baidu")
+-    R eventRelieve(@RequestParam Long id);
++    R eventRelieve(@RequestParam(value = "id") Long id);
+ }
+Index: smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/controller/gantry/GantryUpperController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.devicemonitor.controller.gantry;\r\n\r\nimport com.alibaba.fastjson.JSONObject;\r\nimport com.pingok.devicemonitor.service.gantry.IGantryUpperService;\r\nimport com.ruoyi.common.core.web.domain.AjaxResult;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\nimport org.springframework.web.bind.annotation.RequestMapping;\r\nimport org.springframework.web.bind.annotation.RestController;\r\n\r\n/**\r\n * @author\r\n * @time 2022/5/23 12:35\r\n */\r\n@RestController\r\n@RequestMapping(\"/gantryUpper\")\r\npublic class GantryUpperController {\r\n    @Autowired\r\n    private IGantryUpperService iGantryUpperService;\r\n\r\n    @PostMapping(\"/baseInfoUpload\")\r\n    public AjaxResult handleBaseInfoUpload(@RequestBody JSONObject data) {\r\n        iGantryUpperService.handleBaseInfoUpload(data);\r\n        return AjaxResult.success();\r\n    }\r\n\r\n    @PostMapping(\"/tghbu\")\r\n    public AjaxResult handleTghbu(@RequestBody JSONObject data) {\r\n        iGantryUpperService.handleTghbu(data);\r\n        return AjaxResult.success();\r\n    }\r\n\r\n    @PostMapping(\"/specialEventUpload\")\r\n    public AjaxResult handleSpecialEventUpload(@RequestBody JSONObject data) {\r\n        iGantryUpperService.handleSpecialEventUpload(data);\r\n        return AjaxResult.success();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/controller/gantry/GantryUpperController.java b/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/controller/gantry/GantryUpperController.java
+--- a/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/controller/gantry/GantryUpperController.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/controller/gantry/GantryUpperController.java	(date 1653983719397)
+@@ -36,4 +36,10 @@
+         iGantryUpperService.handleSpecialEventUpload(data);
+         return AjaxResult.success();
+     }
++
++    @PostMapping("/log")
++    public AjaxResult log(@RequestBody JSONObject data) {
++        iGantryUpperService.log(data);
++        return AjaxResult.success();
++    }
+ }
+Index: smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryTravelImage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.charge.domain.gantry;\r\n\r\nimport lombok.Data;\r\n\r\nimport javax.persistence.Table;\r\nimport java.io.Serializable;\r\nimport java.util.Date;\r\n\r\n/**\r\n * tbl_gantry_travelimage\r\n * \r\n * @author bianj\r\n * @version 1.0.0 2022-05-19\r\n */\r\n@Data\r\n@Table(name = \"tbl_gantry_travelimage\")\r\npublic class TblGantryTravelImage implements Serializable {\r\n    /** 版本号 */\r\n    private static final long serialVersionUID = 1L;\r\n\r\n    /** picId */\r\n    private String picId;\r\n\r\n    /** gantryId */\r\n    private String gantryId;\r\n\r\n    /** gantryOrderNum */\r\n    private Integer gantryOrderNum;\r\n\r\n    /** ETC */\r\n    private String gantryHex;\r\n\r\n    /** picTime */\r\n    private Date picTime;\r\n\r\n    /** 1 */\r\n    private Integer driveDir;\r\n\r\n    /** cameraNum */\r\n    private Integer cameraNum;\r\n\r\n    /** hourBatchNo */\r\n    private String hourBatchNo;\r\n\r\n    /** 1- */\r\n    private Integer shootPosition;\r\n\r\n    /** laneNum */\r\n    private String laneNum;\r\n\r\n    /** vehiclePlate */\r\n    private String vehiclePlate;\r\n\r\n    /** vehicleSpeed */\r\n    private Integer vehicleSpeed;\r\n\r\n    /** ʶ */\r\n    private Integer identifyType;\r\n\r\n    /** vehicleModel */\r\n    private String vehicleModel;\r\n\r\n    /** vehicleColor */\r\n    private String vehicleColor;\r\n\r\n    /** ͼƬ */\r\n    private Integer imageSize;\r\n\r\n    /** licenseImageSize */\r\n    private Integer licenseImageSize;\r\n\r\n    /** binImageSize */\r\n    private Integer binImageSize;\r\n\r\n    /** 车牌可信度 */\r\n    private String reliability;\r\n\r\n    /** vehFeatureCode */\r\n    private String vehFeatureCode;\r\n\r\n    /** faceFeatureCode */\r\n    private String faceFeatureCode;\r\n\r\n    /** verifyCode */\r\n    private String verifyCode;\r\n\r\n    /** ƥ */\r\n    private String tradeId;\r\n\r\n    /** 0-δ */\r\n    private Integer matchStatus;\r\n\r\n    /** 0-δ */\r\n    private Integer validStatus;\r\n\r\n    /** 0-δ */\r\n    private Integer dealStatus;\r\n\r\n    /** 关联图片流水号 */\r\n    private String relatedPicId;\r\n\r\n    /** 全部关联图片流水号 */\r\n    private String allRelatedPicId;\r\n\r\n    /** stationDbtime */\r\n    private Date stationDbtime;\r\n\r\n    /** stationDealTime */\r\n    private Date stationDealTime;\r\n\r\n    /** stationValidTime */\r\n    private Date stationValidTime;\r\n\r\n    /** stationMatchTime */\r\n    private Date stationMatchTime;\r\n\r\n    /** 关联车头/车尾流水号 */\r\n    private String cognateSerial;\r\n\r\n    /** 全部关联流水号，多个用\"|\"分隔 */\r\n    private String allCognateSerial;\r\n\r\n    /** chargeUnitId */\r\n    private String chargeUnitId;\r\n\r\n    /** transDate */\r\n    private String transDate;\r\n\r\n    /** versionInfo */\r\n    private String versionInfo;\r\n\r\n    /** spare1 */\r\n    private String spare1;\r\n\r\n    /** spare2 */\r\n    private String spare2;\r\n\r\n    /** spare3 */\r\n    private String spare3;\r\n\r\n    /** spare4 */\r\n    private String spare4;\r\n\r\n    /** spare5 */\r\n    private Long spare5;\r\n\r\n    /** spare6 */\r\n    private Long spare6;\r\n\r\n    /** spare7 */\r\n    private Long spare7;\r\n\r\n    /** spare8 */\r\n    private String spare8;\r\n\r\n    /** type */\r\n    private Integer type;\r\n\r\n    /** rsuMatchResult */\r\n    private Integer rsuMatchResult;\r\n\r\n    /** rsuMatchTransId */\r\n    private String rsuMatchTransId;\r\n\r\n    /** rsuMatchReliability */\r\n    private Integer rsuMatchReliability;\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryTravelImage.java b/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryTravelImage.java
+--- a/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryTravelImage.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryTravelImage.java	(date 1653986534762)
+@@ -2,6 +2,7 @@
+ 
+ import lombok.Data;
+ 
++import javax.persistence.Id;
+ import javax.persistence.Table;
+ import java.io.Serializable;
+ import java.util.Date;
+@@ -19,6 +20,7 @@
+     private static final long serialVersionUID = 1L;
+ 
+     /** picId */
++    @Id
+     private String picId;
+ 
+     /** gantryId */
+@@ -114,54 +116,4 @@
+     /** stationMatchTime */
+     private Date stationMatchTime;
+ 
+-    /** 关联车头/车尾流水号 */
+-    private String cognateSerial;
+-
+-    /** 全部关联流水号，多个用"|"分隔 */
+-    private String allCognateSerial;
+-
+-    /** chargeUnitId */
+-    private String chargeUnitId;
+-
+-    /** transDate */
+-    private String transDate;
+-
+-    /** versionInfo */
+-    private String versionInfo;
+-
+-    /** spare1 */
+-    private String spare1;
+-
+-    /** spare2 */
+-    private String spare2;
+-
+-    /** spare3 */
+-    private String spare3;
+-
+-    /** spare4 */
+-    private String spare4;
+-
+-    /** spare5 */
+-    private Long spare5;
+-
+-    /** spare6 */
+-    private Long spare6;
+-
+-    /** spare7 */
+-    private Long spare7;
+-
+-    /** spare8 */
+-    private String spare8;
+-
+-    /** type */
+-    private Integer type;
+-
+-    /** rsuMatchResult */
+-    private Integer rsuMatchResult;
+-
+-    /** rsuMatchTransId */
+-    private String rsuMatchTransId;
+-
+-    /** rsuMatchReliability */
+-    private Integer rsuMatchReliability;
+ }
+\ No newline at end of file
+Index: smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryPictureFail.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.charge.domain.gantry;\r\n\r\nimport lombok.Data;\r\n\r\nimport java.io.Serializable;\r\nimport java.util.Date;\r\n\r\n/**\r\n * @author\r\n * @time 2022/5/22 10:33\r\n */\r\n@Data\r\npublic class TblGantryPictureFail implements Serializable {\r\n    /** 版本号 */\r\n    private static final long serialVersionUID = 1L;\r\n\r\n    /** picId */\r\n    private String picId;\r\n\r\n    /** gantryId */\r\n    private String gantryId;\r\n\r\n    /** licenseCode */\r\n    private String licenseCode;\r\n\r\n    /** 0- */\r\n    private String licenseColor;\r\n\r\n    /** image */\r\n    private String image;\r\n\r\n    /** licenseImage */\r\n    private String licenseImage;\r\n\r\n    /** binImage */\r\n    private String binImage;\r\n\r\n    /** tailImage */\r\n    private String tailImage;\r\n\r\n    /** picTime */\r\n    private Date picTime;\r\n\r\n    /** type */\r\n    private Integer type;\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryPictureFail.java b/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryPictureFail.java
+--- a/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryPictureFail.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryPictureFail.java	(date 1654141601789)
+@@ -2,6 +2,7 @@
+ 
+ import lombok.Data;
+ 
++import javax.persistence.Id;
+ import java.io.Serializable;
+ import java.util.Date;
+ 
+@@ -15,16 +16,13 @@
+     private static final long serialVersionUID = 1L;
+ 
+     /** picId */
++    @Id
+     private String picId;
+ 
+     /** gantryId */
+     private String gantryId;
+ 
+-    /** licenseCode */
+-    private String licenseCode;
+-
+-    /** 0- */
+-    private String licenseColor;
++    private String vehiclePlate;
+ 
+     /** image */
+     private String image;
+@@ -35,13 +33,7 @@
+     /** binImage */
+     private String binImage;
+ 
+-    /** tailImage */
+-    private String tailImage;
+-
+     /** picTime */
+     private Date picTime;
+ 
+-    /** type */
+-    private Integer type;
+-
+ }
+Index: smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/gantry/IGantryUpperService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.devicemonitor.service.gantry;\r\n\r\nimport com.alibaba.fastjson.JSONObject;\r\n\r\npublic interface IGantryUpperService {\r\n    void handleBaseInfoUpload(JSONObject body);\r\n    void handleSpecialEventUpload(JSONObject body);\r\n    void handleTghbu(JSONObject body);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/gantry/IGantryUpperService.java b/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/gantry/IGantryUpperService.java
+--- a/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/gantry/IGantryUpperService.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/gantry/IGantryUpperService.java	(date 1653983617021)
+@@ -6,4 +6,10 @@
+     void handleBaseInfoUpload(JSONObject body);
+     void handleSpecialEventUpload(JSONObject body);
+     void handleTghbu(JSONObject body);
++
++    /**
++     * 存储门架日志
++     * @param body
++     */
++    void log(JSONObject body);
+ }
+Index: smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/Impl/GantryUpperServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.charge.service.gantry.Impl;\r\n\r\nimport cn.hutool.http.HttpUtil;\r\nimport com.alibaba.fastjson.JSON;\r\nimport com.alibaba.fastjson.JSONArray;\r\nimport com.alibaba.fastjson.JSONObject;\r\nimport com.pingok.charge.domain.gantry.*;\r\nimport com.pingok.charge.mapper.gantry.*;\r\nimport com.pingok.charge.service.gantry.IGantryUpperService;\r\nimport com.pingok.charge.service.gantry.IGantryUpperStoreService;\r\nimport com.ruoyi.common.core.domain.R;\r\nimport com.ruoyi.common.core.utils.DateUtils;\r\nimport com.ruoyi.common.core.utils.StringUtils;\r\nimport lombok.extern.slf4j.Slf4j;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.beans.factory.annotation.Value;\r\nimport org.springframework.scheduling.annotation.Async;\r\nimport org.springframework.stereotype.Service;\r\nimport tk.mybatis.mapper.entity.Example;\r\n\r\nimport java.io.BufferedOutputStream;\r\nimport java.io.File;\r\nimport java.io.FileOutputStream;\r\nimport java.nio.charset.StandardCharsets;\r\n\r\n/**\r\n * @author\r\n * @time 2022/5/19 20:41\r\n * 构造返回json：https://www.cnblogs.com/seanRay/p/15388523.html\r\n */\r\n@Slf4j\r\n@Service\r\npublic class GantryUpperServiceImpl implements IGantryUpperService {\r\n\r\n    @Value(\"${daas.host}\")\r\n    private String host;\r\n\r\n    @Value(\"${tempFilePath}\")\r\n    private String tempFilePath;\r\n\r\n    @Autowired\r\n    private IGantryUpperStoreService iGantryUpperStoreService;\r\n    @Autowired\r\n    private TblGantryBaseInfoStoreMapper tblGantryBaseInfoStoreMapper;\r\n    @Autowired\r\n    private TblGantryPictureMapper tblGantryPictureMapper;\r\n    @Autowired\r\n    private TblGantrySumTransactionMapper tblGantrySumTransactionMapper;\r\n    @Autowired\r\n    private TblGantrySumTravelImageMapper tblGantrySumTravelImageMapper;\r\n    @Autowired\r\n    private TblGantryTransactionMapper tblGantryTransactionMapper;\r\n    @Autowired\r\n    private TblGantryTravelImageMapper tblGantryTravelImageMapper;\r\n\r\n    @Override\r\n    public void handleRequest(String reqType, JSONObject body) {\r\n\r\n        if(body != null) {\r\n            String data = body.toJSONString();\r\n            try {\r\n                switch (reqType) {\r\n\r\n                    case \"GBUPLOAD_VIU\": iGantryUpperStoreService.saveViu(data); handleViu(data); break; //牌识流水\r\n                    case \"GBUPLOAD_VIPU\": iGantryUpperStoreService.saveVipu(data); handleVipu(data); break; //牌识图片（按需、全量）\r\n                    case \"GBUPLOAD_SVIPU\": iGantryUpperStoreService.saveSvipu(data); handleSvipu(data); break; //牌识图片（失败或未匹配）\r\n                    case \"GBUPLOAD_ETCTU\": iGantryUpperStoreService.saveEtctu(data); handleEtctu(data); break; //交易上传\r\n                    case \"GBUPLOAD_ETCSU\": iGantryUpperStoreService.saveEtcsu(data); handleEtcsu(data); break; //交易小时汇总上传\r\n                    case \"GBUPLOAD_VISU\": iGantryUpperStoreService.saveVisu(data); handleVisu(data); break; //牌识小时汇总上传\r\n                    case \"GBUPLOAD_LOGBUPLOAD\": handleLogBUpload(data); break; //日志文件按需调取\r\n                    case \"GBUPLOAD_VEHICLEMONITOR\": handleVehicleMonitor(data); break; //车检器数据\r\n                    case \"RM_BASEINFOUPLOAD\": iGantryUpperStoreService.saveBaseInfo(data); handleBaseInfoUpload(body); //基础信息数据\r\n                    case \"RM_TGHBU\": iGantryUpperStoreService.saveTghbu(data); handleTghbu(body); break; //运行状态数据\r\n                    case \"RM_SPECIALEVENTUPLOAD\": iGantryUpperStoreService.saveSpecialEvent(data); handleSpecialEventUpload(data); break; //异常事件\r\n                }\r\n            } catch (Exception ex) {\r\n                log.error(\"解析门架报文异常：\" + ex.getMessage());\r\n            }\r\n        }\r\n    }\r\n\r\n    @Async\r\n    void handleViu(String data) {\r\n        TblGantryTravelImage tblGantryTravelImage = JSON.parseObject(data, TblGantryTravelImage.class);\r\n        if(!tblGantryTravelImage.getPicId().isEmpty()) {\r\n            if(sendTo(\"viu\", data)) {\r\n                Example example = new Example(TblGantryTravelImage.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"picId\", tblGantryTravelImage.getPicId());\r\n                tblGantryTravelImageMapper.deleteByExample(example);\r\n            }\r\n        }\r\n    }\r\n\r\n    @Async\r\n    void handleVipu(String data) {\r\n        TblGantryPicture tblGantryPicture = JSON.parseObject(data, TblGantryPicture.class);\r\n        if(!tblGantryPicture.getPicId().isEmpty()) {\r\n            if(sendTo(\"vipu\", data)) {\r\n                Example example = new Example(TblGantryPicture.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"picId\", tblGantryPicture.getPicId());\r\n                tblGantryPictureMapper.deleteByExample(example);\r\n            }\r\n        }\r\n    }\r\n\r\n    @Async\r\n    void handleSvipu(String data) {\r\n        TblGantryPictureFail tblGantryPictureFail = JSON.parseObject(data, TblGantryPictureFail.class);\r\n        if(!tblGantryPictureFail.getPicId().isEmpty()) {\r\n            if(sendTo(\"svipu\", data)) {\r\n                Example example = new Example(TblGantryTravelImage.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"picId\", tblGantryPictureFail.getPicId());\r\n                tblGantryPictureMapper.deleteByExample(example);\r\n            }\r\n        }\r\n    }\r\n\r\n    @Async\r\n    void handleEtctu(String data) {\r\n        TblGantryTransaction tblGantryTransaction = JSON.parseObject(data, TblGantryTransaction.class);\r\n        if(!tblGantryTransaction.getTradeId().isEmpty()) {\r\n            if(sendTo(\"etctu\", data)) {\r\n                Example example = new Example(TblGantryTransaction.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"tradeId\", tblGantryTransaction.getTradeId());\r\n                tblGantryTransactionMapper.deleteByExample(example);\r\n            }\r\n        }\r\n    }\r\n\r\n    @Async\r\n    void handleEtcsu(String data) {\r\n        TblGantrySumTransaction tblGantrySumTransaction = JSON.parseObject(data, TblGantrySumTransaction.class);\r\n        if(!tblGantrySumTransaction.getCollectId().isEmpty()) {\r\n            if(sendTo(\"etcsu\", data)) {\r\n                Example example = new Example(TblGantrySumTransaction.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"collectId\", tblGantrySumTransaction.getCollectId());\r\n                criteria.andEqualTo(\"computerOrder\", tblGantrySumTransaction.getComputerOrder());\r\n                tblGantrySumTransactionMapper.deleteByExample(example);\r\n            }\r\n        }\r\n    }\r\n\r\n    @Async\r\n    void handleVisu(String data) {\r\n        TblGantrySumTravelImage tblGantrySumTravelImage = JSON.parseObject(data, TblGantrySumTravelImage.class);\r\n        if(!tblGantrySumTravelImage.getCollectId().isEmpty()) {\r\n            if(sendTo(\"visu\", data)) {\r\n                Example example = new Example(TblGantrySumTravelImage.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"collectId\", tblGantrySumTravelImage.getCollectId());\r\n                criteria.andEqualTo(\"computerOrder\", tblGantrySumTravelImage.getComputerOrder());\r\n                tblGantrySumTravelImageMapper.deleteByExample(example);\r\n            }\r\n        }\r\n    }\r\n\r\n    @Async\r\n    void handleLogBUpload(String data) {\r\n        byte[] bytes = data.getBytes(StandardCharsets.UTF_8);\r\n//        Map<String, InputStream> files = new HashMap<>();\r\n        BufferedOutputStream bos = null;\r\n        FileOutputStream fos = null;\r\n        File file = null;\r\n        try {\r\n            File dir = new File(tempFilePath);\r\n            if (!dir.exists() && dir.isDirectory()) { //判断文件目录是否存在\r\n                dir.mkdirs();\r\n            }\r\n            file = new File(tempFilePath + File.separator + \"GantryLogBUpload\" + DateUtils.dateTimeNow() + \".zip\");\r\n            fos = new FileOutputStream(file);\r\n            bos = new BufferedOutputStream(fos);\r\n            bos.write(bytes);\r\n            bos.flush();\r\n            bos.close();\r\n            // 发送给前端，或前端主动再请求一次？\r\n\r\n\r\n        }catch (Exception ex){\r\n            log.error(\"解析zip日志包异常：\" + ex.getMessage());\r\n        }\r\n    }\r\n\r\n    @Async\r\n    void handleVehicleMonitor(String data) {\r\n        // 目前门架无外接车检器\r\n        log.info(\"收到门架车检器数据：\" + data);\r\n    }\r\n\r\n    @Async\r\n    void handleBaseInfoUpload(JSONObject data) {\r\n        String chargeUnitId = data.getString(\"chargeUnitId\");\r\n        if(!chargeUnitId.isEmpty()) {\r\n            if(sendTo(\"baseInfoUpload\", data.toJSONString())) {\r\n                Example example = new Example(TblGantryBaseInfoStore.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"chargeUnitId\", chargeUnitId);\r\n                tblGantryBaseInfoStoreMapper.deleteByExample(example);\r\n            }\r\n        }\r\n    }\r\n\r\n    void handleTghbu(JSONObject data) {\r\n        String chargeUnitId = data.getString(\"chargeUnitId\");\r\n        if(sendTo(\"tghbu\", data.toJSONString())) {\r\n            Example example = new Example(TblGantryMonitorStore.class);\r\n            Example.Criteria criteria = example.createCriteria();\r\n            criteria.andEqualTo(\"chargeUnitId\", chargeUnitId);\r\n            tblGantryBaseInfoStoreMapper.deleteByExample(example);\r\n        }\r\n    }\r\n\r\n    void handleSpecialEventUpload(String data) {\r\n        TblGantryErrorInfo tblGantryErrorInfo = JSON.parseObject(data, TblGantryErrorInfo.class);\r\n        if(!tblGantryErrorInfo.getEventId().isEmpty()) {\r\n            if(sendTo(\"specialEventUpload\", data)) {\r\n                Example example = new Example(TblGantrySumTravelImage.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"eventId\", tblGantryErrorInfo.getEventId());\r\n                tblGantrySumTravelImageMapper.deleteByExample(example);\r\n            }\r\n        }\r\n    }\r\n\r\n    /**\r\n     * @param reqType 请求类型\r\n     * @return true 妆发成功 false 失败\r\n     */\r\n    boolean sendTo(String reqType, String data) {\r\n        String url = host + \"/data-center/gantryUpper/\" + reqType;\r\n        String post;\r\n        R ret = null;\r\n        int[] sleep = new int[] { 1,3,6 };\r\n        int i = 0;\r\n        while (i++ < sleep.length) {\r\n            try {\r\n                post = HttpUtil.post(url, data);\r\n                if (!StringUtils.isEmpty(post)) {\r\n                    ret = JSON.parseObject(post, R.class);\r\n                    if (R.FAIL == ret.getCode()) {\r\n                        log.error(data + \"门架数据转发失败：\" + ret.getMsg());\r\n                    } else {\r\n                        break;\r\n                    }\r\n                    Thread.sleep(sleep[i++] * 1000);\r\n                }\r\n            } catch (Exception e) {\r\n                log.error(data + \"门架数据转发失败：\" + e.getMessage());\r\n            }\r\n        }\r\n        return R.SUCCESS == ret.getCode();\r\n    }\r\n\r\n    /**\r\n     * 解析请求类型\r\n     * @param reqFileName 请求文件名\r\n     * @return\r\n     */\r\n    public String getReqType(String reqFileName) {\r\n        int pos = reqFileName.indexOf('_');\r\n        pos = reqFileName.indexOf('_', pos + 1);\r\n        return reqFileName.substring(0, pos);\r\n    }\r\n\r\n    /**\r\n     * 生成返回body\r\n     * @param reqType 请求类型\r\n     * @param code 状态码 200-成功，其他异常\r\n     * @return\r\n     */\r\n    public JSONObject genResponse(String reqType, Integer code) {\r\n//        MultipartFormData ret = null;\r\n        JSONObject jo = new JSONObject();\r\n        jo.put(\"subCode\", code);\r\n        jo.put(\"info\", code == 200 ? \"成功\" : \"失败\");\r\n        jo.put(\"receiveTime\", DateUtils.dateTimeNow(\"yyyy-MM-dd'T'HH:mm:ss\"));\r\n\r\n        switch (reqType) {\r\n            case \"GBUPLOAD_VIU\": {\r\n                jo.put(\"successCount\", 0);\r\n                jo.put(\"failList\", new JSONArray());\r\n                break;\r\n            }\r\n            default: break;\r\n        }\r\n//        ret = new MultipartFormData();\r\n        return jo;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/Impl/GantryUpperServiceImpl.java b/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/Impl/GantryUpperServiceImpl.java
+--- a/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/Impl/GantryUpperServiceImpl.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/Impl/GantryUpperServiceImpl.java	(date 1654398417628)
+@@ -18,10 +18,7 @@
+ import org.springframework.stereotype.Service;
+ import tk.mybatis.mapper.entity.Example;
+ 
+-import java.io.BufferedOutputStream;
+-import java.io.File;
+-import java.io.FileOutputStream;
+-import java.nio.charset.StandardCharsets;
++import java.util.List;
+ 
+ /**
+  * @author
+@@ -35,8 +32,6 @@
+     @Value("${daas.host}")
+     private String host;
+ 
+-    @Value("${tempFilePath}")
+-    private String tempFilePath;
+ 
+     @Autowired
+     private IGantryUpperStoreService iGantryUpperStoreService;
+@@ -52,104 +47,19 @@
+     private TblGantryTransactionMapper tblGantryTransactionMapper;
+     @Autowired
+     private TblGantryTravelImageMapper tblGantryTravelImageMapper;
+-
+-    @Override
+-    public void handleRequest(String reqType, JSONObject body) {
++    @Autowired
++    private TblGantryPictureFailMapper tblGantryPictureFailMapper;
+ 
+-        if(body != null) {
+-            String data = body.toJSONString();
+-            try {
+-                switch (reqType) {
+ 
+-                    case "GBUPLOAD_VIU": iGantryUpperStoreService.saveViu(data); handleViu(data); break; //牌识流水
+-                    case "GBUPLOAD_VIPU": iGantryUpperStoreService.saveVipu(data); handleVipu(data); break; //牌识图片（按需、全量）
+-                    case "GBUPLOAD_SVIPU": iGantryUpperStoreService.saveSvipu(data); handleSvipu(data); break; //牌识图片（失败或未匹配）
+-                    case "GBUPLOAD_ETCTU": iGantryUpperStoreService.saveEtctu(data); handleEtctu(data); break; //交易上传
+-                    case "GBUPLOAD_ETCSU": iGantryUpperStoreService.saveEtcsu(data); handleEtcsu(data); break; //交易小时汇总上传
+-                    case "GBUPLOAD_VISU": iGantryUpperStoreService.saveVisu(data); handleVisu(data); break; //牌识小时汇总上传
+-                    case "GBUPLOAD_LOGBUPLOAD": handleLogBUpload(data); break; //日志文件按需调取
+-                    case "GBUPLOAD_VEHICLEMONITOR": handleVehicleMonitor(data); break; //车检器数据
+-                    case "RM_BASEINFOUPLOAD": iGantryUpperStoreService.saveBaseInfo(data); handleBaseInfoUpload(body); //基础信息数据
+-                    case "RM_TGHBU": iGantryUpperStoreService.saveTghbu(data); handleTghbu(body); break; //运行状态数据
+-                    case "RM_SPECIALEVENTUPLOAD": iGantryUpperStoreService.saveSpecialEvent(data); handleSpecialEventUpload(data); break; //异常事件
+-                }
+-            } catch (Exception ex) {
+-                log.error("解析门架报文异常：" + ex.getMessage());
+-            }
+-        }
+-    }
+ 
+-    @Async
+-    void handleViu(String data) {
+-        TblGantryTravelImage tblGantryTravelImage = JSON.parseObject(data, TblGantryTravelImage.class);
+-        if(!tblGantryTravelImage.getPicId().isEmpty()) {
+-            if(sendTo("viu", data)) {
+-                Example example = new Example(TblGantryTravelImage.class);
+-                Example.Criteria criteria = example.createCriteria();
+-                criteria.andEqualTo("picId", tblGantryTravelImage.getPicId());
+-                tblGantryTravelImageMapper.deleteByExample(example);
+-            }
+-        }
+-    }
+ 
+-    @Async
+-    void handleVipu(String data) {
+-        TblGantryPicture tblGantryPicture = JSON.parseObject(data, TblGantryPicture.class);
+-        if(!tblGantryPicture.getPicId().isEmpty()) {
+-            if(sendTo("vipu", data)) {
+-                Example example = new Example(TblGantryPicture.class);
+-                Example.Criteria criteria = example.createCriteria();
+-                criteria.andEqualTo("picId", tblGantryPicture.getPicId());
+-                tblGantryPictureMapper.deleteByExample(example);
+-            }
+-        }
+-    }
+ 
+-    @Async
+-    void handleSvipu(String data) {
+-        TblGantryPictureFail tblGantryPictureFail = JSON.parseObject(data, TblGantryPictureFail.class);
+-        if(!tblGantryPictureFail.getPicId().isEmpty()) {
+-            if(sendTo("svipu", data)) {
+-                Example example = new Example(TblGantryTravelImage.class);
+-                Example.Criteria criteria = example.createCriteria();
+-                criteria.andEqualTo("picId", tblGantryPictureFail.getPicId());
+-                tblGantryPictureMapper.deleteByExample(example);
+-            }
+-        }
+-    }
+-
+-    @Async
+-    void handleEtctu(String data) {
+-        TblGantryTransaction tblGantryTransaction = JSON.parseObject(data, TblGantryTransaction.class);
+-        if(!tblGantryTransaction.getTradeId().isEmpty()) {
+-            if(sendTo("etctu", data)) {
+-                Example example = new Example(TblGantryTransaction.class);
+-                Example.Criteria criteria = example.createCriteria();
+-                criteria.andEqualTo("tradeId", tblGantryTransaction.getTradeId());
+-                tblGantryTransactionMapper.deleteByExample(example);
+-            }
+-        }
+-    }
+-
+-    @Async
+-    void handleEtcsu(String data) {
+-        TblGantrySumTransaction tblGantrySumTransaction = JSON.parseObject(data, TblGantrySumTransaction.class);
+-        if(!tblGantrySumTransaction.getCollectId().isEmpty()) {
+-            if(sendTo("etcsu", data)) {
+-                Example example = new Example(TblGantrySumTransaction.class);
+-                Example.Criteria criteria = example.createCriteria();
+-                criteria.andEqualTo("collectId", tblGantrySumTransaction.getCollectId());
+-                criteria.andEqualTo("computerOrder", tblGantrySumTransaction.getComputerOrder());
+-                tblGantrySumTransactionMapper.deleteByExample(example);
+-            }
+-        }
+-    }
+ 
+     @Async
+     void handleVisu(String data) {
+         TblGantrySumTravelImage tblGantrySumTravelImage = JSON.parseObject(data, TblGantrySumTravelImage.class);
+-        if(!tblGantrySumTravelImage.getCollectId().isEmpty()) {
+-            if(sendTo("visu", data)) {
++        if (!tblGantrySumTravelImage.getCollectId().isEmpty()) {
++            if (sendToDataCenter("visu", data)) {
+                 Example example = new Example(TblGantrySumTravelImage.class);
+                 Example.Criteria criteria = example.createCriteria();
+                 criteria.andEqualTo("collectId", tblGantrySumTravelImage.getCollectId());
+@@ -161,28 +71,7 @@
+ 
+     @Async
+     void handleLogBUpload(String data) {
+-        byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
+-//        Map<String, InputStream> files = new HashMap<>();
+-        BufferedOutputStream bos = null;
+-        FileOutputStream fos = null;
+-        File file = null;
+-        try {
+-            File dir = new File(tempFilePath);
+-            if (!dir.exists() && dir.isDirectory()) { //判断文件目录是否存在
+-                dir.mkdirs();
+-            }
+-            file = new File(tempFilePath + File.separator + "GantryLogBUpload" + DateUtils.dateTimeNow() + ".zip");
+-            fos = new FileOutputStream(file);
+-            bos = new BufferedOutputStream(fos);
+-            bos.write(bytes);
+-            bos.flush();
+-            bos.close();
+-            // 发送给前端，或前端主动再请求一次？
+-
+-
+-        }catch (Exception ex){
+-            log.error("解析zip日志包异常：" + ex.getMessage());
+-        }
++        sendToDeviceMonitor("Log", data);
+     }
+ 
+     @Async
+@@ -194,8 +83,8 @@
+     @Async
+     void handleBaseInfoUpload(JSONObject data) {
+         String chargeUnitId = data.getString("chargeUnitId");
+-        if(!chargeUnitId.isEmpty()) {
+-            if(sendTo("baseInfoUpload", data.toJSONString())) {
++        if (!chargeUnitId.isEmpty()) {
++            if (sendToDeviceMonitor("baseInfoUpload", data.toJSONString())) {
+                 Example example = new Example(TblGantryBaseInfoStore.class);
+                 Example.Criteria criteria = example.createCriteria();
+                 criteria.andEqualTo("chargeUnitId", chargeUnitId);
+@@ -204,9 +93,10 @@
+         }
+     }
+ 
++    @Async
+     void handleTghbu(JSONObject data) {
+         String chargeUnitId = data.getString("chargeUnitId");
+-        if(sendTo("tghbu", data.toJSONString())) {
++        if (sendToDeviceMonitor("tghbu", data.toJSONString())) {
+             Example example = new Example(TblGantryMonitorStore.class);
+             Example.Criteria criteria = example.createCriteria();
+             criteria.andEqualTo("chargeUnitId", chargeUnitId);
+@@ -214,10 +104,11 @@
+         }
+     }
+ 
++
+     void handleSpecialEventUpload(String data) {
+         TblGantryErrorInfo tblGantryErrorInfo = JSON.parseObject(data, TblGantryErrorInfo.class);
+-        if(!tblGantryErrorInfo.getEventId().isEmpty()) {
+-            if(sendTo("specialEventUpload", data)) {
++        if (!tblGantryErrorInfo.getEventId().isEmpty()) {
++            if (sendToDeviceMonitor("specialEventUpload", data)) {
+                 Example example = new Example(TblGantrySumTravelImage.class);
+                 Example.Criteria criteria = example.createCriteria();
+                 criteria.andEqualTo("eventId", tblGantryErrorInfo.getEventId());
+@@ -226,15 +117,114 @@
+         }
+     }
+ 
++
++    @Async
++    @Override
++    public void updateVisu(String reqFileName, List<TblGantrySumTravelImage> data) {
++        String route = "/data-center/gantryUpper/visu";
++        if (update(route, reqFileName, JSON.toJSONString(data))) {
++            for (TblGantrySumTravelImage g : data) {
++                tblGantrySumTravelImageMapper.delete(g);
++            }
++        }
++    }
++
++    @Async
++    @Override
++    public void updateEtcsu(String reqFileName, List<TblGantrySumTransaction> data) {
++        String route = "/data-center/gantryUpper/etcsu";
++        if (update(route, reqFileName, JSON.toJSONString(data))) {
++            for (TblGantrySumTransaction g : data) {
++                tblGantrySumTransactionMapper.delete(g);
++            }
++        }
++    }
++
++    @Async
++    @Override
++    public void updateEtctu(String reqFileName, List<TblGantryTransaction> data) {
++        String route = "/data-center/gantryUpper/etctu";
++        if (update(route, reqFileName, JSON.toJSONString(data))) {
++            for (TblGantryTransaction g : data) {
++                tblGantryTransactionMapper.delete(g);
++            }
++        }
++    }
++
++    @Async
++    @Override
++    public void updateSvipu(String reqFileName, List<TblGantryPictureFail> data) {
++        String route = "/data-center/gantryUpper/svipu";
++        if (update(route, reqFileName, JSON.toJSONString(data))) {
++            for (TblGantryPictureFail g : data) {
++                tblGantryPictureFailMapper.delete(g);
++            }
++        }
++
++    }
++
++    @Async
++    @Override
++    public void updateVipu(String reqFileName, List<TblGantryPicture> data) {
++        String route = "/data-center/gantryUpper/vipu";
++        if (update(route, reqFileName, JSON.toJSONString(data))) {
++            for (TblGantryPicture g : data) {
++                tblGantryPictureMapper.delete(g);
++            }
++        }
++
++    }
++
++    @Async
++    @Override
++    public void updateViu(String reqFileName, List<TblGantryTravelImage> data) {
++        String route = "/data-center/gantryUpper/viu";
++        if (update(route, reqFileName, JSON.toJSONString(data))) {
++            for (TblGantryTravelImage g : data) {
++                tblGantryTravelImageMapper.delete(g);
++            }
++        }
++    }
++
++
++    @Override
++    public String getReqType(String reqFileName) {
++        int pos = reqFileName.indexOf('_');
++        pos = reqFileName.indexOf('_', pos + 1);
++        return reqFileName.substring(0, pos);
++    }
++
++
++    @Override
++    public JSONObject genResponse(String reqType, Integer code) {
++        JSONObject jo = new JSONObject();
++        jo.put("subCode", code);
++        jo.put("info", code == 200 ? "成功" : "失败");
++        jo.put("receiveTime", DateUtils.dateTimeNow("yyyy-MM-dd'T'HH:mm:ss"));
++
++        switch (reqType) {
++            case "GBUPLOAD_VIU": {
++                jo.put("successCount", 0);
++                jo.put("failList", new JSONArray());
++                break;
++            }
++            default:
++                break;
++        }
++        return jo;
++    }
++
+     /**
+-     * @param reqType 请求类型
++     * 上传至Daas
++     *
++     * @param route 接口路由
+      * @return true 妆发成功 false 失败
+      */
+-    boolean sendTo(String reqType, String data) {
+-        String url = host + "/data-center/gantryUpper/" + reqType;
++    boolean update(String route, String reqFileName, String data) {
++        String url = host + route;
+         String post;
+         R ret = null;
+-        int[] sleep = new int[] { 1,3,6 };
++        int[] sleep = new int[]{1, 3, 6};
+         int i = 0;
+         while (i++ < sleep.length) {
+             try {
+@@ -242,52 +232,16 @@
+                 if (!StringUtils.isEmpty(post)) {
+                     ret = JSON.parseObject(post, R.class);
+                     if (R.FAIL == ret.getCode()) {
+-                        log.error(data + "门架数据转发失败：" + ret.getMsg());
++                        log.error(reqFileName + "门架数据上传失败：" + ret.getMsg());
+                     } else {
+                         break;
+                     }
+                     Thread.sleep(sleep[i++] * 1000);
+                 }
+             } catch (Exception e) {
+-                log.error(data + "门架数据转发失败：" + e.getMessage());
++                log.error(reqFileName + "门架数据上传失败：" + e.getMessage());
+             }
+         }
+         return R.SUCCESS == ret.getCode();
+     }
+-
+-    /**
+-     * 解析请求类型
+-     * @param reqFileName 请求文件名
+-     * @return
+-     */
+-    public String getReqType(String reqFileName) {
+-        int pos = reqFileName.indexOf('_');
+-        pos = reqFileName.indexOf('_', pos + 1);
+-        return reqFileName.substring(0, pos);
+-    }
+-
+-    /**
+-     * 生成返回body
+-     * @param reqType 请求类型
+-     * @param code 状态码 200-成功，其他异常
+-     * @return
+-     */
+-    public JSONObject genResponse(String reqType, Integer code) {
+-//        MultipartFormData ret = null;
+-        JSONObject jo = new JSONObject();
+-        jo.put("subCode", code);
+-        jo.put("info", code == 200 ? "成功" : "失败");
+-        jo.put("receiveTime", DateUtils.dateTimeNow("yyyy-MM-dd'T'HH:mm:ss"));
+-
+-        switch (reqType) {
+-            case "GBUPLOAD_VIU": {
+-                jo.put("successCount", 0);
+-                jo.put("failList", new JSONArray());
+-                break;
+-            }
+-            default: break;
+-        }
+-//        ret = new MultipartFormData();
+-        return jo;
+-    }
+ }
+Index: smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantrySumTravelImage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.charge.domain.gantry;\r\n\r\nimport lombok.Data;\r\n\r\nimport javax.persistence.Table;\r\nimport java.io.Serializable;\r\nimport java.util.Date;\r\n\r\n/**\r\n * tbl_gantry_sum_travelimage\r\n * \r\n * @author bianj\r\n * @version 1.0.0 2022-05-19\r\n */\r\n@Data\r\n@Table(name=\"tbl_gantry_sum_travelimage\")\r\npublic class TblGantrySumTravelImage implements Serializable {\r\n    /** 版本号 */\r\n    private static final long serialVersionUID = 1L;\r\n\r\n    /** id */\r\n    private String id;\r\n\r\n    /** ETC */\r\n    private String collectId;\r\n\r\n    /** directivityId */\r\n    private Integer directivityId;\r\n\r\n    /** gantryid */\r\n    private String gantryid;\r\n\r\n    /** YYYYMMDD */\r\n    private String collectDate;\r\n\r\n    /** collectHourBatch */\r\n    private String collectHourBatch;\r\n\r\n    /** vehicleDataCount */\r\n    private Integer vehicleDataCount;\r\n\r\n    /** vehiclePicCount */\r\n    private Integer vehiclePicCount;\r\n\r\n    /** recvTime */\r\n    private Date recvTime;\r\n\r\n    /** receiveFlag */\r\n    private Integer receiveFlag;\r\n\r\n    /** computerOrder */\r\n    private Integer computerOrder;\r\n\r\n    /** type */\r\n    private Integer type;\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantrySumTravelImage.java b/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantrySumTravelImage.java
+--- a/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantrySumTravelImage.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantrySumTravelImage.java	(date 1654165275006)
+@@ -2,6 +2,7 @@
+ 
+ import lombok.Data;
+ 
++import javax.persistence.Id;
+ import javax.persistence.Table;
+ import java.io.Serializable;
+ import java.util.Date;
+@@ -19,13 +20,9 @@
+     private static final long serialVersionUID = 1L;
+ 
+     /** id */
+-    private String id;
+-
+-    /** ETC */
++    @Id
+     private String collectId;
+ 
+-    /** directivityId */
+-    private Integer directivityId;
+ 
+     /** gantryid */
+     private String gantryid;
+@@ -42,16 +39,9 @@
+     /** vehiclePicCount */
+     private Integer vehiclePicCount;
+ 
+-    /** recvTime */
+-    private Date recvTime;
+-
+-    /** receiveFlag */
+-    private Integer receiveFlag;
+ 
+     /** computerOrder */
+     private Integer computerOrder;
+ 
+-    /** type */
+-    private Integer type;
+ 
+ }
+\ No newline at end of file
+Index: smart-g60/data-center/src/main/java/com/pingok/datacenter/controller/gantry/GantryUpperController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.datacenter.controller.gantry;\r\n\r\nimport com.alibaba.fastjson.JSONObject;\r\nimport com.pingok.datacenter.domain.gantry.*;\r\nimport com.pingok.datacenter.domain.gantry.model.*;\r\nimport com.pingok.datacenter.service.gantry.IGantryUpperService;\r\nimport com.ruoyi.common.core.web.domain.AjaxResult;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\nimport org.springframework.web.bind.annotation.RequestMapping;\r\nimport org.springframework.web.bind.annotation.RestController;\r\n\r\nimport java.util.List;\r\n\r\n/**\r\n * @author\r\n * @time 2022/5/20 12:21\r\n */\r\n@RestController\r\n@RequestMapping(\"/gantryUpper\")\r\npublic class GantryUpperController {\r\n    @Autowired\r\n    private IGantryUpperService iGantryUpperService;\r\n\r\n\r\n    @PostMapping(\"/viu\")\r\n    public AjaxResult handleViu(@RequestBody List<TblGantryTravelImage> data) {\r\n        iGantryUpperService.handleViu(data);\r\n        return AjaxResult.success();\r\n    }\r\n\r\n    @PostMapping(\"/vipu\")\r\n    public AjaxResult handleVipu(@RequestBody List<TblGantryPicture> data) {\r\n        iGantryUpperService.handleVipu(data);\r\n        return AjaxResult.success();\r\n    }\r\n\r\n    @PostMapping(\"/svipu\")\r\n    public AjaxResult handleSvipu(@RequestBody List<TblGantryPictureFail> data) {\r\n        iGantryUpperService.handleSvipu(data);\r\n        return AjaxResult.success();\r\n    }\r\n\r\n    @PostMapping(\"/etctu\")\r\n    public AjaxResult handleEtctu(@RequestBody List<TblGantryTransaction> data) {\r\n        iGantryUpperService.handleEtctu(data);\r\n        return AjaxResult.success();\r\n    }\r\n\r\n    @PostMapping(\"/etcsu\")\r\n    public AjaxResult handleEtcsu(@RequestBody List<TblGantrySumTransaction> data) {\r\n        iGantryUpperService.handleEtcsu(data);\r\n        return AjaxResult.success();\r\n    }\r\n\r\n    @PostMapping(\"/visu\")\r\n    public AjaxResult handleVisu(@RequestBody JSONObject data) {\r\n        iGantryUpperService.handleVisu(data);\r\n        return AjaxResult.success();\r\n    }\r\n\r\n    @PostMapping(\"/GetErrorData\")\r\n    public AjaxResult GetErrorData(@RequestBody GetErrorDataModel data) {\r\n        return iGantryUpperService.GetErrorData(data);\r\n    }\r\n\r\n    @PostMapping(\"/FixErrorData\")\r\n    public AjaxResult FixErrorData(@RequestBody FixErrorDataModel data) {\r\n        return iGantryUpperService.FixErrorData(data);\r\n    }\r\n\r\n    @PostMapping(\"/PicRealTransfer\")\r\n    public AjaxResult PicRealTransfer(@RequestBody PicRealTransferModel data) {\r\n        return iGantryUpperService.PicRealTransfer(data);\r\n    }\r\n\r\n    @PostMapping(\"/VIUpload\")\r\n    public AjaxResult VIUpload(@RequestBody VIUploadModel data) {\r\n        return iGantryUpperService.VIUpload(data);\r\n    }\r\n\r\n    @PostMapping(\"/VIPUpload\")\r\n    public AjaxResult VIPUpload(@RequestBody VIPUploadModel data) {\r\n        return iGantryUpperService.VIPUpload(data);\r\n    }\r\n\r\n    @PostMapping(\"/ETCTUpload\")\r\n    public AjaxResult ETCTUpload(@RequestBody ETCTUploadModel data) {\r\n        return iGantryUpperService.ETCTUpload(data);\r\n    }\r\n\r\n    @PostMapping(\"/HourSumUpload\")\r\n    public AjaxResult HourSumUpload(@RequestBody HourSumUploadModel data) {\r\n        return iGantryUpperService.HourSumUpload(data);\r\n    }\r\n\r\n    @PostMapping(\"/LogBUpload\")\r\n    public AjaxResult LogBUpload(@RequestBody LogBUploadModel data) {\r\n        return iGantryUpperService.LogBUpload(data);\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/data-center/src/main/java/com/pingok/datacenter/controller/gantry/GantryUpperController.java b/smart-g60/data-center/src/main/java/com/pingok/datacenter/controller/gantry/GantryUpperController.java
+--- a/smart-g60/data-center/src/main/java/com/pingok/datacenter/controller/gantry/GantryUpperController.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/data-center/src/main/java/com/pingok/datacenter/controller/gantry/GantryUpperController.java	(date 1654398476141)
+@@ -55,7 +55,7 @@
+     }
+ 
+     @PostMapping("/visu")
+-    public AjaxResult handleVisu(@RequestBody JSONObject data) {
++    public AjaxResult handleVisu(@RequestBody List<TblGantrySumTravelImage> data) {
+         iGantryUpperService.handleVisu(data);
+         return AjaxResult.success();
+     }
+Index: smart-g60/data-center/src/main/java/com/pingok/datacenter/service/gantry/IGantryUpperService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.datacenter.service.gantry;\r\n\r\nimport com.alibaba.fastjson.JSONObject;\r\nimport com.pingok.datacenter.domain.gantry.*;\r\nimport com.pingok.datacenter.domain.gantry.model.*;\r\nimport com.ruoyi.common.core.web.domain.AjaxResult;\r\nimport com.ruoyi.common.log.annotation.Log;\r\n\r\nimport java.util.List;\r\n\r\npublic interface IGantryUpperService {\r\n    /**\r\n     *存储门架牌识数据\r\n     * @param data\r\n     */\r\n    void handleViu(List<TblGantryTravelImage> data);\r\n\r\n    /**\r\n     * 存储ETC 门架牌识图片（按需调取、全量）上传\r\n     * @param data\r\n     */\r\n    void handleVipu(List<TblGantryPicture> data);\r\n\r\n    /**\r\n     *ETC 门架牌识图片（交易失败或未匹配）\r\n     * @param data\r\n     */\r\n    void handleSvipu(List<TblGantryPictureFail> data);\r\n\r\n    /**\r\n     *存储交易流水\r\n     * @param data\r\n     */\r\n    void handleEtctu(List<TblGantryTransaction> data);\r\n\r\n    /**\r\n     * 存储 ETC 门架交易小时批次汇总\r\n     * @param data\r\n     */\r\n    void handleEtcsu(List<TblGantrySumTransaction> data);\r\n    void handleVisu(JSONObject data);\r\n    AjaxResult GetErrorData(GetErrorDataModel data);\r\n    AjaxResult FixErrorData(FixErrorDataModel data);\r\n    AjaxResult PicRealTransfer(PicRealTransferModel data);\r\n    AjaxResult VIUpload(VIUploadModel data);\r\n    AjaxResult VIPUpload(VIPUploadModel data);\r\n    AjaxResult ETCTUpload(ETCTUploadModel data);\r\n    AjaxResult HourSumUpload(HourSumUploadModel data);\r\n    AjaxResult LogBUpload(LogBUploadModel data);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/data-center/src/main/java/com/pingok/datacenter/service/gantry/IGantryUpperService.java b/smart-g60/data-center/src/main/java/com/pingok/datacenter/service/gantry/IGantryUpperService.java
+--- a/smart-g60/data-center/src/main/java/com/pingok/datacenter/service/gantry/IGantryUpperService.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/data-center/src/main/java/com/pingok/datacenter/service/gantry/IGantryUpperService.java	(date 1654398520288)
+@@ -38,7 +38,12 @@
+      * @param data
+      */
+     void handleEtcsu(List<TblGantrySumTransaction> data);
+-    void handleVisu(JSONObject data);
++
++    /**
++     * 存储 ETC 门架牌识小时批次汇总
++     * @param data
++     */
++    void handleVisu(List<TblGantrySumTravelImage> data);
+     AjaxResult GetErrorData(GetErrorDataModel data);
+     AjaxResult FixErrorData(FixErrorDataModel data);
+     AjaxResult PicRealTransfer(PicRealTransferModel data);
+Index: smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/gantry/impl/GantryUpperServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.devicemonitor.service.gantry.impl;\r\n\r\nimport com.alibaba.fastjson.JSON;\r\nimport com.alibaba.fastjson.JSONArray;\r\nimport com.alibaba.fastjson.JSONObject;\r\nimport com.pingok.devicemonitor.domain.gantry.*;\r\nimport com.pingok.devicemonitor.mapper.gantry.*;\r\nimport com.pingok.devicemonitor.service.gantry.IGantryUpperService;\r\nimport com.ruoyi.common.core.utils.DateUtils;\r\nimport lombok.extern.slf4j.Slf4j;\r\nimport org.springframework.beans.BeanUtils;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.scheduling.annotation.Async;\r\nimport org.springframework.stereotype.Service;\r\nimport tk.mybatis.mapper.entity.Example;\r\n\r\nimport java.util.Date;\r\n\r\n/**\r\n * @author\r\n * @time 2022/5/23 12:36\r\n */\r\n@Slf4j\r\n@Service\r\npublic class GantryUpperServiceImpl implements IGantryUpperService {\r\n\r\n    @Autowired\r\n    private TblGantryBaseInfoCurrentMapper tblGantryBaseInfoCurrentMapper;\r\n    @Autowired\r\n    private TblGantryBaseInfoMapper tblGantryBaseInfoMapper;\r\n    @Autowired\r\n    private TblGantryRsuBaseInfoCurrentMapper tblGantryRsuBaseInfoCurrentMapper;\r\n    @Autowired\r\n    private TblGantryRsuBaseInfoMapper tblGantryRsuBaseInfoMapper;\r\n    @Autowired\r\n    private TblGantryVplrBaseInfoCurrentMapper tblGantryVplrBaseInfoCurrentMapper;\r\n    @Autowired\r\n    private TblGantryVplrBaseInfoMapper tblGantryVplrBaseInfoMapper;\r\n\r\n    @Autowired\r\n    private TblGantryMonitorStatusCurrentMapper tblGantryMonitorStatusCurrentMapper;\r\n    @Autowired\r\n    private TblGantryMonitorStatusMapper tblGantryMonitorStatusMapper;\r\n    @Autowired\r\n    private TblGantryRsuMonitorCurrentMapper tblGantryRsuMonitorCurrentMapper;\r\n    @Autowired\r\n    private TblGantryRsuMonitorMapper tblGantryRsuMonitorMapper;\r\n    @Autowired\r\n    private TblGantryVplrMonitorCurrentMapper tblGantryVplrMonitorCurrentMapper;\r\n    @Autowired\r\n    private TblGantryVplrMonitorMapper tblGantryVplrMonitorMapper;\r\n    @Autowired\r\n    private TblGantryErrorInfoMapper tblGantryErrorInfoMapper;\r\n\r\n    @Async\r\n    @Override\r\n    public void handleBaseInfoUpload(JSONObject data) {\r\n        try {\r\n            //前端（工控机），历史状态\r\n            JSONArray gantryInfoList = data.getJSONArray(\"gantryInfoList\");\r\n            for(int i = 0; i< gantryInfoList.size(); i++) {\r\n                String s = gantryInfoList.getJSONObject(i).toJSONString();\r\n                TblGantryBaseInfo tblGantryBaseInfo = JSON.parseObject(s, TblGantryBaseInfo.class);\r\n                tblGantryBaseInfo.setFrontSysFlag(1);\r\n                tblGantryBaseInfoMapper.insert(tblGantryBaseInfo);\r\n                // 实时状态\r\n                TblGantryBaseInfoCurrent tblGantryBaseInfoCurrent = JSON.parseObject(s, TblGantryBaseInfoCurrent.class);\r\n                Example example = new Example(TblGantryBaseInfoCurrent.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"gantryId\", tblGantryBaseInfoCurrent.getGantryId());\r\n                criteria.andEqualTo(\"frontSysFlag\", 1);\r\n                criteria.andEqualTo(\"computerOrder\", tblGantryBaseInfoCurrent.getComputerOrder());\r\n                tblGantryBaseInfoCurrentMapper.updateByExample(tblGantryBaseInfoCurrent, example);\r\n            }\r\n\r\n            //后台（服务器），历史状态\r\n            JSONArray chargeUnitInfoList = data.getJSONArray(\"chargeUnitInfoList\");\r\n            for(int i = 0; i < chargeUnitInfoList.size(); i++) {\r\n                String s = chargeUnitInfoList.getJSONObject(i).toJSONString();\r\n                TblGantryBaseInfo tblGantryBaseInfoBack = JSON.parseObject(s, TblGantryBaseInfo.class);\r\n                tblGantryBaseInfoBack.setFrontSysFlag(2);\r\n                tblGantryBaseInfoMapper.insert(tblGantryBaseInfoBack);\r\n                //实时状态\r\n                TblGantryBaseInfoCurrent tblGantryBaseInfoCurrentBack = JSON.parseObject(chargeUnitInfoList.toJSONString(), TblGantryBaseInfoCurrent.class);\r\n                Example example = new Example(TblGantryBaseInfoCurrent.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"gantryId\", tblGantryBaseInfoCurrentBack.getGantryId());\r\n                criteria.andEqualTo(\"frontSysFlag\", 2);\r\n                criteria.andEqualTo(\"computerOrder\", tblGantryBaseInfoCurrentBack.getComputerOrder());\r\n                tblGantryBaseInfoCurrentMapper.updateByExample(tblGantryBaseInfoCurrentBack, example);\r\n            }\r\n\r\n            //牌识，历史状态\r\n            JSONArray cameraInfoList = data.getJSONArray(\"cameraInfoList\");\r\n            for(int i = 0; i < cameraInfoList.size(); i++) {\r\n                String s = cameraInfoList.getJSONObject(i).toJSONString();\r\n                TblGantryVplrBaseInfo tblGantryVplrBaseInfo = JSON.parseObject(s, TblGantryVplrBaseInfo.class);\r\n                tblGantryVplrBaseInfoMapper.insert(tblGantryVplrBaseInfo);\r\n                //实时状态\r\n                TblGantryVplrBaseInfoCurrent tblGantryVplrBaseInfoCurrent = JSON.parseObject(s, TblGantryVplrBaseInfoCurrent.class);\r\n                Example example = new Example(TblGantryVplrBaseInfoCurrent.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"gantryId\", tblGantryVplrBaseInfoCurrent.getGantryId());\r\n                criteria.andEqualTo(\"cameraNum\", tblGantryVplrBaseInfoCurrent.getCameraNum());\r\n                tblGantryVplrBaseInfoCurrentMapper.updateByExample(tblGantryVplrBaseInfoCurrent, example);\r\n            }\r\n\r\n            //RSU基础信息\r\n            JSONArray rsuInfoList = data.getJSONArray(\"RSUInfoList\");\r\n            for(int i = 0; i < rsuInfoList.size(); i++) {\r\n                String s = rsuInfoList.getJSONObject(i).toJSONString();\r\n                TblGantryRsuBaseInfo tblGantryRsuBaseInfo = JSON.parseObject(s, TblGantryRsuBaseInfo.class);\r\n                tblGantryRsuBaseInfoMapper.insert(tblGantryRsuBaseInfo);\r\n                //实时状态\r\n                TblGantryRsuBaseInfoCurrent tblGantryRsuBaseInfoCurrent = JSON.parseObject(s, TblGantryRsuBaseInfoCurrent.class);\r\n                Example example = new Example(TblGantryRsuBaseInfoCurrent.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"gantryId\", tblGantryRsuBaseInfoCurrent.getGantryId());\r\n                criteria.andEqualTo(\"rsuId\", tblGantryRsuBaseInfoCurrent.getRsuid());\r\n                tblGantryRsuBaseInfoCurrentMapper.updateByExample(tblGantryRsuBaseInfoCurrent, example);\r\n            }\r\n\r\n            //车检器基础信息（暂无）\r\n            //过车汇总集合信息（空）\r\n            //门架其他基础信息（空）\r\n\r\n        }catch (Exception ex){\r\n            log.error(\"处理门架报文异常：\" + ex.getMessage());\r\n        }\r\n    }\r\n\r\n    @Async\r\n    @Override\r\n    public void handleTghbu(JSONObject data) {\r\n        try {\r\n            String heatVersion = data.getString(\"heatVersion\");\r\n            //前端（工控机）\r\n            JSONArray gantryHeartbeatList = data.getJSONArray(\"gantryHeartbeatList\");\r\n            for(int i = 0; i< gantryHeartbeatList.size(); i++) {\r\n                JSONObject jo = gantryHeartbeatList.getJSONObject(i);\r\n                String s = jo.toJSONString();\r\n                String frontRunStateId = jo.getString(\"frontRunStateId\");\r\n                Date frontStateTime = DateUtils.dateTime(\"yyyy-MM-dd'T'HH:mm:ss\", jo.getString(\"frontStateTime\"));\r\n                Integer frontComputerOrder = jo.getInteger(\"frontComputerOrder\");\r\n                TblGantryMonitorStatus tblGantryMonitorStatus = JSON.parseObject(s, TblGantryMonitorStatus.class);\r\n                tblGantryMonitorStatus.setFrontSysFlag(1);\r\n                tblGantryMonitorStatus.setStateVersion(heatVersion);\r\n                tblGantryMonitorStatus.setRunStateId(frontRunStateId);\r\n                tblGantryMonitorStatus.setStateTime(frontStateTime);\r\n                tblGantryMonitorStatus.setComputerOrder(frontComputerOrder);\r\n                tblGantryMonitorStatusMapper.insert(tblGantryMonitorStatus);\r\n                // 实时状态\r\n                TblGantryMonitorStatusCurrent tblGantryMonitorStatusCurrent = new TblGantryMonitorStatusCurrent();\r\n                BeanUtils.copyProperties(tblGantryMonitorStatus, tblGantryMonitorStatusCurrent);\r\n                Example example = new Example(TblGantryMonitorStatusCurrent.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"gantryId\", tblGantryMonitorStatusCurrent.getGantryId());\r\n                criteria.andEqualTo(\"stateVersion\", tblGantryMonitorStatusCurrent.getStateVersion());\r\n                criteria.andEqualTo(\"computerOrder\", tblGantryMonitorStatusCurrent.getComputerOrder());\r\n                tblGantryMonitorStatusCurrentMapper.updateByExample(tblGantryMonitorStatusCurrent, example);\r\n            }\r\n            //后台（服务器）\r\n            JSONArray chargeUnitHeartbeatList = data.getJSONArray(\"chargeUnitHeartbeatList\");\r\n            for(int i = 0; i< chargeUnitHeartbeatList.size(); i++) {\r\n                JSONObject jo = chargeUnitHeartbeatList.getJSONObject(i);\r\n                String s = jo.toJSONString();\r\n                String backRunStateId = jo.getString(\"backRunStateId\");\r\n                Date backStateTime = DateUtils.dateTime(\"yyyy-MM-dd'T'HH:mm:ss\", jo.getString(\"backStateTime\"));\r\n                Integer backComputerOrder = jo.getInteger(\"backComputerOrder\");\r\n                TblGantryMonitorStatus tblGantryMonitorStatus = JSON.parseObject(s, TblGantryMonitorStatus.class);\r\n                tblGantryMonitorStatus.setFrontSysFlag(2);\r\n                tblGantryMonitorStatus.setStateVersion(heatVersion);\r\n                tblGantryMonitorStatus.setRunStateId(backRunStateId);\r\n                tblGantryMonitorStatus.setStateTime(backStateTime);\r\n                tblGantryMonitorStatus.setComputerOrder(backComputerOrder);\r\n                tblGantryMonitorStatus.setFrontSysVersion(jo.getString(\"backSysVersion\"));\r\n                tblGantryMonitorStatus.setFrontParamVersion(jo.getString(\"backParamVersion\"));\r\n                tblGantryMonitorStatus.setFrontSoftVersion(jo.getString(\"backSoftVersion\"));\r\n                tblGantryMonitorStatus.setFrontSoftState(jo.getString(\"backSoftState\"));\r\n                tblGantryMonitorStatus.setFrontOverTradeCount(jo.getInteger(\"backOverTradeCount\"));\r\n                tblGantryMonitorStatus.setFrontTransErrTradeCount(jo.getInteger(\"backTransErrTradeCount\"));\r\n                tblGantryMonitorStatus.setFrontOverVehDataCount(jo.getInteger(\"backOverVehDataCount\"));\r\n                tblGantryMonitorStatus.setFrontTransErrVehDataCount(jo.getInteger(\"backTransErrVehDataCount\"));\r\n                tblGantryMonitorStatus.setFrontOverVehPicCount(jo.getInteger(\"backOverVehPicCount\"));\r\n                tblGantryMonitorStatus.setFrontTransErrVehPicCount(jo.getInteger(\"backTransErrVehPicCount\"));\r\n                tblGantryMonitorStatus.setFrontLoadAverage(jo.getString(\"backLoadAverage\"));\r\n                tblGantryMonitorStatus.setFrontDiskDataTotalSize(jo.getString(\"backDiskDataTotalSize\"));\r\n                tblGantryMonitorStatus.setFrontDiskDataLeftSize(jo.getString(\"backDiskDataLeftSize\"));\r\n                tblGantryMonitorStatus.setFrontDiskRunTotalSize(jo.getString(\"backDiskRunTotalSize\"));\r\n                tblGantryMonitorStatus.setFrontDiskRunLeftSize(jo.getString(\"backDiskRunLeftSize\"));\r\n                tblGantryMonitorStatus.setFrontCpuRate(jo.getString(\"backCPURate\"));\r\n                tblGantryMonitorStatus.setFrontMemoryRate(jo.getString(\"backMemoryRate\"));\r\n                tblGantryMonitorStatus.setFrontBeidouState(jo.getInteger(\"backBeidouState\"));\r\n                tblGantryMonitorStatus.setFrontErrorDataTotal(jo.getString(\"backErrorDataTotal\"));\r\n                tblGantryMonitorStatus.setFrontErrorEventTotal(jo.getString(\"backErrorEventTotal\"));\r\n                tblGantryMonitorStatusMapper.insert(tblGantryMonitorStatus);\r\n                // 实时状态\r\n                TblGantryMonitorStatusCurrent tblGantryMonitorStatusCurrent = new TblGantryMonitorStatusCurrent();\r\n                BeanUtils.copyProperties(tblGantryMonitorStatus, tblGantryMonitorStatusCurrent);\r\n                Example example = new Example(TblGantryMonitorStatusCurrent.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"gantryId\", tblGantryMonitorStatusCurrent.getGantryId());\r\n                criteria.andEqualTo(\"stateVersion\", tblGantryMonitorStatusCurrent.getStateVersion());\r\n                criteria.andEqualTo(\"computerOrder\", tblGantryMonitorStatusCurrent.getComputerOrder());\r\n                tblGantryMonitorStatusCurrentMapper.updateByExample(tblGantryMonitorStatusCurrent, example);\r\n            }\r\n            //牌识\r\n            JSONArray cameraHeartbeatList = data.getJSONArray(\"cameraHeartbeatList\");\r\n            for(int i = 0; i< cameraHeartbeatList.size(); i++) {\r\n                JSONObject jo = cameraHeartbeatList.getJSONObject(i);\r\n                String s = jo.toJSONString();\r\n                TblGantryVplrMonitor tblGantryVplrMonitor = JSON.parseObject(s, TblGantryVplrMonitor.class);\r\n                tblGantryVplrMonitorMapper.insert(tblGantryVplrMonitor);\r\n                TblGantryVplrMonitorCurrent tblGantryVplrMonitorCurrent = new TblGantryVplrMonitorCurrent();\r\n                BeanUtils.copyProperties(tblGantryVplrMonitor, tblGantryVplrMonitorCurrent);\r\n                Example example = new Example(TblGantryVplrMonitorCurrent.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"gantryId\", tblGantryVplrMonitorCurrent.getGantryId());\r\n                criteria.andEqualTo(\"cameraNum\", tblGantryVplrMonitorCurrent.getCameraNum());\r\n                tblGantryVplrMonitorCurrentMapper.updateByExample(tblGantryVplrMonitorCurrent, example);\r\n            }\r\n            //天线\r\n            JSONArray rsuHeartbeatList = data.getJSONArray(\"RSUHeartbeatList\");\r\n            JSONArray psamInfoList = data.getJSONArray(\"PSAMInfoList\");\r\n            JSONArray antennalInfoList = data.getJSONArray(\"antennalInfoList\");\r\n            for(int i = 0; i< rsuHeartbeatList.size(); i++) {\r\n                JSONObject jo = rsuHeartbeatList.getJSONObject(i);\r\n                jo.put(\"psamInfoList\", psamInfoList);\r\n                jo.put(\"antennalInfoList\", antennalInfoList);\r\n                String s = jo.toJSONString();\r\n                TblGantryRsuMonitor tblGantryRsuMonitor = JSON.parseObject(s, TblGantryRsuMonitor.class);\r\n                tblGantryRsuMonitorMapper.insert(tblGantryRsuMonitor);\r\n                TblGantryRsuMonitorCurrent tblGantryRsuMonitorCurrent = new TblGantryRsuMonitorCurrent();\r\n                BeanUtils.copyProperties(tblGantryRsuMonitor, tblGantryRsuMonitorCurrent);\r\n                Example example = new Example(TblGantryRsuMonitorCurrent.class);\r\n                Example.Criteria criteria = example.createCriteria();\r\n                criteria.andEqualTo(\"gantryId\", tblGantryRsuMonitorCurrent.getGantryId());\r\n                criteria.andEqualTo(\"rsuId\", tblGantryRsuMonitorCurrent.getRsuid());\r\n                tblGantryRsuMonitorCurrentMapper.updateByExample(tblGantryRsuMonitorCurrent, example);\r\n            }\r\n        } catch (Exception ex){\r\n            log.error(\"处理门架报文异常：\" + ex.getMessage());\r\n        }\r\n    }\r\n\r\n    @Async\r\n    @Override\r\n    public void handleSpecialEventUpload(JSONObject data) {\r\n        try {\r\n            TblGantryErrorInfo tblGantryErrorInfo = JSON.parseObject(data.toJSONString(), TblGantryErrorInfo.class);\r\n            tblGantryErrorInfoMapper.insert(tblGantryErrorInfo);\r\n        } catch (Exception ex){\r\n            log.error(\"处理门架报文异常：\" + ex.getMessage());\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/gantry/impl/GantryUpperServiceImpl.java b/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/gantry/impl/GantryUpperServiceImpl.java
+--- a/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/gantry/impl/GantryUpperServiceImpl.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/gantry/impl/GantryUpperServiceImpl.java	(date 1653983719397)
+@@ -52,7 +52,6 @@
+     @Autowired
+     private TblGantryErrorInfoMapper tblGantryErrorInfoMapper;
+ 
+-    @Async
+     @Override
+     public void handleBaseInfoUpload(JSONObject data) {
+         try {
+@@ -129,7 +128,6 @@
+         }
+     }
+ 
+-    @Async
+     @Override
+     public void handleTghbu(JSONObject data) {
+         try {
+@@ -243,7 +241,6 @@
+         }
+     }
+ 
+-    @Async
+     @Override
+     public void handleSpecialEventUpload(JSONObject data) {
+         try {
+@@ -253,4 +250,9 @@
+             log.error("处理门架报文异常：" + ex.getMessage());
+         }
+     }
++
++    @Override
++    public void log(JSONObject body) {
++
++    }
+ }
+Index: smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryTransaction.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.charge.domain.gantry;\r\n\r\nimport lombok.Data;\r\n\r\nimport java.io.Serializable;\r\nimport java.util.Date;\r\n\r\n/**\r\n * tbl_gantry_transaction\r\n * \r\n * @author bianj\r\n * @version 1.0.0 2022-05-19\r\n */\r\n@Data\r\npublic class TblGantryTransaction implements Serializable {\r\n    /** 版本号 */\r\n    private static final long serialVersionUID = 1L;\r\n\r\n    /** 门架编号+交易批次号+批次内流水号（6位） */\r\n    private String tradeId;\r\n\r\n    /** 门架编号 */\r\n    private String gantryId;\r\n\r\n    /** computerOrder */\r\n    private Integer computerOrder;\r\n\r\n    /** 1-OBU（单片式、双片式）            2-CPC卡             */\r\n    private Integer mediaType;\r\n\r\n    /** 按小时自增，不能回退。例如：2019080716 */\r\n    private String hourBatchNo;\r\n\r\n    /** 方向（1上行，2下行）+序号（2位），例如：上行：101，102，103；下行：201，202，203 */\r\n    private Integer gantryOrderNum;\r\n\r\n    /** 当前门架的hex值 */\r\n    private String gantryHex;\r\n\r\n    /** 对向门架的hex值 */\r\n    private String gantryHexOpposite;\r\n\r\n    /** YYYY-MM-DDTHH:mm:ss */\r\n    private Date transTime;\r\n\r\n    /** fee */\r\n    private Integer fee;\r\n\r\n    /** 单位：分，默认为0            实收金额=应收金额-优惠金额，应收金额为优惠前金额             */\r\n    private Integer payFee;\r\n\r\n    /** 单位：分，默认为0            优惠金额为优惠减免金额，未优惠填0；例如消费100元，95折后，应收金额为100元，优惠金额为5元             */\r\n    private Integer discountFee;\r\n\r\n    /** 单位：分，默认为0            如对于储值卡采取0元扣费处理，则该字段填写0，以进行TAC验证。             */\r\n    private Integer transFee;\r\n\r\n    /** 单位：分，默认为0            双片式标签交易前余额              */\r\n    private Long balanceBefore;\r\n\r\n    /** 单位：分，默认为0            双片式标签交易后余额             */\r\n    private Long balanceAfter;\r\n\r\n    /** 若存在为其他收费单元代收时，应将所在的收费单元和代收的收费单元ID号均填上，并且用“|”间隔 */\r\n    private String tollIntervalId;\r\n\r\n    /** feeGroup */\r\n    private String feeGroup;\r\n\r\n    /** 单位：分，若有代收用“|”分隔 */\r\n    private String payFeeGroup;\r\n\r\n    /** 单位：分，若有代收用“|”分隔 */\r\n    private String discountFeeGroup;\r\n\r\n    /** 车牌号码+间隔符+车牌颜色            车牌颜色2位数字:            0-蓝色，1-黄色，            2-黑色，3-白色，            4- 渐变绿色            5- 黄绿双拼色            6- 蓝白渐变色            7- 临时牌照            9- 未确定            11-绿色            12-红色            例：京A12345_1            ETC交易实际车牌不做车牌格式校验             */\r\n    private String vehiclePlate;\r\n\r\n    /** 1-一型客车            2-二型客车            3-三型客车            4-四型客车            11-一型货车            12-二型货车            13-三型货车            14-四型货车            15-五型货车            16-六型货车            21-一型专项作业车            22-二型专项作业车            23-三型专项作业车            24-四型专项作业车            25-五型专项作业车            26-六型专项作业车             */\r\n    private Integer vehicleType;\r\n\r\n    /** 1-一型客车            2-二型客车            3-三型客车            4-四型客车            11-一型货车            12-二型货车            13-三型货车            14-四型货车            15-五型货车            16-六型货车            21-一型专项作业车            22-二型专项作业车            23-三型专项作业车            24-四型专项作业车            25-五型专项作业车            26-六型专项作业车             */\r\n    private Integer identifyVehicleType;\r\n\r\n    /** 0-普通  8-军警 10-紧急  14-车队 （35号公告已定义）21-绿通车 22-联合收割机 23-抢险救灾 24-集装箱 25-大件运输；26-应急车 */\r\n    private Integer vehicleClass;\r\n\r\n    /** ETC计费成功必填。 */\r\n    private String tac;\r\n\r\n    /** PBOC定义，如06为传统交易，09为复合交易。计费成功必填。 */\r\n    private String transType;\r\n\r\n    /** PSAM中0016文件中的终端机编号。计费成功必填。 */\r\n    private String terminalNo;\r\n\r\n    /** 不超过8位。计费成功必填。 */\r\n    private String terminalTransNo;\r\n\r\n    /** 双片式标签计费成功必填。 */\r\n    private Integer transNo;\r\n\r\n    /** 计费成功必填。1位数字：            1-公路电子收费             */\r\n    private Integer serviceType;\r\n\r\n    /** 计费成功必填。1位数字            1-3DEX            2-SM4             */\r\n    private Integer algorithmIdentifier;\r\n\r\n    /** 消费密钥版本号 */\r\n    private String keyVersion;\r\n\r\n    /** 为左边起第一个RSU天线头（超车道开始），其他值类推 */\r\n    private Integer antennaId;\r\n\r\n    /** 计费模块版本号与计费参数版本号使用“|”分隔 */\r\n    private String rateVersion;\r\n\r\n    /** 单位：ms,交易成功时必填 */\r\n    private Integer consumeTime;\r\n\r\n    /** passId */\r\n    private String passId;\r\n\r\n    /** 1-有入口；2-无入口 */\r\n    private Integer passState;\r\n\r\n    /** 1-\t交易成功            2-\t交易失败             */\r\n    private Integer tradeResult;\r\n\r\n    /** 交易特情类型 */\r\n    private String specialType;\r\n\r\n    /** 入口车道编号 */\r\n    private String enTollLaneId;\r\n\r\n    /** 例如：1101ABCD */\r\n    private String enTollStationHex;\r\n\r\n    /** 入口时间 */\r\n    private Date enTime;\r\n\r\n    /** 1-混合（ETC+MTC）            3-ETC专用            参考0019文件             */\r\n    private String enLaneType;\r\n\r\n    /** 上一个门架的hex编号 */\r\n    private String lastGantryHex;\r\n\r\n    /** 通过上一个门架的时间 */\r\n    private Date lastGantryTime;\r\n\r\n    /** 通行介质类型填写1时，必填。1位数字            1-单片式OBU            2-双片式OBU             */\r\n    private Integer obuSign;\r\n\r\n    /** OBU物理地址 */\r\n    private String obumac;\r\n\r\n    /** 不超过20个字符，OBU的EF01系统信息文件的合同序列号； */\r\n    private String obusn;\r\n\r\n    /** OBU的EF01系统信息文件的合同版本； */\r\n    private Integer obuVersion;\r\n\r\n    /** 单片式OBU必填。填写0-100，若无法读数或读数异常时填-1 */\r\n    private Integer obuElectrical;\r\n\r\n    /** 天线返回的OBU状态。 */\r\n    private String obuState;\r\n\r\n    /** EF01系统信息文件的发行方标识，8字节，区域代码（4字节）+运营商标识（2字节）+保留（1字节）+密钥分散标识（1字节） */\r\n    private String obuIssueId;\r\n\r\n    /** YYYYMMDD */\r\n    private Integer obuStartDate;\r\n\r\n    /** YYYYMMDD */\r\n    private Integer obuEndDate;\r\n\r\n    /** 标签内发行的车牌号码+间隔符+车牌颜色，间隔符”_” */\r\n    private String obuVehiclePlate;\r\n\r\n    /** 4X版本0015文件第43字节 */\r\n    private Integer obuVehicleType;\r\n\r\n    /** CPU发行的车牌号码+间隔符+车牌颜色，间隔符”_” */\r\n    private String cpuVehiclePlate;\r\n\r\n    /** 4X版本0015文件第43字节 */\r\n    private Integer cpuVehicleType;\r\n\r\n    /** YYYYMMDD */\r\n    private Integer cpuStartDate;\r\n\r\n    /** YYYYMMDD */\r\n    private Integer cpuEndDate;\r\n\r\n    /** 用户卡的0015文件中记录的卡片版本号。 */\r\n    private Integer cpuVersion;\r\n\r\n    /** 2字节，省级行政区划代码（1字节）+运营商序号（1字节） */\r\n    private String cpuNetId;\r\n\r\n    /** EF01系统信息文件的发行方标识，8字节，区域代码（4字节）+运营商标识（2字节）+保留（1字节）+密钥分散标识（1字节） */\r\n    private String cpuIssueId;\r\n\r\n    /** 22-储值卡            23-记账卡             */\r\n    private Integer cpuCardType;\r\n\r\n    /** 不超过20位 */\r\n    private String cpuCardId;\r\n\r\n    /** ETC应用车辆信息文件中规定 */\r\n    private Integer vehicleUserType;\r\n\r\n    /** ETC车辆座位数/车辆载重(单位：kg) */\r\n    private Integer vehicleSeat;\r\n\r\n    /** 大于等于2,货车必填 */\r\n    private Integer axleCount;\r\n\r\n    /** 单位：kg  */\r\n    private Integer totalWeight;\r\n\r\n    /** 车辆长 */\r\n    private Integer vehicleLength;\r\n\r\n    /** 车辆宽 */\r\n    private Integer vehicleWidth;\r\n\r\n    /** 车辆高 */\r\n    private Integer vehicleHight;\r\n\r\n    /** 0正常；其他异常，具体见计费接口错误定义 */\r\n    private Integer feeCalcResult;\r\n\r\n    /** 计费模块返回的信息，最大400字节 */\r\n    private String feeInfo1;\r\n\r\n    /** 计费模块返回的信息，最大400字节 */\r\n    private String feeInfo2;\r\n\r\n    /** 计费模块返回的信息，最大400字节 */\r\n    private String feeInfo3;\r\n\r\n    /** 1-更新成功；2-更新失败 */\r\n    private Integer updateResult;\r\n\r\n    /** 过站信息中上一个门架的hex编号 */\r\n    private String lastGantryHexPass;\r\n\r\n    /** CPC卡EF02文件第1字节 */\r\n    private Integer gantryPassCount;\r\n\r\n    /** 省界出口有效，最大504字节，仅CPC卡适用，EF02第5字节开始记录 */\r\n    private String gantryPassInfo;\r\n\r\n    /** 仅CPC卡适用，最大10字节，EF04写入前的计费信息 */\r\n    private String feeProvInfo;\r\n\r\n    /** 单位：分            仅CPC卡适用，其他默认0            累计前             */\r\n    private Integer feeSumLocalBefore;\r\n\r\n    /** 单位：分            仅CPC卡适用，其他默认0            累计后（交易成功）             */\r\n    private Integer feeSumLocalAfter;\r\n\r\n    /** holidayState */\r\n    private Integer holidayState;\r\n\r\n    /** 校验码 */\r\n    private String verifyCode;\r\n\r\n    /** 1 反向            2前序门架已完成交易，本排禁止交易            3前序门架复合消费失败            4前序门架更新 CPC 卡过站信息失败            -1查询共享失败             */\r\n    private Integer shareCode;\r\n\r\n    /** B4帧返回的错误HEX码 */\r\n    private String b4ErrCode;\r\n\r\n    /** B5帧返回的错误HEX码 */\r\n    private String b5ErrCode;\r\n\r\n    /** B7帧返回的错误HEX码 */\r\n    private String b7ErrCode;\r\n\r\n    /** B8帧返回的错误HEX码 */\r\n    private String b8ErrCode;\r\n\r\n    /** 共享检查耗时 默认值-1 */\r\n    private Integer shareCtime;\r\n\r\n    /** 计费耗时 默认值-1 */\r\n    private Integer calcTime;\r\n\r\n    /** 以“|”分隔（天线耗时） */\r\n    private String tagTime;\r\n\r\n    /** 软件错误码 */\r\n    private Integer softErr;\r\n\r\n    /** 交易重试次数 */\r\n    private Integer retryTimes;\r\n\r\n    /** 1 待获取用户信息            2 待计费写卡            3 待更新过站信息            4 流程结束             */\r\n    private Integer transStep;\r\n\r\n    /** 不超过38个字符，有匹配时填写 */\r\n    private String vehiclePicId;\r\n\r\n    /** 不超过38个字符，有匹配时填写 */\r\n    private String vehicleTailPicId;\r\n\r\n    /** 当前收费单元同一车辆产生的多条计扣费成功关联流水号，以“|”分隔，用于重复计费稽核 */\r\n    private String relatedTradeId;\r\n\r\n    /** 当前收费单元同一车辆产生的全部交易通行记录的关联流水号，以“|”分隔 */\r\n    private String allRelatedTradeId;\r\n\r\n    /** 0-未处理（默认）；1-已匹配；2-反向数据 */\r\n    private Integer matchStatus;\r\n\r\n    /** 0-未处理（默认）；1-有效数据；2-无效(重复)数据 */\r\n    private Integer validStatus;\r\n\r\n    /** 0-未处理（默认）；1-已处理 */\r\n    private Integer dealStatus;\r\n\r\n    /** 0-交易成功；1-交易失败 */\r\n    private Integer tradeStatus;\r\n\r\n    /** 门架后台入库时间 YYYY-MM-DDTHH:mm:ss */\r\n    private Date stationDbtime;\r\n\r\n    /** 门架后台处理时间 YYYY-MM-DDTHH:mm:ss */\r\n    private Date stationDealTime;\r\n\r\n    /** 门架后台去重时间 YYYY-MM-DDTHH:mm:ss */\r\n    private Date stationValidTime;\r\n\r\n    /** 门架后台匹配时间 YYYY-MM-DDTHH:mm:ss */\r\n    private Date stationMatchTime;\r\n\r\n    /** vehicleSign */\r\n    private String vehicleSign;\r\n\r\n    /** feeCalcSpecial */\r\n    private Integer feeCalcSpecial;\r\n\r\n    /** lastGantryHexFee */\r\n    private String lastGantryHexFee;\r\n\r\n    /** gantryType */\r\n    private String gantryType;\r\n\r\n    /** obufeeSumBefore */\r\n    private Long obufeeSumBefore;\r\n\r\n    /** obufeeSumAfter */\r\n    private Long obufeeSumAfter;\r\n\r\n    /** obuProvfeeSumBefore */\r\n    private Long obuProvfeeSumBefore;\r\n\r\n    /** obuProvfeeSumAfter */\r\n    private Long obuProvfeeSumAfter;\r\n\r\n    /** cardfeeSumBefore */\r\n    private Long cardfeeSumBefore;\r\n\r\n    /** cardfeeSumAfter */\r\n    private Long cardfeeSumAfter;\r\n\r\n    /** noCardTimesBefore */\r\n    private Integer noCardTimesBefore;\r\n\r\n    /** noCardTimesAfter */\r\n    private Integer noCardTimesAfter;\r\n\r\n    /** provinceNumBefore */\r\n    private Integer provinceNumBefore;\r\n\r\n    /** provinceNumAfter */\r\n    private Integer provinceNumAfter;\r\n\r\n    /** obuTotalTradeSuccNumBefore */\r\n    private Integer obuTotalTradeSuccNumBefore;\r\n\r\n    /** obuTotalTradeSuccNumAfter */\r\n    private Integer obuTotalTradeSuccNumAfter;\r\n\r\n    /** obuProvTradeSuccNumBefore */\r\n    private Integer obuProvTradeSuccNumBefore;\r\n\r\n    /** obuProvTradeSuccNumAfter */\r\n    private Integer obuProvTradeSuccNumAfter;\r\n\r\n    /** obuTradeResult */\r\n    private Integer obuTradeResult;\r\n\r\n    /** tradeType */\r\n    private Integer tradeType;\r\n\r\n    /** obuInfoTypeRead */\r\n    private Integer obuInfoTypeRead;\r\n\r\n    /** obuInfoTypeWrite */\r\n    private Integer obuInfoTypeWrite;\r\n\r\n    /** obuPassState */\r\n    private Integer obuPassState;\r\n\r\n    /** feeVehicleType */\r\n    private Integer feeVehicleType;\r\n\r\n    /** obuLastGantryHex */\r\n    private String obuLastGantryHex;\r\n\r\n    /** obuLastGantryTime */\r\n    private Date obuLastGantryTime;\r\n\r\n    /** spare1 */\r\n    private String spare1;\r\n\r\n    /** spare2 */\r\n    private String spare2;\r\n\r\n    /** spare3 */\r\n    private String spare3;\r\n\r\n    /** spare4 */\r\n    private String spare4;\r\n\r\n    /** spare5 */\r\n    private Long spare5;\r\n\r\n    /** spare6 */\r\n    private Long spare6;\r\n\r\n    /** spare7 */\r\n    private String spare7;\r\n\r\n    /** spare8 */\r\n    private String spare8;\r\n\r\n    /** obuPayFeeSumBefore */\r\n    private Long obuPayFeeSumBefore;\r\n\r\n    /** obuPayFeeSumAfter */\r\n    private Long obuPayFeeSumAfter;\r\n\r\n    /** obuDiscountFeeSumBefore */\r\n    private Long obuDiscountFeeSumBefore;\r\n\r\n    /** obuDiscountFeeSumAfter */\r\n    private Long obuDiscountFeeSumAfter;\r\n\r\n    /** obuMileageBefore */\r\n    private Long obuMileageBefore;\r\n\r\n    /** obuMileageAfter */\r\n    private Long obuMileageAfter;\r\n\r\n    /** provMinFee */\r\n    private Long provMinFee;\r\n\r\n    /** feeSpare1 */\r\n    private Long feeSpare1;\r\n\r\n    /** feeSpare2 */\r\n    private Long feeSpare2;\r\n\r\n    /** feeSpare3 */\r\n    private String feeSpare3;\r\n\r\n    /** feeProvBeginHex */\r\n    private String feeProvBeginHex;\r\n\r\n    /** chargeUnitId */\r\n    private String chargeUnitId;\r\n\r\n    /** transDate */\r\n    private String transDate;\r\n\r\n    /** tradeReadCiphertext */\r\n    private String tradeReadCiphertext;\r\n\r\n    /** tradeWriteCiphertext */\r\n    private String tradeWriteCiphertext;\r\n\r\n    /** readCiphertextVerify */\r\n    private Integer readCiphertextVerify;\r\n\r\n    /** rateCompute */\r\n    private Integer rateCompute;\r\n\r\n    /** rateFitCount */\r\n    private Integer rateFitCount;\r\n\r\n    /** versionInfo */\r\n    private String versionInfo;\r\n\r\n    /** 本次交易前标签累计应收金额（省内） */\r\n    private Long obuProvPayFeeSumBefore;\r\n\r\n    /** 本次交易后标签累计应收金额（省内） */\r\n    private Long obuProvPayFeeSumAfter;\r\n\r\n    /** 0-未拟合或拟合成功，1-拟合失败，默认值-1 */\r\n    private Integer pathFitFlag;\r\n\r\n    /** 对应计费协议中计费特情值组合 */\r\n    private String feeCalcSpecials;\r\n\r\n    /** ETC表示本省累计应收金额取整（含本门架应收金额）。CPC表示本省累计金额取整（含本门架计费金额），对应计费模块返回的payFeeProvSumLocal字段 */\r\n    private Long payFeeProvSumLocal;\r\n\r\n    /** PC-RSU接口协议版本号 */\r\n    private Integer pcrsuVersion;\r\n\r\n    /** 本次写入的CPC卡EF02文件中过站信息 */\r\n    private String gantryPassInfoAfter;\r\n\r\n    /** CPC卡计费信息文件写入结果 0-成功 1-失败，默认值-1 */\r\n    private Integer cpcFeeTradeResult;\r\n\r\n    /** 本次写入到CPC EF04中本省计费信息 */\r\n    private String feeProvEf04;\r\n\r\n    /** CPC卡是否进行全省路径拟合的标识，0-未拟合，大于0的值省内自行定义拟合方式。默认值-1 */\r\n    private Integer fitProvFlag;\r\n\r\n    /** 读取CPC卡EF02文件中过站信息中门架数量。默认值-1 */\r\n    private Integer gantryPassCountBefore;\r\n\r\n    /** 拟合后的本省省界入口ETC门架HEX码 */\r\n    private String feeProvBeginHexFit;\r\n\r\n    /** 拟合后的本省省界入口ETC门架的通行时间 */\r\n    private Date feeProvBeginTimeFit;\r\n\r\n    /** 收费单元组合处理标识 */\r\n    private String tollIntervalSign;\r\n\r\n    /** 本省累计通行金额计算方式 */\r\n    private Integer provMinFeeCalcMode;\r\n\r\n    /** 本省累计通行金额计费方式组合 */\r\n    private String provMinFeeCalcMerge;\r\n\r\n    /** 计费里程数 */\r\n    private Integer feeMileage;\r\n\r\n    /** CPC本省省界入口ETC门架通行时间 */\r\n    private Date feeProvBeginTime;\r\n\r\n    /** CPC本省累计拆分金额 */\r\n    private Integer feeSumLocalAfterEf04;\r\n\r\n    /** CPC EF02 文件中上个门架的计费金额 */\r\n    private Integer lastGantryFeePass;\r\n\r\n    /** CPC EF02 文件中上个门架的计费里程 */\r\n    private Integer lastGantryMilePass;\r\n\r\n    /** 路侧单元厂商代码 */\r\n    private String rsuManuid;\r\n\r\n    /** 计费协议数据结构版本号 */\r\n    private String feeDataVersion;\r\n\r\n    /** 配置的反向门架阈值组合 */\r\n    private String gantryHexOppotime;\r\n\r\n    /** 本次交易后标签累计应收金额（门架拟合前） */\r\n    private Integer obuPayFeeSumAfterNoFit;\r\n\r\n    /** 本次交易后标签累计实收金额（门架拟合前） 默认值-1 如有拟合，则不含拟合金额 */\r\n    private Integer obuFeeSumAfterNoFit;\r\n\r\n    /** 本次交易前本省标签/CPC累计里程(门架拟合前）（单位： M 即米）：默认值-1，如有拟合，则不含拟合金额 */\r\n    private Integer obuMileageAfterNoFit;\r\n\r\n    /** 交易前读取的本省或邻省计费起点 */\r\n    private String feeProvBeginHexBefore;\r\n\r\n    /** 门架拟合结果 0-拟合未正常开启 1-路径正常无需拟合 2-拟合成功计费成功 3-拟合成功计费失败 4-拟合失败 */\r\n    private Integer gantryFitResult;\r\n\r\n    /** 门架拟合参数版本信息 */\r\n    private String gantryFitVersion;\r\n\r\n    /** 门架拟合出的HEX集合 */\r\n    private String gantryFitHexs;\r\n\r\n    /** 门架拟合出的收费单元集合，以“|”分隔，若一个HEX存在多个代收以“_”分隔 */\r\n    private String gantryFitTolls;\r\n\r\n    /** 邻省拟合门架的应收金额 */\r\n    private Integer gantryFitNprovPayfee;\r\n\r\n    /** 邻省拟合门架的优惠金额 */\r\n    private Integer gantryFitNprovDiscontfee;\r\n\r\n    /** 邻省拟合门架的实收金额 */\r\n    private Integer gantryFitNprovRealfee;\r\n\r\n    /** 邻省拟合门架的里程 */\r\n    private Integer gantryFitNprovMiles;\r\n\r\n    /** 邻省拟合门架的应收金额组合 */\r\n    private String gantryFitNprovPayfeeGroup;\r\n\r\n    /** 邻省拟合门架的优惠金额组合 */\r\n    private String gantryFitNprovDiscontfeeGroup;\r\n\r\n    /** 邻省拟合门架的实收金额组合 */\r\n    private String gantryFitNprovRealfeeGroup;\r\n\r\n    /** 拟合后邻省全省累计应收金额 */\r\n    private Integer gantryFitNprovPayFeeSum;\r\n\r\n    /** 拟合后邻省全省累计拆分金额 */\r\n    private Integer gantryFitNprovRealFeeSum;\r\n\r\n    /** 拟合后邻省全省累计里程 */\r\n    private Integer gantryFitNprovMileSum;\r\n\r\n    /** 邻省拟合门架的预实收金额 */\r\n    private Integer gantryFitNprovPreRealfee;\r\n\r\n    /** 邻省拟合门架的实收金额 */\r\n    private String pathfitDesc;\r\n\r\n    /** 邻省省份代码 */\r\n    private Integer gantryFitNeighborProvCode;\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryTransaction.java b/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryTransaction.java
+--- a/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryTransaction.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryTransaction.java	(date 1654142193716)
+@@ -2,6 +2,8 @@
+ 
+ import lombok.Data;
+ 
++import javax.persistence.Id;
++import javax.persistence.Table;
+ import java.io.Serializable;
+ import java.util.Date;
+ 
+@@ -12,11 +14,13 @@
+  * @version 1.0.0 2022-05-19
+  */
+ @Data
++@Table(name = "tbl_gantry_transaction")
+ public class TblGantryTransaction implements Serializable {
+     /** 版本号 */
+     private static final long serialVersionUID = 1L;
+ 
+     /** 门架编号+交易批次号+批次内流水号（6位） */
++    @Id
+     private String tradeId;
+ 
+     /** 门架编号 */
+Index: smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantrySumTransaction.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.charge.domain.gantry;\r\n\r\nimport lombok.Data;\r\n\r\nimport java.io.Serializable;\r\n\r\n/**\r\n * tbl_gantry_sum_transaction\r\n * \r\n * @author bianj\r\n * @version 1.0.0 2022-05-19\r\n */\r\n@Data\r\npublic class TblGantrySumTransaction implements Serializable {\r\n    /** 版本号 */\r\n    private static final long serialVersionUID = 1L;\r\n\r\n    /** id */\r\n    private String id;\r\n\r\n    /** directivityId */\r\n    private Integer directivityId;\r\n\r\n    /** ETC */\r\n    private String collectId;\r\n\r\n    /** gantryid */\r\n    private String gantryid;\r\n\r\n    /** 控制器序号 */\r\n    private Integer computerOrder;\r\n\r\n    /** YYYYMMDD */\r\n    private String collectDate;\r\n\r\n    /** collectHourBatch */\r\n    private String collectHourBatch;\r\n\r\n    /** batchCount */\r\n    private Integer batchCount;\r\n\r\n    /** etcTypeCount */\r\n    private String etcTypeCount;\r\n\r\n    /** 0- */\r\n    private String etcClassCount;\r\n\r\n    /** etcSuccessCount */\r\n    private Integer etcSuccessCount;\r\n\r\n    /** etcSuccessFee */\r\n    private Long etcSuccessFee;\r\n\r\n    /** etcFailCount */\r\n    private Integer etcFailCount;\r\n\r\n    /** ETC */\r\n    private Integer etcBatchCount;\r\n\r\n    /** etcPayFeeCount */\r\n    private Long etcPayFeeCount;\r\n\r\n    /** cpcTypeCount */\r\n    private String cpcTypeCount;\r\n\r\n    /** 0- */\r\n    private String cpcClassCount;\r\n\r\n    /** cpcSuccessCount */\r\n    private Integer cpcSuccessCount;\r\n\r\n    /** cpcSuccessFee */\r\n    private Long cpcSuccessFee;\r\n\r\n    /** cpcFailCount */\r\n    private Integer cpcFailCount;\r\n\r\n    /** CPC */\r\n    private Integer cpcBatchCount;\r\n\r\n    /** cpcPayFeeCount */\r\n    private Long cpcPayFeeCount;\r\n\r\n    /** tacBatchCount */\r\n    private Integer tacBatchCount;\r\n\r\n    /** receiveFlag */\r\n    private Integer receiveFlag;\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantrySumTransaction.java b/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantrySumTransaction.java
+--- a/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantrySumTransaction.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantrySumTransaction.java	(date 1654152516905)
+@@ -2,6 +2,8 @@
+ 
+ import lombok.Data;
+ 
++import javax.persistence.Id;
++import javax.persistence.Table;
+ import java.io.Serializable;
+ 
+ /**
+@@ -11,21 +13,17 @@
+  * @version 1.0.0 2022-05-19
+  */
+ @Data
++@Table(name="tbl_gantry_sum_transaction")
+ public class TblGantrySumTransaction implements Serializable {
+     /** 版本号 */
+     private static final long serialVersionUID = 1L;
+ 
+-    /** id */
+-    private String id;
+-
+-    /** directivityId */
+-    private Integer directivityId;
+-
+     /** ETC */
++    @Id
+     private String collectId;
+ 
+     /** gantryid */
+-    private String gantryid;
++    private String gantryId;
+ 
+     /** 控制器序号 */
+     private Integer computerOrder;
+@@ -54,11 +52,6 @@
+     /** etcFailCount */
+     private Integer etcFailCount;
+ 
+-    /** ETC */
+-    private Integer etcBatchCount;
+-
+-    /** etcPayFeeCount */
+-    private Long etcPayFeeCount;
+ 
+     /** cpcTypeCount */
+     private String cpcTypeCount;
+@@ -75,16 +68,5 @@
+     /** cpcFailCount */
+     private Integer cpcFailCount;
+ 
+-    /** CPC */
+-    private Integer cpcBatchCount;
+-
+-    /** cpcPayFeeCount */
+-    private Long cpcPayFeeCount;
+-
+-    /** tacBatchCount */
+-    private Integer tacBatchCount;
+-
+-    /** receiveFlag */
+-    private Integer receiveFlag;
+ 
+ }
+\ No newline at end of file
+Index: ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteAmapService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ruoyi.system.api;\r\n\r\nimport com.ruoyi.common.core.constant.ServiceNameConstants;\r\nimport com.ruoyi.common.core.domain.R;\r\nimport com.ruoyi.system.api.domain.amap.TblAutoNaviMapRecord;\r\nimport com.ruoyi.system.api.factory.RemoteAmapFallbackFactory;\r\nimport org.springframework.cloud.openfeign.FeignClient;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.PutMapping;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\nimport org.springframework.web.bind.annotation.RequestParam;\r\n\r\n/**\r\n * 高德服务\r\n *\r\n * @author qiumin\r\n */\r\n@FeignClient(contextId = \"remoteAmapService\", value = ServiceNameConstants.EXTERNAL_SERVICE, fallbackFactory = RemoteAmapFallbackFactory.class)\r\npublic interface RemoteAmapService {\r\n\r\n\r\n    @PostMapping(\"/amap\")\r\n    R eventPublish(@RequestBody TblAutoNaviMapRecord autoNaviMapRecord);\r\n\r\n    @PutMapping(\"/amap\")\r\n    R eventRelieve(@RequestParam Long id);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteAmapService.java b/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteAmapService.java
+--- a/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteAmapService.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteAmapService.java	(date 1654161994353)
+@@ -18,10 +18,9 @@
+ @FeignClient(contextId = "remoteAmapService", value = ServiceNameConstants.EXTERNAL_SERVICE, fallbackFactory = RemoteAmapFallbackFactory.class)
+ public interface RemoteAmapService {
+ 
+-
+     @PostMapping("/amap")
+     R eventPublish(@RequestBody TblAutoNaviMapRecord autoNaviMapRecord);
+ 
+     @PutMapping("/amap")
+-    R eventRelieve(@RequestParam Long id);
++    R eventRelieve(@RequestParam(value = "id") Long id);
+ }
+Index: smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/IGantryUpperStoreService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.charge.service.gantry;\r\n\r\npublic interface IGantryUpperStoreService {\r\n    void saveViu(String data);\r\n    void saveVipu(String data);\r\n    void saveSvipu(String data);\r\n    void saveEtctu(String data);\r\n    void saveEtcsu(String data);\r\n    void saveVisu(String data);\r\n    void saveBaseInfo(String data);\r\n    void saveTghbu(String data);\r\n    void saveSpecialEvent(String data);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/IGantryUpperStoreService.java b/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/IGantryUpperStoreService.java
+--- a/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/IGantryUpperStoreService.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/IGantryUpperStoreService.java	(date 1654398212000)
+@@ -1,12 +1,50 @@
+ package com.pingok.charge.service.gantry;
+ 
++import com.alibaba.fastjson.JSONArray;
++import com.alibaba.fastjson.JSONObject;
++import com.pingok.charge.domain.gantry.*;
++
++import java.util.List;
++
+ public interface IGantryUpperStoreService {
+-    void saveViu(String data);
+-    void saveVipu(String data);
+-    void saveSvipu(String data);
+-    void saveEtctu(String data);
+-    void saveEtcsu(String data);
+-    void saveVisu(String data);
++    /**
++     * 门架牌识流水暂存
++     * @param data
++     */
++    List<TblGantryTravelImage> saveViu(String reqFileName, JSONObject data);
++
++    /**
++     * ETC 门架牌识图片（按需调取、全量）上传
++     * @param reqFileName
++     * @param data
++     * @return
++     */
++    List<TblGantryPicture> saveVipu(String reqFileName, JSONArray data);
++
++    /**
++     * ETC 门架牌识图片（交易失败或未匹配）上传
++     * @param data
++     */
++    List<TblGantryPictureFail> saveSvipu(String reqFileName, JSONArray data);
++
++    /**
++     * 交易流水
++     * @param data
++     */
++    List<TblGantryTransaction> saveEtctu(String reqFileName, JSONObject data);
++
++    /**
++     * ETC 门架交易小时批次汇总
++     * @param data
++     */
++    List<TblGantrySumTransaction> saveEtcsu(String reqFileName, JSONArray data);
++
++    /**
++     *ETC 门架牌识小时批次汇总
++     * @param data
++     */
++    List<TblGantrySumTravelImage> saveVisu(String reqFileName, JSONArray data);
++
+     void saveBaseInfo(String data);
+     void saveTghbu(String data);
+     void saveSpecialEvent(String data);
+Index: smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/IGantryUpperService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.charge.service.gantry;\r\n\r\nimport cn.hutool.core.net.multipart.MultipartFormData;\r\nimport com.alibaba.fastjson.JSONObject;\r\nimport org.springframework.web.multipart.MultipartFile;\r\n\r\nimport java.io.ByteArrayInputStream;\r\nimport java.io.ByteArrayOutputStream;\r\nimport java.util.stream.Stream;\r\n\r\npublic interface IGantryUpperService {\r\n\r\n    void handleRequest(String reqType, JSONObject data);\r\n\r\n    String getReqType(String reqFileName);\r\n\r\n    JSONObject genResponse(String reqType, Integer i);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/IGantryUpperService.java b/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/IGantryUpperService.java
+--- a/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/IGantryUpperService.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/IGantryUpperService.java	(date 1654398417627)
+@@ -2,17 +2,70 @@
+ 
+ import cn.hutool.core.net.multipart.MultipartFormData;
+ import com.alibaba.fastjson.JSONObject;
++import com.pingok.charge.domain.gantry.*;
+ import org.springframework.web.multipart.MultipartFile;
+ 
+ import java.io.ByteArrayInputStream;
+ import java.io.ByteArrayOutputStream;
++import java.util.List;
+ import java.util.stream.Stream;
+ 
+ public interface IGantryUpperService {
+ 
+-    void handleRequest(String reqType, JSONObject data);
++    /**
++     * 上传ETC 门架交易小时批次汇总
++     * @param reqFileName
++     * @param data
++     */
++    void updateVisu(String reqFileName, List<TblGantrySumTravelImage> data);
++
++    /**
++     * 上传ETC 门架交易小时批次汇总
++     * @param reqFileName
++     * @param data
++     */
++    void updateEtcsu(String reqFileName, List<TblGantrySumTransaction> data);
+ 
++    /**
++     * 上传交易流水
++     * @param reqFileName
++     * @param data
++     */
++    void updateEtctu(String reqFileName, List<TblGantryTransaction> data);
++
++    /**
++     *上传ETC 门架牌识图片（交易失败或未匹配）
++     * @param reqFileName
++     * @param data
++     */
++    void updateSvipu(String reqFileName, List<TblGantryPictureFail> data);
++
++    /**
++     * 上传ETC 门架牌识图片（按需调取、全量）
++     * @param data
++     */
++    void updateVipu(String reqFileName, List<TblGantryPicture> data);
++
++    /**
++     * 上传门架牌识流水
++     * @param data
++     */
++    void updateViu(String reqFileName, List<TblGantryTravelImage> data);
++
++    /**
++     * 解析请求类型
++     *
++     * @param reqFileName 请求文件名
++     * @return
++     */
+     String getReqType(String reqFileName);
+ 
+-    JSONObject genResponse(String reqType, Integer i);
++    /**
++     * 生成返回body
++     *
++     * @param reqType 请求类型
++     * @param code    状态码 200-成功，其他异常
++     * @return
++     */
++    JSONObject genResponse(String reqType, Integer code);
+ }
+Index: smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryPicture.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.pingok.charge.domain.gantry;\r\n\r\nimport lombok.Data;\r\n\r\nimport javax.persistence.Transient;\r\nimport java.io.Serializable;\r\nimport java.util.Date;\r\n\r\n/**\r\n * tbl_gantry_picture\r\n * \r\n * @author bianj\r\n * @version 1.0.0 2022-05-19\r\n */\r\n@Data\r\npublic class TblGantryPicture implements Serializable {\r\n    /** 版本号 */\r\n    private static final long serialVersionUID = 1L;\r\n\r\n    /** picId */\r\n    private String picId;\r\n\r\n    /** gantryId */\r\n    private String gantryId;\r\n\r\n    @Transient\r\n    private String vehiclePlate;\r\n\r\n    /** licenseCode */\r\n    private String licenseCode;\r\n\r\n    /** 0- */\r\n    private String licenseColor;\r\n\r\n    /** image */\r\n    private String image;\r\n\r\n    /** licenseImage */\r\n    private String licenseImage;\r\n\r\n    /** binImage */\r\n    private String binImage;\r\n\r\n    /** tailImage */\r\n    private String tailImage;\r\n\r\n    /** picTime */\r\n    private Date picTime;\r\n\r\n    /** type */\r\n    private Integer type;\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryPicture.java b/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryPicture.java
+--- a/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryPicture.java	(revision 06b637380309930c52313e5fb102c139ccb1d32d)
++++ b/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryPicture.java	(date 1654141601805)
+@@ -2,6 +2,7 @@
+ 
+ import lombok.Data;
+ 
++import javax.persistence.Id;
+ import javax.persistence.Transient;
+ import java.io.Serializable;
+ import java.util.Date;
+@@ -18,20 +19,14 @@
+     private static final long serialVersionUID = 1L;
+ 
+     /** picId */
++    @Id
+     private String picId;
+ 
+     /** gantryId */
+     private String gantryId;
+ 
+-    @Transient
+     private String vehiclePlate;
+ 
+-    /** licenseCode */
+-    private String licenseCode;
+-
+-    /** 0- */
+-    private String licenseColor;
+-
+     /** image */
+     private String image;
+ 
+@@ -41,13 +36,7 @@
+     /** binImage */
+     private String binImage;
+ 
+-    /** tailImage */
+-    private String tailImage;
+-
+     /** picTime */
+     private Date picTime;
+ 
+-    /** type */
+-    private Integer type;
+-
+ }
+\ No newline at end of file

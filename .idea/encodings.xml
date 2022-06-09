@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/ruoyi-api/ruoyi-api-system/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-api/ruoyi-api-system/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-auth/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-auth/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-common/ruoyi-common-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-common/ruoyi-common-core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-common/ruoyi-common-datascope/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-common/ruoyi-common-datascope/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-common/ruoyi-common-datasource/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-common/ruoyi-common-datasource/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-common/ruoyi-common-log/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-common/ruoyi-common-log/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-common/ruoyi-common-redis/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-common/ruoyi-common-redis/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-common/ruoyi-common-security/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-common/ruoyi-common-security/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-common/ruoyi-common-swagger/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-common/ruoyi-common-swagger/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-gateway/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-modules/ruoyi-file/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-modules/ruoyi-file/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-modules/ruoyi-gen/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-modules/ruoyi-gen/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-modules/ruoyi-job/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-modules/ruoyi-job/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-modules/ruoyi-system/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-modules/ruoyi-system/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-visual/ruoyi-monitor/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ruoyi-visual/ruoyi-monitor/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/algorithm/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/algorithm/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/charge-communication/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/charge-communication/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/data-center/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/data-center/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/device-monitor/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/device-monitor/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/event/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/event/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/external-system-communication/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/external-system-communication/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/id-producer/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/id-producer/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/kafka/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/kafka/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/monitor-communication/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/monitor/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/monitor/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/vocational/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/vocational/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/vod/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/vod/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/websocket/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/smart-g60/websocket/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/station-roster/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/station-roster/src/main/resources" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>

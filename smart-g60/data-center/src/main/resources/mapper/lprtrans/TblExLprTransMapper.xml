@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.datacenter.mapper.lprtrans.TblExLprTransMapper">
+
+    <resultMap type="com.pingok.datacenter.domain.lprtrans.TblExLprTrans" id="TblExLprTransResult">
+        <id     property="id"               column="id"                 />
+        <result property="transId"  column="trans_id"   />
+        <result property="laneHex"  column="lane_hex"   />
+        <result property="laneGb"  column="lane_gb"   />
+        <result property="transTime"  column="trans_time"   />
+        <result property="transNumber"  column="trans_number"   />
+        <result property="vehPlate"  column="veh_plate"   />
+        <result property="vehColor"  column="veh_color"   />
+    </resultMap>
+
+    <insert id="insertExLprTrans" parameterType="com.pingok.datacenter.domain.lprtrans.TblExLprTrans">
+        insert into ${tableName}(
+        <if test="transId != null ">trans_id,</if>
+        <if test="laneHex != null ">lane_hex,</if>
+        <if test="laneGb != null ">lane_gb,</if>
+        <if test="transTime != null ">trans_time,</if>
+        <if test="transNumber != null ">trans_number,</if>
+        <if test="vehPlate != null ">veh_plate,</if>
+        <if test="vehColor != null ">veh_color,</if>
+        id
+        )values(
+        <if test="transId != null ">#{transId},</if>
+        <if test="laneHex != null ">#{laneHex},</if>
+        <if test="laneGb != null ">#{laneGb},</if>
+        <if test="transTime != null ">#{transTime},</if>
+        <if test="transNumber != null ">#{transNumber},</if>
+        <if test="vehPlate != null ">#{vehPlate},</if>
+        <if test="vehColor != null ">#{vehColor},</if>
+        #{id}
+        )
+    </insert>
+</mapper>

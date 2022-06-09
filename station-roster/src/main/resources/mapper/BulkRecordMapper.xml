@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.station.mapper.bulkList.BulkRecordMapper">
+
+    <resultMap type="com.pingok.station.domain.bulkList.BulkRecord" id="BulkRecordResult">
+        <id     property="autoID"      column="autoID"       />
+        <result property="certNo"  column="certNo"   />
+        <result property="provinces"  column="provinces"   />
+        <result property="enStationId"  column="enStationId"   />
+        <result property="enStationName"  column="enStationName"   />
+        <result property="exStationId"  column="exStationId"   />
+        <result property="exStationName"  column="exStationName"   />
+        <result property="tractorVehicleId"  column="tractorVehicleId"   />
+        <result property="trailerVehicleId"  column="trailerVehicleId"   />
+        <result property="startPassDate"  column="startPassDate"   />
+        <result property="endPassDate"  column="endPassDate"   />
+        <result property="carriorUnit"  column="carriorUnit"   />
+        <result property="goodsInfo"  column="goodsInfo"   />
+        <result property="vehicleweight"  column="vehicleweight"   />
+        <result property="vehiclelength"  column="vehiclelength"   />
+        <result property="width"  column="width"   />
+        <result property="height"  column="height"   />
+        <result property="alexCount"  column="alexCount"   />
+        <result property="tyleCount"  column="tyleCount"   />
+        <result property="alexsLoad"  column="alexsLoad"   />
+        <result property="roads"  column="roads"   />
+        <result property="passCount"  column="passCount"   />
+        <result property="descript"  column="descript"   />
+        <result property="orgUnit"  column="orgUnit"   />
+        <result property="certificationDate"  column="certificationDate"   />
+    </resultMap>
+    <insert id="insertBulk" parameterType="com.pingok.station.domain.bulkList.BulkRecord">
+        insert into BulkRecord(
+        <if test="provinces != null ">provinces,</if>
+        <if test="enStationId != null ">enStationId,</if>
+        <if test="enStationName != null ">enStationName,</if>
+        <if test="exStationId != null ">exStationId,</if>
+        <if test="exStationName != null ">exStationName,</if>
+        <if test="tractorVehicleId != null ">tractorVehicleId,</if>
+        <if test="trailerVehicleId != null ">trailerVehicleId,</if>
+        <if test="startPassDate != null ">startPassDate,</if>
+        <if test="endPassDate != null ">endPassDate,</if>
+        <if test="carriorUnit != null ">carriorUnit,</if>
+        <if test="goodsInfo != null ">goodsInfo,</if>
+        <if test="vehicleweight != null ">vehicleweight,</if>
+        <if test="vehiclelength != null ">vehiclelength,</if>
+        <if test="width != null ">width,</if>
+        <if test="height != null ">height,</if>
+        <if test="alexCount != null ">alexCount,</if>
+        <if test="tyleCount != null ">tyleCount,</if>
+        <if test="alexsLoad != null ">alexsLoad,</if>
+        <if test="roads != null ">roads,</if>
+        <if test="passCount != null ">passCount,</if>
+        <if test="descript != null ">descript,</if>
+        <if test="orgUnit != null ">orgUnit,</if>
+        <if test="certificationDate != null ">certificationDate,</if>
+        certNo
+        )values(
+        <if test="provinces != null ">#{provinces},</if>
+        <if test="enStationId != null ">#{enStationId},</if>
+        <if test="enStationName != null ">#{enStationName},</if>
+        <if test="exStationId != null ">#{exStationId},</if>
+        <if test="exStationName != null ">#{exStationName},</if>
+        <if test="tractorVehicleId != null ">#{tractorVehicleId},</if>
+        <if test="trailerVehicleId != null ">#{trailerVehicleId},</if>
+        <if test="startPassDate != null ">#{startPassDate},</if>
+        <if test="endPassDate != null ">#{endPassDate},</if>
+        <if test="carriorUnit != null ">#{carriorUnit},</if>
+        <if test="goodsInfo != null ">#{goodsInfo},</if>
+        <if test="vehicleweight != null ">#{vehicleweight},</if>
+        <if test="vehiclelength != null ">#{vehiclelength},</if>
+        <if test="width != null ">#{width},</if>
+        <if test="height != null ">#{height},</if>
+        <if test="alexCount != null ">#{alexCount},</if>
+        <if test="tyleCount != null ">#{tyleCount},</if>
+        <if test="alexsLoad != null ">#{alexsLoad},</if>
+        <if test="roads != null ">#{roads},</if>
+        <if test="passCount != null ">#{passCount},</if>
+        <if test="descript != null ">#{descript},</if>
+        <if test="orgUnit != null ">#{orgUnit},</if>
+        <if test="certificationDate != null ">#{certificationDate},</if>
+        #{certNo}
+        )
+    </insert>
+    <delete id="deleteAll">
+        truncate table BulkRecord
+    </delete>
+</mapper>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.datacenter.mapper.trans.TblExTransMapper">
+
+    <resultMap type="com.pingok.datacenter.domain.trans.TblExTrans" id="TblExTransResult">
+        <id     property="id"  column="id"   />
+        <result property="passId"  column="pass_id"   />
+        <result property="gid"  column="gid"   />
+        <result property="transTime"  column="trans_time"   />
+        <result property="workDate"  column="work_date"   />
+        <result property="transType"  column="trans_type"   />
+        <result property="laneHex"  column="lane_hex"   />
+        <result property="transNumber"  column="trans_number"   />
+        <result property="optId"  column="opt_id"   />
+        <result property="shift"  column="shift"   />
+        <result property="psamId"  column="psam_id"   />
+        <result property="psamVer"  column="psam_ver"   />
+        <result property="psamTerminalNo"  column="psam_terminal_no"   />
+        <result property="mileage"  column="mileage"   />
+        <result property="minMileage"  column="min_mileage"   />
+        <result property="minVer"  column="min_ver"   />
+        <result property="minFee"  column="min_fee"   />
+        <result property="printFlag"  column="print_flag"   />
+        <result property="feeType"  column="fee_type"   />
+        <result property="fitFee"  column="fit_fee"   />
+        <result property="fitFee95"  column="fit_fee_95"   />
+        <result property="tollFee"  column="toll_fee"   />
+        <result property="tollFee95"  column="toll_fee_95"   />
+        <result property="localFee"  column="local_fee"   />
+        <result property="localFee95"  column="local_fee_95"   />
+        <result property="payWay"  column="pay_way"   />
+        <result property="passType"  column="pass_type"   />
+        <result property="vehClass"  column="veh_class"   />
+        <result property="vehStatus"  column="veh_status"   />
+        <result property="vehPlate"  column="veh_plate"   />
+        <result property="vehColor"  column="veh_color"   />
+        <result property="truckAxle"  column="truck_axle"   />
+        <result property="truckWeight"  column="truck_weight"   />
+        <result property="truckCapacity"  column="truck_capacity"   />
+        <result property="vehWeight"  column="veh_weight"   />
+        <result property="enTime"  column="en_time"   />
+        <result property="enNet"  column="en_net"   />
+        <result property="enStation"  column="en_station"   />
+        <result property="enLane"  column="en_lane"   />
+        <result property="proCount"  column="pro_count"   />
+        <result property="subCount"  column="sub_count"   />
+        <result property="amount"  column="amount"   />
+        <result property="specialType"  column="special_type"   />
+        <result property="remark"  column="remark"   />
+        <result property="reserve"  column="reserve"   />
+    </resultMap>
+
+    <insert id="insertExTrans" parameterType="com.pingok.datacenter.domain.trans.TblExTrans">
+        insert into ${tableName}(
+            <if test="passId != null ">pass_id,</if>
+            <if test="gid != null ">gid,</if>
+            <if test="transTime != null ">trans_time,</if>
+            <if test="workDate != null ">work_date,</if>
+            <if test="transType != null ">trans_type,</if>
+            <if test="laneHex != null ">lane_hex,</if>
+            <if test="transNumber != null ">trans_number,</if>
+            <if test="optId != null ">opt_id,</if>
+            <if test="shift != null ">shift,</if>
+            <if test="psamId != null ">psam_id,</if>
+            <if test="psamVer != null ">psam_ver,</if>
+            <if test="psamTerminalNo != null ">psam_terminal_no,</if>
+            <if test="mileage != null ">mileage,</if>
+            <if test="minMileage != null ">min_mileage,</if>
+            <if test="minVer != null ">min_ver,</if>
+            <if test="minFee != null ">min_fee,</if>
+            <if test="printFlag != null ">print_flag,</if>
+            <if test="feeType != null ">fee_type,</if>
+            <if test="fitFee != null ">fit_fee,</if>
+            <if test="fitFee95 != null ">fit_fee_95,</if>
+            <if test="tollFee != null ">toll_fee,</if>
+            <if test="tollFee95 != null ">toll_fee_95,</if>
+            <if test="localFee != null ">local_fee,</if>
+            <if test="localFee95 != null ">local_fee_95,</if>
+            <if test="payWay != null ">pay_way,</if>
+            <if test="passType != null ">pass_type,</if>
+            <if test="vehClass != null ">veh_class,</if>
+            <if test="vehStatus != null ">veh_status,</if>
+            <if test="vehPlate != null ">veh_plate,</if>
+            <if test="vehColor != null ">veh_color,</if>
+            <if test="truckAxle != null ">truck_axle,</if>
+            <if test="truckWeight != null ">truck_weight,</if>
+            <if test="truckCapacity != null ">truck_capacity,</if>
+            <if test="vehWeight != null ">veh_weight,</if>
+            <if test="enTime != null ">en_time,</if>
+            <if test="enNet != null ">en_net,</if>
+            <if test="enStation != null ">en_station,</if>
+            <if test="enLane != null ">en_lane,</if>
+            <if test="proCount != null ">pro_count,</if>
+            <if test="subCount != null ">sub_count,</if>
+            <if test="amount != null ">amount,</if>
+            <if test="specialType != null ">special_type,</if>
+            <if test="remark != null ">remark,</if>
+            <if test="reserve != null ">reserve,</if>
+            id
+        )values(
+            <if test="passId != null ">#{passId},</if>
+            <if test="gid != null ">#{gid},</if>
+            <if test="transTime != null ">#{transTime},</if>
+            <if test="workDate != null ">#{workDate},</if>
+            <if test="transType != null ">#{transType},</if>
+            <if test="laneHex != null ">#{laneHex},</if>
+            <if test="transNumber != null ">#{transNumber},</if>
+            <if test="optId != null ">#{optId},</if>
+            <if test="shift != null ">#{shift},</if>
+            <if test="psamId != null ">#{psamId},</if>
+            <if test="psamVer != null ">#{psamVer},</if>
+            <if test="psamTerminalNo != null ">#{psamTerminalNo},</if>
+            <if test="mileage != null ">#{mileage},</if>
+            <if test="minMileage != null ">#{minMileage},</if>
+            <if test="minVer != null ">#{minVer},</if>
+            <if test="minFee != null ">#{minFee},</if>
+            <if test="printFlag != null ">#{printFlag},</if>
+            <if test="feeType != null ">#{feeType},</if>
+            <if test="fitFee != null ">#{fitFee},</if>
+            <if test="fitFee95 != null ">#{fitFee95},</if>
+            <if test="tollFee != null ">#{tollFee},</if>
+            <if test="tollFee95 != null ">#{tollFee95},</if>
+            <if test="localFee != null ">#{localFee},</if>
+            <if test="localFee95 != null ">#{localFee95},</if>
+            <if test="payWay != null ">#{payWay},</if>
+            <if test="passType != null ">#{passType},</if>
+            <if test="vehClass != null ">#{vehClass},</if>
+            <if test="vehStatus != null ">#{vehStatus},</if>
+            <if test="vehPlate != null ">#{vehPlate},</if>
+            <if test="vehColor != null ">#{vehColor},</if>
+            <if test="truckAxle != null ">#{truckAxle},</if>
+            <if test="truckWeight != null ">#{truckWeight},</if>
+            <if test="truckCapacity != null ">#{truckCapacity},</if>
+            <if test="vehWeight != null ">#{vehWeight},</if>
+            <if test="enTime != null ">#{enTime},</if>
+            <if test="enNet != null ">#{enNet},</if>
+            <if test="enStation != null ">#{enStation},</if>
+            <if test="enLane != null ">#{enLane},</if>
+            <if test="proCount != null ">#{proCount},</if>
+            <if test="subCount != null ">#{subCount},</if>
+            <if test="amount != null ">#{amount},</if>
+            <if test="specialType != null ">#{specialType},</if>
+            <if test="remark != null ">#{remark},</if>
+            <if test="reserve != null ">#{reserve},</if>
+            #{id}
+        )
+    </insert>
+</mapper>

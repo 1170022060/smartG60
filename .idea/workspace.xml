@@ -1,0 +1,970 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="69b2e1bc-5263-41e7-8fee-369cd4f40512" name="Changes" comment="data-center">
+      <change beforePath="$PROJECT_DIR$/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteAmapService.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteAmapService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteBaiDuService.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteBaiDuService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-gateway/src/main/resources/bootstrap.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-gateway/src/main/resources/bootstrap.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/algorithm/src/main/resources/bootstrap.yml" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/algorithm/src/main/resources/bootstrap.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/controller/gantry/GantryUpperController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/controller/gantry/GantryUpperController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/controller/roster/TractorRecordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/controller/roster/TractorRecordController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryPicture.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryPicture.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryPictureFail.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryPictureFail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantrySumTransaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantrySumTransaction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantrySumTravelImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantrySumTravelImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryTransaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryTransaction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryTravelImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/domain/gantry/TblGantryTravelImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/IGantryUpperService.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/IGantryUpperService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/IGantryUpperStoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/IGantryUpperStoreService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/Impl/GantryUpperServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/Impl/GantryUpperServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/Impl/GantryUpperStoreServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/gantry/Impl/GantryUpperStoreServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/roster/impl/TractorListRecordServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/roster/impl/TractorListRecordServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/software/impl/SoftwareInfoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/charge-communication/src/main/java/com/pingok/charge/service/software/impl/SoftwareInfoServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/controller/gantry/GantryUpperController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/controller/gantry/GantryUpperController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/service/gantry/IGantryUpperService.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/service/gantry/IGantryUpperService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/service/gantry/Impl/GantryUpperServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/service/gantry/Impl/GantryUpperServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/controller/gantry/GantryUpperController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/controller/gantry/GantryUpperController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/gantry/IGantryUpperService.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/gantry/IGantryUpperService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/gantry/impl/GantryUpperServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/gantry/impl/GantryUpperServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/id-producer/src/main/resources/bootstrap.yml" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/id-producer/src/main/resources/bootstrap.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/kafka/src/main/resources/bootstrap.yml" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/kafka/src/main/resources/bootstrap.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/domain/device/TblDeviceInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/domain/device/TblDeviceInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/device/TblDeviceInfoMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/device/TblDeviceInfoMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vod/src/main/java/com/pingok/vod/domain/TblDeviceInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vod/src/main/java/com/pingok/vod/domain/TblDeviceInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vod/src/main/resources/bootstrap.yml" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vod/src/main/resources/bootstrap.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/websocket/src/main/resources/bootstrap.yml" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/websocket/src/main/resources/bootstrap.yml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="test-new" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="JpbToolWindowState">
+    <option name="myId2FirstActivated">
+      <map>
+        <entry key="com.haulmont.jpb.jpaStructure" value="true" />
+      </map>
+    </option>
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.haulmont.jpb.jpaStructure" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="localRepository" value="D:\maven\repo" />
+        <option name="mavenHome" value="C:/Program Files/apache-maven-3.8.3" />
+        <option name="userSettingsFile" value="D:\maven\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="27UzeqqMNbJPuiww3TAierCnGKc" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/IdeaProjects/management",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Facets",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "File.Encoding",
+    "spring.configuration.checksum": "7dbf4855f4984ce08215f7db5a6d8711"
+  }
+}]]></component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.ruoyi.system.api.factory" />
+      <recent name="com.ruoyi.system.api" />
+      <recent name="com.ruoyi.system.api.domain.emergency" />
+      <recent name="com.pingok.devicemonitor.service.infoboard.impl" />
+      <recent name="com.pingok.devicemonitor.service.infoboard" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\IdeaProjects\smartg60\smart-g60\vocational\src\main\java\com\pingok\vocational\service\sectorlog" />
+      <recent name="D:\IdeaProjects\smartg60\smart-g60\vocational\src\main\java\com\pingok\vocational\domain\sectorlog" />
+      <recent name="D:\IdeaProjects\smartg60\smart-g60\external-system-communication\src\main\java\com\pingok\external\domain\bridge" />
+      <recent name="D:\IdeaProjects\smartg60\smart-g60\external-system-communication\src\main\java\com\pingok\external\domain\gps" />
+      <recent name="D:\IdeaProjects\smartg60\smart-g60\external-system-communication\src\main\java\com\pingok\external\domain\baidu" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.ExernalSystemApplication">
+    <configuration name="AlgorithmApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="algorithm" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.pingok.algorithm.AlgorithmApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ChargeCommunicationApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="charge-communication" />
+      <option name="SHORTEN_COMMAND_LINE" value="NONE" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.pingok.charge.ChargeCommunicationApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DataCenterApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="data-center" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.pingok.datacenter.DataCenterApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DeviceMonitorApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="device-monitor" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.pingok.devicemonitor.DeviceMonitorApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="EventApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="event" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.pingok.event.EventApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ExernalSystemApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="external-system-communication" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.pingok.external.ExernalSystemApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="IdProducerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="id-producer" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.pingok.idproducer.IdProducerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="KafkaApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="kafka" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.pingok.kafka.KafkaApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MonitorApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="monitor" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.pingok.monitor.MonitorApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MonitorCommunicationApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="monitor-communication" />
+      <option name="SHORTEN_COMMAND_LINE" value="NONE" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.pingok.monitor.MonitorCommunicationApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RuoYiAuthApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="ruoyi-auth" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ruoyi.auth.RuoYiAuthApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RuoYiFileApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="ruoyi-modules-file" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ruoyi.file.RuoYiFileApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RuoYiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="ruoyi-gateway" />
+      <option name="SHORTEN_COMMAND_LINE" value="NONE" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ruoyi.gateway.RuoYiGatewayApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RuoYiGenApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="ruoyi-modules-gen" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ruoyi.gen.RuoYiGenApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RuoYiJobApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="ruoyi-modules-job" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ruoyi.job.RuoYiJobApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RuoYiMonitorApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="ruoyi-visual-monitor" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ruoyi.modules.monitor.RuoYiMonitorApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RuoYiSystemApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="ruoyi-modules-system" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ruoyi.system.RuoYiSystemApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StationRosterApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="station-roster" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.pingok.station.StationRosterApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="VocationalApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="vocational" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.pingok.vocational.VocationalApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="VodApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="vod" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.pingok.vod.VodApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WerSocketApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="websocket" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.pingok.websocket.WerSocketApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <option name="contentProportion" value="0.16017316" />
+          <treeState>
+            <expand>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="Spring Boot" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              </path>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="Spring Boot" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+                <item name="Finished" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              </path>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="Spring Boot" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+                <item name="Not Started" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              </path>
+            </expand>
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="69b2e1bc-5263-41e7-8fee-369cd4f40512" name="Changes" comment="更新" />
+      <created>1649389562456</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1649389562456</updated>
+      <workItem from="1649389564918" duration="566000" />
+      <workItem from="1649390146111" duration="1062000" />
+      <workItem from="1649391352946" duration="13931000" />
+      <workItem from="1649470162857" duration="607000" />
+      <workItem from="1649570390422" duration="40000" />
+      <workItem from="1649659564518" duration="16304000" />
+      <workItem from="1649732182221" duration="18685000" />
+      <workItem from="1649826225658" duration="25720000" />
+      <workItem from="1649986774831" duration="18176000" />
+      <workItem from="1650248465845" duration="22000" />
+      <workItem from="1650347941382" duration="7532000" />
+      <workItem from="1650421429463" duration="12555000" />
+      <workItem from="1650447562689" duration="741000" />
+      <workItem from="1650449084927" duration="2372000" />
+      <workItem from="1650513364045" duration="78000" />
+      <workItem from="1650513720300" duration="5442000" />
+      <workItem from="1650595154718" duration="12023000" />
+      <workItem from="1650613631802" duration="2855000" />
+      <workItem from="1650616538251" duration="1847000" />
+      <workItem from="1650618423106" duration="273000" />
+      <workItem from="1650618829681" duration="13332000" />
+      <workItem from="1650800630370" duration="12000" />
+      <workItem from="1650856319971" duration="9397000" />
+      <workItem from="1650941111936" duration="21776000" />
+      <workItem from="1651032186123" duration="4739000" />
+      <workItem from="1651113299873" duration="3684000" />
+      <workItem from="1651124054998" duration="14102000" />
+      <workItem from="1651199634145" duration="15648000" />
+      <workItem from="1651281910512" duration="667000" />
+      <workItem from="1651308305520" duration="135000" />
+      <workItem from="1651398004926" duration="3765000" />
+      <workItem from="1651411689079" duration="12134000" />
+      <workItem from="1651472559803" duration="8129000" />
+      <workItem from="1651507414516" duration="1873000" />
+      <workItem from="1651549108507" duration="247000" />
+      <workItem from="1651549426686" duration="8569000" />
+      <workItem from="1651654920207" duration="23000" />
+      <workItem from="1651659389455" duration="5529000" />
+      <workItem from="1651678951316" duration="886000" />
+      <workItem from="1651681947051" duration="846000" />
+      <workItem from="1651716968465" duration="4609000" />
+      <workItem from="1651725551471" duration="45000" />
+      <workItem from="1651741797556" duration="7636000" />
+      <workItem from="1651764698087" duration="2404000" />
+      <workItem from="1651802758077" duration="8557000" />
+      <workItem from="1651813458669" duration="1840000" />
+      <workItem from="1651828454691" duration="587000" />
+      <workItem from="1651829284875" duration="1894000" />
+      <workItem from="1651844331899" duration="2149000" />
+      <workItem from="1651890188975" duration="30000" />
+      <workItem from="1651892044955" duration="620000" />
+      <workItem from="1651907632292" duration="3428000" />
+      <workItem from="1651920143299" duration="302000" />
+      <workItem from="1651921403376" duration="761000" />
+      <workItem from="1652003486456" duration="3000" />
+      <workItem from="1652009672082" duration="905000" />
+      <workItem from="1652066176982" duration="2888000" />
+      <workItem from="1652084120743" duration="1137000" />
+      <workItem from="1652089126330" duration="1531000" />
+      <workItem from="1652090708502" duration="239000" />
+      <workItem from="1652091141106" duration="726000" />
+      <workItem from="1652160805486" duration="5771000" />
+      <workItem from="1652241272519" duration="17000" />
+      <workItem from="1652244322817" duration="2237000" />
+      <workItem from="1652323365968" duration="21192000" />
+      <workItem from="1652410781288" duration="15515000" />
+      <workItem from="1652597468731" duration="1096000" />
+      <workItem from="1652751662060" duration="14529000" />
+      <workItem from="1652855642071" duration="4085000" />
+      <workItem from="1652925696182" duration="17204000" />
+      <workItem from="1653016061713" duration="13341000" />
+      <workItem from="1653099920965" duration="6005000" />
+      <workItem from="1653189023533" duration="2981000" />
+      <workItem from="1653272918566" duration="188000" />
+      <workItem from="1653273127869" duration="373000" />
+      <workItem from="1653273517037" duration="14891000" />
+      <workItem from="1653363898402" duration="5385000" />
+      <workItem from="1653384395271" duration="3132000" />
+      <workItem from="1653443608061" duration="14218000" />
+      <workItem from="1653532038622" duration="447000" />
+      <workItem from="1653532511517" duration="199000" />
+      <workItem from="1653532730190" duration="659000" />
+      <workItem from="1653534143701" duration="29000" />
+      <workItem from="1653534195045" duration="2979000" />
+      <workItem from="1653550792892" duration="5172000" />
+      <workItem from="1653616053976" duration="17388000" />
+      <workItem from="1653710668584" duration="19062000" />
+      <workItem from="1653789028530" duration="19873000" />
+      <workItem from="1653874913203" duration="3137000" />
+      <workItem from="1653879104521" duration="12382000" />
+      <workItem from="1653917061846" duration="997000" />
+      <workItem from="1653959044202" duration="23380000" />
+      <workItem from="1654045185375" duration="618000" />
+      <workItem from="1654047728429" duration="63000" />
+      <workItem from="1654048731109" duration="603000" />
+      <workItem from="1654051075158" duration="140000" />
+      <workItem from="1654068002597" duration="4838000" />
+      <workItem from="1654132262060" duration="1327000" />
+      <workItem from="1654135165623" duration="21271000" />
+      <workItem from="1654224422258" duration="56000" />
+      <workItem from="1654240152641" duration="32000" />
+      <workItem from="1654269460877" duration="371000" />
+      <workItem from="1654269851529" duration="57000" />
+      <workItem from="1654269924218" duration="83000" />
+      <workItem from="1654270023687" duration="41000" />
+      <workItem from="1654319315022" duration="498000" />
+      <workItem from="1654323618562" duration="249000" />
+      <workItem from="1654395339428" duration="922000" />
+      <workItem from="1654397818790" duration="40000" />
+      <workItem from="1654397880860" duration="8226000" />
+      <workItem from="1654479556241" duration="3026000" />
+      <workItem from="1654499429100" duration="84000" />
+      <workItem from="1654576232737" duration="342000" />
+      <workItem from="1654578164607" duration="623000" />
+      <workItem from="1654595569208" duration="1368000" />
+      <workItem from="1654653470611" duration="776000" />
+      <workItem from="1654670110923" duration="2574000" />
+      <workItem from="1654689629941" duration="7066000" />
+      <workItem from="1654736833853" duration="25000" />
+      <workItem from="1654749238351" duration="79000" />
+      <workItem from="1654750056242" duration="607000" />
+      <workItem from="1654760870673" duration="37000" />
+    </task>
+    <task id="LOCAL-00030" summary="更新设备故障管理">
+      <created>1651401346413</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1651401346414</updated>
+    </task>
+    <task id="LOCAL-00031" summary="更新设备故障管理">
+      <created>1651401726998</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1651401726998</updated>
+    </task>
+    <task id="LOCAL-00032" summary="更新设备故障管理">
+      <created>1651419458309</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1651419458309</updated>
+    </task>
+    <task id="LOCAL-00033" summary="更新设备故障管理">
+      <created>1651429256971</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1651429256971</updated>
+    </task>
+    <task id="LOCAL-00034" summary="更新设备故障管理">
+      <created>1651430148589</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1651430148589</updated>
+    </task>
+    <task id="LOCAL-00035" summary="更新设备故障管理">
+      <created>1651512281846</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1651512281846</updated>
+    </task>
+    <task id="LOCAL-00036" summary="更新设备故障管理">
+      <created>1651588523883</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1651588523883</updated>
+    </task>
+    <task id="LOCAL-00037" summary="更新设备故障管理">
+      <created>1651593590365</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1651593590365</updated>
+    </task>
+    <task id="LOCAL-00038" summary="更新设备故障管理">
+      <created>1651659567710</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1651659567710</updated>
+    </task>
+    <task id="LOCAL-00039" summary="更新设备故障管理">
+      <created>1651679144241</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1651679144241</updated>
+    </task>
+    <task id="LOCAL-00040" summary="更新设备故障管理">
+      <created>1651682045895</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1651682045895</updated>
+    </task>
+    <task id="LOCAL-00041" summary="新增算法模块">
+      <created>1651721263545</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1651721263545</updated>
+    </task>
+    <task id="LOCAL-00042" summary="新增算法模块">
+      <created>1651743266164</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1651743266164</updated>
+    </task>
+    <task id="LOCAL-00043" summary="新增算法模块">
+      <created>1651757458007</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1651757458007</updated>
+    </task>
+    <task id="LOCAL-00044" summary="新增算法模块">
+      <created>1651765068136</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1651765068136</updated>
+    </task>
+    <task id="LOCAL-00045" summary="新增算法模块">
+      <created>1651766214995</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1651766214995</updated>
+    </task>
+    <task id="LOCAL-00046" summary="新增算法模块">
+      <created>1651802803539</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1651802803539</updated>
+    </task>
+    <task id="LOCAL-00047" summary="新增算法模块">
+      <created>1651811004684</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1651811004684</updated>
+    </task>
+    <task id="LOCAL-00048" summary="新增算法模块">
+      <created>1651819619677</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1651819619677</updated>
+    </task>
+    <task id="LOCAL-00049" summary="解决中文乱码">
+      <created>1651828899715</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1651828899715</updated>
+    </task>
+    <task id="LOCAL-00050" summary="解决中文乱码">
+      <created>1651845169344</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1651845169344</updated>
+    </task>
+    <task id="LOCAL-00051" summary="解决时间问题">
+      <created>1651907953819</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1651907953820</updated>
+    </task>
+    <task id="LOCAL-00052" summary="解决时间问题">
+      <created>1652089228808</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1652089228809</updated>
+    </task>
+    <task id="LOCAL-00053" summary="解决时间问题">
+      <created>1652089377128</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1652089377128</updated>
+    </task>
+    <task id="LOCAL-00054" summary="解决时间问题">
+      <created>1652089727117</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1652089727117</updated>
+    </task>
+    <task id="LOCAL-00055" summary="解决时间问题">
+      <created>1652182909853</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1652182909853</updated>
+    </task>
+    <task id="LOCAL-00056" summary="解决时间问题">
+      <created>1652183193013</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1652183193013</updated>
+    </task>
+    <task id="LOCAL-00057" summary="新增收費站名單服务">
+      <created>1652423506596</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1652423506596</updated>
+    </task>
+    <task id="LOCAL-00058" summary="新增收費站名單服务">
+      <created>1652423932094</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1652423932094</updated>
+    </task>
+    <task id="LOCAL-00059" summary="新增收費站名單服务">
+      <created>1652597598627</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1652597598627</updated>
+    </task>
+    <task id="LOCAL-00060" summary="新增收費站名單服务">
+      <created>1652597813420</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1652597813420</updated>
+    </task>
+    <task id="LOCAL-00061" summary="修改上传服务">
+      <created>1652778524214</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1652778524214</updated>
+    </task>
+    <task id="LOCAL-00062" summary="修改上传服务">
+      <created>1652951811656</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1652951811657</updated>
+    </task>
+    <task id="LOCAL-00063" summary="增加高德地图处理模块">
+      <created>1653294121188</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1653294121188</updated>
+    </task>
+    <task id="LOCAL-00064" summary="增加百度地图，养护车辆GPS处理模块">
+      <created>1653386934681</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1653386934681</updated>
+    </task>
+    <task id="LOCAL-00065" summary="处理批量插入报错">
+      <created>1653446262120</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1653446262120</updated>
+    </task>
+    <task id="LOCAL-00066" summary="更新配置文件">
+      <created>1653463337282</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1653463337282</updated>
+    </task>
+    <task id="LOCAL-00067" summary="接入桥面温度系统">
+      <created>1653470122435</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1653470122435</updated>
+    </task>
+    <task id="LOCAL-00068" summary="接入桥梁监控系统">
+      <created>1653634534289</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1653634534289</updated>
+    </task>
+    <task id="LOCAL-00069" summary="接入桥梁监控系统">
+      <created>1653640640497</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1653640640497</updated>
+    </task>
+    <task id="LOCAL-00070" summary="合并RY_CLOUD监控系统">
+      <created>1653640727213</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1653640727213</updated>
+    </task>
+    <task id="LOCAL-00071" summary="站名单服务&#10;系统">
+      <created>1653713435032</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1653713435033</updated>
+    </task>
+    <task id="LOCAL-00072" summary="站名单服务&#10;系统">
+      <created>1653732822766</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1653732822766</updated>
+    </task>
+    <task id="LOCAL-00073" summary="更新">
+      <created>1653817548008</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1653817548008</updated>
+    </task>
+    <task id="LOCAL-00074" summary="更新">
+      <created>1653876920967</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1653876920972</updated>
+    </task>
+    <task id="LOCAL-00075" summary="更新">
+      <created>1653877474501</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1653877474501</updated>
+    </task>
+    <task id="LOCAL-00076" summary="更新">
+      <created>1653918051016</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1653918051016</updated>
+    </task>
+    <task id="LOCAL-00077" summary="更新">
+      <created>1653982143924</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1653982143924</updated>
+    </task>
+    <task id="LOCAL-00078" summary="data-center">
+      <created>1654323691035</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1654323691035</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="java:com.google.protobuf:protobuf-java" />
+    <option featureType="dependencySupport" implementationName="java:org.apache.kafka:kafka-clients" />
+    <option featureType="dependencySupport" implementationName="java:io.minio:minio" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="3e08ef98-25d4-4797-80ef-a49729411ea1">
+          <value>
+            <State>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+        <entry key="44bf5454-b91d-4bd8-94d7-c453007f208f">
+          <value>
+            <State>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="structure">
+                    <value>
+                      <list>
+                        <option value="dir:D:/IdeaProjects/smartg60/smart-g60/monitor" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+        <entry key="592e5ff9-2b64-4114-8aea-45617a5757d6">
+          <value>
+            <State />
+          </value>
+        </entry>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+        <entry key="acbff4bb-163c-4c0e-a8fc-dfe605ebf125">
+          <value>
+            <State>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="structure">
+                    <value>
+                      <list>
+                        <option value="dir:D:/IdeaProjects/smartg60/ruoyi-gateway" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="更新智慧厕所健康服务" />
+    <MESSAGE value="上传配置文件" />
+    <MESSAGE value="更新门架监控接口" />
+    <MESSAGE value="重写设备监控服务，新增两大通讯服务" />
+    <MESSAGE value="增加监控通信服务，收费通信服务" />
+    <MESSAGE value="更新设备故障管理" />
+    <MESSAGE value="新增算法模块" />
+    <MESSAGE value="解决中文乱码" />
+    <MESSAGE value="解决时间问题" />
+    <MESSAGE value="新增收費站名單服务" />
+    <MESSAGE value="修改上传服务" />
+    <MESSAGE value="增加高德地图处理模块" />
+    <MESSAGE value="增加百度地图，养护车辆GPS处理模块" />
+    <MESSAGE value="处理批量插入报错" />
+    <MESSAGE value="更新配置文件" />
+    <MESSAGE value="接入桥面温度系统" />
+    <MESSAGE value="接入桥梁监控系统" />
+    <MESSAGE value="合并RY_CLOUD监控系统" />
+    <MESSAGE value="站名单服务&#10;系统" />
+    <MESSAGE value="更新" />
+    <MESSAGE value="data-center" />
+    <option name="LAST_COMMIT_MESSAGE" value="data-center" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/service/lane/impl/LaneStatusServiceImpl.java</url>
+          <line>33</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/smart-g60/external-system-communication/src/main/java/com/pingok/external/service/dingTalk/impl/DingTalkServiceImpl.java</url>
+          <line>40</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/service/roster/impl/TractorListRecordServiceImpl.java</url>
+          <line>32</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/controller/roster/TractorListRecordController.java</url>
+          <line>34</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/smart-g60/event/src/main/java/com/pingok/event/service/impl/EventServiceImpl.java</url>
+          <line>402</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

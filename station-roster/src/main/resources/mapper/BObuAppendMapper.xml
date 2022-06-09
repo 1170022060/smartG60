@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.station.mapper.obuBlacklist.BObuAppendMapper">
+
+    <resultMap type="com.pingok.station.domain.obuBlacklist.BObuAppend" id="BObuAppendResult">
+        <id     property="TransId"      column="TransId"       />
+        <result property="ApdVer"       column="ApdVer"        />
+        <result property="ProvId"       column="ProvId"        />
+        <result property="CardId"       column="CardId"        />
+        <result property="CTime"        column="CTime"         />
+        <result property="ITime"        column="ITime"     />
+        <result property="IssuerId"     column="IssuerId"    />
+        <result property="CStatus"      column="CStatus"     />
+        <result property="CType"        column="CType"      />
+    </resultMap>
+    <insert id="insertBObuAppend" parameterType="com.pingok.station.domain.obuBlacklist.BObuAppend">
+        insert into BObuAppend(
+        <if test="ApdVer != null ">ApdVer,</if>
+        <if test="ProvId != null ">ProvId,</if>
+        <if test="CardId != null ">CardId,</if>
+        <if test="CTime != null ">CTime,</if>
+        <if test="ITime != null ">ITime,</if>
+        <if test="IssuerId != null ">IssuerId,</if>
+        <if test="CStatus != null ">CStatus,</if>
+        <if test="CType != null ">CType</if>
+        )values(
+        <if test="ApdVer != null ">#{ApdVer},</if>
+        <if test="ProvId != null ">#{ProvId},</if>
+        <if test="CardId != null ">#{CardId},</if>
+        <if test="CTime != null ">#{CTime},</if>
+        <if test="ITime != null ">#{ITime},</if>
+        <if test="IssuerId != null ">#{IssuerId},</if>
+        <if test="CStatus != null ">#{CStatus},</if>
+        <if test="CType != null ">#{CType}</if>
+        )
+    </insert>
+</mapper>

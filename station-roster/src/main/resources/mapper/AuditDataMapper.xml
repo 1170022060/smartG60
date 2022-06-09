@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.station.mapper.auditList.AuditDataMapper">
+
+    <resultMap type="com.pingok.station.domain.auditList.AuditData" id="AuditDataResult">
+        <id     property="TransId"      column="TransId"       />
+        <result property="ApdVer"  column="ApdVer"   />
+        <result property="VehicleId"  column="VehicleId"   />
+        <result property="OweFee"  column="OweFee"   />
+        <result property="EvasionCount"  column="EvasionCount"   />
+        <result property="Reason"  column="Reason"   />
+    </resultMap>
+    <insert id="insertAuditData" parameterType="com.pingok.station.domain.auditList.AuditData">
+        insert into AuditData(
+        <if test="VehicleId != null ">VehicleId,</if>
+        <if test="OweFee != null ">OweFee,</if>
+        <if test="EvasionCount != null ">EvasionCount,</if>
+        <if test="Reason != null ">Reason,</if>
+        ApdVer
+        )values(
+        <if test="VehicleId != null ">#{VehicleId},</if>
+        <if test="OweFee != null ">#{OweFee},</if>
+        <if test="EvasionCount != null ">#{EvasionCount},</if>
+        <if test="Reason != null ">#{Reason},</if>
+        #{ApdVer}
+        )
+    </insert>
+    <delete id="deleteAll">
+        truncate table AuditData
+    </delete>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>ruoyi</artifactId>
+        <groupId>com.ruoyi</groupId>
+        <version>3.4.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>monitor</module>
+        <module>websocket</module>
+        <module>kafka</module>
+        <module>vocational</module>
+        <module>id-producer</module>
+        <module>data-center</module>
+        <module>vod</module>
+        <module>device-monitor</module>
+        <module>event</module>
+        <module>monitor-communication</module>
+        <module>charge-communication</module>
+        <module>algorithm</module>
+        <module>external-system-communication</module>
+    </modules>
+
+    <artifactId>smart-g60</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        G60业务模块
+    </description>
+
+</project>

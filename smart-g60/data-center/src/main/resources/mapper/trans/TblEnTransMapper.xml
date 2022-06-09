@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.datacenter.mapper.trans.TblEnTransMapper">
+
+    <resultMap type="com.pingok.datacenter.domain.trans.TblEnTrans" id="TblEnTransResult">
+        <id     property="id"               column="id"                 />
+        <result property="passId"           column="pass_id"            />
+        <result property="gid"              column="gid"                />
+        <result property="transTime"        column="trans_time"         />
+        <result property="workDate"         column="work_date"          />
+        <result property="transType"        column="trans_type"         />
+        <result property="passType"         column="pass_type"          />
+        <result property="laneHex"          column="lane_hex"           />
+        <result property="transNumber"      column="trans_number"       />
+        <result property="optId"            column="opt_id"             />
+        <result property="shift"            column="shift"              />
+        <result property="psamId"           column="psam_id"            />
+        <result property="psamVer"          column="psam_ver"           />
+        <result property="psamTerminalNo"   column="psam_terminal_no"   />
+        <result property="vehClass"         column="veh_class"          />
+        <result property="vehStatus"        column="veh_status"         />
+        <result property="vehPlate"         column="veh_plate"          />
+        <result property="vehColor"         column="veh_color"          />
+        <result property="truckAxle"        column="truck_axle"         />
+        <result property="truckWeight"      column="truck_weight"       />
+        <result property="truckCapacity"    column="truck_capacity"     />
+        <result property="vehWeight"        column="veh_weight"         />
+        <result property="specialType"      column="special_type"       />
+    </resultMap>
+
+    <insert id="insertEnTrans" parameterType="com.pingok.datacenter.domain.trans.TblEnTrans">
+        insert into ${tableName}(
+            <if test="passId != null ">pass_id,</if>
+            <if test="gid != null ">gid,</if>
+            <if test="transTime != null ">trans_time,</if>
+            <if test="workDate != null ">work_date,</if>
+            <if test="transType != null ">trans_type,</if>
+            <if test="passType != null ">pass_type,</if>
+            <if test="laneHex != null ">lane_hex,</if>
+            <if test="transNumber != null ">trans_number,</if>
+            <if test="optId != null ">opt_id,</if>
+            <if test="shift != null ">shift,</if>
+            <if test="psamId != null ">psam_id,</if>
+            <if test="psamVer != null ">psam_ver,</if>
+            <if test="psamTerminalNo != null ">psam_terminal_no,</if>
+            <if test="vehClass != null ">veh_class,</if>
+            <if test="vehStatus != null ">veh_status,</if>
+            <if test="vehPlate != null ">veh_plate,</if>
+            <if test="vehColor != null ">veh_color,</if>
+            <if test="truckAxle != null ">truck_axle,</if>
+            <if test="truckWeight != null ">truck_weight,</if>
+            <if test="truckCapacity != null ">truck_capacity,</if>
+            <if test="vehWeight != null ">veh_weight,</if>
+            <if test="specialType != null ">special_type,</if>
+            id
+        )values(
+            <if test="passId != null ">#{passId},</if>
+            <if test="gid != null ">#{gid},</if>
+            <if test="transTime != null ">#{transTime},</if>
+            <if test="workDate != null ">#{workDate},</if>
+            <if test="transType != null ">#{transType},</if>
+            <if test="passType != null ">#{passType},</if>
+            <if test="laneHex != null ">#{laneHex},</if>
+            <if test="transNumber != null ">#{transNumber},</if>
+            <if test="optId != null ">#{optId},</if>
+            <if test="shift != null ">#{shift},</if>
+            <if test="psamId != null ">#{psamId},</if>
+            <if test="psamVer != null ">#{psamVer},</if>
+            <if test="psamTerminalNo != null ">#{psamTerminalNo},</if>
+            <if test="vehClass != null ">#{vehClass},</if>
+            <if test="vehStatus != null ">#{vehStatus},</if>
+            <if test="vehPlate != null ">#{vehPlate},</if>
+            <if test="vehColor != null ">#{vehColor},</if>
+            <if test="truckAxle != null ">#{truckAxle},</if>
+            <if test="truckWeight != null ">#{truckWeight},</if>
+            <if test="truckCapacity != null ">#{truckCapacity},</if>
+            <if test="vehWeight != null ">#{vehWeight},</if>
+            <if test="specialType != null ">#{specialType},</if>
+            #{id}
+        )
+    </insert>
+</mapper>
