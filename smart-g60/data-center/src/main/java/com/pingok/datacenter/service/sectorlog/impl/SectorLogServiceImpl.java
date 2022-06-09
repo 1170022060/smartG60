@@ -1,17 +1,15 @@
 package com.pingok.datacenter.service.sectorlog.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.pingok.datacenter.domain.sectorlog.*;
 import com.pingok.datacenter.domain.sectorlog.vo.SectorLogVo;
 import com.pingok.datacenter.mapper.sectorlog.*;
 import com.pingok.datacenter.service.sectorlog.ISectorLogService;
-import com.ruoyi.common.core.kafka.KafkaTopIc;
+import com.ruoyi.common.core.constant.UserConstants;
+import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.common.core.utils.bean.BeanUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
-import com.ruoyi.system.api.RemoteKafkaService;
-import com.ruoyi.system.api.domain.kafuka.TblKafkaFailInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 
@@ -54,15 +52,8 @@ public class SectorLogServiceImpl implements ISectorLogService {
     @Override
     public long insertSectorLog(SectorLogVo sectorLogVo) {
         TblSectorLog tblSectorLog = new TblSectorLog();
+        BeanUtils.copyNotNullProperties(sectorLogVo,tblSectorLog);
         tblSectorLog.setId(remoteIdProducerService.nextId());
-        tblSectorLog.setGid(sectorLogVo.getGid());
-        tblSectorLog.setPassType(sectorLogVo.getPassType());
-        tblSectorLog.setTransTime(sectorLogVo.getTransTime());
-        tblSectorLog.setObuVehicleInfo(sectorLogVo.getObuVehicleInfo());
-        tblSectorLog.setFile0015(sectorLogVo.getFile0015());
-        tblSectorLog.setFile0019(sectorLogVo.getFile0019());
-        tblSectorLog.setEf04(sectorLogVo.getEf04());
-        tblSectorLog.setEf02(sectorLogVo.getEf02());
         tblSectorLogMapper.insert(tblSectorLog);
         return tblSectorLog.getId();
     }
@@ -264,6 +255,10 @@ public class SectorLogServiceImpl implements ISectorLogService {
         return result;
     }
 
+    @Override
+    public int checkGidUnique(String gid) {
+        return tblSectorLogMapper.checkFieldNameUnique(gid);
+    }
 
     public static byte[] hexString2Bytes(String src) {
         int l = src.length() / 2;

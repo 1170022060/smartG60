@@ -38,9 +38,15 @@ public class GreenListServiceImpl implements IGreenListService {
     @Value("${center.host}")
     private String host;
 
+    @Value("${center.stationGB}")
+    private String stationGB;
+
+    @Value("${center.greenPath}")
+    private String greenPath;
+
     @Override
     public void greenList(String version) {
-        String url="http://10.131.4.18:18180/api/lane-service/appointment-all-list";
+        String url= host + "/api/lane-service/appointment-all-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo=new VersionVo();
         versionVo.setVersion(version);
@@ -48,7 +54,7 @@ public class GreenListServiceImpl implements IGreenListService {
         RequestBody requestBody =  RequestBody.create(MediaType.parse("application/json"),jsonStr);
         final Request request = new Request.Builder()
                 .url(url)
-                .addHeader("AuthCode","S0004310010010")
+                .addHeader("AuthCode",stationGB)
                 .addHeader("Json-Md5",backMD5(jsonStr))
                 .post(requestBody)
                 .build();
@@ -57,34 +63,24 @@ public class GreenListServiceImpl implements IGreenListService {
         try{
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            File pathFile=new File("D:\\appointList");
-            if(!pathFile.exists()){
-                pathFile.mkdirs();
-            }
-
-            String contentHeader = response.header("Content-Disposition");
-            String fileName="Appoint.zip";
-            if(contentHeader.contains("filename="))
+            if(bytes.length>0)
             {
-                String str1 = contentHeader.substring(0, contentHeader.indexOf("filename="));
-                String str2 = contentHeader.substring(str1.length() + 9);
-                if(str2.contains(".zip"))
-                {
-                    fileName = str2;
+                String fileName = version +"Green"+ ".zip";
+                File file=new File(greenPath);
+                if(!file.exists()){
+                    file.mkdirs();
                 }
+                String pathName=greenPath+"\\"+fileName;
+                file  = new File(pathName);
+                if(!file.exists()){
+                    file.createNewFile();
+                }
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(bytes,0,bytes.length);
+                fos.flush();
+                fos.close();
+                unzipGreen(pathName,greenPath);
             }
-
-            String pathName="D:\\appointList"+"\\"+fileName;
-            File file  = new File(pathName);
-            if(!file.exists()){
-                file.createNewFile();
-            }
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(bytes,0,bytes.length);
-            fos.flush();
-            fos.close();
-
-            unzipGreen(pathName,"D:\\appointList");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -152,7 +148,7 @@ public class GreenListServiceImpl implements IGreenListService {
                 out.close();
                 if(zipEntryName.contains(".zip"))
                 {
-                    unzipGreen(outpath,"D:\\appointList");
+                    unzipGreen(outpath,resourcePath);
                 }
                 if(zipEntryName.contains(".json"))
                 {

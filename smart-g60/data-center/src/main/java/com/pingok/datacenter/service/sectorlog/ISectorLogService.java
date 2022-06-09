@@ -71,4 +71,12 @@ public interface ISectorLogService {
      * @param province 省份信息
      */
     public int insertObuEf04LogProv(Long logId ,String province);
+
+    /**
+     * 查询抢险救灾名单
+     *
+     * @return 结果
+     * @param gid
+     */
+    public int checkGidUnique(String gid);
 }

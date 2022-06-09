@@ -21,4 +21,27 @@ public interface AuditDataMapper {
      * @return 结果
      */
     public void deleteAll();
+
+    /**
+     * 更新稽核黑名单
+     *
+     * @return 结果
+     */
+    public int updateAuditData(AuditData auditData);
+
+    /**
+     * 查询稽核黑名单
+     *
+     * @return 结果
+     * @param vehicleId
+     */
+    public int selectVehicleId(String vehicleId);
+
+    /**
+     * 删除稽核黑名单
+     *
+     * @return 结果
+     * @param vehicleId
+     */
+    public void deleteVehicleId(String vehicleId);
 }
