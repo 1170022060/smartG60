@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.datacenter.mapper.trans.TblExMtcPassMapper">
+
+    <resultMap type="com.pingok.datacenter.domain.trans.TblExMtcPass" id="TblExMtcPassResult">
+        <id     property="recordId"  column="record_id"   />
+        <result property="transTime"  column="trans_time"   />
+        <result property="cpcCardId"  column="cpc_card_id"   />
+        <result property="cpcElec"  column="cpc_elec"   />
+        <result property="cpcCardPlate"  column="cpc_card_plate"   />
+        <result property="cpcCardColor"  column="cpc_card_color"   />
+        <result property="cpcCardVeh"  column="cpc_card_veh"   />
+        <result property="cpcCardVehStatus"  column="cpc_card_veh_status"   />
+        <result property="cpcCardEnNet"  column="cpc_card_en_net"   />
+        <result property="cpcCardEnTime"  column="cpc_card_en_time"   />
+        <result property="cpcCardEnStation"  column="cpc_card_en_station"   />
+        <result property="cpcCardProCount"  column="cpc_card_pro_count"   />
+    </resultMap>
+
+    <insert id="insertExMtcPass" parameterType="com.pingok.datacenter.domain.trans.TblExMtcPass">
+        insert into ${tableName}(
+        <if test="transTime != null ">trans_time,</if>
+        <if test="cpcCardId != null ">cpc_card_id,</if>
+        <if test="cpcElec != null ">cpc_elec,</if>
+        <if test="cpcCardPlate != null ">cpc_card_plate,</if>
+        <if test="cpcCardColor != null ">cpc_card_color,</if>
+        <if test="cpcCardVeh != null ">cpc_card_veh,</if>
+        <if test="cpcCardVehStatus != null ">cpc_card_veh_status,</if>
+        <if test="cpcCardEnNet != null ">cpc_card_en_net,</if>
+        <if test="cpcCardEnTime != null ">cpc_card_en_time,</if>
+        <if test="cpcCardEnStation != null ">cpc_card_en_station,</if>
+        <if test="cpcCardProCount != null ">cpc_card_pro_count,</if>
+        record_id
+        )values(
+        <if test="transTime != null ">#{transTime},</if>
+        <if test="cpcCardId != null ">#{cpcCardId},</if>
+        <if test="cpcElec != null ">#{cpcElec},</if>
+        <if test="cpcCardPlate != null ">#{cpcCardPlate},</if>
+        <if test="cpcCardColor != null ">#{cpcCardColor},</if>
+        <if test="cpcCardVeh != null ">#{cpcCardVeh},</if>
+        <if test="cpcCardVehStatus != null ">#{cpcCardVehStatus},</if>
+        <if test="cpcCardEnNet != null ">#{cpcCardEnNet},</if>
+        <if test="cpcCardEnTime != null ">#{cpcCardEnTime},</if>
+        <if test="cpcCardEnStation != null ">#{cpcCardEnStation},</if>
+        <if test="cpcCardProCount != null ">#{cpcCardProCount},</if>
+        #{recordId}
+        )
+    </insert>
+</mapper>

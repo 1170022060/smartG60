@@ -5,8 +5,7 @@
 <mapper namespace="com.pingok.datacenter.mapper.trans.TblEnTransMapper">
 
     <resultMap type="com.pingok.datacenter.domain.trans.TblEnTrans" id="TblEnTransResult">
-        <id     property="id"               column="id"                 />
-        <result property="passId"           column="pass_id"            />
+        <id     property="recordId"         column="record_id"   />
         <result property="gid"              column="gid"                />
         <result property="transTime"        column="trans_time"         />
         <result property="workDate"         column="work_date"          />
@@ -32,7 +31,6 @@
 
     <insert id="insertEnTrans" parameterType="com.pingok.datacenter.domain.trans.TblEnTrans">
         insert into ${tableName}(
-            <if test="passId != null ">pass_id,</if>
             <if test="gid != null ">gid,</if>
             <if test="transTime != null ">trans_time,</if>
             <if test="workDate != null ">work_date,</if>
@@ -54,9 +52,8 @@
             <if test="truckCapacity != null ">truck_capacity,</if>
             <if test="vehWeight != null ">veh_weight,</if>
             <if test="specialType != null ">special_type,</if>
-            id
+            record_id
         )values(
-            <if test="passId != null ">#{passId},</if>
             <if test="gid != null ">#{gid},</if>
             <if test="transTime != null ">#{transTime},</if>
             <if test="workDate != null ">#{workDate},</if>
@@ -78,7 +75,7 @@
             <if test="truckCapacity != null ">#{truckCapacity},</if>
             <if test="vehWeight != null ">#{vehWeight},</if>
             <if test="specialType != null ">#{specialType},</if>
-            #{id}
+            #{recordId}
         )
     </insert>
 </mapper>

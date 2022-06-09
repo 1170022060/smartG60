@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.datacenter.mapper.trans.TblEnMtcPassMapper">
+
+    <resultMap type="com.pingok.datacenter.domain.trans.TblEnMtcPass" id="TblEnMtcPassResult">
+        <id     property="recordId"  column="record_id"   />
+        <result property="transTime"  column="trans_time"   />
+        <result property="cpcCardId"  column="cpc_card_id"   />
+        <result property="cpcElec"  column="cpc_elec"   />
+    </resultMap>
+
+    <insert id="insertEnMtcPass" parameterType="com.pingok.datacenter.domain.trans.TblEnMtcPass">
+        insert into ${tableName}(
+        <if test="transTime!= null ">trans_time,</if>
+        <if test="cpcCardId!= null ">cpc_card_id,</if>
+        <if test="cpcElec!= null ">cpc_elec,</if>
+        record_id
+        )values(
+        <if test="transTime != null ">#{transTime},</if>
+        <if test="cpcCardId != null ">#{cpcCardId},</if>
+        <if test="cpcElec != null ">#{cpcElec},</if>
+        #{recordId}
+        )
+    </insert>
+</mapper>

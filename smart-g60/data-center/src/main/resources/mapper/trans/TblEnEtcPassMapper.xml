@@ -2,11 +2,10 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.pingok.datacenter.mapper.trans.TblEnTransPassMapper">
+<mapper namespace="com.pingok.datacenter.mapper.trans.TblEnEtcPassMapper">
 
-    <resultMap type="com.pingok.datacenter.domain.trans.TblEnTransPass" id="TblEnTransPassResult">
-        <id     property="id"  column="id"   />
-        <result property="passId"  column="pass_id"   />
+    <resultMap type="com.pingok.datacenter.domain.trans.TblEnEtcPass" id="TblEnEtcPassResult">
+        <id     property="recordId"  column="record_id"   />
         <result property="transTime"  column="trans_time"   />
         <result property="vehLwh"  column="veh_lwh"   />
         <result property="etcCardId"  column="etc_card_id"   />
@@ -29,13 +28,10 @@
         <result property="mac"  column="mac"   />
         <result property="tac"  column="tac"   />
         <result property="usedTime"  column="used_time"   />
-        <result property="cpcCardId"  column="cpc_card_id"   />
-        <result property="cpcElec"  column="cpc_elec"   />
     </resultMap>
 
-    <insert id="insertEnTransPass" parameterType="com.pingok.datacenter.domain.trans.TblEnTransPass">
+    <insert id="insertEnEtcPass" parameterType="com.pingok.datacenter.domain.trans.TblEnEtcPass">
         insert into ${tableName}(
-            <if test="passId!= null ">pass_id,</if>
             <if test="transTime!= null ">trans_time,</if>
             <if test="vehLwh!= null ">veh_lwh,</if>
             <if test="etcCardId!= null ">etc_card_id,</if>
@@ -58,11 +54,8 @@
             <if test="mac!= null ">mac,</if>
             <if test="tac!= null ">tac,</if>
             <if test="usedTime!= null ">used_time,</if>
-            <if test="cpcCardId!= null ">cpc_card_id,</if>
-            <if test="cpcElec!= null ">cpc_elec,</if>
-            id
+            record_id
         )values(
-            <if test="passId != null ">#{passId},</if>
             <if test="transTime != null ">#{transTime},</if>
             <if test="vehLwh != null ">#{vehLwh},</if>
             <if test="etcCardId != null ">#{etcCardId},</if>
@@ -85,9 +78,7 @@
             <if test="mac != null ">#{mac},</if>
             <if test="tac != null ">#{tac},</if>
             <if test="usedTime != null ">#{usedTime},</if>
-            <if test="cpcCardId != null ">#{cpcCardId},</if>
-            <if test="cpcElec != null ">#{cpcElec},</if>
-            #{id}
+            #{recordId}
         )
     </insert>
 </mapper>

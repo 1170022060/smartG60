@@ -4,12 +4,12 @@ import com.pingok.datacenter.domain.trans.vo.*;
 import com.pingok.datacenter.domain.trans.*;
 import com.pingok.datacenter.mapper.trans.*;
 import com.pingok.datacenter.service.trans.ITransService;
-import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -25,13 +25,22 @@ public class TransServiceImpl implements ITransService {
     private TblEnTransMapper tblEnTransMapper;
 
     @Autowired
-    private TblEnTransPassMapper tblEnTransPassMapper;
+    private TblEnEtcPassMapper tblEnEtcPassMapper;
+
+    @Autowired
+    private TblEnMtcPassMapper tblEnMtcPassMapper;
 
     @Autowired
     private TblExTransMapper tblExTransMapper;
 
     @Autowired
-    private TblExTransPassMapper tblExTransPassMapper;
+    private TblExEtcPassMapper tblExEtcPassMapper;
+
+    @Autowired
+    private TblExMtcPassMapper tblExMtcPassMapper;
+
+    @Autowired
+    private TblExPaperPassMapper tblExPaperPassMapper;
 
     @Autowired
     private TblExTransSplitMapper tblExTransSplitMapper;
@@ -43,49 +52,80 @@ public class TransServiceImpl implements ITransService {
     private RemoteIdProducerService remoteIdProducerService;
 
     @Override
-    public int insertEnTrans(TblEnTrans tblEnTrans) {
-        tblEnTrans.setId(remoteIdProducerService.nextId());
+    public Long insertEnTrans(TblEnTrans tblEnTrans) {
+        tblEnTrans.setRecordId(remoteIdProducerService.nextId());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         String year = sdf.format(tblEnTrans.getTransTime());
         tblEnTrans.setTableName("TBL_EN_TRANS_"+ year);
-        return tblEnTransMapper.insertEnTrans(tblEnTrans);
+        tblEnTransMapper.insertEnTrans(tblEnTrans);
+        return tblEnTrans.getRecordId();
     }
 
     @Override
-    public int insertEnTransPass(TblEnTransPass tblEnTransPass) {
-        tblEnTransPass.setId(remoteIdProducerService.nextId());
+    public int insertEnEtcPass(TblEnEtcPass tblEnEtcPass,Long recordId) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
-        String year = sdf.format(tblEnTransPass.getTransTime());
-        tblEnTransPass.setTableName("TBL_EN_TRANS_PASS_"+ year);
-        return tblEnTransPassMapper.insertEnTransPass(tblEnTransPass);
+        String year = sdf.format(tblEnEtcPass.getTransTime());
+        tblEnEtcPass.setRecordId(recordId);
+        tblEnEtcPass.setTableName("TBL_EN_ETC_PASS_"+ year);
+        return tblEnEtcPassMapper.insertEnEtcPass(tblEnEtcPass);
     }
 
     @Override
-    public String insertExTrans(TblExTrans tblExTrans) {
-        tblExTrans.setId(remoteIdProducerService.nextId());
+    public int insertEnMtcPass(TblEnMtcPass tblEnMtcPass,Long recordId) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        String year = sdf.format(tblEnMtcPass.getTransTime());
+        tblEnMtcPass.setRecordId(recordId);
+        tblEnMtcPass.setTableName("TBL_EN_MTC_PASS_"+ year);
+        return tblEnMtcPassMapper.insertEnMtcPass(tblEnMtcPass);
+    }
+
+    @Override
+    public ExInfoVo insertExTrans(TblExTrans tblExTrans) {
+        tblExTrans.setRecordId(remoteIdProducerService.nextId());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         String year = sdf.format(tblExTrans.getTransTime());
         tblExTrans.setTableName("TBL_EX_TRANS_"+ year);
         tblExTransMapper.insertExTrans(tblExTrans);
-        return year;
+        ExInfoVo exInfoVo=new ExInfoVo();
+        exInfoVo.setRecordId(tblExTrans.getRecordId());
+        exInfoVo.setYear(year);
+        return exInfoVo;
     }
 
     @Override
-    public int insertExTransPass(TblExTransPass tblExTransPass) {
-        tblExTransPass.setId(remoteIdProducerService.nextId());
+    public int insertExEtcPass(TblExEtcPass tblExEtcPass,Long recordId) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
-        String year = sdf.format(tblExTransPass.getTransTime());
-        tblExTransPass.setTableName("TBL_EX_TRANS_PASS_"+ year);
-        return tblExTransPassMapper.insertExTransPass(tblExTransPass);
+        String year = sdf.format(tblExEtcPass.getTransTime());
+        tblExEtcPass.setRecordId(recordId);
+        tblExEtcPass.setTableName("TBL_EX_ETC_PASS_"+ year);
+        return tblExEtcPassMapper.insertExEtcPass(tblExEtcPass);
     }
 
     @Override
-    public int insertExTransSplit(String year, List<TblExTransSplit> tblExTransSplit) {
+    public int insertExMtcPass(TblExMtcPass tblExMtcPass,Long recordId) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        String year = sdf.format(tblExMtcPass.getTransTime());
+        tblExMtcPass.setRecordId(recordId);
+        tblExMtcPass.setTableName("TBL_EX_MTC_PASS_"+ year);
+        return tblExMtcPassMapper.insertExMtcPass(tblExMtcPass);
+    }
+
+    @Override
+    public int insertExPaperPass(TblExPaperPass tblExPaperPass,Long recordId) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        String year = sdf.format(tblExPaperPass.getTransTime());
+        tblExPaperPass.setRecordId(recordId);
+        tblExPaperPass.setTableName("TBL_EX_PAPER_PASS_"+ year);
+        return tblExPaperPassMapper.insertExPaperPass(tblExPaperPass);
+    }
+
+    @Override
+    public int insertExTransSplit(ExInfoVo exInfoVo, List<TblExTransSplit> tblExTransSplit) {
         int result=0;
         for(TblExTransSplit list :tblExTransSplit)
         {
-            list.setId(remoteIdProducerService.nextId());
-            list.setTableName("TBL_EX_TRANS_SPLIT_"+ year);
+            list.setRecordId(exInfoVo.getRecordId());
+            list.setTableName("TBL_EX_TRANS_SPLIT_"+ exInfoVo.getYear());
             tblExTransSplitMapper.insertExTransSplit(list);
             result++;
         }
@@ -98,8 +138,12 @@ public class TransServiceImpl implements ITransService {
     }
 
     @Override
+    public String selectLaneGB(String laneHex) {
+        return tblTransSummaryMapper.selectLaneGB(laneHex);
+    }
+
+    @Override
     public int insertEnTransSummary(EnTransEnum enTransEnum) {
-        Long id = StringUtils.isNull(tblTransSummaryMapper.selectSamePassId(enTransEnum.getTblEnTrans().getPassId())) ? 0L : tblTransSummaryMapper.selectSamePassId(enTransEnum.getTblEnTrans().getPassId());
         TblTransSummary tblTransSummary=new TblTransSummary();
         tblTransSummary.setEnGid(enTransEnum.getTblEnTrans().getGid());
         tblTransSummary.setEnTransTime(enTransEnum.getTblEnTrans().getTransTime());
@@ -114,18 +158,36 @@ public class TransServiceImpl implements ITransService {
         tblTransSummary.setEnVehStatus(enTransEnum.getTblEnTrans().getVehStatus());
         tblTransSummary.setEnVehPlate(enTransEnum.getTblEnTrans().getVehPlate());
         tblTransSummary.setEnVehColor(enTransEnum.getTblEnTrans().getVehColor());
-        if(enTransEnum.getTblEnTrans().getPassType()==5)
+        String passId=null;
+        if(enTransEnum.getTblEnTrans().getPassType()==5 && enTransEnum.getTblEnEtcPass()!=null)
         {
-            tblTransSummary.setEnCardId(enTransEnum.getTblEnTransPass().getEtcCardId());
+            if(enTransEnum.getTblEnEtcPass().getEtcCardId()!=null && enTransEnum.getTblEnEtcPass().getEtcCardNet()!=null)
+            {
+                tblTransSummary.setEnCardId(zero(enTransEnum.getTblEnEtcPass().getEtcCardId()));
+                SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
+                String time=formatter.format(enTransEnum.getTblEnTrans().getTransTime());
+                passId="01"+enTransEnum.getTblEnEtcPass().getEtcCardNet()+zero(enTransEnum.getTblEnEtcPass().getEtcCardId())+time;
+            }
         }
-        if(enTransEnum.getTblEnTrans().getPassType()==6)
+        if(enTransEnum.getTblEnTrans().getPassType()==6 && enTransEnum.getTblEnMtcPass()!=null)
         {
-            tblTransSummary.setEnCardId(enTransEnum.getTblEnTransPass().getCpcCardId());
+            if(enTransEnum.getTblEnMtcPass().getCpcCardId()!=null)
+            {
+                tblTransSummary.setEnCardId(zero(enTransEnum.getTblEnMtcPass().getCpcCardId()));
+                SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
+                String time=formatter.format(enTransEnum.getTblEnTrans().getTransTime());
+                passId="020000"+zero(enTransEnum.getTblEnMtcPass().getCpcCardId())+time;
+            }
+        }
+        Long id=0L;
+        if(passId!=null)
+        {
+            id=StringUtils.isNull(selectSamePassId(passId)) ? 0L : selectSamePassId(passId);
         }
         if(id==0L)
         {
             tblTransSummary.setId(remoteIdProducerService.nextId());
-            tblTransSummary.setPassId(enTransEnum.getTblEnTrans().getPassId());
+            tblTransSummary.setPassId(passId);
             return tblTransSummaryMapper.insert(tblTransSummary);
         }
         else
@@ -137,7 +199,6 @@ public class TransServiceImpl implements ITransService {
 
     @Override
     public int insertExTransSummary(ExTransEnum exTransEnum) {
-        Long id = StringUtils.isNull(tblTransSummaryMapper.selectSamePassId(exTransEnum.getTblExTrans().getPassId())) ? 0L : tblTransSummaryMapper.selectSamePassId(exTransEnum.getTblExTrans().getPassId());
         TblTransSummary tblTransSummary=new TblTransSummary();
         tblTransSummary.setExGid(exTransEnum.getTblExTrans().getGid());
         tblTransSummary.setExTransTime(exTransEnum.getTblExTrans().getTransTime());
@@ -159,18 +220,46 @@ public class TransServiceImpl implements ITransService {
         tblTransSummary.setExVehPlate(exTransEnum.getTblExTrans().getVehPlate());
         tblTransSummary.setExVehColor(exTransEnum.getTblExTrans().getVehColor());
         tblTransSummary.setAmount(exTransEnum.getTblExTrans().getAmount());
-        if(exTransEnum.getTblExTrans().getPassType()==5)
+        String passId=null;
+        if(exTransEnum.getTblExTrans().getPassType()==5 && exTransEnum.getTblExEtcPass()!=null)
         {
-            tblTransSummary.setExCardId(exTransEnum.getTblExTransPass().getEtcCardId());
+            if(exTransEnum.getTblExEtcPass().getEtcCardId()!=null)
+            {
+                tblTransSummary.setExCardId(zero(exTransEnum.getTblExEtcPass().getEtcCardId()));
+                SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
+                String time=formatter.format(exTransEnum.getTblExTrans().getEnTime());
+                passId="01"+exTransEnum.getTblExEtcPass().getEtcCardNet()+zero(exTransEnum.getTblExEtcPass().getEtcCardId())+time;
+            }
+
         }
-        if(exTransEnum.getTblExTrans().getPassType()==6)
+        if(exTransEnum.getTblExTrans().getPassType()==6 && exTransEnum.getTblExMtcPass()!=null)
         {
-            tblTransSummary.setExCardId(exTransEnum.getTblExTransPass().getCpcCardId());
+            if(exTransEnum.getTblExMtcPass().getCpcCardId()!=null)
+            {
+                tblTransSummary.setExCardId(zero(exTransEnum.getTblExMtcPass().getCpcCardId()));
+                SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
+                String time=formatter.format(exTransEnum.getTblExTrans().getEnTime());
+                passId="020000"+zero(exTransEnum.getTblExMtcPass().getCpcCardId())+time;
+            }
+        }
+        if(exTransEnum.getTblExTrans().getPassType()==9 && exTransEnum.getTblExPaperPass()!=null)
+        {
+            if(exTransEnum.getTblExPaperPass().getLaneHex()!=null)
+            {
+                SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
+                String time=formatter.format(exTransEnum.getTblExTrans().getTransTime());
+                passId="030"+selectLaneGB(exTransEnum.getTblExPaperPass().getLaneHex())+time;
+            }
+        }
+        Long id=0L;
+        if(passId!=null)
+        {
+            id=StringUtils.isNull(selectSamePassId(passId)) ? 0L : selectSamePassId(passId);
         }
         if(id==0L)
         {
             tblTransSummary.setId(remoteIdProducerService.nextId());
-            tblTransSummary.setPassId(exTransEnum.getTblExTrans().getPassId());
+            tblTransSummary.setPassId(passId);
             return tblTransSummaryMapper.insert(tblTransSummary);
         }
         else
@@ -178,6 +267,13 @@ public class TransServiceImpl implements ITransService {
             tblTransSummary.setId(id);
             return tblTransSummaryMapper.updateByPrimaryKeySelective(tblTransSummary);
         }
+    }
+
+    public static String zero(Long number) {
+        NumberFormat formatter = NumberFormat.getNumberInstance();
+        formatter.setMinimumIntegerDigits(16);
+        formatter.setGroupingUsed(false);
+        return formatter.format(number);
     }
 
 
