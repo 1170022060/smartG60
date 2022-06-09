@@ -1,12 +1,10 @@
-package com.pingok.datacenter.domain.trans;
+package com.pingok.charge.domain.trans;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ruoyi.common.core.utils.DateUtils;
-import com.ruoyi.common.core.web.domain.BaseEntity;
-import org.apache.poi.ss.usermodel.DateUtil;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -20,6 +18,7 @@ public class TblEnTrans{
 
     /** 主键 */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long recordId;
 
     /** GID */

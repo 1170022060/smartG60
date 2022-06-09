@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.datacenter.mapper.trans.TblExPaperPassMapper">
+
+    <resultMap type="com.pingok.datacenter.domain.trans.TblExPaperPass" id="TblExPaperPassResult">
+        <id     property="recordId"  column="record_id"   />
+        <result property="laneHex"  column="lane_hex"   />
+        <result property="transTime"  column="trans_time"   />
+        <result property="paperEnNet"  column="paper_en_net"   />
+        <result property="paperEnStation"  column="paper_en_station"   />
+    </resultMap>
+
+    <insert id="insertExPaperPass" parameterType="com.pingok.datacenter.domain.trans.TblExPaperPass">
+        insert into ${tableName}(
+        <if test="laneHex != null ">lane_hex,</if>
+        <if test="transTime != null ">trans_time,</if>
+        <if test="paperEnNet != null ">paper_en_net,</if>
+        <if test="paperEnStation != null ">paper_en_station,</if>
+        record_id
+        )values(
+        <if test="laneHex != null ">#{laneHex},</if>
+        <if test="transTime != null ">#{transTime},</if>
+        <if test="paperEnNet != null ">#{paperEnNet},</if>
+        <if test="paperEnStation != null ">#{paperEnStation},</if>
+        #{recordId}
+        )
+    </insert>
+</mapper>

@@ -1,9 +1,10 @@
-package com.pingok.datacenter.domain.trans;
+package com.pingok.charge.domain.trans;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -15,6 +16,11 @@ import java.util.Date;
 public class TblExTransSplit implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    /** 主键 */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     /** 索引：与CPC、ETC、PAPER共用SEQ */
     private Long recordId;
@@ -65,6 +71,14 @@ public class TblExTransSplit implements Serializable {
 
     /** 表名   */
     private String tableName;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getRecordId() {
         return recordId;

@@ -5,8 +5,7 @@
 <mapper namespace="com.pingok.datacenter.mapper.trans.TblExTransSplitMapper">
 
     <resultMap type="com.pingok.datacenter.domain.trans.TblExTransSplit" id="TblExTransSplitResult">
-        <id     property="id"  column="id"   />
-        <result property="passId"  column="pass_id"   />
+        <id     property="recordId"   column="record_id"   />
         <result property="provIndex"  column="prov_index"   />
         <result property="provId"  column="prov_id"   />
         <result property="tollFee"  column="toll_fee"   />
@@ -25,7 +24,6 @@
 
     <insert id="insertExTransSplit" parameterType="com.pingok.datacenter.domain.trans.TblExTransSplit">
         insert into ${tableName}(
-            <if test="passId != null ">pass_id,</if>
             <if test="provIndex != null ">prov_index,</if>
             <if test="provId != null ">prov_id,</if>
             <if test="tollFee != null ">toll_fee,</if>
@@ -40,9 +38,8 @@
             <if test="tollDiscountFee != null ">toll_discount_fee,</if>
             <if test="tollRateVersion != null ">toll_rate_version,</if>
             <if test="tollTransTime != null ">toll_trans_time,</if>
-            id
+            record_id
         )values(
-            <if test="passId != null ">#{passId},</if>
             <if test="provIndex != null ">#{provIndex},</if>
             <if test="provId != null ">#{provId},</if>
             <if test="tollFee != null ">#{tollFee},</if>
@@ -57,7 +54,7 @@
             <if test="tollDiscountFee != null ">#{tollDiscountFee},</if>
             <if test="tollRateVersion != null ">#{tollRateVersion},</if>
             <if test="tollTransTime != null ">#{tollTransTime},</if>
-            #{id}
+            #{recordId}
         )
     </insert>
 </mapper>

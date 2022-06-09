@@ -1,6 +1,6 @@
-package com.pingok.datacenter.domain.trans.vo;
+package com.pingok.charge.domain.trans.vo;
 
-import com.pingok.datacenter.domain.trans.*;
+import com.pingok.charge.domain.trans.*;
 import lombok.Data;
 
 import java.util.List;

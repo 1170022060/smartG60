@@ -5,8 +5,10 @@ import lombok.Data;
 @Data
 public class ExTransInfo {
 
-    public String insertExTrans;
-    public int insertExTransPass;
+    public ExInfoVo insertExTrans;
+    public int insertExEtcPass;
+    public int insertExMtcPass;
+    public int insertExPaperPass;
     public int insertExTransSplit;
     public int insertExTransSummary;
 }

@@ -1,9 +1,11 @@
-package com.pingok.datacenter.domain.trans;
+package com.pingok.charge.domain.trans;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,29 +13,30 @@ import java.util.Date;
  *
  * @author ruoyi
  */
-public class TblEnTransPass {
+public class TblEnEtcPass implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /** 主键 */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** ETC：4发行方编号 +8卡号 + 8入口unix时间 CPC：”0000” + 8卡号 + 8入口unix时间 纸圈：”00” + 10车道Node十六进制码 + 8出口unix出口时间  */
-    private String passId;
+    /** ETC卡号 */
+    private Long etcCardId;
+
+    /** ETC卡版本号 */
+    private Integer etcCardVer;
 
     /** 入口时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date transTime;
 
+    /** 索引：与CPC、ETC共用SEQ */
+    private Long recordId;
+
     /** 长（2字节）宽（1字节）高（1字节） */
     private String vehLwh;
-
-    /** ETC卡号 */
-    private String etcCardId;
-
-    /** ETC卡版本号 */
-    private Integer etcCardVer;
 
     /** ETC卡网络号 */
     private String etcCardNet;
@@ -89,12 +92,6 @@ public class TblEnTransPass {
     /** 交易花费总时间 */
     private Integer usedTime;
 
-    /** CPC卡ID */
-    private String cpcCardId;
-
-    /** CPC卡电量 */
-    private Integer cpcElec;
-
     /** 表名   */
     private String tableName;
 
@@ -106,12 +103,12 @@ public class TblEnTransPass {
         this.id = id;
     }
 
-    public String getPassId() {
-        return passId;
+    public Long getRecordId() {
+        return recordId;
     }
 
-    public void setPassId(String passId) {
-        this.passId = passId;
+    public void setRecordId(Long recordId) {
+        this.recordId = recordId;
     }
 
     public Date getTransTime() {
@@ -130,11 +127,11 @@ public class TblEnTransPass {
         this.vehLwh = vehLwh;
     }
 
-    public String getEtcCardId() {
+    public Long getEtcCardId() {
         return etcCardId;
     }
 
-    public void setEtcCardId(String etcCardId) {
+    public void setEtcCardId(Long etcCardId) {
         this.etcCardId = etcCardId;
     }
 
@@ -288,22 +285,6 @@ public class TblEnTransPass {
 
     public void setUsedTime(Integer usedTime) {
         this.usedTime = usedTime;
-    }
-
-    public String getCpcCardId() {
-        return cpcCardId;
-    }
-
-    public void setCpcCardId(String cpcCardId) {
-        this.cpcCardId = cpcCardId;
-    }
-
-    public Integer getCpcElec() {
-        return cpcElec;
-    }
-
-    public void setCpcElec(Integer cpcElec) {
-        this.cpcElec = cpcElec;
     }
 
     public String getTableName() {

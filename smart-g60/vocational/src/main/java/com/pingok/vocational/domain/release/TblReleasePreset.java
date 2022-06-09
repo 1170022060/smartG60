@@ -28,6 +28,10 @@ public class TblReleasePreset {
     @Excel(name = "信息类型")
     private Integer infoType;
 
+    /** 预设名称 */
+    @Excel(name = "预设名称")
+    private String presetName;
+
     /** 预设信息 */
     @Excel(name = "预设信息")
     private String presetInfo;
@@ -88,6 +92,15 @@ public class TblReleasePreset {
     public void setInfoType(Integer infoType)
     {
         this.infoType = infoType;
+    }
+
+    @Size(min = 0, max = 48, message = "预设名称不能超过48个字符")
+    public String getPresetName() {
+        return presetName;
+    }
+
+    public void setPresetName(String presetName) {
+        this.presetName = presetName;
     }
 
     @Size(min = 0, max = 100, message = "预设信息不能超过100个字符")
@@ -184,6 +197,7 @@ public class TblReleasePreset {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
                 .append("infoType", getInfoType())
+                .append("presetName", getPresetName())
                 .append("presetInfo", getPresetInfo())
                 .append("typeface", getTypeface())
                 .append("typefaceSize", getTypefaceSize())

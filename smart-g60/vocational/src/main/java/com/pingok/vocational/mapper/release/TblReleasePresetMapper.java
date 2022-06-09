@@ -18,6 +18,7 @@ public interface TblReleasePresetMapper extends CommonRepository<TblReleasePrese
     @Select({"<script>" +
             "select a.ID as \"id\" ," +
             "b.DICT_LABEL as \"infoType\" , " +
+            "a.PRESET_NAME as \"presetName\" , " +
             "a.PRESET_INFO as \"presetInfo\" , " +
             "c.DICT_LABEL as \"typeface\" , " +
             "d.DICT_LABEL as \"typefaceSize\" , " +
