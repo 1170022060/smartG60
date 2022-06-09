@@ -3,6 +3,7 @@ package com.pingok.station.controller;
 import com.pingok.station.service.auditList.IAuditListService;
 import com.pingok.station.service.bulkList.IBulkListService;
 import com.pingok.station.service.cardBlacklist.*;
+import com.pingok.station.service.emergList.IEmergListService;
 import com.pingok.station.service.greenList.IGreenListService;
 import com.pingok.station.service.obuBlacklist.IObuBlacklistService;
 import com.ruoyi.common.core.web.controller.BaseController;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 @RestController
 @RequestMapping("/list")
@@ -28,6 +28,9 @@ public class Controller extends BaseController {
     private IBulkListService bulkListService;
     @Autowired
     private IAuditListService auditListService;
+    @Autowired
+    private IEmergListService emergListService;
+
 
     @PostMapping("/blackIncr")
     public AjaxResult blackIncr(@Validated @RequestBody String version)
@@ -84,17 +87,45 @@ public class Controller extends BaseController {
         return AjaxResult.success();
     }
 
+    @PostMapping("/emergListAll")
+    public AjaxResult emergListAll(@Validated @RequestBody String version)
+    {
+        emergListService.all(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/unzipEmergListAll")
+    public AjaxResult unzipEmergListAll(@Validated @RequestBody String version)
+    {
+        emergListService.unzipAll(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/auditIncr")
+    public AjaxResult auditIncr(@Validated @RequestBody String version)
+    {
+        auditListService.increment(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/auditBlackAll")
+    public AjaxResult auditBlackAll(@Validated @RequestBody String version)
+    {
+        auditListService.all(version);
+        return AjaxResult.success();
+    }
+
     @PostMapping("/unzipAuditBlackAll")
     public AjaxResult unzipAuditBlackAll(@Validated @RequestBody String version)
     {
         auditListService.unzipAll(version);
         return AjaxResult.success();
     }
-    @PostMapping("/zip")
-    public AjaxResult zip()
+
+    @PostMapping("/unzipAuditPreAll")
+    public AjaxResult unzipAuditPreAll(@Validated @RequestBody String version)
     {
-        auditListService.file();
+        auditListService.preAll(version);
         return AjaxResult.success();
     }
-
 }

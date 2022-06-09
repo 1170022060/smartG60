@@ -13,6 +13,12 @@ public interface IAuditListService {
     void increment(String version);
 
     /**
+     * 下载、入库稽核预追缴黑名单全量
+     * @param version 版本号
+     */
+    void preAll(String version);
+
+    /**
      * 下载稽核黑名单全量
      * @param version 版本号
      */
@@ -24,7 +30,6 @@ public interface IAuditListService {
      */
     void unzipAll(String version);
 
-    void insert(List<AuditVo> list);
+    void insertData(List<AuditVo> list);
 
-    void file();
 }
