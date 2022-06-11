@@ -99,4 +99,34 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
 
     @Select("select ID as \"id\",DEVICE_NAME || '_' || DEVICE_ID as \"deviceName\" from TBL_DEVICE_INFO order by DEVICE_ID")
     List<Map> selectDeviceName();
+
+    @Select({"<script>" +
+            "select " +
+            "c.DEVICE_ID as \"deviceId\" ," +
+            "c.DEVICE_NAME as \"deviceName\" ," +
+            "c.DICT_LABEL as \"manufacturer\" ," +
+            "c.DEVICE_MODEL as \"deviceModel\" ," +
+            "c.PILE_NO as \"pileNo\" ," +
+            "a.PRESET_INFO as \"text\" ," +
+            "c.DEVICE_PHOTO as \"devicePhoto\" from TBL_RELEASE_RECORD a " +
+            "left join  SYS_DICT_DATA b on b.DICT_VALUE=a.MANUFACTURER and b.DICT_TYPE='manufacturer' " +
+            "left join TBL_DEVICE_INFO c on c.DEVICE_ID=a.DEVICE_ID " +
+            "where rownum = 1 " +
+            "<when test='deviceCategory != null'> " +
+            "and c.DEVICE_CATEGORY= #{deviceCategory} or c.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory}) " +
+            "<when test='deviceName != null'> " +
+            "and c.DEVICE_NAME like CONCAT(CONCAT('%',#{deviceName}),'%') " +
+            "</when>"+
+            "<when test='pileNo != null'> " +
+            "and c.PILE_NO like CONCAT(CONCAT('%',#{pileNo}),'%') " +
+            "</when>"+
+            "<when test='manufacturer != null'> " +
+            "and c.MANUFACTURER =#{manufacturer} " +
+            "</when>"+
+            "<when test='deviceModel != null'> " +
+            "and c.DEVICE_MODEL =#{deviceModel} " +
+            "</when>" +
+            " order by a.PRESET_TIME desc "+
+            "</script>"})
+    List<Map> selectInfoBoard(@Param("deviceCategory")Long deviceCategory,@Param("deviceName") String deviceName,@Param("pileNo") String pileNo,@Param("manufacturer")String manufacturer,@Param("deviceModel")String deviceModel);
 }

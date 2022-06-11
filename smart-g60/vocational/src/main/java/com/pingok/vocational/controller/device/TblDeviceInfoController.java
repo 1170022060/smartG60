@@ -89,4 +89,12 @@ public class TblDeviceInfoController extends BaseController {
         return toAjax(tblDeviceInfoService.updateDeviceInfo(tblDeviceInfo));
     }
 
+    @RequiresPermissions("vocational:device:board")
+    @Log(title = "情报板信息查询", businessType = BusinessType.OTHER)
+    @GetMapping("/board")
+    public TableDataInfo board(@RequestParam(name = "deviceCategory", required = false) Long deviceCategory,@RequestParam(name = "deviceName", required = false) String deviceName,@RequestParam(name = "pileNo", required = false) String pileNo,@RequestParam(name = "manufacturer", required = false) String manufacturer,@RequestParam(name = "deviceModel", required = false) String deviceModel) {
+        startPage();
+        List<Map> info = tblDeviceInfoService.selectInfoBoard(deviceCategory, deviceName, pileNo, manufacturer, deviceModel);
+        return getDataTable(info);
+    }
 }
