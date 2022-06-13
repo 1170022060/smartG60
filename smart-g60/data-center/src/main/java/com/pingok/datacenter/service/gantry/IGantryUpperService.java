@@ -44,6 +44,9 @@ public interface IGantryUpperService {
      * @param data
      */
     void handleVisu(List<TblGantrySumTravelImage> data);
+
+    void handleLog(JSONObject data);
+
     AjaxResult GetErrorData(GetErrorDataModel data);
     AjaxResult FixErrorData(FixErrorDataModel data);
     AjaxResult PicRealTransfer(PicRealTransferModel data);

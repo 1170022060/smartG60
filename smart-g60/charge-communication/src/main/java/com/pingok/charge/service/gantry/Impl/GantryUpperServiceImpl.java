@@ -51,54 +51,49 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
     private TblGantryPictureFailMapper tblGantryPictureFailMapper;
 
 
-    @Async
-    void handleVehicleMonitor(String data) {
-        // 目前门架无外接车检器
-        log.info("收到门架车检器数据：" + data);
-    }
-
-    @Async
-    void handleBaseInfoUpload(JSONObject data) {
-        String chargeUnitId = data.getString("chargeUnitId");
-        if (!chargeUnitId.isEmpty()) {
-            if (sendToDeviceMonitor("baseInfoUpload", data.toJSONString())) {
-                Example example = new Example(TblGantryBaseInfoStore.class);
-                Example.Criteria criteria = example.createCriteria();
-                criteria.andEqualTo("chargeUnitId", chargeUnitId);
-                tblGantryBaseInfoStoreMapper.deleteByExample(example);
-            }
+    @Override
+    public void updateSpecialEvent(String reqFileName, JSONObject data) {
+        String route = "/device-monitor/gantryUpper/specialEventUpload";
+        if (update(route, reqFileName, data.toJSONString())) {
+            Example example = new Example(TblGantrySumTravelImage.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("eventId", data.getString("eventId"));
+            tblGantrySumTravelImageMapper.deleteByExample(example);
         }
     }
 
     @Async
-    void handleTghbu(JSONObject data) {
-        String chargeUnitId = data.getString("chargeUnitId");
-        if (sendToDeviceMonitor("tghbu", data.toJSONString())) {
+    @Override
+    public void updateTghbu(String reqFileName, JSONObject data) {
+        String route = "/device-monitor/gantryUpper/tghbu";
+        if (update(route, reqFileName, data.toJSONString())) {
             Example example = new Example(TblGantryMonitorStore.class);
             Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("chargeUnitId", chargeUnitId);
+            criteria.andEqualTo("chargeUnitId", data.getString("chargeUnitId"));
             tblGantryBaseInfoStoreMapper.deleteByExample(example);
         }
     }
 
-
-    void handleSpecialEventUpload(String data) {
-        TblGantryErrorInfo tblGantryErrorInfo = JSON.parseObject(data, TblGantryErrorInfo.class);
-        if (!tblGantryErrorInfo.getEventId().isEmpty()) {
-            if (sendToDeviceMonitor("specialEventUpload", data)) {
-                Example example = new Example(TblGantrySumTravelImage.class);
-                Example.Criteria criteria = example.createCriteria();
-                criteria.andEqualTo("eventId", tblGantryErrorInfo.getEventId());
-                tblGantrySumTravelImageMapper.deleteByExample(example);
-            }
+    @Async
+    @Override
+    public void updateBaseInfo(String reqFileName, JSONObject data) {
+        String route = "/device-monitor/gantryUpper/baseInfoUpload";
+        if (update(route, reqFileName, data.toJSONString())) {
+            Example example = new Example(TblGantryBaseInfoStore.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("chargeUnitId", data.getString("chargeUnitId"));
+            tblGantryBaseInfoStoreMapper.deleteByExample(example);
         }
     }
 
-
+    @Async
     @Override
     public void updateLog(String reqFileName, String data) {
         String route = "/data-center/gantryUpper/log";
-        update(route, reqFileName, data);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("reqFileName", reqFileName);
+        jsonObject.put("data", data);
+        update(route, reqFileName, jsonObject.toJSONString());
     }
 
     @Async

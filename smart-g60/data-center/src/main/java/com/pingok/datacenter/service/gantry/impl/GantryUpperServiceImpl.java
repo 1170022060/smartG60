@@ -1,22 +1,33 @@
 package com.pingok.datacenter.service.gantry.Impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.datacenter.domain.gantry.*;
 import com.pingok.datacenter.domain.gantry.model.*;
 import com.pingok.datacenter.mapper.gantry.*;
 import com.pingok.datacenter.service.gantry.IGantryUpperService;
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.web.domain.AjaxResult;
+import com.ruoyi.system.api.RemoteFileService;
+import com.ruoyi.system.api.RemoteIdProducerService;
+import com.ruoyi.system.api.domain.SysFile;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Example;
 
+import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * @author
@@ -25,11 +36,6 @@ import java.util.List;
 @Slf4j
 @Service
 public class GantryUpperServiceImpl implements IGantryUpperService {
-
-    @Value("${picturePath}")
-    private String picturePath; // 牌识图片保存路径
-    @Value("${pictureFailPath}")
-    private String pictureFailPath; // 失败牌识图片保存路径
 
     @Autowired
     private TblGantryInfoMapper tblGantryInfoMapper;
@@ -47,6 +53,12 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
     private TblGantryTransactionMapper tblGantryTransactionMapper;
     @Autowired
     private TblGantryTravelImageMapper tblGantryTravelImageMapper;
+    @Autowired
+    private RemoteFileService remoteFileService;
+    @Autowired
+    private TblGantryLogfileMapper tblGantryLogfileMapper;
+    @Autowired
+    private RemoteIdProducerService remoteIdProducerService;
 
     @Override
     public void handleViu(List<TblGantryTravelImage> data) {
@@ -136,6 +148,80 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
             }
         } catch (Exception ex) {
             log.error("存储ETC 门架牌识小时批次汇总异常：" + ex.getMessage());
+        }
+    }
+
+    @Override
+    public void handleLog(JSONObject data) {
+        try {
+            String gantryId = null;
+            String path = "/root/"+DateUtils.getNowTimestampLong();
+            String fileName = data.getString("reqFileName") + ".zip";
+            File file = new File(path);
+            if (!file.exists()) {
+                file.mkdir();
+            }
+            String pathName = path + "/" + fileName;
+            file = new File(pathName);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(data.getString("data").getBytes(), 0, data.getString("data").getBytes().length);
+            fos.flush();
+            fos.close();
+            ZipFile zp = new ZipFile(pathName, Charset.forName("gbk"));
+            Enumeration entries = zp.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = (ZipEntry) entries.nextElement();
+                String zipEntryName = entry.getName();
+                if (zipEntryName.contains(".json")) {
+                    FileReader fileReader = new FileReader(pathName);
+                    Reader reader = new InputStreamReader(new FileInputStream(pathName), "utf-8");
+                    int ch = 0;
+                    StringBuffer sb = new StringBuffer();
+                    while ((ch = reader.read()) != -1) {
+                        sb.append((char) ch);
+                    }
+                    fileReader.close();
+                    reader.close();
+                    JSONObject object = JSONObject.parseObject(sb.toString());
+                    gantryId = object.getString("gantryId");
+                    break;
+                }
+            }
+            zp.close();
+            file.delete();
+            InputStream inputStream = new ByteArrayInputStream(data.getString("data").getBytes());
+            MultipartFile mFile = new MockMultipartFile(ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
+            R<SysFile> r = remoteFileService.upload(mFile);
+            if (r != null) {
+                if (R.SUCCESS == r.getCode()) {
+                    if(gantryId!=null){
+                        Example example = new Example(TblGantryLogfile.class);
+                        example.createCriteria().andEqualTo("gantryId",gantryId);
+                        TblGantryLogfile tblGantryLogfile = tblGantryLogfileMapper.selectOneByExample(example);
+                        if(tblGantryLogfile==null){
+                            tblGantryLogfile = new TblGantryLogfile();
+                            tblGantryLogfile.setGantryId(gantryId);
+                            tblGantryLogfile.setId(remoteIdProducerService.nextId());
+                            tblGantryLogfile.setUrl(r.getData().getUrl());
+                            tblGantryLogfileMapper.insert(tblGantryLogfile);
+                        }else {
+                            tblGantryLogfile.setUrl(r.getData().getUrl());
+                            tblGantryLogfileMapper.updateByPrimaryKey(tblGantryLogfile);
+                        }
+                    }else {
+                        throw new ServiceException("门架日志存储失败，原因：JSON文件内未包含门架编号");
+                    }
+                } else {
+                    throw new ServiceException("门架日志存储失败，原因：" + r.getMsg());
+                }
+            } else {
+                throw new ServiceException("门架日志存储失败，原因未知");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

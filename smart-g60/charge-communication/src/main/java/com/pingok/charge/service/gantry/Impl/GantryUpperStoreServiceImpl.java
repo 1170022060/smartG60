@@ -149,54 +149,27 @@ public class GantryUpperStoreServiceImpl implements IGantryUpperStoreService {
     }
 
     @Override
-    public void saveBaseInfo(String data) {
-        JSONObject jo = JSONObject.parseObject(data);
-        JSONObject joStore = new JSONObject();
-        joStore.put("chargeUnitId", jo.getString("chargeUnitId"));
-        joStore.put("infoVersion", jo.getString("infoVersion"));
-        joStore.put("gantryInfoList", jo.getJSONArray("gantryInfoList").toJSONString());
-        joStore.put("chargeUnitInfoList", jo.getJSONArray("chargeUnitInfoList").toJSONString());
-        joStore.put("cameraInfoList", jo.getJSONArray("cameraInfoList").toJSONString());
-        joStore.put("RSUInfoList", jo.getJSONArray("RSUInfoList").toJSONString());
-        joStore.put("vehicleDetectorInfoList", jo.getJSONArray("vehicleDetectorInfoList").toJSONString());
-        joStore.put("vehicleCountCollect", jo.getJSONArray("vehicleCountCollect").toJSONString());
-        joStore.put("otherInfoList", jo.getJSONArray("otherInfoList").toJSONString());
-
+    public void saveBaseInfo(String reqFileName, String data) {
         try {
-            TblGantryBaseInfoStore tblGantryBaseInfoStore = JSONObject.parseObject(joStore.toJSONString(), TblGantryBaseInfoStore.class);
+            TblGantryBaseInfoStore tblGantryBaseInfoStore = JSONObject.parseObject(data, TblGantryBaseInfoStore.class);
             tblGantryBaseInfoStoreMapper.insert(tblGantryBaseInfoStore);
         } catch (Exception ex) {
-            log.error("暂存门架报文异常：" + ex.getMessage());
+            log.error(reqFileName + "暂存门架报文异常：" + ex.getMessage());
         }
     }
 
     @Override
-    public void saveTghbu(String data) {
-        JSONObject jo = JSONObject.parseObject(data);
-        JSONObject joStore = new JSONObject();
-        joStore.put("chargeUnitId", jo.getString("chargeUnitId"));
-        joStore.put("heatVersion", jo.getString("heatVersion"));
-        joStore.put("gantryHeartbeatList", jo.getJSONArray("gantryHeartbeatList").toJSONString());
-        joStore.put("transProFitList", jo.getJSONArray("transProFitList").toJSONString());
-        joStore.put("chargeUnitHeartbeatList", jo.getJSONArray("chargeUnitHeartbeatList").toJSONString());
-        joStore.put("vehicleDetectorHeartbeatList", jo.getJSONArray("vehicleDetectorHeartbeatList").toJSONString());
-        joStore.put("otherHeartbeatList", jo.getJSONArray("otherHeartbeatList").toJSONString());
-        joStore.put("vehicleCountCollect", jo.getJSONArray("vehicleCountCollect").toJSONString());
-        joStore.put("cameraHeartbeatList", jo.getJSONArray("cameraHeartbeatList").toJSONString());
-        joStore.put("RSUHeartbeatList", jo.getJSONArray("RSUHeartbeatList").toJSONString());
-        joStore.put("PSAMInfoList", jo.getJSONArray("PSAMInfoList").toJSONString());
-        joStore.put("antennalInfoList", jo.getJSONArray("antennalInfoList").toJSONString());
-
+    public void saveTghbu(String reqFileName, String data) {
         try {
-            TblGantryMonitorStore tblGantryMonitorStore = JSONObject.parseObject(joStore.toJSONString(), TblGantryMonitorStore.class);
+            TblGantryMonitorStore tblGantryMonitorStore = JSONObject.parseObject(data, TblGantryMonitorStore.class);
             tblGantryMonitorStoreMapper.insert(tblGantryMonitorStore);
         } catch (Exception ex) {
-            log.error("暂存门架报文异常：" + ex.getMessage());
+            log.error(reqFileName + "暂存门架报文异常：" + ex.getMessage());
         }
     }
 
     @Override
-    public void saveSpecialEvent(String data) {
+    public void saveSpecialEvent(String reqFileName,String data) {
         TblGantryErrorInfo tblGantryErrorInfo = JSON.parseObject(data, TblGantryErrorInfo.class);
         try {
             tblGantryErrorInfoMapper.insert(tblGantryErrorInfo);

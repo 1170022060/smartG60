@@ -6,11 +6,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.pingok.devicemonitor.domain.gantry.*;
 import com.pingok.devicemonitor.mapper.gantry.*;
 import com.pingok.devicemonitor.service.gantry.IGantryUpperService;
+import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -57,7 +57,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         try {
             //前端（工控机），历史状态
             JSONArray gantryInfoList = data.getJSONArray("gantryInfoList");
-            for(int i = 0; i< gantryInfoList.size(); i++) {
+            for (int i = 0; i < gantryInfoList.size(); i++) {
                 String s = gantryInfoList.getJSONObject(i).toJSONString();
                 TblGantryBaseInfo tblGantryBaseInfo = JSON.parseObject(s, TblGantryBaseInfo.class);
                 tblGantryBaseInfo.setFrontSysFlag(1);
@@ -74,7 +74,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
 
             //后台（服务器），历史状态
             JSONArray chargeUnitInfoList = data.getJSONArray("chargeUnitInfoList");
-            for(int i = 0; i < chargeUnitInfoList.size(); i++) {
+            for (int i = 0; i < chargeUnitInfoList.size(); i++) {
                 String s = chargeUnitInfoList.getJSONObject(i).toJSONString();
                 TblGantryBaseInfo tblGantryBaseInfoBack = JSON.parseObject(s, TblGantryBaseInfo.class);
                 tblGantryBaseInfoBack.setFrontSysFlag(2);
@@ -91,7 +91,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
 
             //牌识，历史状态
             JSONArray cameraInfoList = data.getJSONArray("cameraInfoList");
-            for(int i = 0; i < cameraInfoList.size(); i++) {
+            for (int i = 0; i < cameraInfoList.size(); i++) {
                 String s = cameraInfoList.getJSONObject(i).toJSONString();
                 TblGantryVplrBaseInfo tblGantryVplrBaseInfo = JSON.parseObject(s, TblGantryVplrBaseInfo.class);
                 tblGantryVplrBaseInfoMapper.insert(tblGantryVplrBaseInfo);
@@ -106,7 +106,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
 
             //RSU基础信息
             JSONArray rsuInfoList = data.getJSONArray("RSUInfoList");
-            for(int i = 0; i < rsuInfoList.size(); i++) {
+            for (int i = 0; i < rsuInfoList.size(); i++) {
                 String s = rsuInfoList.getJSONObject(i).toJSONString();
                 TblGantryRsuBaseInfo tblGantryRsuBaseInfo = JSON.parseObject(s, TblGantryRsuBaseInfo.class);
                 tblGantryRsuBaseInfoMapper.insert(tblGantryRsuBaseInfo);
@@ -123,8 +123,8 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
             //过车汇总集合信息（空）
             //门架其他基础信息（空）
 
-        }catch (Exception ex){
-            log.error("处理门架报文异常：" + ex.getMessage());
+        } catch (Exception ex) {
+            throw new ServiceException("存储门架基础信息异常，原因：" + ex.getMessage());
         }
     }
 
@@ -134,7 +134,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
             String heatVersion = data.getString("heatVersion");
             //前端（工控机）
             JSONArray gantryHeartbeatList = data.getJSONArray("gantryHeartbeatList");
-            for(int i = 0; i< gantryHeartbeatList.size(); i++) {
+            for (int i = 0; i < gantryHeartbeatList.size(); i++) {
                 JSONObject jo = gantryHeartbeatList.getJSONObject(i);
                 String s = jo.toJSONString();
                 String frontRunStateId = jo.getString("frontRunStateId");
@@ -159,7 +159,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
             }
             //后台（服务器）
             JSONArray chargeUnitHeartbeatList = data.getJSONArray("chargeUnitHeartbeatList");
-            for(int i = 0; i< chargeUnitHeartbeatList.size(); i++) {
+            for (int i = 0; i < chargeUnitHeartbeatList.size(); i++) {
                 JSONObject jo = chargeUnitHeartbeatList.getJSONObject(i);
                 String s = jo.toJSONString();
                 String backRunStateId = jo.getString("backRunStateId");
@@ -204,7 +204,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
             }
             //牌识
             JSONArray cameraHeartbeatList = data.getJSONArray("cameraHeartbeatList");
-            for(int i = 0; i< cameraHeartbeatList.size(); i++) {
+            for (int i = 0; i < cameraHeartbeatList.size(); i++) {
                 JSONObject jo = cameraHeartbeatList.getJSONObject(i);
                 String s = jo.toJSONString();
                 TblGantryVplrMonitor tblGantryVplrMonitor = JSON.parseObject(s, TblGantryVplrMonitor.class);
@@ -221,7 +221,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
             JSONArray rsuHeartbeatList = data.getJSONArray("RSUHeartbeatList");
             JSONArray psamInfoList = data.getJSONArray("PSAMInfoList");
             JSONArray antennalInfoList = data.getJSONArray("antennalInfoList");
-            for(int i = 0; i< rsuHeartbeatList.size(); i++) {
+            for (int i = 0; i < rsuHeartbeatList.size(); i++) {
                 JSONObject jo = rsuHeartbeatList.getJSONObject(i);
                 jo.put("psamInfoList", psamInfoList);
                 jo.put("antennalInfoList", antennalInfoList);
@@ -236,7 +236,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
                 criteria.andEqualTo("rsuId", tblGantryRsuMonitorCurrent.getRsuid());
                 tblGantryRsuMonitorCurrentMapper.updateByExample(tblGantryRsuMonitorCurrent, example);
             }
-        } catch (Exception ex){
+        } catch (Exception ex) {
             log.error("处理门架报文异常：" + ex.getMessage());
         }
     }
@@ -246,13 +246,9 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         try {
             TblGantryErrorInfo tblGantryErrorInfo = JSON.parseObject(data.toJSONString(), TblGantryErrorInfo.class);
             tblGantryErrorInfoMapper.insert(tblGantryErrorInfo);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             log.error("处理门架报文异常：" + ex.getMessage());
         }
     }
 
-    @Override
-    public void log(JSONObject body) {
-
-    }
 }

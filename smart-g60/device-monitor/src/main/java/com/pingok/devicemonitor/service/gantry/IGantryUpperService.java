@@ -7,9 +7,4 @@ public interface IGantryUpperService {
     void handleSpecialEventUpload(JSONObject body);
     void handleTghbu(JSONObject body);
 
-    /**
-     * 存储门架日志
-     * @param body
-     */
-    void log(JSONObject body);
 }
