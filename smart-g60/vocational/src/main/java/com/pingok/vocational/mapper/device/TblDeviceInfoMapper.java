@@ -102,31 +102,31 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
 
     @Select({"<script>" +
             "select " +
-            "c.DEVICE_ID as \"deviceId\" ," +
-            "c.DEVICE_NAME as \"deviceName\" ," +
-            "c.DICT_LABEL as \"manufacturer\" ," +
-            "c.DEVICE_MODEL as \"deviceModel\" ," +
-            "c.PILE_NO as \"pileNo\" ," +
-            "a.PRESET_INFO as \"text\" ," +
-            "c.DEVICE_PHOTO as \"devicePhoto\" from TBL_RELEASE_RECORD a " +
-            "left join  SYS_DICT_DATA b on b.DICT_VALUE=a.MANUFACTURER and b.DICT_TYPE='manufacturer' " +
-            "left join TBL_DEVICE_INFO c on c.DEVICE_ID=a.DEVICE_ID " +
-            "where rownum = 1 " +
+            "a.DEVICE_ID as \"deviceId\" ," +
+            "a.DEVICE_NAME as \"deviceName\" ," +
+            "b.DICT_LABEL as \"manufacturer\" ," +
+            "a.DEVICE_MODEL as \"deviceModel\" ," +
+            "a.PILE_NO as \"pileNo\" ," +
+            "c.PRESET_INFO as \"text\" ," +
+            "a.DEVICE_PHOTO as \"devicePhoto\" from TBL_DEVICE_INFO a " +
+            "left join SYS_DICT_DATA b on b.DICT_VALUE=a.MANUFACTURER and b.DICT_TYPE='manufacturer' " +
+            "left join TBL_RELEASE_RECORD c on c.DEVICE_ID=a.DEVICE_ID and c.ID in (select ID from TBL_RELEASE_RECORD where DEVICE_ID=a.DEVICE_ID and rownum=1 and PRESET_TIME = (select max(PRESET_TIME) from TBL_RELEASE_RECORD where DEVICE_ID=a.DEVICE_ID )) " +
+            "where 1 = 1 " +
             "<when test='deviceCategory != null'> " +
-            "and c.DEVICE_CATEGORY= #{deviceCategory} or c.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory}) " +
+            "and a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory}) " +
+            "</when>"+
             "<when test='deviceName != null'> " +
-            "and c.DEVICE_NAME like CONCAT(CONCAT('%',#{deviceName}),'%') " +
+            "and a.DEVICE_NAME like CONCAT(CONCAT('%',#{deviceName}),'%') " +
             "</when>"+
             "<when test='pileNo != null'> " +
-            "and c.PILE_NO like CONCAT(CONCAT('%',#{pileNo}),'%') " +
+            "and a.PILE_NO like CONCAT(CONCAT('%',#{pileNo}),'%') " +
             "</when>"+
             "<when test='manufacturer != null'> " +
-            "and c.MANUFACTURER =#{manufacturer} " +
+            "and a.MANUFACTURER =#{manufacturer} " +
             "</when>"+
             "<when test='deviceModel != null'> " +
-            "and c.DEVICE_MODEL =#{deviceModel} " +
+            "and a.DEVICE_MODEL =#{deviceModel} " +
             "</when>" +
-            " order by a.PRESET_TIME desc "+
             "</script>"})
     List<Map> selectInfoBoard(@Param("deviceCategory")Long deviceCategory,@Param("deviceName") String deviceName,@Param("pileNo") String pileNo,@Param("manufacturer")String manufacturer,@Param("deviceModel")String deviceModel);
 }
