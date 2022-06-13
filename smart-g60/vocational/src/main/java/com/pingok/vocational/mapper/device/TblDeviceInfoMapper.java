@@ -99,4 +99,38 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
 
     @Select("select ID as \"id\",DEVICE_NAME || '_' || DEVICE_ID as \"deviceName\" from TBL_DEVICE_INFO order by DEVICE_ID")
     List<Map> selectDeviceName();
+
+    @Select({"<script>" +
+            "select " +
+            "a.DEVICE_ID as \"deviceId\" ," +
+            "a.DEVICE_NAME as \"deviceName\" ," +
+            "b.DICT_LABEL as \"manufacturer\" ," +
+            "a.DEVICE_MODEL as \"deviceModel\" ," +
+            "a.PILE_NO as \"pileNo\" ," +
+            "c.PRESET_INFO as \"text\" ," +
+            "a.DEVICE_PHOTO as \"devicePhoto\" from TBL_DEVICE_INFO a " +
+            "left join SYS_DICT_DATA b on b.DICT_VALUE=a.MANUFACTURER and b.DICT_TYPE='manufacturer' " +
+            "left join TBL_RELEASE_RECORD c on c.DEVICE_ID=a.DEVICE_ID and c.ID in (select ID " +
+            "  from (select t.*,                " +
+            "               row_number() over(partition by t.DEVICE_ID order by t.PRESET_TIME desc) rn " +
+            "          from TBL_RELEASE_RECORD t) c " +
+            " where rn = 1) " +
+            "where 1 = 1 " +
+            "<when test='deviceCategory != null'> " +
+            "and a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory}) " +
+            "</when>"+
+            "<when test='deviceName != null'> " +
+            "and a.DEVICE_NAME like CONCAT(CONCAT('%',#{deviceName}),'%') " +
+            "</when>"+
+            "<when test='pileNo != null'> " +
+            "and a.PILE_NO like CONCAT(CONCAT('%',#{pileNo}),'%') " +
+            "</when>"+
+            "<when test='manufacturer != null'> " +
+            "and a.MANUFACTURER =#{manufacturer} " +
+            "</when>"+
+            "<when test='deviceModel != null'> " +
+            "and a.DEVICE_MODEL like CONCAT(CONCAT('%',#{deviceModel}),'%') " +
+            "</when>" +
+            "</script>"})
+    List<Map> selectInfoBoard(@Param("deviceCategory")Long deviceCategory,@Param("deviceName") String deviceName,@Param("pileNo") String pileNo,@Param("manufacturer")String manufacturer,@Param("deviceModel")String deviceModel);
 }

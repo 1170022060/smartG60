@@ -89,4 +89,11 @@ public interface TblDeviceInfoService {
      * @return 设备信息
      */
     public List<Map> selectDeviceName();
+
+    /**
+     * 情报板查询
+     *
+     * @return 情报板信息
+     */
+    public List<Map> selectInfoBoard(Long deviceCategory,String deviceName,String pileNo,String manufacturer,String deviceModel);
 }

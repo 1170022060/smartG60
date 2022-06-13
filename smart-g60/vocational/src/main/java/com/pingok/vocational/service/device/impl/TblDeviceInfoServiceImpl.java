@@ -122,4 +122,9 @@ public class TblDeviceInfoServiceImpl implements TblDeviceInfoService {
     public List<Map> selectDeviceName() {
         return tblDeviceInfoMapper.selectDeviceName();
     }
+
+    @Override
+    public List<Map> selectInfoBoard(Long deviceCategory, String deviceName, String pileNo, String manufacturer, String deviceModel) {
+        return tblDeviceInfoMapper.selectInfoBoard(deviceCategory, deviceName, pileNo, manufacturer, deviceModel);
+    }
 }
