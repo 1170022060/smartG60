@@ -110,7 +110,11 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "c.PRESET_INFO as \"text\" ," +
             "a.DEVICE_PHOTO as \"devicePhoto\" from TBL_DEVICE_INFO a " +
             "left join SYS_DICT_DATA b on b.DICT_VALUE=a.MANUFACTURER and b.DICT_TYPE='manufacturer' " +
-            "left join TBL_RELEASE_RECORD c on c.DEVICE_ID=a.DEVICE_ID and c.ID in (select ID from TBL_RELEASE_RECORD where DEVICE_ID=a.DEVICE_ID and rownum=1 and PRESET_TIME = (select max(PRESET_TIME) from TBL_RELEASE_RECORD where DEVICE_ID=a.DEVICE_ID )) " +
+            "left join TBL_RELEASE_RECORD c on c.DEVICE_ID=a.DEVICE_ID and c.ID in (select ID " +
+            "  from (select t.*,                " +
+            "               row_number() over(partition by t.DEVICE_ID order by t.PRESET_TIME desc) rn " +
+            "          from TBL_RELEASE_RECORD t) c " +
+            " where rn = 1) " +
             "where 1 = 1 " +
             "<when test='deviceCategory != null'> " +
             "and a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory}) " +
@@ -125,7 +129,7 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "and a.MANUFACTURER =#{manufacturer} " +
             "</when>"+
             "<when test='deviceModel != null'> " +
-            "and a.DEVICE_MODEL =#{deviceModel} " +
+            "and a.DEVICE_MODEL like CONCAT(CONCAT('%',#{deviceModel}),'%') " +
             "</when>" +
             "</script>"})
     List<Map> selectInfoBoard(@Param("deviceCategory")Long deviceCategory,@Param("deviceName") String deviceName,@Param("pileNo") String pileNo,@Param("manufacturer")String manufacturer,@Param("deviceModel")String deviceModel);
