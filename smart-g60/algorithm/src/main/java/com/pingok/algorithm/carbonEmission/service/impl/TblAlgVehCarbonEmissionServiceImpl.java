@@ -58,6 +58,7 @@ public class TblAlgVehCarbonEmissionServiceImpl implements TblAlgVehCarbonEmissi
         SimpleDateFormat endTimeSf = new SimpleDateFormat("yyyy-MM-dd HH:59:59");
         String startTimeStr= startTimeSf.format(calendar.getTime());
         String endTimeStr= endTimeSf.format(calendar.getTime());
+        // 门架过车记录，需要按照车牌升序，门架方向升序（或经过时间升序）排序
         R<List<Map>> result = remoteDataCenterService.info(startTimeStr, endTimeStr);
         if (200 != result.getCode()){
             return;
@@ -253,6 +254,26 @@ public class TblAlgVehCarbonEmissionServiceImpl implements TblAlgVehCarbonEmissi
     @Override
     public TblAlgVehCarbonEmission getAlgVehCarbonEmission(String queryTime){
         return algVehCarbonEmissionMapper.getAlgVehCarbonEmission(queryTime);
+    }
+
+    /**
+     * 查询车辆碳排放列表
+     * @param tblAlgVehCarbonEmission
+     * @return
+     */
+    @Override
+    public List<TblAlgVehCarbonEmission> listByBean(TblAlgVehCarbonEmission tblAlgVehCarbonEmission){
+        return algVehCarbonEmissionMapper.select(tblAlgVehCarbonEmission);
+    }
+
+    /**
+     * 查询车辆碳排放详情
+     * @param tblAlgVehCarbonEmission
+     * @return
+     */
+    @Override
+    public TblAlgVehCarbonEmission selectByBean(TblAlgVehCarbonEmission tblAlgVehCarbonEmission){
+        return algVehCarbonEmissionMapper.selectOne(tblAlgVehCarbonEmission);
     }
 
     /**

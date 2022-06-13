@@ -34,6 +34,26 @@ public class TblAlgBuildCarbonEmissionServiceImpl implements TblAlgBuildCarbonEm
     private RemoteIdProducerService remoteIdProducerService;
 
     /**
+     * 查询碳排放列表
+     * @param tblAlgBuildCarbonEmission
+     * @return
+     */
+    @Override
+    public List<TblAlgBuildCarbonEmission> listByBean(TblAlgBuildCarbonEmission tblAlgBuildCarbonEmission){
+        return buildCarbonEmissionMapper.select(tblAlgBuildCarbonEmission);
+    }
+
+    /**
+     * 查询碳排放详情
+     * @param tblAlgBuildCarbonEmission
+     * @return
+     */
+    @Override
+    public TblAlgBuildCarbonEmission selectByBean(TblAlgBuildCarbonEmission tblAlgBuildCarbonEmission){
+        return buildCarbonEmissionMapper.selectOne(tblAlgBuildCarbonEmission);
+    }
+
+    /**
      * 保存建筑碳排放记录
      *
      * @param tblAlgBuildCarbonEmission

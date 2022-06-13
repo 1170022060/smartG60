@@ -34,6 +34,26 @@ public class TblAlgPlantCarbonEmissionServiceImpl implements TblAlgPlantCarbonEm
     private RemoteIdProducerService remoteIdProducerService;
 
     /**
+     * 查询植物碳排放列表
+     * @param tblAlgPlantCarbonEmission
+     * @return
+     */
+    @Override
+    public List<TblAlgPlantCarbonEmission> listByBean(TblAlgPlantCarbonEmission tblAlgPlantCarbonEmission){
+        return plantCarbonEmissionMapper.select(tblAlgPlantCarbonEmission);
+    }
+
+    /**
+     * 查询植物碳排放详情
+     * @param tblAlgPlantCarbonEmission
+     * @return
+     */
+    @Override
+    public TblAlgPlantCarbonEmission selectByBean(TblAlgPlantCarbonEmission tblAlgPlantCarbonEmission){
+        return plantCarbonEmissionMapper.selectOne(tblAlgPlantCarbonEmission);
+    }
+
+    /**
      * 保存植物碳排放记录
      *
      * @param tblAlgPlantCarbonEmission
