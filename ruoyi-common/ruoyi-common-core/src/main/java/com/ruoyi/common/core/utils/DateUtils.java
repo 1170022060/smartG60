@@ -256,4 +256,51 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         }
         return date;
     }
+
+    /**
+     * 根据两个时间字符串，比较大小
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    public static Boolean compareTo(String startTime, String endTime) {
+        try {
+            int diff = startTime.compareTo(endTime);
+
+            return diff > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 判断当前时间是否在[startTime, endTime]区间，注意时间格式要一致
+     *
+     * @param nowTime 当前时间 例：12:00:00
+     * @param startTime 开始时间 例：6:00:00
+     * @param endTime 结束时间 例：23:00:00
+     * @return
+     */
+    public static boolean isEffectiveDate(Date nowTime, Date startTime, Date endTime) {
+        if (nowTime.getTime() == startTime.getTime()
+                || nowTime.getTime() == endTime.getTime()) {
+            return true;
+        }
+        Calendar date = Calendar.getInstance();
+        date.setTime(nowTime);
+
+        Calendar begin = Calendar.getInstance();
+        begin.setTime(startTime);
+
+        Calendar end = Calendar.getInstance();
+        end.setTime(endTime);
+
+        if (date.after(begin) && date.before(end)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

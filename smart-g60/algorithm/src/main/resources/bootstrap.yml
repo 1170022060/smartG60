@@ -1,6 +1,6 @@
 # Tomcat
 server:
-  port: 9304
+  port: 9314
   tomcat:
     uri-encoding: UTF-8
 
@@ -18,10 +18,10 @@ spring:
     nacos:
       discovery:
         # 服务注册地址
-        server-addr: 497c8310e9.qicp.vip:22292
+        server-addr: 192.168.2.200:8848
       config:
         # 配置中心地址
-        server-addr: 497c8310e9.qicp.vip:22292
+        server-addr: 192.168.2.200:8848
         # 配置文件格式
         file-extension: yml
         # 共享配置
