@@ -28,6 +28,6 @@ public class AlgorithmController {
     @PostMapping("/getLaneAvgSpeed")
     public AjaxResult getLaneAvgSpeed(@RequestBody JSONObject body) {
         return AjaxResult.success(iAlgorithmService.getLaneAvgSpeed(
-                body.getString("mileage"), body.getInteger("laneNo"), body.getInteger("dir")));
+                body.getString("mileage"), body.getString("laneNo"), body.getInteger("dir")));
     }
 }

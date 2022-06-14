@@ -5,5 +5,5 @@ import com.pingok.event.domain.algorithm.LaneAvgSpeed;
 import java.util.List;
 
 public interface IAlgorithmService {
-    List<LaneAvgSpeed> getLaneAvgSpeed(String mileage, Integer laneNo, Integer dir);
+    List<LaneAvgSpeed> getLaneAvgSpeed(String mileage, String laneNo, Integer dir);
 }
