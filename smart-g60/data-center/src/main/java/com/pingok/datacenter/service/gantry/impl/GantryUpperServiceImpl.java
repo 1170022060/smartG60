@@ -1,4 +1,4 @@
-package com.pingok.datacenter.service.gantry.Impl;
+package com.pingok.datacenter.service.gantry.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.datacenter.domain.gantry.*;
