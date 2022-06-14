@@ -44,7 +44,7 @@ public class Consumer {
             log.info("sectorLog 消费了： Topic:" + topic + ",Message:" + msg);
             JSONObject object = JSONObject.parseObject(String.valueOf(msg));
             try {
-                SectorLogVo sectorLogVo = iSectorLogService.getSectorLog(object.getString("ip"), object.getString("port"), object.getString("laneHex"), object.getString("gid"));
+                SectorLogVo sectorLogVo = iSectorLogService.getSectorLog( object.getString("laneHex"), object.getString("gid"));
                 if (sectorLogVo != null) {
                     iSectorLogService.updateSectorLog(sectorLogVo);
                 }

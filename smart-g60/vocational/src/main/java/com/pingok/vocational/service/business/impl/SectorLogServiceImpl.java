@@ -78,17 +78,7 @@ public class SectorLogServiceImpl implements ISectorLogService {
         example.createCriteria().andEqualTo("gid", gid);
         TblSectorLog tblSectorLog = tblSectorLogMapper.selectOneByExample(example);
         if (tblSectorLog == null) {
-            TblLaneInfo laneInfo = iLaneInfoService.findByLaneHex(laneHex);
-            if(laneInfo==null){
-                throw new SecurityException("laneHex错误");
-            }
-            TblBaseStationInfo baseStationInfo = iBaseStationInfoService.findByNetWorkAndStationId(laneInfo.getNetWork(),laneInfo.getStationId());
-            if(baseStationInfo==null){
-                throw new SecurityException("未查询到对应收费站信息");
-            }
             JSONObject data = new JSONObject();
-            data.put("ip", baseStationInfo.getIp());
-            data.put("port", baseStationInfo.getPort());
             data.put("laneHex", laneHex);
             data.put("gid", gid);
             TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();

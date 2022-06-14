@@ -11,13 +11,11 @@ import com.pingok.charge.domain.sectorlog.vo.SectorLogVo;
 public interface ISectorLogService {
     /**
      * 获取车道日志
-     * @param ip
-     * @param port
      * @param laneHex
      * @param gid
      * @return
      */
-    SectorLogVo getSectorLog(String ip,String port, String laneHex, String gid);
+    SectorLogVo getSectorLog(String laneHex, String gid);
 
     /**
      * 上传车道日志

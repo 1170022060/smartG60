@@ -25,13 +25,16 @@ public class SectorLogServiceImpl implements ISectorLogService {
     @Value("${daas.host}")
     private String host;
 
+    @Value("${center.host}")
+    private String centerHost;
+
 
     @Override
-    public SectorLogVo getSectorLog(String ip, String port, String laneHex, String gid) {
+    public SectorLogVo getSectorLog(String laneHex, String gid) {
         Map<String, Object> body = new HashMap<>();
         body.put("LaneHex", laneHex);
         body.put("Gid", gid);
-        String r = HttpUtil.post("http://" + ip + ":" + port + "/api/Lane/QueryReadRecord", body.toString());
+        String r = HttpUtil.post(centerHost + "/api/Lane/QueryReadRecord", body.toString());
         SectorLogVo ret = null;
         if (!StringUtils.isEmpty(r)) {
             ret = JSON.parseObject(r, SectorLogVo.class);
