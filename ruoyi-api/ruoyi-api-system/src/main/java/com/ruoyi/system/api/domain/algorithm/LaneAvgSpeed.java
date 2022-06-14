@@ -14,5 +14,5 @@ public class LaneAvgSpeed {
     private Integer lineType; //车道类型 0:查询车道 1:相邻车道
     private String lineSpeed; //车道速度
     private Integer limitSpeed; //限速
-
+    private Integer isEffect; //是否产生影响 0:未产生 1:产生
 }
