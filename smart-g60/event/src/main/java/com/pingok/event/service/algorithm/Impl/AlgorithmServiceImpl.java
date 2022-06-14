@@ -41,34 +41,40 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
 
     // 根据桩号、车道号查询车道平均速度 mileage 桩号(格式：26+300)；laneNo 车道号(1，2，3，……)
     @Override
-    public List<LaneAvgSpeed> getLaneAvgSpeed(String mileage, Integer laneNo, Integer dir) {
+    public List<LaneAvgSpeed> getLaneAvgSpeed(String mileage, String laneNo, Integer dir) {
 
         List<LaneAvgSpeed> ret  = new ArrayList<>();
         try{
             // get计算区间
             Float calcMileage = 6f;
             // 2022-06-09 sql故障
-//            R<String> r = remoteConfigService.getConfigKey("speed.mileage");
-//            if(R.SUCCESS == r.getCode()) {
-//                calcMileage = Float.parseFloat(r.getMsg());
-//            }
+            R<String> r = remoteConfigService.getConfigKey("speed.mileage");
+            if(R.SUCCESS == r.getCode()) {
+                calcMileage = Float.parseFloat(r.getMsg());
+            }
             // get邻道id
-            List<Integer> laneIds = getJoinLaneIdList(laneNo);
+            List<String> laneIds = getJoinLaneIdList(laneNo);
             // get calcMileage范围内的相机id
             List<String> cameraIds = getRelCameraIdList(mileage, dir, calcMileage);
             // get速度
             for (int i = 0; i < laneIds.size(); ++i) {
-                List<TblEventPlateInfo> tblEventPlateInfos = tblEventPlateInfoMapper.selectByLane(laneIds.get(i), cameraIds);
-                if(tblEventPlateInfos.size() > 0) {
-                    // 计算平均速度
-                    Double avgSpeed = tblEventPlateInfos.stream().mapToDouble(elm -> elm.getUiSpeed()).average().orElse(0);
-                    LaneAvgSpeed laneAvgSpeed = new LaneAvgSpeed();
-                    laneAvgSpeed.setStationNum(mileage);
-                    laneAvgSpeed.setLineNum(laneIds.get(i).toString());
-                    laneAvgSpeed.setLineType(i == 0 ? 0 : 1);
-                    laneAvgSpeed.setLineSpeed(avgSpeed.toString());
-                    ret.add(laneAvgSpeed);
+                String[] splitIds = laneIds.get(i).split(",");
+                Double total = 0.0;
+                for (String id : splitIds) {
+                    List<TblEventPlateInfo> tblEventPlateInfos = tblEventPlateInfoMapper.selectByLane(id, cameraIds);
+                    if(tblEventPlateInfos.size() > 0) {
+                        total += tblEventPlateInfos.stream().mapToDouble(elm -> elm.getUiSpeed()).average().orElse(0);
+                    }
                 }
+                if(total == 0) continue;
+                // 计算平均速度
+                Double avgSpeed = total / splitIds.length;
+                LaneAvgSpeed laneAvgSpeed = new LaneAvgSpeed();
+                laneAvgSpeed.setStationNum(mileage);
+                laneAvgSpeed.setLineNum(laneIds.get(i));
+                laneAvgSpeed.setLineType(i == 0 ? 0 : 1);
+                laneAvgSpeed.setLineSpeed(avgSpeed.toString());
+                ret.add(laneAvgSpeed);
             }
 
         } catch (Exception e) {
@@ -78,13 +84,14 @@ public class AlgorithmServiceImpl implements IAlgorithmService {
         return ret;
     }
 
-    // get邻道id
-    private List<Integer> getJoinLaneIdList(Integer laneNo) {
-        List<Integer> ids = new ArrayList<>();
+    // get邻道id，laneNo格式：1,2,3,...
+    private List<String> getJoinLaneIdList(String laneNo) {
+        List<String> ids = new ArrayList<>();
         ids.add(laneNo); // 查询车道
+        String[] splits = laneNo.split(",");
         //相邻车道（如果车道号不存在，则相机不会有该车道的记录）
-        ids.add(laneNo-1);
-        ids.add(laneNo+1);
+        ids.add(Integer.toString(Integer.parseInt(splits[0])-1));
+        ids.add(Integer.toString(Integer.parseInt(splits[splits.length-1])+1));
         return ids;
     }
 

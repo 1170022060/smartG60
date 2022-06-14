@@ -19,6 +19,6 @@ public interface TblEventPlateInfoMapper extends CommonRepository<TblEventPlateI
             " #{camId}" +
             "</foreach>" +
             "</script>"})
-    List<TblEventPlateInfo> selectByLane(@Param("laneNo") Integer laneNo, @Param("camIds") List<String> camIds);
+    List<TblEventPlateInfo> selectByLane(@Param("laneNo") String laneNo, @Param("camIds") List<String> camIds);
 
 }
