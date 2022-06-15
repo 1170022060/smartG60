@@ -38,9 +38,15 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "<when test='deviceCategory != null'> " +
             "and tdi.DEVICE_CATEGORY = #{deviceCategory} " +
             "</when>" +
-            "and d.DEPT_ID = (select u.DEPT_ID FROM  SYS_USER u where u.USER_ID=#{userId}) OR d.DEPT_ID IN (SELECT t.DEPT_ID FROM  SYS_DEPT t WHERE instr(','||ancestors||',' , ','||(select u.DEPT_ID FROM  SYS_USER u where u.USER_ID=#{userId})||',')&lt;&gt;0 ) " +
+            "<when test='deviceName != null'> " +
+            "and tdi.DEVICE_NAME like CONCAT(CONCAT('%',#{deviceName}),'%') " +
+            "</when>" +
+            "<when test='deviceId != null'> " +
+            "and tdi.DEVICE_ID like CONCAT(CONCAT('%',#{deviceId}),'%') " +
+            "</when>"+
+            "and (d.DEPT_ID = (select u.DEPT_ID FROM  SYS_USER u where u.USER_ID=#{userId}) OR d.DEPT_ID IN (SELECT t.DEPT_ID FROM  SYS_DEPT t WHERE instr(','||ancestors||',' , ','||(select u.DEPT_ID FROM  SYS_USER u where u.USER_ID=#{userId})||',')&lt;&gt;0 )) " +
             "order by tds.STATUS desc " +
             "</script>")
-    List<Map> list(@Param("deviceCategory") Long deviceCategory,@Param("userId") Long userId);
+    List<Map> list(@Param("deviceCategory") Long deviceCategory,@Param("deviceName") String deviceName,@Param("deviceId") String deviceId,@Param("userId") Long userId);
 
 }
