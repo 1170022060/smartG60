@@ -28,9 +28,10 @@ public interface ICustomerProblemsService {
      * @param handleUserId 处理人ID
      * @param startTime 开始时间
      * @param endTime 结束时间
+     * @param handleDept 处理部门
      * @return 客户投诉与咨询记录
      */
-    List<Map> selectCustomerProblems(Long handleUserId, Date startTime, Date endTime);
+    List<Map> selectCustomerProblems(Long handleUserId, Date startTime, Date endTime,Long handleDept);
 
     /**
      * 新增客户投诉与咨询记录

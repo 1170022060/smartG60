@@ -9,5 +9,5 @@ import java.util.Map;
  * @author qiumin
  */
 public interface IDeviceStatusService {
-    List<Map> list(Long deviceCategory);
+    List<Map> list(Long deviceCategory,String deviceName,String deviceId);
 }

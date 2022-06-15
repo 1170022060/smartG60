@@ -65,7 +65,7 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "left join TBL_PROJECT_INFO f on a.ITEM_NAME=f.ID " +
             "where 1=1 " +
             "<when test='deviceCategory != null'> " +
-            "and a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory}) " +
+            "and (a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory})) " +
             "</when>"+
             "<when test='status != null'> " +
             "and a.STATUS= #{status} " +
@@ -117,7 +117,7 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             " where rn = 1) " +
             "where 1 = 1 " +
             "<when test='deviceCategory != null'> " +
-            "and a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory}) " +
+            "and (a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory})) " +
             "</when>"+
             "<when test='deviceName != null'> " +
             "and a.DEVICE_NAME like CONCAT(CONCAT('%',#{deviceName}),'%') " +

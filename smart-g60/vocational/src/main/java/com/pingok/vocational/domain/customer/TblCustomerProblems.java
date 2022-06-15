@@ -49,6 +49,10 @@ public class TblCustomerProblems {
     @Excel(name = "投诉人联系方式")
     private String contactInfo;
 
+    /** 处理部门 */
+    @Excel(name = "处理部门")
+    private Long handleDept;
+
     /** 处理时间 */
     @Excel(name = "处理时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -134,6 +138,14 @@ public class TblCustomerProblems {
 
     public void setContactInfo(String contactInfo) {
         this.contactInfo = contactInfo;
+    }
+
+    public Long getHandleDept() {
+        return handleDept;
+    }
+
+    public void setHandleDept(Long handleDept) {
+        this.handleDept = handleDept;
     }
 
     public Date getHandleTime() {
