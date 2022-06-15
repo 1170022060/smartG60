@@ -33,8 +33,8 @@ public class CustomerProblemsServiceImpl implements ICustomerProblemsService {
     }
 
     @Override
-    public List<Map> selectCustomerProblems(Long handleUserId, Date startTime, Date endTime) {
-        return tblCustomerProblemsMapper.selectCustomerProblems(handleUserId, startTime, endTime);
+    public List<Map> selectCustomerProblems(Long handleUserId, Date startTime, Date endTime,Long handleDept) {
+        return tblCustomerProblemsMapper.selectCustomerProblems(handleUserId, startTime, endTime, handleDept);
     }
 
     @Override
