@@ -3,6 +3,7 @@ package com.pingok.external.service.bridge.impl;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.external.config.BridgeTemperatureConfig;
 import com.pingok.external.domain.bridge.TblBridgeInfo;
 import com.pingok.external.domain.bridge.TblBridgeTemperature;
 import com.pingok.external.domain.bridge.TblBridgeTemperatureLog;
@@ -31,11 +32,7 @@ import java.math.BigDecimal;
 @Service
 public class BridgeTemperatureServiceImpl implements IBridgeTemperatureService {
 
-    @Value("${bridgeTemperature.host}")
-    private String host;
 
-    @Value("${bridgeTemperature.sessid}")
-    private String sessid;
 
 
     @Autowired
@@ -54,9 +51,9 @@ public class BridgeTemperatureServiceImpl implements IBridgeTemperatureService {
     @Override
     public void getTemperature() {
         JSONObject param = new JSONObject();
-        param.put("sessid", sessid);
+        param.put("sessid", BridgeTemperatureConfig.SESSID);
         param.put("updatetm", DateUtils.getPreTime(DateUtils.getNowDate(), -5));
-        String r = HttpUtil.post(host, param.toJSONString());
+        String r = HttpUtil.post(BridgeTemperatureConfig.HOST, param.toJSONString());
         if (!StringUtils.isEmpty(r)) {
             JSONObject ret = JSONObject.parseObject(r);
             if (ret.getBoolean("success")) {

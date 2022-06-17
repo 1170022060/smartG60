@@ -3,6 +3,7 @@ package com.pingok.external.service.amap.impl;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.external.config.AutoNaviMapConfig;
 import com.pingok.external.domain.amap.TblAutoNaviMapRecord;
 import com.pingok.external.mapper.amap.TblAutoNaviMapRecordMapper;
 import com.pingok.external.service.amap.IAutoNaviMapService;
@@ -14,7 +15,6 @@ import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -25,23 +25,6 @@ import java.util.Map;
 @Service
 public class AutoNaviMapServiceImpl implements IAutoNaviMapService {
 
-    @Value("${amap.host}")
-    private String host;
-
-    @Value("${amap.adcode}")
-    private String adcode;
-
-    @Value("${amap.clientKey}")
-    private String clientKey;
-
-    @Value("${amap.callback}")
-    private String callback;
-
-    @Value("${amap.sourceId}")
-    private String sourceId;
-
-    @Value("${amap.secret}")
-    private String secret;
 
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
@@ -51,10 +34,10 @@ public class AutoNaviMapServiceImpl implements IAutoNaviMapService {
     @Override
     public void eventPublish(TblAutoNaviMapRecord autoNaviMapRecord) {
         Map<String, Object> param = new LinkedHashMap<>();
-        param.put("adcode", adcode);
-        param.put("clientKey", clientKey);
+        param.put("adcode", AutoNaviMapConfig.ADCODE);
+        param.put("clientKey", AutoNaviMapConfig.CLIENTKEY);
         param.put("timestamp", DateUtils.getNowShortTimestamp());
-        param.put("sourceId", sourceId);
+        param.put("sourceId", AutoNaviMapConfig.SOURCEID);
         param.put("id", autoNaviMapRecord.getId());
         param.put("stateFlag", 0);
         param.put("type", autoNaviMapRecord.getType());
@@ -63,15 +46,15 @@ public class AutoNaviMapServiceImpl implements IAutoNaviMapService {
         param.put("locs", autoNaviMapRecord.getLocs());
         param.put("startDate", autoNaviMapRecord.getStartDate());
         param.put("desc", autoNaviMapRecord.getDesc());
-        param.put("callback", callback + "amap/callback");
+        param.put("callback", AutoNaviMapConfig.CALLBACK + "amap/callback");
         String digest = "";
         for (String key : param.keySet()) {
             digest += param.get(key).toString();
         }
-        digest = SignUtils.HmacSHA256(digest, secret);
+        digest = SignUtils.HmacSHA256(digest, AutoNaviMapConfig.SECRET);
         param.put("digest", digest);
 
-        String r = HttpUtil.get(host, param);
+        String r = HttpUtil.get(AutoNaviMapConfig.HOST, param);
         if (!StringUtils.isEmpty(r)) {
             if (r.startsWith("{")) {
                 JSONObject ret = JSONObject.parseObject(r);
@@ -80,7 +63,7 @@ public class AutoNaviMapServiceImpl implements IAutoNaviMapService {
                     example.createCriteria()
                             .andEqualTo("id", autoNaviMapRecord.getId());
                     autoNaviMapRecord = tblAutoNaviMapRecordMapper.selectOneByExample(example);
-                    if(autoNaviMapRecord == null){
+                    if (autoNaviMapRecord == null) {
                         autoNaviMapRecord = JSON.parseObject(param.toString(), TblAutoNaviMapRecord.class);
                         autoNaviMapRecord.setId(remoteIdProducerService.nextId());
                         autoNaviMapRecord.setStatus(0);
@@ -112,20 +95,20 @@ public class AutoNaviMapServiceImpl implements IAutoNaviMapService {
     @Override
     public void eventRelieve(Long id) {
         Map<String, Object> param = new LinkedHashMap<>();
-        param.put("adcode", adcode);
-        param.put("clientKey", clientKey);
+        param.put("adcode", AutoNaviMapConfig.ADCODE);
+        param.put("clientKey", AutoNaviMapConfig.CLIENTKEY);
         param.put("timestamp", DateUtils.getNowShortTimestamp());
-        param.put("sourceId", sourceId);
+        param.put("sourceId", AutoNaviMapConfig.SOURCEID);
         param.put("id", id);
         param.put("stateFlag", 2);
         String digest = "";
         for (String key : param.keySet()) {
             digest += param.get(key).toString();
         }
-        digest = SignUtils.HmacSHA256(digest, secret);
+        digest = SignUtils.HmacSHA256(digest, AutoNaviMapConfig.SECRET);
         param.put("digest", digest);
 
-        String r = HttpUtil.get(host, param);
+        String r = HttpUtil.get(AutoNaviMapConfig.HOST, param);
         if (!StringUtils.isEmpty(r)) {
             if (r.startsWith("{")) {
                 JSONObject ret = JSONObject.parseObject(r);

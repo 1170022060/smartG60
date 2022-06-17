@@ -96,7 +96,7 @@ public class SysDept extends BaseEntity
         this.deptName = deptName;
     }
 
-    @NotBlank(message = "显示顺序不能为空")
+//    @NotBlank(message = "显示顺序不能为空")
     public String getOrderNum()
     {
         return orderNum;

@@ -1,14 +1,15 @@
-package com.pingok.external.service.gps.impl;
+package com.pingok.external.service.beiDou.impl;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.common.utils.MD5Utils;
+import com.pingok.external.config.BeiDouConfig;
 import com.pingok.external.domain.gps.TblMaintainCarGps;
 import com.pingok.external.domain.gps.TblMaintainCarGpsLog;
 import com.pingok.external.mapper.gps.TblMaintainCarGpsLogMapper;
 import com.pingok.external.mapper.gps.TblMaintainCarGpsMapper;
-import com.pingok.external.service.gps.IGpsService;
+import com.pingok.external.service.beiDou.IGpsService;
 import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
@@ -26,14 +27,7 @@ import java.io.UnsupportedEncodingException;
 @Service
 public class GpsServiceImpl implements IGpsService {
 
-    @Value("${gps.host}")
-    private String host;
 
-    @Value("${gps.username}")
-    private String username;
-
-    @Value("${gps.password}")
-    private String password;
 
     @Autowired
     private TblMaintainCarGpsMapper tblMaintainCarGpsMapper;
@@ -46,11 +40,11 @@ public class GpsServiceImpl implements IGpsService {
     public void getCarsGps() {
         try {
             JSONObject param = new JSONObject();
-            param.put("username", username);
-            param.put("password", MD5Utils.encodeHexString(password.getBytes("UTF-8")));
+            param.put("username", BeiDouConfig.USERNAME);
+            param.put("password", MD5Utils.encodeHexString(BeiDouConfig.PASSWORD.getBytes("UTF-8")));
             param.put("md5", 1);
             param.put("regnum", "all");
-            String r = HttpUtil.get(host, param);
+            String r = HttpUtil.get(BeiDouConfig.HOST, param);
             if (!StringUtils.isEmpty(r)) {
                 Example example = new Example(TblMaintainCarGps.class);
                 JSONArray ret = JSONArray.parseArray(r);

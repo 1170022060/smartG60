@@ -4,6 +4,7 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.external.config.BridgeConfig;
 import com.pingok.external.domain.bridge.*;
 import com.pingok.external.mapper.bridge.*;
 import com.pingok.external.service.bridge.IBridgeService;
@@ -27,11 +28,7 @@ import java.util.List;
 @Service
 public class BridgeServiceImpl implements IBridgeService {
 
-    @Value("${bridge.host}")
-    private String host;
 
-    @Value("${bridge.token}")
-    private String token;
 
     @Autowired
     private RemoteEventService remoteEventService;
@@ -60,7 +57,7 @@ public class BridgeServiceImpl implements IBridgeService {
         List<TblBridgeWarning> bridgeWarnings = tblBridgeWarningMapper.selectByExample(example);
         String r;
         for (TblBridgeWarning warning : bridgeWarnings) {
-            r = HttpUtil.get(host + "/monitor/alarm_record/" + token + "/" + warning.getId());
+            r = HttpUtil.get(BridgeConfig.HOST + "/monitor/alarm_record/" + BridgeConfig.TOKEN + "/" + warning.getId());
             if (!StringUtils.isEmpty(r)) {
                 JSONObject ret = JSONObject.parseObject(r);
                 if (ret.getInteger("code") == 200) {
@@ -84,7 +81,7 @@ public class BridgeServiceImpl implements IBridgeService {
         TblEventRecord eventRecord;
         R re;
         for (TblBridgeInfo bridge : bridgeInfos) {
-            r = HttpUtil.get(host + "/monitor/alarm_records_by_range_time/" + token + "/" + bridge.getId() + "/" + startTime + "/" + endTime);
+            r = HttpUtil.get(BridgeConfig.HOST + "/monitor/alarm_records_by_range_time/" + BridgeConfig.TOKEN + "/" + bridge.getId() + "/" + startTime + "/" + endTime);
             if (!StringUtils.isEmpty(r)) {
                 JSONObject ret = JSONObject.parseObject(r);
                 if (ret.getInteger("code") == 200) {
@@ -120,7 +117,7 @@ public class BridgeServiceImpl implements IBridgeService {
         String r;
         List<TblBridgeInfo> bridgeInfos = tblBridgeInfoMapper.selectAll();
         for (TblBridgeInfo bridge : bridgeInfos) {
-            r = HttpUtil.get(host + "/monitor/sensors/" + token + "/" + bridge.getId());
+            r = HttpUtil.get(BridgeConfig.HOST + "/monitor/sensors/" + BridgeConfig.TOKEN + "/" + bridge.getId());
             if (!StringUtils.isEmpty(r)) {
                 JSONObject ret = JSONObject.parseObject(r);
                 if (ret.getInteger("code") == 200) {
@@ -159,7 +156,7 @@ public class BridgeServiceImpl implements IBridgeService {
         String r;
         List<TblBridgeInfo> bridgeInfos = tblBridgeInfoMapper.selectAll();
         for (TblBridgeInfo bridge : bridgeInfos) {
-            r = HttpUtil.get(host + "/monitor/acquisitions/" + token + "/" + bridge.getId());
+            r = HttpUtil.get(BridgeConfig.HOST + "/monitor/acquisitions/" + BridgeConfig.TOKEN + "/" + bridge.getId());
             if (!StringUtils.isEmpty(r)) {
                 JSONObject ret = JSONObject.parseObject(r);
                 if (ret.getInteger("code") == 200) {
@@ -198,7 +195,7 @@ public class BridgeServiceImpl implements IBridgeService {
         String r;
         List<TblBridgeProject> bridgeProjects = tblBridgeProjectMapper.selectAll();
         for (TblBridgeProject project : bridgeProjects) {
-            r = HttpUtil.get(host + "/monitor/bridges/" + token + "/" + project.getId());
+            r = HttpUtil.get(BridgeConfig.HOST + "/monitor/bridges/" + BridgeConfig.TOKEN + "/" + project.getId());
             if (!StringUtils.isEmpty(r)) {
                 JSONObject ret = JSONObject.parseObject(r);
                 if (ret.getInteger("code") == 200) {
@@ -230,7 +227,7 @@ public class BridgeServiceImpl implements IBridgeService {
 
     @Override
     public void updateProjectInfo() {
-        String r = HttpUtil.get(host + "/monitor/projects/" + token);
+        String r = HttpUtil.get(BridgeConfig.HOST + "/monitor/projects/" + BridgeConfig.TOKEN);
         if (!StringUtils.isEmpty(r)) {
             JSONObject ret = JSONObject.parseObject(r);
             if (ret.getInteger("code") == 200) {

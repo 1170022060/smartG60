@@ -1,4 +1,4 @@
-package com.pingok.external.service.gps;
+package com.pingok.external.service.beiDou;
 
 public interface IGpsService {
     void getCarsGps();
