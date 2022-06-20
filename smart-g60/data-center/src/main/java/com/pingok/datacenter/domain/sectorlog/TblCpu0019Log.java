@@ -6,6 +6,7 @@ import com.ruoyi.common.core.annotation.Excel;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Date;
  * @author ruoyi
  */
 @Table(name = "TBL_CPU_0019_LOG")
-public class TblCpu0019Log {
+public class TblCpu0019Log implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */

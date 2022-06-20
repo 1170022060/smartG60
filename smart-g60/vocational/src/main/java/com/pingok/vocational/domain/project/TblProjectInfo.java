@@ -5,6 +5,7 @@ import com.ruoyi.common.core.annotation.Excel;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Date;
  * @author ruoyi
  */
 @Table(name = "TBL_PROJECT_INFO")
-public class TblProjectInfo {
+public class TblProjectInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */

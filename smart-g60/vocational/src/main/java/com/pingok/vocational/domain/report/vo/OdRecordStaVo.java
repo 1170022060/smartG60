@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.Id;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Date;
  * @author ruoyi
  */
 
-public class OdRecordStaVo {
+public class OdRecordStaVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

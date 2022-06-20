@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Date;
  * @author ruoyi
  */
 @Table(name = "TBL_TOLL_FORECAST_RECORD")
-public class TblTollForecastRecord {
+public class TblTollForecastRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */

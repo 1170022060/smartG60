@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.Map;
  * @author ruoyi
  */
 @Table(name = "TBL_DEVICE_CATEGORY")
-public class TblDeviceCategory {
+public class TblDeviceCategory implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */

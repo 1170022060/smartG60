@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.util.Date;
-
+/**
+ * 入口MTC流水通行信息表 TBL_EN_MTC_PASS_年份
+ *
+ * @author ruoyi
+ */
 public class TblEnMtcPass implements Serializable {
 
     private static final long serialVersionUID = 1L;

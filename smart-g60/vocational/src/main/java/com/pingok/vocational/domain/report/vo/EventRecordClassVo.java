@@ -4,12 +4,14 @@ import com.ruoyi.common.core.annotation.Excel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.io.Serializable;
+
 /**
  * 事件记录表(按车型导出)
  *
  * @author ruoyi
  */
-public class EventRecordClassVo {
+public class EventRecordClassVo implements Serializable {
 
     /** 车型*/
     @Excel(name = "车型")

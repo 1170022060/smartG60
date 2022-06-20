@@ -1,8 +1,6 @@
 package com.pingok.vocational.mapper.device;
 
-import com.pingok.vocational.domain.device.DeviceGetInfo;
 import com.pingok.vocational.domain.device.TblDeviceInfo;
-import com.pingok.vocational.domain.emergency.TblEmergencyGroup;
 import com.ruoyi.common.core.mapper.CommonRepository;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
