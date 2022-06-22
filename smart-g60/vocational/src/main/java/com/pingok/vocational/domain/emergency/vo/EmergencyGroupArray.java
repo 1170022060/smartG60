@@ -4,8 +4,9 @@ import com.ruoyi.common.core.annotation.Excel;
 
 import javax.persistence.Id;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
-public class EmergencyGroupArray {
+public class EmergencyGroupArray implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */

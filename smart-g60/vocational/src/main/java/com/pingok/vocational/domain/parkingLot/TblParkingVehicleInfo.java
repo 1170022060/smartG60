@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Date;
  * @version 1.0.0 2022-04-08
  */
 @Table(name = "TBL_PARKING_VEHICLE_INFO")
-public class TblParkingVehicleInfo {
+public class TblParkingVehicleInfo implements Serializable {
     /** 版本号 */
     private static final long serialVersionUID = -7132345013553295596L;
 

@@ -4,12 +4,14 @@ import com.ruoyi.common.core.annotation.Excel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.io.Serializable;
+
 /**
  * 事件记录表(按位置区间导出)
  *
  * @author ruoyi
  */
-public class EventRecordSiteVo {
+public class EventRecordSiteVo implements Serializable {
 
     /** 位置区间 */
     @Excel(name = "位置区间")

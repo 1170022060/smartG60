@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 入口流水通行信息表 TBL_EN_TRANS_PASS_年份
+ * 入口ETC流水通行信息表 TBL_EN_ETC_PASS_年份
  *
  * @author ruoyi
  */

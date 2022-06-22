@@ -1,6 +1,5 @@
 package com.pingok.vocational.service.field.impl;
 
-import com.pingok.vocational.domain.baseinfo.vo.StationInfo;
 import com.pingok.vocational.domain.field.TblFieldInfo;
 import com.pingok.vocational.domain.field.vo.FieldVo;
 import com.pingok.vocational.mapper.field.TblFieldInfoMapper;

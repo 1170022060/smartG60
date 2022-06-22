@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 /**
  * 门架设备详情表 TBL_GANTRY_INFO_DTL
@@ -14,7 +15,7 @@ import javax.validation.constraints.Size;
  * @author ruoyi
  */
 @Table(name = "TBL_GANTRY_INFO_DTL")
-public class TblGantryInfoDtl {
+public class TblGantryInfoDtl implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */

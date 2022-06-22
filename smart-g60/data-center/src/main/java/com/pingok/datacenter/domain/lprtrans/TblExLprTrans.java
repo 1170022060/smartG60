@@ -3,6 +3,7 @@ package com.pingok.datacenter.domain.lprtrans;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Date;
  *
  * @author ruoyi
  */
-public class TblExLprTrans {
+public class TblExLprTrans implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

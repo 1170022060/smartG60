@@ -1,5 +1,7 @@
 package com.pingok.vocational.service.roster;
 
+import com.pingok.vocational.domain.roster.TblPursuesListRecord;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -18,4 +20,12 @@ public interface IPursuesListRecordService {
      * @return 追讨名单
      */
     List<Map> selectPursuesList(Date startTime, Date endTime);
+
+    /**
+     * 导入追讨名单
+     *
+     * @param pursuesList 追讨名单列表
+     * @return 结果
+     */
+    public String importPursues(List<TblPursuesListRecord> pursuesList);
 }
