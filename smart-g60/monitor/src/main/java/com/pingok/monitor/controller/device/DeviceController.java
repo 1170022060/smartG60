@@ -9,10 +9,7 @@ import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -31,12 +28,19 @@ public class DeviceController extends BaseController {
     @Autowired
     private IDeviceStatusService iDeviceStatusService;
 
+    @PutMapping
+    public AjaxResult checkStatus() {
+        iDeviceStatusService.checkStatus();
+        return AjaxResult.success();
+    }
+
+
     @RequiresPermissions("monitor:device:search")
     @Log(title = "设备监控服务", businessType = BusinessType.OTHER)
     @GetMapping("/search")
-    public TableDataInfo search(Long deviceCategory,String deviceName,String deviceId) {
+    public TableDataInfo search(Long deviceCategory, String deviceName, String deviceId) {
         startPage();
-        List<Map> list = iDeviceStatusService.list(deviceCategory,deviceName,deviceId);
+        List<Map> list = iDeviceStatusService.list(deviceCategory, deviceName, deviceId);
         return getDataTable(list);
     }
 
