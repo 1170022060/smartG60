@@ -1,5 +1,6 @@
 package com.pingok.vocational.service.device.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.pingok.vocational.domain.device.TblDeviceCategory;
 import com.pingok.vocational.domain.device.vo.TreeSelect;
 import com.pingok.vocational.mapper.device.TblDeviceCategoryMapper;
@@ -40,7 +41,9 @@ public class TblDeviceCategoryServiceImpl implements TblDeviceCategoryService {
 
     @Override
     public TblDeviceCategory selectCategoryById(Long Id) {
-        return tblDeviceCategoryMapper.selectByPrimaryKey(Id);
+        TblDeviceCategory tblDeviceCategory=tblDeviceCategoryMapper.selectByPrimaryKey(Id);
+        tblDeviceCategory.setCategoryPostStr(JSON.parseObject(tblDeviceCategory.getCategoryPost(), Long[].class));
+        return tblDeviceCategory;
     }
 
 
@@ -60,6 +63,7 @@ public class TblDeviceCategoryServiceImpl implements TblDeviceCategoryService {
         {
             tblDeviceCategory.setCategoryNum(PinYinUtil.getPinYinHeadChar(tblDeviceCategory.getCategoryName()));
         }
+        tblDeviceCategory.setCategoryPost(JSON.toJSONString(tblDeviceCategory.getCategoryPostStr()));
         tblDeviceCategory.setCreateTime(new Date());
         tblDeviceCategory.setCreateUserId(SecurityUtils.getUserId());
         return tblDeviceCategoryMapper.insert(tblDeviceCategory);
@@ -67,6 +71,7 @@ public class TblDeviceCategoryServiceImpl implements TblDeviceCategoryService {
 
     @Override
     public int updateDeviceCategory(TblDeviceCategory tblDeviceCategory) {
+        tblDeviceCategory.setCategoryPost(JSON.toJSONString(tblDeviceCategory.getCategoryPostStr()));
         tblDeviceCategory.setUpdateTime(new Date());
         tblDeviceCategory.setUpdateUserId(SecurityUtils.getUserId());
         return tblDeviceCategoryMapper.updateByPrimaryKeySelective(tblDeviceCategory);
@@ -96,26 +101,26 @@ public class TblDeviceCategoryServiceImpl implements TblDeviceCategoryService {
     /**
      * 构建前端所需要树结构
      *
-     * @param menus 菜单列表
+     * @param deviceCategoryList 设备类目列表
      * @return 树结构列表
      */
     @Override
-    public List<TblDeviceCategory> buildMenuTree(List<TblDeviceCategory> menus) {
+    public List<TblDeviceCategory> buildMenuTree(List<TblDeviceCategory> deviceCategoryList) {
         List<TblDeviceCategory> returnList = new ArrayList<TblDeviceCategory>();
         List<Long> tempList = new ArrayList<Long>();
-        for (TblDeviceCategory dept : menus) {
-            tempList.add(dept.getId());
+        for (TblDeviceCategory tblDeviceCategory : deviceCategoryList) {
+            tempList.add(tblDeviceCategory.getId());
         }
-        for (Iterator<TblDeviceCategory> iterator = menus.iterator(); iterator.hasNext(); ) {
-            TblDeviceCategory menu = (TblDeviceCategory) iterator.next();
+        for (Iterator<TblDeviceCategory> iterator = deviceCategoryList.iterator(); iterator.hasNext(); ) {
+            TblDeviceCategory category = (TblDeviceCategory) iterator.next();
             // 如果是顶级节点, 遍历该父节点的所有子节点
-            if (!tempList.contains(menu.getParentCategory())) {
-                recursionFn(menus, menu);
-                returnList.add(menu);
+            if (!tempList.contains(category.getParentCategory())) {
+                recursionFn(deviceCategoryList, category);
+                returnList.add(category);
             }
         }
         if (returnList.isEmpty()) {
-            returnList = menus;
+            returnList = deviceCategoryList;
         }
         return returnList;
     }
@@ -123,13 +128,13 @@ public class TblDeviceCategoryServiceImpl implements TblDeviceCategoryService {
     /**
      * 构建前端所需要下拉树结构
      *
-     * @param menus 菜单列表
+     * @param deviceCategoryList 设备类目列表
      * @return 下拉树结构列表
      */
     @Override
-    public List<TreeSelect> buildMenuTreeSelect(List<TblDeviceCategory> menus) {
-        List<TblDeviceCategory> menuTrees = buildMenuTree(menus);
-        return menuTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
+    public List<TreeSelect> buildMenuTreeSelect(List<TblDeviceCategory> deviceCategoryList) {
+        List<TblDeviceCategory> categoryTrees = buildMenuTree(deviceCategoryList);
+        return categoryTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     /**

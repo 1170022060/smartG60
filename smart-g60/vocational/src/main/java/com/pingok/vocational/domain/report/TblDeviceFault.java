@@ -83,6 +83,19 @@ public class TblDeviceFault implements Serializable {
 
     private String remark;
 
+    /** 故障图片*/
+    private String faultPhoto;
+
+    /** 故障视频*/
+    private String faultVideo;
+
+    /** 故障图片数组*/
+    private String[] faultPhotoStr;
+
+    /** 故障视频数组*/
+    private String[] faultVideoStr;
+
+
     public Long getId()
     {
         return id;
@@ -204,6 +217,38 @@ public class TblDeviceFault implements Serializable {
     }
 
     public void setUpdateUserId(Long updateUserId) { this.updateUserId = updateUserId; }
+
+    public String getFaultPhoto() {
+        return faultPhoto;
+    }
+
+    public void setFaultPhoto(String faultPhoto) {
+        this.faultPhoto = faultPhoto;
+    }
+
+    public String getFaultVideo() {
+        return faultVideo;
+    }
+
+    public void setFaultVideo(String faultVideo) {
+        this.faultVideo = faultVideo;
+    }
+
+    public String[] getFaultPhotoStr() {
+        return faultPhotoStr;
+    }
+
+    public void setFaultPhotoStr(String[] faultPhotoStr) {
+        this.faultPhotoStr = faultPhotoStr;
+    }
+
+    public String[] getFaultVideoStr() {
+        return faultVideoStr;
+    }
+
+    public void setFaultVideoStr(String[] faultVideoStr) {
+        this.faultVideoStr = faultVideoStr;
+    }
 
     @Override
     public String toString() {

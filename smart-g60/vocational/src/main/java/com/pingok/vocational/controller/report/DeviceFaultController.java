@@ -1,6 +1,7 @@
 package com.pingok.vocational.controller.report;
 
 import com.pingok.vocational.domain.report.TblDeviceFault;
+import com.pingok.vocational.domain.report.vo.DeviceFaultSearch;
 import com.pingok.vocational.domain.report.vo.DeviceFaultTypeVo;
 import com.pingok.vocational.domain.report.vo.ReportVo;
 import com.pingok.vocational.service.report.IDeviceFaultService;
@@ -85,7 +86,7 @@ public class DeviceFaultController extends BaseController {
     @GetMapping("/search")
     public TableDataInfo search(String faultType, Long deviceId, String faultId, String faultDescription, Integer status) {
         startPage();
-        List<Map> list = deviceFaultService.search(faultType, deviceId, faultId, faultDescription, status);
+        List<DeviceFaultSearch> list = deviceFaultService.search(faultType, deviceId, faultId, faultDescription, status);
         return getDataTable(list);
     }
 
