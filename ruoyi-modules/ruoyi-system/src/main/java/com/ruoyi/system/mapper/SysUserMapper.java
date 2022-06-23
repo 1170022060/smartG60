@@ -36,6 +36,14 @@ public interface SysUserMapper
     public List<SysUser> selectUnallocatedList(SysUser user);
 
     /**
+     * 通过钉钉用户id名查询用户
+     *
+     * @param dingTalkId 用户名
+     * @return 用户对象信息
+     */
+    public SysUser selectUserBydingTalkId(String dingTalkId);
+
+    /**
      * 通过用户名查询用户
      * 
      * @param userName 用户名

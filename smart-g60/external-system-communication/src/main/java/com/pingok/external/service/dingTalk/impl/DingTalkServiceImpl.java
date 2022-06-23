@@ -1,204 +1,112 @@
 package com.pingok.external.service.dingTalk.impl;
 
 import cn.hutool.http.HttpUtil;
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.external.config.DingTalkConfig;
 import com.pingok.external.service.dingTalk.IDeptService;
 import com.pingok.external.service.dingTalk.IDingTalkService;
-import com.ruoyi.common.core.constant.SecurityConstants;
-import com.ruoyi.common.core.domain.R;
+import com.pingok.external.service.dingTalk.IRoleService;
+import com.pingok.external.service.dingTalk.IUserService;
+import com.pingok.external.util.DingCallbackCrypto;
 import com.ruoyi.common.core.utils.StringUtils;
-import com.ruoyi.system.api.RemoteDeptService;
-import com.ruoyi.system.api.domain.SysDept;
+import com.ruoyi.common.redis.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
 public class DingTalkServiceImpl implements IDingTalkService {
 
     @Autowired
+    private RedisService redisService;
+
+    @Autowired
     private IDeptService iDeptService;
 
     @Autowired
-    private RemoteDeptService remoteDeptService;
+    private IRoleService iRoleService;
+
+    @Autowired
+    private IUserService iUserService;
+
 
     @Override
-    public void orgDeptRemove(JSONArray deptIds) {
-        R r;
-        int deptIdSize = deptIds.size();
-        for (int i = 0; i < deptIdSize; i++) {
-            r = remoteDeptService.removeInner(deptIds.getLong(i),SecurityConstants.INNER);
-            if (r != null) {
-                if (r.getCode() == R.FAIL) {
-                    log.error("删除：" + deptIds.getLong(i) + "部门信息失败，原因：" + r.getMsg());
-                }
-            } else {
-                log.error("删除：" + deptIds.getLong(i) + "部门信息失败，原因：ruoyi-system服务无响应");
-            }
-        }
-    }
-
-    @Override
-    public void orgDeptModify(JSONArray deptIds) {
-        String token = iDeptService.gettoken();
-        Map<String, Object> param = new HashMap<>();
-        param.put("access_token", token);
-        param.put("language", "zh_CN");
-        String res;
-        R<SysDept> sysDeptR;
-        SysDept sysDept;
-        R r;
-        JSONObject object;
-        int deptIdSize = deptIds.size();
-        for (int i = 0; i < deptIdSize; i++) {
-            param.put("dept_id", deptIds.getLong(i));
-            res = HttpUtil.post(DingTalkConfig.HOST + "/topapi/v2/department/get", param);
-            if (!StringUtils.isEmpty(res)) {
-                object = JSONObject.parseObject(res);
+    public String gettoken() {
+        if (!redisService.hasKey(DingTalkConfig.REDIS_KEY)) {
+            Map<String, Object> param = new HashMap<>();
+            param.put("appkey", DingTalkConfig.APP_KEY);
+            param.put("appsecret", DingTalkConfig.APP_SECRET);
+            String r = HttpUtil.get(DingTalkConfig.HOST + "/gettoken", param);
+            if (!StringUtils.isEmpty(r)) {
+                JSONObject object = JSONObject.parseObject(r);
                 if (object.getInteger("errcode") == 0) {
-                    object = object.getJSONObject("result");
-                    sysDeptR = remoteDeptService.getInfoInner(object.getLong("dept_id"), SecurityConstants.INNER);
-                    if (sysDeptR != null && sysDeptR.getCode() == R.SUCCESS) {
-                        sysDept = sysDeptR.getData();
-                        sysDept.setDeptId(object.getLong("dept_id"));
-                        sysDept.setDeptName(object.getString("name"));
-                        sysDept.setParentId(object.getLong("parent_id"));
-                        r = remoteDeptService.editInner(sysDept, SecurityConstants.INNER);
-                        if (r != null) {
-                            if (r.getCode() == R.FAIL) {
-                                log.error("更新：" + object.getString("name") + "部门信息失败，原因：" + r.getMsg());
-                            }
-                        } else {
-                            log.error("更新：" + object.getString("name") + "部门信息失败，原因：ruoyi-system服务无响应");
-                        }
-                    }else {
-                        sysDept = new SysDept();
-                        sysDept.setStatus("0");
-                        sysDept.setDelFlag("0");
-                        sysDept.setDeptId(object.getLong("dept_id"));
-                        sysDept.setDeptName(object.getString("name"));
-                        sysDept.setParentId(object.getLong("parent_id"));
-                        r = remoteDeptService.addInner(sysDept, SecurityConstants.INNER);
-                        if (r != null) {
-                            if (r.getCode() == R.FAIL) {
-                                log.error("新增：" + object.getString("name") + "部门信息失败，原因：" + r.getMsg());
-                            }
-                        } else {
-                            log.error("新增：" + object.getString("name") + "部门信息失败，原因：ruoyi-system服务无响应");
-                        }
-                    }
+                    redisService.setCacheObject(DingTalkConfig.REDIS_KEY, object.getString("access_token"), object.getLong("expires_in"), TimeUnit.SECONDS);
+                } else {
+                    throw new SecurityException("获取DingTalkToken失败：" + object.getString("errmsg"));
                 }
             }
         }
-    }
-
-    @Override
-    public void orgDeptCreate(JSONArray deptIds) {
-        String token = iDeptService.gettoken();
-        Map<String, Object> param = new HashMap<>();
-        param.put("access_token", token);
-        param.put("language", "zh_CN");
-        String res;
-        SysDept sysDept;
-        R r;
-        JSONObject object;
-        int deptIdSize = deptIds.size();
-        for (int i = 0; i < deptIdSize; i++) {
-            param.put("dept_id", deptIds.getLong(i));
-            res = HttpUtil.post(DingTalkConfig.HOST + "/topapi/v2/department/get", param);
-            if (!StringUtils.isEmpty(res)) {
-                object = JSONObject.parseObject(res);
-                if (object.getInteger("errcode") == 0) {
-                    object = object.getJSONObject("result");
-                    sysDept = new SysDept();
-                    sysDept.setStatus("0");
-                    sysDept.setDelFlag("0");
-                    sysDept.setDeptId(object.getLong("dept_id"));
-                    sysDept.setDeptName(object.getString("name"));
-                    sysDept.setParentId(object.getLong("parent_id"));
-                    r = remoteDeptService.addInner(sysDept, SecurityConstants.INNER);
-                    if (r != null) {
-                        if (r.getCode() == R.FAIL) {
-                            log.error("新增：" + object.getString("name") + "部门信息失败，原因：" + r.getMsg());
-                        }
-                    } else {
-                        log.error("新增：" + object.getString("name") + "部门信息失败，原因：ruoyi-system服务无响应");
-                    }
-
-                }
-            }
-        }
+        String token = redisService.getCacheObject(DingTalkConfig.REDIS_KEY);
+        return token;
     }
 
 
     @Override
-    public void updateDepartmentList(Long deptId) {
-        String token = iDeptService.gettoken();
-        Map<String, Object> param = new HashMap<>();
-        param.put("access_token", token);
-        param.put("dept_id", deptId);
-        param.put("language", "zh_CN");
-        String res = HttpUtil.post(DingTalkConfig.HOST + "/topapi/v2/department/listsub", param);
-        if (!StringUtils.isEmpty(res)) {
-            JSONObject object = JSONObject.parseObject(res);
-            if (object.getInteger("errcode") == 0) {
-                JSONArray array = object.getJSONArray("result");
-                if (!array.isEmpty() && array.size() > 0) {
-                    int size = array.size();
-                    SysDept sysDept;
-                    R r;
-                    R<SysDept> sysDeptR;
-                    for (int i = 0; i < size; i++) {
-                        object = array.getJSONObject(i);
-                        sysDeptR = remoteDeptService.getInfoInner(object.getLong("dept_id"), SecurityConstants.INNER);
-                        if (sysDeptR != null && sysDeptR.getCode() == R.SUCCESS) {
-                            sysDept = sysDeptR.getData();
-                            sysDept.setDeptId(object.getLong("dept_id"));
-                            sysDept.setDeptName(object.getString("name"));
-                            sysDept.setParentId(object.getLong("parent_id"));
-                            r = remoteDeptService.editInner(sysDept, SecurityConstants.INNER);
-                            if (r != null) {
-                                if (r.getCode() == R.SUCCESS) {
-                                    updateDepartmentList(sysDept.getDeptId());
-                                } else {
-                                    log.error("更新：" + object.getString("name") + "部门信息失败，原因：" + r.getMsg());
-                                }
-                            } else {
-                                log.error("更新：" + object.getString("name") + "部门信息失败，原因：ruoyi-system服务无响应");
-                            }
-                        } else {
-                            sysDept = new SysDept();
-                            sysDept.setStatus("0");
-                            sysDept.setDelFlag("0");
-                            sysDept.setOrderNum(String.valueOf(i));
-                            sysDept.setDeptId(object.getLong("dept_id"));
-                            sysDept.setDeptName(object.getString("name"));
-                            sysDept.setParentId(object.getLong("parent_id"));
-                            r = remoteDeptService.addInner(sysDept, SecurityConstants.INNER);
-                            if (r != null) {
-                                if (r.getCode() == R.SUCCESS) {
-                                    updateDepartmentList(sysDept.getDeptId());
-                                } else {
-                                    log.error("新增：" + object.getString("name") + "部门信息失败，原因：" + r.getMsg());
-                                }
-                            } else {
-                                log.error("新增：" + object.getString("name") + "部门信息失败，原因：ruoyi-system服务无响应");
-                            }
-                        }
-                    }
-                }
-            } else {
-                throw new SecurityException("获取钉钉部门列表失败：" + object.getString("errmsg"));
+    public Map<String, String> callBack(String msg_signature, String timeStamp, String nonce, JSONObject json) {
+        try {
+            // 1. 从http请求中获取加解密参数
+            // 2. 使用加解密类型
+            // Constant.OWNER_KEY 说明：
+            // 1、开发者后台配置的订阅事件为应用级事件推送，此时OWNER_KEY为应用的APP_KEY。
+            // 2、调用订阅事件接口订阅的事件为企业级事件推送，
+            //      此时OWNER_KEY为：企业的appkey（企业内部应用）或SUITE_KEY（三方应用）
+            DingCallbackCrypto callbackCrypto = new DingCallbackCrypto(DingTalkConfig.AES_TOKEN, DingTalkConfig.AES_KEY, DingTalkConfig.APP_KEY);
+            String encryptMsg = json.getString("encrypt");
+            String decryptMsg = callbackCrypto.getDecryptMsg(msg_signature, timeStamp, nonce, encryptMsg);
 
+            // 3. 反序列化回调事件json数据
+            JSONObject eventJson = JSON.parseObject(decryptMsg);
+            String eventType = eventJson.getString("EventType");
+            switch (eventType) {
+                case "org_dept_create":
+                    iDeptService.orgDeptCreate(eventJson.getJSONArray("DeptId"));
+                    break;
+                case "org_dept_modify":
+                    iDeptService.orgDeptModify(eventJson.getJSONArray("DeptId"));
+                    break;
+                case "org_dept_remove":
+                    iDeptService.orgDeptRemove(eventJson.getJSONArray("DeptId"));
+                    break;
+                case "label_conf_add":
+                    iRoleService.labelConfAdd(eventJson.getJSONArray("LabelIdList"));
+                    break;
+                case "label_conf_modify":
+                    iRoleService.labelConfModify(eventJson.getJSONArray("PostLabelList"));
+                    break;
+                case "label_conf_del":
+                    iRoleService.labelConfDel(eventJson.getJSONArray("LabelIdList"));
+                    break;
+                case "user_add_org":
+                    iUserService.saveOrUpdate(eventJson.getJSONArray("UserId"));
+                    break;
+                case "user_modify_org":
+                    iUserService.saveOrUpdate(eventJson.getJSONArray("UserId"));
+                    break;
+                case "user_leave_org":
+                    iUserService.delete(eventJson.getJSONArray("UserId"));
+                    break;
             }
+            // 5. 返回success的加密数据
+            Map<String, String> successMap = callbackCrypto.getEncryptedMap("success");
+            return successMap;
+        } catch (DingCallbackCrypto.DingTalkEncryptException e) {
+            throw new RuntimeException(e);
         }
     }
-
 }

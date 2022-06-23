@@ -26,6 +26,11 @@ public class RemoteUserFallbackFactory implements FallbackFactory<RemoteUserServ
         return new RemoteUserService()
         {
             @Override
+            public R<LoginUser> getUserInfoByDingTalkId(String dingTalkId, String source) {
+                return null;
+            }
+
+            @Override
             public R<LoginUser> getUserInfo(String username, String source)
             {
                 return R.fail("获取用户失败:" + throwable.getMessage());
@@ -36,6 +41,27 @@ public class RemoteUserFallbackFactory implements FallbackFactory<RemoteUserServ
             {
                 return R.fail("注册用户失败:" + throwable.getMessage());
             }
+
+            @Override
+            public R authRoleInner(Long userId, Long[] roleIds, String source) {
+                return null;
+            }
+
+            @Override
+            public R addInner(SysUser user, String source) {
+                return null;
+            }
+
+            @Override
+            public R editInner(SysUser user, String source) {
+                return null;
+            }
+
+            @Override
+            public R removeInner(Long[] userIds, String source) {
+                return null;
+            }
+
         };
     }
 }

@@ -5,10 +5,11 @@ import com.ruoyi.common.core.constant.ServiceNameConstants;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.api.domain.SysDept;
 import com.ruoyi.system.api.factory.RemoteDeptFallbackFactory;
-import org.bouncycastle.its.asn1.IValue;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 部门服务
@@ -44,5 +45,8 @@ public interface RemoteDeptService {
      */
     @DeleteMapping("/dept/removeInner/{deptId}")
     R removeInner(@PathVariable(value = "deptId") Long deptId, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
+
+    @PostMapping("/dept/listInner")
+    R<List<SysDept>> listInner(SysDept dept, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
 
 }

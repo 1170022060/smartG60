@@ -1,26 +1,29 @@
 package com.pingok.external.service.dingTalk;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
-import java.util.Map;
 
 public interface IDeptService {
 
+    /**
+     * 删除部门信息
+     */
+    void orgDeptRemove(JSONArray deptIds);
 
+    /**
+     * 更新部门信息
+     */
+    void orgDeptModify(JSONArray deptIds);
+
+    /**
+     * 新增部门信息
+     */
+    void orgDeptCreate(JSONArray deptIds);
     /**
      * 获取token
-     */
-    String gettoken();
-
 
     /**
-     * 事件订阅
-     * @param msg_signature
-     * @param timeStamp
-     * @param nonce
-     * @param json
-     * @return
+     * 更新部门列表
      */
-    Map<String, String> callBack(String msg_signature, String timeStamp, String nonce, JSONObject json);
+    void updateDepartmentList(Long deptId);
+
 }
