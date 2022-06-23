@@ -5,6 +5,7 @@ import com.pingok.vocational.domain.device.vo.TreeSelect;
 import com.pingok.vocational.mapper.device.TblDeviceCategoryMapper;
 import com.pingok.vocational.service.device.TblDeviceCategoryService;
 import com.ruoyi.common.core.constant.UserConstants;
+import com.ruoyi.common.core.utils.PinYinUtil;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
@@ -57,6 +58,10 @@ public class TblDeviceCategoryServiceImpl implements TblDeviceCategoryService {
             tblDeviceCategory.setParentCategory(0L);
         }
         tblDeviceCategory.setStatus(1);
+        if(StringUtils.isNull(tblDeviceCategory.getCategoryNum()))
+        {
+            tblDeviceCategory.setCategoryNum(PinYinUtil.getPinYinHeadChar(tblDeviceCategory.getCategoryNum()));
+        }
         tblDeviceCategory.setCreateTime(new Date());
         tblDeviceCategory.setCreateUserId(SecurityUtils.getUserId());
         return tblDeviceCategoryMapper.insert(tblDeviceCategory);
