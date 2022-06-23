@@ -22,7 +22,6 @@ import java.util.Map;
  * @author ruoyi
  */
 @RestController
-@CrossOrigin(origins = "*",maxAge = -1)
 @RequestMapping("/deviceCategory")
 public class TblDeviceCategoryController extends BaseController {
 

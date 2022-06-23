@@ -65,6 +65,8 @@ public class TblFieldInfoServiceImpl implements TblFieldInfoService {
     @Override
     public int updateStatus(Long id, Integer status) {
         TblFieldInfo tblFieldInfo= tblFieldInfoMapper.selectByPrimaryKey(id);
+        tblFieldInfo.setUpdateTime(new Date());
+        tblFieldInfo.setUpdateUserId(SecurityUtils.getUserId());
         tblFieldInfo.setStatus(status);
         return tblFieldInfoMapper.updateByPrimaryKeySelective(tblFieldInfo);
     }

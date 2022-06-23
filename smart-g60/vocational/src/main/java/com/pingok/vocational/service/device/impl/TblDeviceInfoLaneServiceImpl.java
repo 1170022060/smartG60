@@ -70,6 +70,8 @@ public class TblDeviceInfoLaneServiceImpl implements TblDeviceInfoLaneService {
     @Override
     public int updateStatus(Long id, Integer status) {
         TblDeviceInfoLane tblDeviceInfoLane= tblDeviceInfoLaneMapper.selectByPrimaryKey(id);
+        tblDeviceInfoLane.setUpdateTime(new Date());
+        tblDeviceInfoLane.setUpdateUserId(SecurityUtils.getUserId());
         tblDeviceInfoLane.setStatus(status);
         return tblDeviceInfoLaneMapper.updateByPrimaryKeySelective(tblDeviceInfoLane);
     }

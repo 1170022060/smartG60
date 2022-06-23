@@ -75,6 +75,8 @@ public class ReleasePresetServiceImpl implements IReleasePresetService {
     @Override
     public int updateStatus(Long id, Integer status) {
         TblReleasePreset tblReleasePreset= tblReleasePresetMapper.selectByPrimaryKey(id);
+        tblReleasePreset.setUpdateTime(new Date());
+        tblReleasePreset.setUpdateUserId(SecurityUtils.getUserId());
         tblReleasePreset.setStatus(status);
         return tblReleasePresetMapper.updateByPrimaryKeySelective(tblReleasePreset);
     }

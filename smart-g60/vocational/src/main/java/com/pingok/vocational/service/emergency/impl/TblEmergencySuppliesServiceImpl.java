@@ -61,7 +61,8 @@ public class TblEmergencySuppliesServiceImpl implements TblEmergencySuppliesServ
     @Override
     public int updateStatus(Long id, Integer status) {
         TblEmergencySupplies tblEmergencySupplies= tblEmergencySuppliesMapper.selectByPrimaryKey(id);
-        tblEmergencySupplies.setStatus(status);
+        tblEmergencySupplies.setUpdateTime(new Date());
+        tblEmergencySupplies.setUpdateUserId(SecurityUtils.getUserId());
         return tblEmergencySuppliesMapper.updateByPrimaryKeySelective(tblEmergencySupplies);
     }
 

@@ -70,6 +70,8 @@ public class TractorListRecordServiceImpl implements ITractorListRecordService {
     @Override
     public int updateStatus(Long id, Integer status) {
         TblTractorListRecord tblTractorListRecord = tblTractorListRecordMapper.selectByPrimaryKey(id);
+        tblTractorListRecord.setUpdateTime(new Date());
+        tblTractorListRecord.setUpdateUserId(SecurityUtils.getUserId());
         tblTractorListRecord.setStatus(status);
         return tblTractorListRecordMapper.updateByPrimaryKeySelective(tblTractorListRecord);
     }

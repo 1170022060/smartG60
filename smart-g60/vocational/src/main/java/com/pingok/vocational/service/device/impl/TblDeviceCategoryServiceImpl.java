@@ -11,8 +11,6 @@ import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
-import tk.mybatis.mapper.util.Sqls;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -60,7 +58,7 @@ public class TblDeviceCategoryServiceImpl implements TblDeviceCategoryService {
         tblDeviceCategory.setStatus(1);
         if(StringUtils.isNull(tblDeviceCategory.getCategoryNum()))
         {
-            tblDeviceCategory.setCategoryNum(PinYinUtil.getPinYinHeadChar(tblDeviceCategory.getCategoryNum()));
+            tblDeviceCategory.setCategoryNum(PinYinUtil.getPinYinHeadChar(tblDeviceCategory.getCategoryName()));
         }
         tblDeviceCategory.setCreateTime(new Date());
         tblDeviceCategory.setCreateUserId(SecurityUtils.getUserId());
@@ -77,6 +75,8 @@ public class TblDeviceCategoryServiceImpl implements TblDeviceCategoryService {
     @Override
     public int updateStatus(Long id, Integer status) {
         TblDeviceCategory tblDeviceCategory = tblDeviceCategoryMapper.selectByPrimaryKey(id);
+        tblDeviceCategory.setUpdateTime(new Date());
+        tblDeviceCategory.setUpdateUserId(SecurityUtils.getUserId());
         tblDeviceCategory.setStatus(status);
         return tblDeviceCategoryMapper.updateByPrimaryKeySelective(tblDeviceCategory);
     }

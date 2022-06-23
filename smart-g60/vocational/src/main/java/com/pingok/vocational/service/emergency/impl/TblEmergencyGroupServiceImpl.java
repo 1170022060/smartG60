@@ -65,6 +65,8 @@ public class TblEmergencyGroupServiceImpl implements TblEmergencyGroupService {
     @Override
     public int updateStatus(Long id, Integer status) {
         TblEmergencyGroup tblEmergencyGroup= tblEmergencyGroupMapper.selectByPrimaryKey(id);
+        tblEmergencyGroup.setUpdateTime(new Date());
+        tblEmergencyGroup.setUpdateUserId(SecurityUtils.getUserId());
         tblEmergencyGroup.setStatus(status);
         return tblEmergencyGroupMapper.updateByPrimaryKeySelective(tblEmergencyGroup);
     }

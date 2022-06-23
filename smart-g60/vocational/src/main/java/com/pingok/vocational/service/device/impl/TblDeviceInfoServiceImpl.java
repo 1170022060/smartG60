@@ -92,6 +92,8 @@ public class TblDeviceInfoServiceImpl implements TblDeviceInfoService {
     @Override
     public int updateStatus(Long id, Integer status) {
         TblDeviceInfo tblDeviceInfo= tblDeviceInfoMapper.selectByPrimaryKey(id);
+        tblDeviceInfo.setUpdateTime(new Date());
+        tblDeviceInfo.setUpdateUserId(SecurityUtils.getUserId());
         tblDeviceInfo.setStatus(status);
         return tblDeviceInfoMapper.updateByPrimaryKeySelective(tblDeviceInfo);
     }
