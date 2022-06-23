@@ -90,6 +90,10 @@ public class SysUser extends BaseEntity
     /** 角色ID */
     private Long roleId;
 
+    private String dingTalkId;
+
+    private String jobNumber;
+
     public SysUser()
     {
 
@@ -319,7 +323,25 @@ public class SysUser extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
+            .append("jobNumber", getJobNumber())
+            .append("dingTalkId", getDingTalkId())
             .append("dept", getDept())
             .toString();
+    }
+
+    public String getDingTalkId() {
+        return dingTalkId;
+    }
+
+    public void setDingTalkId(String dingTalkId) {
+        this.dingTalkId = dingTalkId;
+    }
+
+    public String getJobNumber() {
+        return jobNumber;
+    }
+
+    public void setJobNumber(String jobNumber) {
+        this.jobNumber = jobNumber;
     }
 }

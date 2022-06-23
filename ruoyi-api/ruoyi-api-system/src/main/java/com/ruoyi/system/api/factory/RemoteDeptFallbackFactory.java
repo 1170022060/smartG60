@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * 部门服务降级处理
  * 
@@ -44,6 +46,12 @@ public class RemoteDeptFallbackFactory implements FallbackFactory<RemoteDeptServ
             public R removeInner(Long deptId, String source) {
                 return null;
             }
+
+            @Override
+            public R<List<SysDept>> listInner(SysDept dept, String source) {
+                return null;
+            }
+
 
         };
     }

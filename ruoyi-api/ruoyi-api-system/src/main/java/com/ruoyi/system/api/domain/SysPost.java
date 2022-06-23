@@ -1,12 +1,13 @@
-package com.ruoyi.system.domain;
+package com.ruoyi.system.api.domain;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.annotation.Excel;
 import com.ruoyi.common.core.annotation.Excel.ColumnType;
 import com.ruoyi.common.core.web.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  * 岗位表 sys_post
@@ -51,7 +52,7 @@ public class SysPost extends BaseEntity
     }
 
     @NotBlank(message = "岗位编码不能为空")
-    @Size(min = 0, max = 64, message = "岗位编码长度不能超过64个字符")
+    @Size(min = 0, max = 500, message = "岗位编码长度不能超过500个字符")
     public String getPostCode()
     {
         return postCode;
@@ -63,7 +64,7 @@ public class SysPost extends BaseEntity
     }
 
     @NotBlank(message = "岗位名称不能为空")
-    @Size(min = 0, max = 50, message = "岗位名称长度不能超过50个字符")
+    @Size(min = 0, max = 500, message = "岗位名称长度不能超过500个字符")
     public String getPostName()
     {
         return postName;

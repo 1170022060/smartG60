@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Validator;
+
+import com.ruoyi.system.api.domain.SysPost;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,6 @@ import com.ruoyi.common.datascope.annotation.DataScope;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.domain.SysRole;
 import com.ruoyi.system.api.domain.SysUser;
-import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.domain.SysUserPost;
 import com.ruoyi.system.domain.SysUserRole;
 import com.ruoyi.system.mapper.SysPostMapper;
@@ -60,6 +61,17 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     protected Validator validator;
+
+    /**
+     * 通过钉钉用户id名查询用户
+     *
+     * @param dingTalkId 用户名
+     * @return 用户对象信息
+     */
+    @Override
+    public SysUser selectUserBydingTalkId(String dingTalkId) {
+        return userMapper.selectUserBydingTalkId(dingTalkId);
+    }
 
     /**
      * 根据条件分页查询用户列表
@@ -482,7 +494,7 @@ public class SysUserServiceImpl implements ISysUserService
         for (Long userId : userIds)
         {
             checkUserAllowed(new SysUser(userId));
-            checkUserDataScope(userId);
+//            checkUserDataScope(userId);
         }
         // 删除用户与角色关联
         userRoleMapper.deleteUserRole(userIds);
@@ -558,6 +570,20 @@ public class SysUserServiceImpl implements ISysUserService
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
+    }
+
+    @Override
+    public int deleteUserByIdsInner(Long[] userIds) {
+        for (Long userId : userIds)
+        {
+            checkUserAllowed(new SysUser(userId));
+            checkUserDataScope(userId);
+        }
+        // 删除用户与角色关联
+        userRoleMapper.deleteUserRole(userIds);
+        // 删除用户与岗位关联
+        userPostMapper.deleteUserPost(userIds);
+        return userMapper.deleteUserByIds(userIds);
     }
 
 }

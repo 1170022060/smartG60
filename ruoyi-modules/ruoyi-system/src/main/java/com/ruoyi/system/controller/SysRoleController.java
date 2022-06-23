@@ -2,6 +2,8 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.security.annotation.InnerAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -218,5 +220,68 @@ public class SysRoleController extends BaseController
     {
         roleService.checkRoleDataScope(roleId);
         return toAjax(roleService.insertAuthUsers(roleId, userIds));
+    }
+
+
+    /**
+     * 删除角色
+     */
+    @InnerAuth
+    @DeleteMapping("/removeInner/{roleIds}")
+    public AjaxResult removeInner(@PathVariable Long[] roleIds)
+    {
+        return toAjax(roleService.deleteRoleByIdsInner(roleIds));
+    }
+
+    /**
+     * 根据角色编号获取详细信息
+     */
+    @InnerAuth
+    @GetMapping(value = "/getInfoInner/{roleId}")
+    public AjaxResult getInfoInner(@PathVariable Long roleId)
+    {
+//        roleService.checkRoleDataScope(roleId);
+        return AjaxResult.success(roleService.selectRoleById(roleId));
+    }
+
+    /**
+     * 新增角色
+     */
+    @InnerAuth
+    @PostMapping("/addInner")
+    public AjaxResult addInner(@Validated @RequestBody SysRole role)
+    {
+        if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleNameUnique(role)))
+        {
+            return AjaxResult.error("新增角色'" + role.getRoleName() + "'失败，角色名称已存在");
+        }
+        else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleKeyUnique(role)))
+        {
+            return AjaxResult.error("新增角色'" + role.getRoleName() + "'失败，角色权限已存在");
+        }
+        role.setCreateBy(SecurityUtils.getUsername());
+        return toAjax(roleService.insertRole(role));
+
+    }
+
+    /**
+     * 修改保存角色
+     */
+    @InnerAuth
+    @PutMapping("/editInner")
+    public AjaxResult editInner(@Validated @RequestBody SysRole role)
+    {
+        roleService.checkRoleAllowed(role);
+//        roleService.checkRoleDataScope(role.getRoleId());
+        if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleNameUnique(role)))
+        {
+            return AjaxResult.error("修改角色'" + role.getRoleName() + "'失败，角色名称已存在");
+        }
+        else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleKeyUnique(role)))
+        {
+            return AjaxResult.error("修改角色'" + role.getRoleName() + "'失败，角色权限已存在");
+        }
+        role.setUpdateBy(SecurityUtils.getUsername());
+        return toAjax(roleService.updateRole(role));
     }
 }

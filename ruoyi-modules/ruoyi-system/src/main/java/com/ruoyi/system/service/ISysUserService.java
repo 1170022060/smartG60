@@ -11,6 +11,14 @@ import com.ruoyi.system.api.domain.SysUser;
 public interface ISysUserService
 {
     /**
+     * 通过钉钉用户id名查询用户
+     *
+     * @param dingTalkId 用户名
+     * @return 用户对象信息
+     */
+    public SysUser selectUserBydingTalkId(String dingTalkId);
+
+    /**
      * 根据条件分页查询用户列表
      * 
      * @param user 用户信息
@@ -203,4 +211,12 @@ public interface ISysUserService
      * @return 结果
      */
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName);
+
+    /**
+     * 批量删除用户信息
+     *
+     * @param userIds 需要删除的用户ID
+     * @return 结果
+     */
+    public int deleteUserByIdsInner(Long[] userIds);
 }

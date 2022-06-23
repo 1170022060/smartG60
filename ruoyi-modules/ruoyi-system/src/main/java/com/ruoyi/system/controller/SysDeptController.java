@@ -206,7 +206,7 @@ public class SysDeptController extends BaseController
     @GetMapping(value = "/getInfoInner/{deptId}")
     public AjaxResult getInfoInner(@PathVariable Long deptId)
     {
-        deptService.checkDeptDataScope(deptId);
+//        deptService.checkDeptDataScope(deptId);
         return AjaxResult.success(deptService.selectDeptById(deptId));
     }
 
@@ -225,7 +225,15 @@ public class SysDeptController extends BaseController
         {
             return AjaxResult.error("部门存在用户,不允许删除");
         }
-        deptService.checkDeptDataScope(deptId);
+//        deptService.checkDeptDataScope(deptId);
         return toAjax(deptService.deleteDeptById(deptId));
+    }
+
+    @InnerAuth
+    @PostMapping("/listInner")
+    public AjaxResult listInner(SysDept dept)
+    {
+        List<SysDept> depts = deptService.selectDeptList(dept);
+        return AjaxResult.success(depts);
     }
 }

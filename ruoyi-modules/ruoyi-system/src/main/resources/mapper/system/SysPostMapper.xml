@@ -119,4 +119,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach> 
  	</delete>
 
+	<select id="selectPostByName" parameterType="String" resultMap="SysPostResult">
+		<include refid="selectPostVo"/>
+		where post_name = #{postName}
+	</select>
+
 </mapper> 

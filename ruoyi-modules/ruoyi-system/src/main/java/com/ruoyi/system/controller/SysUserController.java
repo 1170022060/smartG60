@@ -309,4 +309,100 @@ public class SysUserController extends BaseController
         userService.insertUserAuth(userId, roleIds);
         return success();
     }
+
+
+    /**
+     * 用户授权角色
+     */
+    @InnerAuth
+    @PutMapping("/authRoleInner")
+    public AjaxResult authRoleInner(Long userId, Long[] roleIds)
+    {
+//        userService.checkUserDataScope(userId);
+        userService.insertUserAuth(userId, roleIds);
+        return success();
+    }
+
+    /**
+     * 新增用户
+     */
+    @InnerAuth
+    @PostMapping("/addInner")
+    public AjaxResult addInner(@Validated @RequestBody SysUser user)
+    {
+        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUserName())))
+        {
+            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，登录账号已存在");
+        }
+        else if (StringUtils.isNotEmpty(user.getPhonenumber())
+                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user)))
+        {
+            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，手机号码已存在");
+        }
+        else if (StringUtils.isNotEmpty(user.getEmail())
+                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user)))
+        {
+            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
+        }
+        user.setCreateBy(SecurityUtils.getUsername());
+        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+        return toAjax(userService.insertUser(user));
+    }
+
+    /**
+     * 修改用户
+     */
+    @InnerAuth
+    @PutMapping("/editInner")
+    public AjaxResult editInner(@Validated @RequestBody SysUser user)
+    {
+        userService.checkUserAllowed(user);
+//        userService.checkUserDataScope(user.getUserId());
+        if (StringUtils.isNotEmpty(user.getPhonenumber())
+                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user)))
+        {
+            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
+        }
+        else if (StringUtils.isNotEmpty(user.getEmail())
+                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user)))
+        {
+            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
+        }
+        user.setUpdateBy(SecurityUtils.getUsername());
+        return toAjax(userService.updateUser(user));
+    }
+
+    /**
+     * 删除用户
+     */
+    @InnerAuth
+    @DeleteMapping("/removeInner/{userIds}")
+    public AjaxResult removeInner(@PathVariable Long[] userIds)
+    {
+        if (ArrayUtils.contains(userIds, SecurityUtils.getUserId()))
+        {
+            return AjaxResult.error("当前用户不能删除");
+        }
+        return toAjax(userService.deleteUserByIdsInner(userIds));
+    }
+
+    @InnerAuth
+    @GetMapping("/getUserInfoByDingTalkId/{dingTalkId}")
+    public R<LoginUser> getUserInfoByDingTalkId(@PathVariable("dingTalkId") String dingTalkId)
+    {
+        SysUser sysUser = userService.selectUserBydingTalkId(dingTalkId);
+        if (StringUtils.isNull(sysUser))
+        {
+            return R.fail("用户名或密码错误");
+        }
+        // 角色集合
+        Set<String> roles = permissionService.getRolePermission(sysUser.getUserId());
+        // 权限集合
+        Set<String> permissions = permissionService.getMenuPermission(sysUser.getUserId());
+        LoginUser sysUserVo = new LoginUser();
+        sysUserVo.setSysUser(sysUser);
+        sysUserVo.setRoles(roles);
+        sysUserVo.setPermissions(permissions);
+        return R.ok(sysUserVo);
+    }
 }

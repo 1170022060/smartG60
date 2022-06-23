@@ -1,7 +1,8 @@
 package com.ruoyi.system.mapper;
 
+import com.ruoyi.system.api.domain.SysPost;
+
 import java.util.List;
-import com.ruoyi.system.domain.SysPost;
 
 /**
  * 岗位信息 数据层
@@ -10,6 +11,13 @@ import com.ruoyi.system.domain.SysPost;
  */
 public interface SysPostMapper
 {
+
+    /**
+     * 根据岗位名称查询岗位信息
+     * @param postName
+     * @return
+     */
+    public SysPost selectPostByName(String postName);
     /**
      * 查询岗位数据集合
      * 
