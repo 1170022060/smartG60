@@ -66,6 +66,14 @@ public class TblDeviceCategory implements Serializable {
     /** 子菜单 */
     private List<TblDeviceCategory> children = new ArrayList<TblDeviceCategory>();
 
+    /** 绑定岗位*/
+    @Excel(name = "绑定岗位")
+    private String categoryPost;
+
+    /** 绑定岗位数组*/
+    @Excel(name = "绑定岗位数组")
+    private Long[] categoryPostStr;
+
     @Transient
     private List<Map> deviceInfos;
 
@@ -176,5 +184,21 @@ public class TblDeviceCategory implements Serializable {
 
     public void setDeviceInfos(List<Map> deviceInfos) {
         this.deviceInfos = deviceInfos;
+    }
+
+    public String getCategoryPost() {
+        return categoryPost;
+    }
+
+    public void setCategoryPost(String categoryPost) {
+        this.categoryPost = categoryPost;
+    }
+
+    public Long[] getCategoryPostStr() {
+        return categoryPostStr;
+    }
+
+    public void setCategoryPostStr(Long[] categoryPostStr) {
+        this.categoryPostStr = categoryPostStr;
     }
 }

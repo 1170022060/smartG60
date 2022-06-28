@@ -49,10 +49,10 @@ public class ReleasePresetController extends BaseController {
     @RequiresPermissions("vocational:releasePreset:info")
     @Log(title = "信息发布预设信息-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
-    public TableDataInfo info(@RequestParam(name = "infoType",required = false) Integer infoType,@RequestParam(name = "status",required = false) Integer status)
+    public TableDataInfo info(@RequestParam(name = "infoType",required = false) Integer infoType,@RequestParam(name = "status",required = false) Integer status,@RequestParam(name = "presetName",required = false) String presetName)
     {
         startPage();
-        List<Map> info = releasePresetService.selectReleasePreset(infoType,status);
+        List<Map> info = releasePresetService.selectReleasePreset(infoType,status,presetName);
         return getDataTable(info);
     }
 

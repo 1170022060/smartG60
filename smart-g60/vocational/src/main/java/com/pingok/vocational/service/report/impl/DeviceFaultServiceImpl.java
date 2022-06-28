@@ -1,8 +1,11 @@
 package com.pingok.vocational.service.report.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.util.StringUtil;
 import com.pingok.vocational.domain.report.TblDeviceFault;
 import com.pingok.vocational.domain.report.vo.DeviceFaultTypeVo;
 import com.pingok.vocational.domain.report.vo.ReportVo;
+import com.pingok.vocational.domain.report.vo.DeviceFaultSearch;
 import com.pingok.vocational.mapper.report.TblDeviceFaultMapper;
 import com.pingok.vocational.service.report.IDeviceFaultService;
 import com.ruoyi.common.core.exception.ServiceException;
@@ -12,8 +15,8 @@ import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +42,17 @@ public class DeviceFaultServiceImpl implements IDeviceFaultService {
         tblDeviceFault.setCreateUserId(SecurityUtils.getUserId());
         tblDeviceFault.setRegisterType(2);
         tblDeviceFault.setFaultTime(DateUtils.getNowDate());
+        tblDeviceFault.setFaultPhoto(JSON.toJSONString(tblDeviceFault.getFaultPhotoStr()));
+        tblDeviceFault.setFaultVideo(JSON.toJSONString(tblDeviceFault.getFaultVideoStr()));
         tblDeviceFaultMapper.insert(tblDeviceFault);
     }
 
     @Override
     public TblDeviceFault findById(Long id) {
-        return tblDeviceFaultMapper.selectByPrimaryKey(id);
+        TblDeviceFault tblDeviceFault = tblDeviceFaultMapper.selectByPrimaryKey(id);
+        tblDeviceFault.setFaultPhotoStr(JSON.parseObject(tblDeviceFault.getFaultPhoto(), String[].class));
+        tblDeviceFault.setFaultVideoStr(JSON.parseObject(tblDeviceFault.getFaultVideo(), String[].class));
+        return tblDeviceFault;
     }
 
     @Override
@@ -74,8 +82,25 @@ public class DeviceFaultServiceImpl implements IDeviceFaultService {
     }
 
     @Override
-    public List<Map> search(String faultType, Long deviceId, String faultId, String faultDescription, Integer status) {
-        return tblDeviceFaultMapper.search(faultType,deviceId,faultId,faultDescription,status);
+    public List<DeviceFaultSearch> search(String faultType, Long deviceId, String faultId, String faultDescription, Integer status) {
+        List<DeviceFaultSearch> list =tblDeviceFaultMapper.search(faultType,deviceId,faultId,faultDescription,status);
+        List<DeviceFaultSearch> list2 = new ArrayList<>();
+        Long postId =tblDeviceFaultMapper.selectPostId(SecurityUtils.getUserId());
+        for(DeviceFaultSearch Search :list)
+        {
+            String postStr=tblDeviceFaultMapper.selectPostIDs(Search.getDeviceCategory());
+            if(StringUtils.isNotNull(postStr) && postId!=null)
+            {
+                Long[] post=JSON.parseObject(postStr, Long[].class);
+                for(Long l: post){
+                    if(l.longValue()==postId.longValue())
+                    {
+                        list2.add(Search);
+                    }
+                }
+            }
+        }
+        return list2;
     }
 
     @Override
@@ -87,4 +112,5 @@ public class DeviceFaultServiceImpl implements IDeviceFaultService {
     public List<DeviceFaultTypeVo> selectDeviceFaultByTypeList(ReportVo reportVo) {
         return tblDeviceFaultMapper.selectDeviceFaultByTypeList(reportVo);
     }
+
 }

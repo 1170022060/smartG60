@@ -1,6 +1,7 @@
 package com.pingok.vocational.mapper.report;
 
 import com.pingok.vocational.domain.report.TblDeviceFault;
+import com.pingok.vocational.domain.report.vo.DeviceFaultSearch;
 import com.pingok.vocational.domain.report.vo.DeviceFaultTypeVo;
 import com.pingok.vocational.domain.report.vo.ReportVo;
 import com.ruoyi.common.core.mapper.CommonRepository;
@@ -58,7 +59,8 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "updateUser.NICK_NAME AS \"updateUser\", " +
             "tdi.DEVICE_ID AS \"deviceNum\", " +
             "tdi.DEVICE_NAME AS \"deviceName\",  " +
-            "tdf.DEVICE_ID AS \"deviceId\"  " +
+            "tdf.DEVICE_ID AS \"deviceId\",  " +
+            "tdi.DEVICE_CATEGORY AS \"deviceCategory\"  " +
             "FROM " +
             "TBL_DEVICE_FAULT tdf " +
             "JOIN TBL_DEVICE_INFO tdi ON tdi.ID = tdf.DEVICE_ID " +
@@ -100,7 +102,8 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "updateUser.NICK_NAME AS \"updateUser\", " +
             "tdi.DEVICE_ID AS \"deviceNum\", " +
             "tdi.DEVICE_NAME AS \"deviceName\",  " +
-            "tdf.DEVICE_ID AS \"deviceId\"  " +
+            "tdf.DEVICE_ID AS \"deviceId\",  " +
+            "tdi.DEVICE_CATEGORY AS \"deviceCategory\"  " +
             "FROM " +
             "TBL_DEVICE_FAULT tdf " +
             "JOIN TBL_GANTRY_INFO tdi ON tdi.ID = tdf.DEVICE_ID " +
@@ -142,7 +145,8 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "updateUser.NICK_NAME AS \"updateUser\", " +
             "tdi.DEVICE_ID AS \"deviceNum\", " +
             "tdi.DEVICE_NAME AS \"deviceName\",  " +
-            "tdf.DEVICE_ID AS \"deviceId\"  " +
+            "tdf.DEVICE_ID AS \"deviceId\",  " +
+            "tdi.DEVICE_CATEGORY AS \"deviceCategory\"  " +
             "FROM " +
             "TBL_DEVICE_FAULT tdf " +
             "JOIN TBL_DEVICE_INFO_LANE tdi ON tdi.ID = tdf.DEVICE_ID " +
@@ -167,7 +171,7 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "and f.\"status\"= #{status} " +
             "</when>"+
             "</script>"})
-    List<Map> search(@Param("faultType") String faultType, @Param("deviceId") Long deviceId, @Param("faultId") String faultId, @Param("faultDescription") String faultDescription, @Param("status") Integer status);
+    List<DeviceFaultSearch> search(@Param("faultType") String faultType, @Param("deviceId") Long deviceId, @Param("faultId") String faultId, @Param("faultDescription") String faultDescription, @Param("status") Integer status);
 
     @Select({"<script>" +
             "select b.DICT_LABEL as \"faultType\"," +
@@ -206,4 +210,12 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "group by b.DICT_LABEL order by b.DICT_LABEL" +
             "</script>"})
     List<DeviceFaultTypeVo> selectDeviceFaultByTypeList(ReportVo reportVo);
+
+    @Select("select POST_ID as \"postId\" from SYS_USER_POST where USER_ID= #{userId} ")
+    Long selectPostId(@Param("userId") Long userId);
+
+    @Select("select CATEGORY_POST as \"categoryPost\" from TBL_DEVICE_CATEGORY where ID= #{deviceCategory} ")
+    String selectPostIDs(@Param("deviceCategory") Long deviceCategory);
+
+
 }

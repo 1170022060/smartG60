@@ -33,8 +33,8 @@ public class ReleasePresetServiceImpl implements IReleasePresetService {
     }
 
     @Override
-    public List<Map> selectReleasePreset(Integer infoType,Integer status) {
-        return tblReleasePresetMapper.selectReleasePreset(infoType, status);
+    public List<Map> selectReleasePreset(Integer infoType,Integer status,String presetName) {
+        return tblReleasePresetMapper.selectReleasePreset(infoType, status,presetName);
     }
 
     @Override
