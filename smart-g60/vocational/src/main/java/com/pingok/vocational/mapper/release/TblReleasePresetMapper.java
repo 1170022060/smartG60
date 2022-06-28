@@ -38,9 +38,12 @@ public interface TblReleasePresetMapper extends CommonRepository<TblReleasePrese
             "<when test='status != null'> " +
             "and a.STATUS= #{status} " +
             "</when>"+
+            "<when test='presetName != null'> " +
+            "and a.PRESET_NAME like CONCAT(CONCAT('%',#{presetName}),'%') " +
+            "</when>"+
             "order by a.INFO_TYPE, a.CREATE_TIME" +
             "</script>"})
-    List<Map> selectReleasePreset(@Param("infoType") Integer infoType, @Param("status") Integer status);
+    List<Map> selectReleasePreset(@Param("infoType") Integer infoType, @Param("status") Integer status ,@Param("presetName") String presetName);
 
     @Select("select " +
             "DEVICE_ID as \"deviceId\" ," +
