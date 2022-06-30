@@ -26,11 +26,11 @@ public interface TblReleasePresetMapper extends CommonRepository<TblReleasePrese
             "f.DICT_LABEL as \"pictureType\", " +
             "a.STATUS  as \"status\" " +
             "from TBL_RELEASE_PRESET a " +
-            "left join  SYS_DICT_DATA b on b.DICT_VALUE=a.INFO_TYPE and b.DICT_TYPE='release_info_type' " +
-            "left join  SYS_DICT_DATA c on c.DICT_VALUE=a.TYPEFACE and c.DICT_TYPE='release_typeface' " +
-            "left join  SYS_DICT_DATA d on d.DICT_VALUE=a.TYPEFACE_SIZE and d.DICT_TYPE='release_size' " +
-            "left join  SYS_DICT_DATA e on e.DICT_VALUE=a.COLOR and e.DICT_TYPE='release_color' " +
-            "left join  SYS_DICT_DATA f on f.DICT_VALUE=a.PICTURE_TYPE and f.DICT_TYPE='release_picture_type' " +
+            "left join  SYS_DICT_DATA b on b.DICT_VALUE=to_char(a.INFO_TYPE) and b.DICT_TYPE='release_info_type' " +
+            "left join  SYS_DICT_DATA c on c.DICT_VALUE=to_char(a.TYPEFACE) and c.DICT_TYPE='release_typeface' " +
+            "left join  SYS_DICT_DATA d on d.DICT_VALUE=to_char(a.TYPEFACE_SIZE) and d.DICT_TYPE='release_size' " +
+            "left join  SYS_DICT_DATA e on e.DICT_VALUE=to_char(a.COLOR) and e.DICT_TYPE='release_color' " +
+            "left join  SYS_DICT_DATA f on f.DICT_VALUE=to_char(a.PICTURE_TYPE) and f.DICT_TYPE='release_picture_type' " +
             "where 1=1 " +
             "<when test='infoType != null'> " +
             "and a.INFO_TYPE= #{infoType} " +
