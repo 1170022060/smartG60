@@ -7,7 +7,7 @@ import com.pingok.monitor.domain.infoboard.MbsAttribute;
  * @time 2022/5/2 8:52
  */
 public interface IModbusService {
-    String read(MbsAttribute mbsAttribute) throws Exception;
-
-    Boolean write(MbsAttribute mbsAttribute, String value) throws Exception;
+    byte[] readHoldingRegister(MbsAttribute mbs);
+    boolean writeRegister(MbsAttribute mbs, short value);
+    void writeMultiRegister(MbsAttribute mbs, short[] values);
 }

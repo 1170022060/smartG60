@@ -16,15 +16,18 @@ public class MbsAttribute {
     private Integer funcCode;
     //偏移索引
     private Integer offset;
+    //寄存器个数
+    private Integer count;
     //值的类型
-    private String attributeType;
+    private Integer dataType;
 
-    public MbsAttribute(String host, Integer slaveId, Integer funcCode, Integer offset, String attributeType) {
+    public MbsAttribute(String host, Integer port, Integer slaveId, Integer funcCode, Integer offset, Integer count, Integer dataType) {
         this.host = host;
-        this.port = 502;
+        this.port = port;
         this.slaveId = slaveId;
         this.funcCode = funcCode;
         this.offset = offset;
-        this.attributeType = attributeType;
+        this.count = count;
+        this.dataType = dataType;
     }
 }

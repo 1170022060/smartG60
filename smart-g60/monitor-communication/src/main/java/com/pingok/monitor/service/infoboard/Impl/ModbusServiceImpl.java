@@ -9,8 +9,9 @@ import com.serotonin.modbus4j.exception.ErrorResponseException;
 import com.serotonin.modbus4j.exception.ModbusTransportException;
 import com.serotonin.modbus4j.ip.IpParameters;
 import com.serotonin.modbus4j.locator.BaseLocator;
-import com.serotonin.modbus4j.msg.WriteCoilRequest;
-import com.serotonin.modbus4j.msg.WriteCoilResponse;
+import com.serotonin.modbus4j.msg.*;
+import com.serotonin.modbus4j.sero.util.queue.ByteQueue;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import static com.pingok.monitor.utils.ConvertUtils.value;
@@ -19,126 +20,72 @@ import static com.pingok.monitor.utils.ConvertUtils.value;
  * @author
  * @time 2022/5/2 8:54
  */
+@Slf4j
 @Service
 public class ModbusServiceImpl implements IModbusService {
 
     static ModbusFactory modbusFactory = new ModbusFactory();
 
-    static final class ValueType {
-        public static final String BYTE = "byte";
-        public static final String SHORT = "short";
-        public static final String INT = "int";
-        public static final String LONG = "long";
-        public static final String FLOAT = "float";
-        public static final String DOUBLE = "double";
-        public static final String BOOLEAN = "boolean";
-        public static final String STRING = "string";
-        public static final String ENUM = "enum";
-    }
-
-    @Override
-    public String read(MbsAttribute mbsAttribute) throws Exception {
-        ModbusMaster modbusMaster = getMaster(mbsAttribute.getHost(), mbsAttribute.getPort());
-        if (modbusMaster == null) {
-            return null;
-        }
-        String result = null;
-        try {
-            result = readValue(modbusMaster, mbsAttribute);
-        } catch (Exception e) {
-            System.out.println("设备连接失败,host："+mbsAttribute.getHost() + "port："+mbsAttribute.getPort());
-            return null;
-        }
-        return result;
-    }
-
-    @Override
-    public Boolean write(MbsAttribute mbsAttribute, String value) throws Exception {
-        ModbusMaster modbusMaster = getMaster(mbsAttribute.getHost(), mbsAttribute.getPort());
-        if (modbusMaster == null) {
-            return false;
-        }
-        Boolean flag = null;
-        try {
-            flag = writeValue(modbusMaster, mbsAttribute, value);
-        } catch (Exception e) {
-            System.out.println("设备连接失败,host："+mbsAttribute.getHost() + "port："+mbsAttribute.getPort());
-            return false;
-        }
-        return flag;
-    }
-
     public ModbusMaster getMaster(String host, int port) {
-        System.out.println("Modbus 设备信息：" + host);
         ModbusMaster modbusMaster = null;
         try {
             IpParameters params = new IpParameters();
             params.setHost(host);
             params.setPort(port);
-            modbusMaster = modbusFactory.createTcpMaster(params, true);
+            modbusMaster = modbusFactory.createTcpMaster(params, false);
             modbusMaster.init();
         } catch (Exception e) {
             modbusMaster = null;
-            System.out.println("设备连接失败,host："+host + "port："+port);
+            log.error("情报板modbus设备连接失败,host："+host + "port："+port);
         }
         return modbusMaster;
     }
 
-    public String readValue(ModbusMaster modbusMaster, MbsAttribute attribute) throws ModbusTransportException, ErrorResponseException {
-        int slaveId = attribute.getSlaveId();
-        int functionCode = attribute.getFuncCode();
-        int offset = attribute.getOffset();
-        switch (functionCode) {
-            case 1:
-                BaseLocator<Boolean> coilLocator = BaseLocator.coilStatus(slaveId, offset);
-                Boolean coilValue = modbusMaster.getValue(coilLocator);
-                return String.valueOf(coilValue);
-            case 2:
-                BaseLocator<Boolean> inputLocator = BaseLocator.inputStatus(slaveId, offset);
-                Boolean inputStatusValue = modbusMaster.getValue(inputLocator);
-                return String.valueOf(inputStatusValue);
-            case 3:
-                BaseLocator<Number> holdingLocator = BaseLocator.holdingRegister(slaveId, offset, getValueType(attribute.getAttributeType()));
-                Number holdingValue = modbusMaster.getValue(holdingLocator);
-                return String.valueOf(holdingValue);
-            case 4:
-                BaseLocator<Number> inputRegister = BaseLocator.inputRegister(slaveId, offset, getValueType(attribute.getAttributeType()));
-                Number inputRegisterValue = modbusMaster.getValue(inputRegister);
-                return String.valueOf(inputRegisterValue);
-            default:
-                return "0";
+    @Override
+    public byte[] readHoldingRegister(MbsAttribute mbs) {
+        try {
+            // 03 Holding Register类型数据读取
+            ReadHoldingRegistersRequest req = new ReadHoldingRegistersRequest(mbs.getSlaveId(), mbs.getOffset(), mbs.getCount());
+            ModbusMaster master = getMaster(mbs.getHost(), mbs.getPort());
+            ModbusResponse resp = master.send(req);
+            ByteQueue byteQueue = new ByteQueue(1024);
+            resp.write(byteQueue);
+            return byteQueue.popAll();
+        } catch (Exception e) {
+            log.error("情报板读寄存器失败：" + e.getMessage());
         }
+        return null;
     }
 
-    public boolean writeValue(ModbusMaster modbusMaster, MbsAttribute mbsAttribute, String value) throws ModbusTransportException, ErrorResponseException {
-        int slaveId = mbsAttribute.getSlaveId();
-        int functionCode = mbsAttribute.getFuncCode();
-        int offset = mbsAttribute.getOffset();
-        switch (functionCode) {
-            case 1:
-                boolean coilValue = value(mbsAttribute.getAttributeType(), value);
-                WriteCoilRequest coilRequest = new WriteCoilRequest(slaveId, offset, coilValue);
-                WriteCoilResponse coilResponse = (WriteCoilResponse) modbusMaster.send(coilRequest);
-                return !coilResponse.isException();
-            case 3:
-                BaseLocator<Number> locator = BaseLocator.holdingRegister(slaveId, offset, getValueType(mbsAttribute.getAttributeType()));
-                modbusMaster.setValue(locator, value(mbsAttribute.getAttributeType(), value));
-                return true;
-            default:
-                return false;
+    @Override
+    public boolean writeRegister(MbsAttribute mbs, short value) {
+        boolean ret = true;
+        try {
+            WriteRegisterRequest req = new WriteRegisterRequest(mbs.getSlaveId(), mbs.getOffset(), value);
+            ModbusMaster master = getMaster(mbs.getHost(), mbs.getPort());
+            ModbusResponse resp = master.send(req);
+            if(resp.isException()) {
+                log.error("车检器写寄存器失败：" + resp.getExceptionMessage());
+                ret = false;
+            }
+        } catch (Exception e) {
+            log.error("车检器写寄存器失败：" + e.getMessage());
+            ret = false;
         }
+        return ret;
     }
 
-    public int getValueType(String type) {
-        switch (type.toLowerCase()) {
-            case ValueType.LONG:
-                return DataType.FOUR_BYTE_INT_SIGNED;
-            case ValueType.FLOAT:
-                return DataType.FOUR_BYTE_FLOAT;
-            case ValueType.DOUBLE:
-                return DataType.EIGHT_BYTE_FLOAT;
-            default:
-                return DataType.TWO_BYTE_INT_SIGNED;
+    @Override
+    public void writeMultiRegister(MbsAttribute mbs, short[] values) {
+        try {
+            WriteRegistersRequest req = new WriteRegistersRequest(mbs.getSlaveId(), mbs.getOffset(), values);
+            ModbusMaster master = getMaster(mbs.getHost(), mbs.getPort());
+            ModbusResponse resp = master.send(req);
+            if(resp.isException()) {
+                log.error("情报板写多寄存器失败：" + resp.getExceptionMessage());
+            }
+        } catch (Exception e) {
+            log.error("情报板写多寄存器失败：" + e.getMessage());
         }
     }
 }

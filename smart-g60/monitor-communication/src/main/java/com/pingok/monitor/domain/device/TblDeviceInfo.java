@@ -127,7 +127,7 @@ public class TblDeviceInfo implements Serializable {
     /**
      * 端口号
      */
-    private Long port;
+    private Integer port;
 
     /**
      * 桩号
@@ -203,6 +203,11 @@ public class TblDeviceInfo implements Serializable {
      * 设备协议
      */
     private String protocol;
+
+    /**
+     * 从站id
+     */
+    private Integer slaveId;
 
     private static final long serialVersionUID = 1L;
 }

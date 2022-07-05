@@ -23,8 +23,8 @@ public class InfoBoardController {
     private IInfoBoardService iInfoBoardService;
 
     @PostMapping("/publish")
-    public AjaxResult publish(@RequestBody JSONObject vmsPublishInfo) {
-        iInfoBoardService.publish(vmsPublishInfo);
-        return AjaxResult.success();
+    public AjaxResult publish(@RequestBody JSONObject pubInfo) {
+        int ret = iInfoBoardService.publish(pubInfo);
+        return ret == 200 ? AjaxResult.success() : AjaxResult.error();
     }
 }

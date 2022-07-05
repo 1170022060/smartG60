@@ -2,16 +2,15 @@ package com.pingok.monitor.domain.infoboard;
 
 import lombok.Data;
 
-/** 情报板单屏发布内容
+/**
  * @author
- * @time 2022/5/2 8:51
+ * @time 2022/7/5 10:16
  */
 @Data
-public class VmsPublishScreenInfo {
+public class VmsInfo {
     private String text;
     private String font;
-    private String fontColor;
     private String fontSize;
+    private String fontColor;
     private String picId;
-    private String picType;
 }
