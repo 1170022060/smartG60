@@ -1,6 +1,6 @@
-package com.pingok.monitor.service.infoboard;
+package com.pingok.monitor.service.common;
 
-import com.pingok.monitor.domain.infoboard.MbsAttribute;
+import com.pingok.monitor.domain.common.MbsAttribute;
 
 /**
  * @author

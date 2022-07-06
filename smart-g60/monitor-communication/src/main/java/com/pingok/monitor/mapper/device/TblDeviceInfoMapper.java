@@ -12,4 +12,7 @@ import java.util.List;
 public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
     @Select("SELECT * FROM TBL_DEVICE_INFO where 1=1 and DEVICE_ID = #{deviceId} ")
     TblDeviceInfo findByDeviceId(@Param("deviceId") String deviceId);
+
+    @Select("SELECT * FROM TBL_DEVICE_INFO where 1=1 and PROTOCOL like ('%'||#{protocol}||'%' ")
+    List<TblDeviceInfo> findByProtocol(@Param("protocol") String protocol);
 }

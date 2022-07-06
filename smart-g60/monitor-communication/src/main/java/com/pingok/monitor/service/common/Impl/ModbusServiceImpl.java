@@ -1,20 +1,14 @@
-package com.pingok.monitor.service.infoboard.Impl;
+package com.pingok.monitor.service.common.Impl;
 
-import com.pingok.monitor.domain.infoboard.MbsAttribute;
-import com.pingok.monitor.service.infoboard.IModbusService;
+import com.pingok.monitor.domain.common.MbsAttribute;
+import com.pingok.monitor.service.common.IModbusService;
 import com.serotonin.modbus4j.ModbusFactory;
 import com.serotonin.modbus4j.ModbusMaster;
-import com.serotonin.modbus4j.code.DataType;
-import com.serotonin.modbus4j.exception.ErrorResponseException;
-import com.serotonin.modbus4j.exception.ModbusTransportException;
 import com.serotonin.modbus4j.ip.IpParameters;
-import com.serotonin.modbus4j.locator.BaseLocator;
 import com.serotonin.modbus4j.msg.*;
 import com.serotonin.modbus4j.sero.util.queue.ByteQueue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import static com.pingok.monitor.utils.ConvertUtils.value;
 
 /**
  * @author

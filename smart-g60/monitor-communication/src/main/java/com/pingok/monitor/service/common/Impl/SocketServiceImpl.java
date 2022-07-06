@@ -1,6 +1,6 @@
-package com.pingok.monitor.service.infoboard.Impl;
+package com.pingok.monitor.service.common.Impl;
 
-import com.pingok.monitor.service.infoboard.ISocketService;
+import com.pingok.monitor.service.common.ISocketService;
 import org.springframework.stereotype.Service;
 
 import java.io.DataInputStream;

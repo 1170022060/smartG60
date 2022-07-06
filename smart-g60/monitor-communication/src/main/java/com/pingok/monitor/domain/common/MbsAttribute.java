@@ -1,10 +1,10 @@
-package com.pingok.monitor.domain.infoboard;
+package com.pingok.monitor.domain.common;
 
 import lombok.Data;
 
 /**
  * @author
- * @time 2022/5/2 8:50
+ * @time 2022/6/26 13:24
  */
 @Data
 public class MbsAttribute {

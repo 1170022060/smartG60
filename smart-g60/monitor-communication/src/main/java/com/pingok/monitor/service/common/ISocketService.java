@@ -1,4 +1,4 @@
-package com.pingok.monitor.service.infoboard;
+package com.pingok.monitor.service.common;
 
 import java.net.Socket;
 
