@@ -250,6 +250,7 @@
         <module>ruoyi-common</module>
         <module>smart-g60</module>
         <module>station-roster</module>
+        <module>gantry</module>
     </modules>
     <packaging>pom</packaging>
 
