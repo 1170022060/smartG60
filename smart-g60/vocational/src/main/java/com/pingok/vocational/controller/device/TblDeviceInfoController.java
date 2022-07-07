@@ -56,9 +56,9 @@ public class TblDeviceInfoController extends BaseController {
     @RequiresPermissions("vocational:device:info")
     @Log(title = "设备信息-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
-    public TableDataInfo info(@RequestParam(name = "deviceCategory", required = false) Long deviceCategory, @RequestParam(name = "status", required = false) Integer status, @RequestParam(name = "fieldBelong", required = false) Long fieldBelong, @RequestParam(name = "deviceId", required = false) String deviceId, @RequestParam(name = "userSide", required = false) Long userSide, @RequestParam(name = "managementSide", required = false) Long managementSide, @RequestParam(name = "serviceLife", required = false) Integer serviceLife, @RequestParam(name = "deviceName", required = false) String deviceName) {
+    public TableDataInfo info(@RequestParam(name = "deviceCategory", required = false) Long deviceCategory, @RequestParam(name = "status", required = false) Integer status, @RequestParam(name = "fieldBelong", required = false) Long fieldBelong, @RequestParam(name = "deviceId", required = false) String deviceId, @RequestParam(name = "userSide", required = false) Long userSide, @RequestParam(name = "managementSide", required = false) Long managementSide, @RequestParam(name = "serviceLife", required = false) Integer serviceLife, @RequestParam(name = "deviceName", required = false) String deviceName, @RequestParam(name = "deviceType", required = false) Integer deviceType) {
         startPage();
-        List<Map> info = tblDeviceInfoService.selectDeviceInfo(deviceCategory, status, fieldBelong, deviceId, userSide, managementSide, serviceLife, deviceName);
+        List<Map> info = tblDeviceInfoService.selectDeviceInfo(deviceCategory, status, fieldBelong, deviceId, userSide, managementSide, serviceLife, deviceName ,deviceType);
         return getDataTable(info);
     }
 

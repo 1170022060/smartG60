@@ -48,9 +48,9 @@ public class TblDeviceInfoServiceImpl implements TblDeviceInfoService {
     }
 
     @Override
-    public List<Map> selectDeviceInfo(Long deviceCategory, Integer status, Long fieldBelong, String deviceId, Long userSide, Long managementSide, Integer serviceLife, String deviceName) {
+    public List<Map> selectDeviceInfo(Long deviceCategory, Integer status, Long fieldBelong, String deviceId, Long userSide, Long managementSide, Integer serviceLife, String deviceName ,Integer deviceType) {
 
-        return tblDeviceInfoMapper.selectDeviceInfo( deviceCategory, status,  fieldBelong,  deviceId,  userSide,  managementSide,serviceLife,deviceName);
+        return tblDeviceInfoMapper.selectDeviceInfo( deviceCategory, status,  fieldBelong,  deviceId,  userSide,  managementSide,serviceLife,deviceName,deviceType);
     }
 
     @Override
