@@ -119,8 +119,8 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "          from TBL_RELEASE_RECORD t) c " +
             " where rn = 1) " +
             "where 1 = 1 " +
-            "<when test='deviceCategory != null'> " +
-            "and (a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory})) " +
+            "<when test='deviceType != null'> " +
+            "and a.DEVICE_TYPE= #{deviceType} " +
             "</when>"+
             "<when test='deviceName != null'> " +
             "and a.DEVICE_NAME like CONCAT(CONCAT('%',#{deviceName}),'%') " +
@@ -135,5 +135,5 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "and a.DEVICE_MODEL like CONCAT(CONCAT('%',#{deviceModel}),'%') " +
             "</when>" +
             "</script>"})
-    List<Map> selectInfoBoard(@Param("deviceCategory")Long deviceCategory,@Param("deviceName") String deviceName,@Param("pileNo") String pileNo,@Param("manufacturer")String manufacturer,@Param("deviceModel")String deviceModel);
+    List<Map> selectInfoBoard(@Param("deviceType")Integer deviceType,@Param("deviceName") String deviceName,@Param("pileNo") String pileNo,@Param("manufacturer")String manufacturer,@Param("deviceModel")String deviceModel);
 }
