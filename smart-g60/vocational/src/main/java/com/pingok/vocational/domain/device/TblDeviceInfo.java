@@ -192,6 +192,8 @@ public class TblDeviceInfo implements Serializable {
 
     private BigDecimal high;
 
+    private Integer deviceType;
+
     public Long getId()
     {
         return id;
@@ -570,5 +572,13 @@ public class TblDeviceInfo implements Serializable {
 
     public void setHigh(BigDecimal high) {
         this.high = high;
+    }
+
+    public Integer getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(Integer deviceType) {
+        this.deviceType = deviceType;
     }
 }
