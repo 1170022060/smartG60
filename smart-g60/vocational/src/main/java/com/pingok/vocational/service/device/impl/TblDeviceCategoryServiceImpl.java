@@ -98,6 +98,10 @@ public class TblDeviceCategoryServiceImpl implements TblDeviceCategoryService {
         return UserConstants.UNIQUE;
     }
 
+    @Override
+    public List<Map> selectPost() {
+        return tblDeviceCategoryMapper.selectPost();
+    }
     /**
      * 构建前端所需要树结构
      *
