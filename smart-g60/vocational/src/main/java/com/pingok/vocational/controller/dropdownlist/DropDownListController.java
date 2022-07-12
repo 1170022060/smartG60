@@ -6,6 +6,7 @@ import com.pingok.vocational.mapper.emergency.TblEmergencyGroupMapper;
 import com.pingok.vocational.service.baseinfo.IBaseStationInfoService;
 import com.pingok.vocational.service.baseinfo.ILaneInfoService;
 import com.pingok.vocational.service.device.IGantryInfoService;
+import com.pingok.vocational.service.device.TblDeviceCategoryService;
 import com.pingok.vocational.service.device.TblDeviceInfoService;
 import com.pingok.vocational.service.emergency.TblEmergencyGroupService;
 import com.pingok.vocational.service.emergency.TblEmergencySuppliesService;
@@ -53,6 +54,8 @@ public class DropDownListController extends BaseController {
     private IReleasePresetService releasePresetService;
     @Autowired
     private IGantryInfoService gantryInfoService;
+    @Autowired
+    private TblDeviceCategoryService tblDeviceCategoryService;
 
     @RequiresPermissions("vocational:dropDownList:field")
     @Log(title = "所属场地下拉列表查询", businessType = BusinessType.OTHER)
@@ -159,6 +162,15 @@ public class DropDownListController extends BaseController {
     public AjaxResult preset(@RequestParam(name = "infoType") Integer infoType)
     {
         List<Map> info = releasePresetService.selectReleaseInfo(infoType);
+        return AjaxResult.success(info);
+    }
+
+//    @RequiresPermissions("vocational:dropDownList:post")
+    @Log(title = "岗位下拉列表查询", businessType = BusinessType.OTHER)
+    @GetMapping(value="/post")
+    public AjaxResult preset()
+    {
+        List<Map> info = tblDeviceCategoryService.selectPost();
         return AjaxResult.success(info);
     }
 }
