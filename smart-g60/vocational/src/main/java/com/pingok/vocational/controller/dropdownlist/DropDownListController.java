@@ -165,7 +165,7 @@ public class DropDownListController extends BaseController {
         return AjaxResult.success(info);
     }
 
-//    @RequiresPermissions("vocational:dropDownList:post")
+    @RequiresPermissions("vocational:dropDownList:post")
     @Log(title = "岗位下拉列表查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/post")
     public AjaxResult preset()
