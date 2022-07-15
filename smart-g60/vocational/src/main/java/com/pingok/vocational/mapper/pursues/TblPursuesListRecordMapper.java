@@ -1,4 +1,4 @@
-package com.pingok.vocational.mapper.roster;
+package com.pingok.vocational.mapper.pursues;
 
 import com.pingok.vocational.domain.roster.TblPursuesListRecord;
 import com.ruoyi.common.core.mapper.CommonRepository;
@@ -49,7 +49,8 @@ public interface TblPursuesListRecordMapper extends CommonRepository<TblPursuesL
             "REAL_PASS_ID as \"realPassId\" , " +
             "DISCOUNT_TYPE as \"discountType\" , " +
             "BACK_TYPE as \"backType\" , " +
-            "OPERATOR as \"operator\"  from TBL_PURSUES_LIST_RECORD  " +
+            "OPERATOR as \"operator\" ," +
+            "REMARK as \"remark\" from TBL_PURSUES_LIST_RECORD  " +
             "where 1=1 " +
             "<when test='startTime != null'> " +
             " and END_TIME &gt;= #{startTime} " +
