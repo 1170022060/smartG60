@@ -16,4 +16,5 @@ public interface RemoteDeviceMonitorService {
      */
     @GetMapping("/deviceMonitor")
     R serverHeartbeat();
+
 }

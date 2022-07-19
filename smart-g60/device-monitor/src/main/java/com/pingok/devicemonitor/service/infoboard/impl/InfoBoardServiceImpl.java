@@ -3,6 +3,7 @@ package com.pingok.devicemonitor.service.infoboard.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.devicemonitor.domain.infoBoard.VmsInfo;
 import com.pingok.devicemonitor.service.infoboard.IInfoBoardService;
 import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.system.api.RemoteKafkaService;
@@ -12,6 +13,9 @@ import com.ruoyi.system.api.domain.release.TblReleaseRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author
@@ -29,34 +33,37 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
     private RemoteReleaseService remoteReleaseService;
 
     @Override
-    public void publish(JSONObject vmsPublishInfo) {
+    public int publish(JSONObject pubInfo) {
+        //转发
         TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();
         tblKafkaFailInfo.setTopIc(KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PUBLISH);
-        tblKafkaFailInfo.setData(JSON.toJSONString(vmsPublishInfo));
+        tblKafkaFailInfo.setData(JSON.toJSONString(pubInfo));
         remoteKafkaService.send(tblKafkaFailInfo);
 
-        TblReleaseRecord tblReleaseRecord = new TblReleaseRecord();
-        tblReleaseRecord.setDeviceId(vmsPublishInfo.getLong("deviceId"));
-        if (vmsPublishInfo.containsKey("fmsValue")) {
-            tblReleaseRecord.setPresetInfo(vmsPublishInfo.getString("fmsValue"));
-        }
-        if (vmsPublishInfo.containsKey("info")) {
-            JSONArray infos = vmsPublishInfo.getJSONArray("info");
-            if (infos != null && infos.size() > 0) {
-                JSONObject info;
-                int size = infos.size();
-                for (int i = 0; i < size; i++) {
-                    info = infos.getJSONObject(i);
-                    tblReleaseRecord.setPresetInfo(info.getString("text"));
-                    tblReleaseRecord.setColor(info.getString("fontColor"));
-                    tblReleaseRecord.setPictureType(info.getInteger("picId"));
-                    tblReleaseRecord.setTypeface(info.getString("font"));
-                    tblReleaseRecord.setTypefaceSize(info.getInteger("fontSize"));
-                    remoteReleaseService.add(tblReleaseRecord);
-                }
+        //发布记录
+        List<VmsInfo> vmsInfoList = new ArrayList<>();
+        String deviceIds = pubInfo.getString("deviceId");
+        if (pubInfo.containsKey("info")) {
+            JSONArray infoList = pubInfo.getJSONArray("info");
+            if (infoList != null && infoList.size() > 0) {
+                vmsInfoList = JSON.parseArray(JSONObject.toJSONString(infoList), VmsInfo.class);
             }
         } else {
-            remoteReleaseService.add(tblReleaseRecord);
+            return 500;
         }
+        String[] ids = deviceIds.split("|");
+        String br = "|";
+        for(int i = 0; i < ids.length; ++i) {
+            TblReleaseRecord rec = new TblReleaseRecord();
+            rec.setDeviceId(ids[i]);
+            for (VmsInfo info : vmsInfoList) {
+                rec.setPresetInfo(rec.getPresetInfo() + br + info.getText());
+                rec.setColor(rec.getColor() + br + info.getFontColor());
+                rec.setTypeface(rec.getTypeface() + br + info.getFont());
+                rec.setTypefaceSize(rec.getTypefaceSize() + br + info.getFontSize());
+                remoteReleaseService.add(rec);
+            }
+        }
+        return 200;
     }
 }
