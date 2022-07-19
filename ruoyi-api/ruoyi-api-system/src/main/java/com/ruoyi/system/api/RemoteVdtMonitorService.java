@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * @author
  * @time 2022/7/6 10:14
  */
-@FeignClient(contextId = "remoteDeviceMonitorService", value = ServiceNameConstants.DEVICE_MONITOR_SERVICE, fallbackFactory = RemoteVdtMonitorFallbackFactory.class)
+@FeignClient(contextId = "remoteVdtMonitorService", value = ServiceNameConstants.DEVICE_MONITOR_SERVICE, fallbackFactory = RemoteVdtMonitorFallbackFactory.class)
 public interface RemoteVdtMonitorService {
     /**
      * 车检器状态采集

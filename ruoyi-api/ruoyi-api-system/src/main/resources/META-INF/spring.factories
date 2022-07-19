@@ -23,4 +23,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.ruoyi.system.api.factory.RemotePilotLightFallbackFactory, \
   com.ruoyi.system.api.factory.RemotePostFallbackFactory, \
   com.ruoyi.system.api.factory.RemoteRoleFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteVodFallbackFactory
+  com.ruoyi.system.api.factory.RemoteVodFallbackFactory, \
+  com.ruoyi.system.api.factory.RemoteVdtMonitorFallbackFactory
