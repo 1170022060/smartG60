@@ -251,6 +251,7 @@
         <module>smart-g60</module>
         <module>station-roster</module>
         <module>gantry</module>
+        <module>radar-camera-mix</module>
     </modules>
     <packaging>pom</packaging>
 

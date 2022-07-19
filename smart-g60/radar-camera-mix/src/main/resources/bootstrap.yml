@@ -1,6 +1,6 @@
 # Tomcat
 server:
-  port: 9402
+  port: 9312
   tomcat:
     uri-encoding: UTF-8
 
@@ -10,7 +10,7 @@ spring:
     allow-circular-references: true
   application:
     # 应用名称
-    name: gantry
+    name: radar-camera-mix
   profiles:
     # 环境配置
     active: dev
@@ -18,13 +18,12 @@ spring:
     nacos:
       discovery:
         # 服务注册地址
-        server-addr: 127.0.0.1:8848
+        server-addr: 192.168.2.200:8848
       config:
         # 配置中心地址
-        server-addr: 127.0.0.1:8848
+        server-addr: 192.168.2.200:8848
         # 配置文件格式
         file-extension: yml
         # 共享配置
         shared-configs:
           - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
-
