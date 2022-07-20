@@ -1,6 +1,6 @@
 # Tomcat
 server:
-  port: 8080
+  port: 8082
   tomcat:
     uri-encoding: UTF-8
 
@@ -20,11 +20,11 @@ spring:
       discovery:
         # 服务注册地址
         server-addr: 127.0.0.1:8848
-        namespace: ed01487a-41a0-480e-a369-39f2be469364
-        group: SMARTG60
+        #namespace: ed01487a-41a0-480e-a369-39f2be469364
+        #group: SMARTG60
       config:
-        namespace: ed01487a-41a0-480e-a369-39f2be469364
-        group: SMARTG60
+        #namespace: ed01487a-41a0-480e-a369-39f2be469364
+        #group: SMARTG60
         # 配置中心地址
         server-addr: 127.0.0.1:8848
         # 配置文件格式
@@ -44,6 +44,7 @@ spring:
           nacos:
             server-addr: 127.0.0.1:8848
             dataId: sentinel-ruoyi-gateway
-            groupId: DEFAULT_GROUP
+            #namespace: ed01487a-41a0-480e-a369-39f2be469364
+            groupId:
             data-type: json
             rule-type: flow
