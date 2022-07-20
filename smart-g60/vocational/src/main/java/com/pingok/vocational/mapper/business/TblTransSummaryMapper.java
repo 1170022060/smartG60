@@ -44,23 +44,25 @@ public interface TblTransSummaryMapper {
             "n.DICT_LABEL as \"exVehStatus\" , " +
             "a.EX_VEH_PLATE as \"exVehPlate\" , " +
             "o.DICT_LABEL as \"exVehColor\" , " +
+            "q.DICT_LABEL as \"feeType\" , " +
             "a.EX_CARD_ID as \"exCardId\" , " +
             "a.AMOUNT as \"amount\" from TBL_TRANS_SUMMARY a " +
-            "left join  SYS_DICT_DATA b on b.DICT_VALUE=to_char(a.EN_PASS_TYPE) and b.DICT_TYPE='pass_type' " +
-            "left join  SYS_DICT_DATA c on c.DICT_VALUE=to_char(a.EX_PASS_TYPE) and c.DICT_TYPE='pass_type' " +
+            "left join SYS_DICT_DATA b on b.DICT_VALUE=to_char(a.EN_PASS_TYPE) and b.DICT_TYPE='pass_type' " +
+            "left join SYS_DICT_DATA c on c.DICT_VALUE=to_char(a.EX_PASS_TYPE) and c.DICT_TYPE='pass_type' " +
             "left join TBL_BASE_STATION_INFO d on UPPER(d.STATION_HEX)=UPPER(SUBSTR(a.EN_LANE_HEX, 1, 8)) " +
             "left join TBL_BASE_STATION_INFO e on UPPER(e.STATION_HEX)=UPPER(SUBSTR(a.EX_LANE_HEX, 1, 8)) " +
             "left join TBL_LANE_INFO f on UPPER(f.LANE_HEX)=UPPER(a.EN_LANE_HEX) " +
             "left join TBL_LANE_INFO g on UPPER(g.LANE_HEX)=UPPER(a.EX_LANE_HEX) " +
-            "left join  SYS_DICT_DATA h on h.DICT_VALUE=to_char(a.EN_SHIFT) and h.DICT_TYPE='shift' " +
-            "left join  SYS_DICT_DATA i on i.DICT_VALUE=to_char(a.EX_SHIFT) and i.DICT_TYPE='shift' " +
-            "left join  SYS_DICT_DATA j on j.DICT_VALUE=a.EN_VEH_CLASS and j.DICT_TYPE='veh_class' " +
-            "left join  SYS_DICT_DATA k on k.DICT_VALUE=a.EN_VEH_STATUS and k.DICT_TYPE='veh_status' " +
-            "left join  SYS_DICT_DATA l on l.DICT_VALUE=a.EN_VEH_COLOR and l.DICT_TYPE='veh_color' " +
-            "left join  SYS_DICT_DATA m on m.DICT_VALUE=a.EX_VEH_CLASS and m.DICT_TYPE='veh_class' " +
-            "left join  SYS_DICT_DATA n on n.DICT_VALUE=a.EX_VEH_STATUS and n.DICT_TYPE='veh_status' " +
-            "left join  SYS_DICT_DATA o on o.DICT_VALUE=a.EX_VEH_COLOR and o.DICT_TYPE='veh_color' " +
-            "left join  SYS_DICT_DATA p on p.DICT_VALUE=to_char(a.PAY_WAY) and p.DICT_TYPE='pay_way' " +
+            "left join SYS_DICT_DATA h on h.DICT_VALUE=to_char(a.EN_SHIFT) and h.DICT_TYPE='shift' " +
+            "left join SYS_DICT_DATA i on i.DICT_VALUE=to_char(a.EX_SHIFT) and i.DICT_TYPE='shift' " +
+            "left join SYS_DICT_DATA j on j.DICT_VALUE=a.EN_VEH_CLASS and j.DICT_TYPE='veh_class' " +
+            "left join SYS_DICT_DATA k on k.DICT_VALUE=a.EN_VEH_STATUS and k.DICT_TYPE='veh_status' " +
+            "left join SYS_DICT_DATA l on l.DICT_VALUE=a.EN_VEH_COLOR and l.DICT_TYPE='veh_color' " +
+            "left join SYS_DICT_DATA m on m.DICT_VALUE=a.EX_VEH_CLASS and m.DICT_TYPE='veh_class' " +
+            "left join SYS_DICT_DATA n on n.DICT_VALUE=a.EX_VEH_STATUS and n.DICT_TYPE='veh_status' " +
+            "left join SYS_DICT_DATA o on o.DICT_VALUE=a.EX_VEH_COLOR and o.DICT_TYPE='veh_color' " +
+            "left join SYS_DICT_DATA p on p.DICT_VALUE=to_char(a.PAY_WAY) and p.DICT_TYPE='pay_way' " +
+            "left join SYS_DICT_DATA q on q.DICT_VALUE=a.FEE_TYPE and q.DICT_TYPE='fee_type' " +
             "where 1=1 " +
             "<when test='enStartTime != null'> " +
             "and a.EN_TRANS_TIME &gt;= #{enStartTime} " +
@@ -163,23 +165,25 @@ public interface TblTransSummaryMapper {
             "n.DICT_LABEL as \"exVehStatus\" , " +
             "a.EX_VEH_PLATE as \"exVehPlate\" , " +
             "o.DICT_LABEL as \"exVehColor\" , " +
+            "q.DICT_LABEL as \"feeType\" , " +
             "a.EX_CARD_ID as \"exCardId\" , " +
             "a.AMOUNT as \"amount\" from TBL_TRANS_SUMMARY a " +
-            "left join  SYS_DICT_DATA b on b.DICT_VALUE=to_char(a.EN_PASS_TYPE) and b.DICT_TYPE='pass_type' " +
-            "left join  SYS_DICT_DATA c on c.DICT_VALUE=to_char(a.EX_PASS_TYPE) and c.DICT_TYPE='pass_type' " +
+            "left join SYS_DICT_DATA b on b.DICT_VALUE=to_char(a.EN_PASS_TYPE) and b.DICT_TYPE='pass_type' " +
+            "left join SYS_DICT_DATA c on c.DICT_VALUE=to_char(a.EX_PASS_TYPE) and c.DICT_TYPE='pass_type' " +
             "left join TBL_BASE_STATION_INFO d on UPPER(d.STATION_HEX)=UPPER(SUBSTR(a.EN_LANE_HEX, 1, 8)) " +
             "left join TBL_BASE_STATION_INFO e on UPPER(e.STATION_HEX)=UPPER(SUBSTR(a.EX_LANE_HEX, 1, 8)) " +
             "left join TBL_LANE_INFO f on UPPER(f.LANE_HEX)=UPPER(a.EN_LANE_HEX) " +
             "left join TBL_LANE_INFO g on UPPER(g.LANE_HEX)=UPPER(a.EX_LANE_HEX) " +
-            "left join  SYS_DICT_DATA h on h.DICT_VALUE=to_char(a.EN_SHIFT) and h.DICT_TYPE='shift' " +
-            "left join  SYS_DICT_DATA i on i.DICT_VALUE=to_char(a.EX_SHIFT) and i.DICT_TYPE='shift' " +
-            "left join  SYS_DICT_DATA j on j.DICT_VALUE=a.EN_VEH_CLASS and j.DICT_TYPE='veh_class' " +
-            "left join  SYS_DICT_DATA k on k.DICT_VALUE=a.EN_VEH_STATUS and k.DICT_TYPE='veh_status' " +
-            "left join  SYS_DICT_DATA l on l.DICT_VALUE=a.EN_VEH_COLOR and l.DICT_TYPE='veh_color' " +
-            "left join  SYS_DICT_DATA m on m.DICT_VALUE=a.EX_VEH_CLASS and m.DICT_TYPE='veh_class' " +
-            "left join  SYS_DICT_DATA n on n.DICT_VALUE=a.EX_VEH_STATUS and n.DICT_TYPE='veh_status' " +
-            "left join  SYS_DICT_DATA o on o.DICT_VALUE=a.EX_VEH_COLOR and o.DICT_TYPE='veh_color' " +
-            "left join  SYS_DICT_DATA p on p.DICT_VALUE=to_char(a.PAY_WAY) and p.DICT_TYPE='pay_way' " +
+            "left join SYS_DICT_DATA h on h.DICT_VALUE=to_char(a.EN_SHIFT) and h.DICT_TYPE='shift' " +
+            "left join SYS_DICT_DATA i on i.DICT_VALUE=to_char(a.EX_SHIFT) and i.DICT_TYPE='shift' " +
+            "left join SYS_DICT_DATA j on j.DICT_VALUE=a.EN_VEH_CLASS and j.DICT_TYPE='veh_class' " +
+            "left join SYS_DICT_DATA k on k.DICT_VALUE=a.EN_VEH_STATUS and k.DICT_TYPE='veh_status' " +
+            "left join SYS_DICT_DATA l on l.DICT_VALUE=a.EN_VEH_COLOR and l.DICT_TYPE='veh_color' " +
+            "left join SYS_DICT_DATA m on m.DICT_VALUE=a.EX_VEH_CLASS and m.DICT_TYPE='veh_class' " +
+            "left join SYS_DICT_DATA n on n.DICT_VALUE=a.EX_VEH_STATUS and n.DICT_TYPE='veh_status' " +
+            "left join SYS_DICT_DATA o on o.DICT_VALUE=a.EX_VEH_COLOR and o.DICT_TYPE='veh_color' " +
+            "left join SYS_DICT_DATA p on p.DICT_VALUE=to_char(a.PAY_WAY) and p.DICT_TYPE='pay_way' " +
+            "left join SYS_DICT_DATA q on q.DICT_VALUE=a.FEE_TYPE and q.DICT_TYPE='fee_type' " +
             "where 1=1 " +
             "<when test='enStartTime != null'> " +
             "and a.EN_TRANS_TIME &gt;= #{enStartTime} " +
