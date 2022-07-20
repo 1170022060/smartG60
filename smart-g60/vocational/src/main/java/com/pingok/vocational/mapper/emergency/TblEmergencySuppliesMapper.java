@@ -43,7 +43,7 @@ public interface TblEmergencySuppliesMapper extends CommonRepository<TblEmergenc
             "left join TBL_FIELD_INFO c on c.ID=a.FIELD_BELONG " +
             "left join  SYS_USER d on a.CREATE_USER_ID=d.USER_ID " +
             "left join  SYS_USER e on a.UPDATE_USER_ID=e.USER_ID " +
-            "left join  SYS_DICT_DATA f on f.DICT_VALUE=a.SUPPLIES_TYPE and f.DICT_TYPE='supplies_type' " +
+            "left join  SYS_DICT_DATA f on f.DICT_VALUE=to_char(a.SUPPLIES_TYPE) and f.DICT_TYPE='supplies_type' " +
             "left join  SYS_DICT_DATA g on g.DICT_VALUE=a.VEH_CLASS and g.DICT_TYPE='veh_class' " +
             "left join  SYS_DICT_DATA h on h.DICT_VALUE=a.VEH_COLOR and h.DICT_TYPE='veh_color' " +
             "where a.SUPPLIES_TYPE= #{suppliesType}" +
