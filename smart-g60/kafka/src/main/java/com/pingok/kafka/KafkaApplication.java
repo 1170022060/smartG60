@@ -15,7 +15,6 @@ import tk.mybatis.spring.annotation.MapperScan;
 @EnableCustomConfig
 @EnableCustomSwagger2
 @EnableRyFeignClients
-@MapperScan(basePackages = "com.pingok.kafka.mapper")
 @SpringBootApplication
 public class KafkaApplication
 {

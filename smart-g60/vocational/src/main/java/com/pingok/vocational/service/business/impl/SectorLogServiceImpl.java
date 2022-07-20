@@ -1,8 +1,6 @@
 package com.pingok.vocational.service.business.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.pingok.vocational.domain.baseinfo.TblBaseStationInfo;
-import com.pingok.vocational.domain.baseinfo.TblLaneInfo;
 import com.pingok.vocational.domain.business.TblCpcEf02Log;
 import com.pingok.vocational.domain.business.TblObuEf04Log;
 import com.pingok.vocational.domain.business.TblSectorLog;
@@ -15,7 +13,7 @@ import com.pingok.vocational.service.baseinfo.ILaneInfoService;
 import com.pingok.vocational.service.business.ISectorLogService;
 import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.system.api.RemoteKafkaService;
-import com.ruoyi.system.api.domain.kafuka.TblKafkaFailInfo;
+import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -81,10 +79,10 @@ public class SectorLogServiceImpl implements ISectorLogService {
             JSONObject data = new JSONObject();
             data.put("laneHex", laneHex);
             data.put("gid", gid);
-            TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();
-            tblKafkaFailInfo.setTopIc(KafkaTopIc.SECTOR_LOG);
-            tblKafkaFailInfo.setData(data.toJSONString());
-            remoteKafkaService.send(tblKafkaFailInfo);
+            KafkaEnum kafkaEnum = new KafkaEnum();
+            kafkaEnum.setTopIc(KafkaTopIc.SECTOR_LOG);
+            kafkaEnum.setData(data.toJSONString());
+            remoteKafkaService.send(kafkaEnum);
 
             throw new SecurityException("正在下载扇区日志请稍后查看");
         }

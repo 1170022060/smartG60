@@ -1,15 +1,11 @@
 package com.ruoyi.system.api.factory;
 
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.system.api.RemoteKafkaService;
 import com.ruoyi.system.api.RemoteVodService;
-import com.ruoyi.system.api.domain.kafuka.TblKafkaFailInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * vod服务降级处理

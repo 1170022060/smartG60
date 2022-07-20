@@ -8,7 +8,7 @@ import com.pingok.devicemonitor.service.infoboard.IInfoBoardService;
 import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.system.api.RemoteKafkaService;
 import com.ruoyi.system.api.RemoteReleaseService;
-import com.ruoyi.system.api.domain.kafuka.TblKafkaFailInfo;
+import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import com.ruoyi.system.api.domain.release.TblReleaseRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +35,10 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
     @Override
     public int publish(JSONObject pubInfo) {
         //转发
-        TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();
-        tblKafkaFailInfo.setTopIc(KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PUBLISH);
-        tblKafkaFailInfo.setData(JSON.toJSONString(pubInfo));
-        remoteKafkaService.send(tblKafkaFailInfo);
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PUBLISH);
+        kafkaEnum.setData(JSON.toJSONString(pubInfo));
+        remoteKafkaService.send(kafkaEnum);
 
         //发布记录
         List<VmsInfo> vmsInfoList = new ArrayList<>();

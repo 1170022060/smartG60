@@ -13,7 +13,7 @@ import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import com.ruoyi.system.api.RemoteKafkaService;
-import com.ruoyi.system.api.domain.kafuka.TblKafkaFailInfo;
+import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,10 +81,10 @@ public class RadarCameraServiceImpl implements IRadarCameraService {
         JSONObject joData = new JSONObject();
         data.put("type", "eventOccur");
         data.put("data", jo.toJSONString());
-        TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();
-        tblKafkaFailInfo.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-        tblKafkaFailInfo.setData(data.toJSONString());
-        remoteKafkaService.send(tblKafkaFailInfo);
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+        kafkaEnum.setData(data.toJSONString());
+        remoteKafkaService.send(kafkaEnum);
     }
 
     String cvtEventType(Integer t) {

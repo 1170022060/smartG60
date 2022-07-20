@@ -28,6 +28,13 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
 
+        <!-- SpringCloud Alibaba Sentinel -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+
+
         <!-- SpringBoot Actuator -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -40,11 +47,11 @@
         <!--            <groupId>mysql</groupId>-->
         <!--            <artifactId>mysql-connector-java</artifactId>-->
         <!--        </dependency>-->
-        <dependency>
-            <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc6</artifactId>
-            <version>11.2.0.4</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.oracle.database.jdbc</groupId>-->
+<!--            <artifactId>ojdbc6</artifactId>-->
+<!--            <version>11.2.0.4</version>-->
+<!--        </dependency>-->
 
         <!-- RuoYi Common DataSource -->
         <dependency>

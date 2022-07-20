@@ -1,7 +1,7 @@
 package com.pingok.kafka.controller;
 
 
-import com.pingok.kafka.domain.TblKafkaFailInfo;
+import com.pingok.kafka.domain.KafkaEnum;
 import com.pingok.kafka.service.KafkaService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
@@ -17,20 +17,10 @@ public class KafkaController extends BaseController {
     private KafkaService kafkaService;
 
     @PostMapping
-    public AjaxResult send(@Validated @RequestBody TblKafkaFailInfo tblKafkaFailInfo) {
-        kafkaService.send(tblKafkaFailInfo);
+    public AjaxResult send(@Validated @RequestBody KafkaEnum kafkaEnum) {
+        kafkaService.send(kafkaEnum);
         return AjaxResult.success();
     }
 
-
-    @GetMapping
-    public AjaxResult findAll() {
-        return AjaxResult.success(kafkaService.findAll());
-    }
-
-    @DeleteMapping
-    public AjaxResult delete(@RequestParam("id") Long id) {
-        return toAjax(kafkaService.delete(id));
-    }
 
 }
