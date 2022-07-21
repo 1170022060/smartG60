@@ -28,7 +28,7 @@ public class EpidemicListRecordController extends BaseController {
     @Autowired
     private IEpidemicListRecordService epidemicListRecordService;
 
-//    @RequiresPermissions("vocational:epidemicList:info")
+    @RequiresPermissions("vocational:epidemicList:info")
     @Log(title = "中高风险地区名单-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
     public TableDataInfo info(@RequestParam(name = "startTime",required = false) Date startTime, @RequestParam(name = "endTime",required = false) Date endTime)
