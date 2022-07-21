@@ -98,6 +98,11 @@ public class CardBlacklistServiceImpl implements ICardBlacklistService {
     }
 
     @Override
+    public void test(String version) {
+        unzipInside(unzip("D:\\blacklist\\BASIC_CARDBLACKLISTINCREDOWN_RES_310201_20220512144151267.zip", cardPath),cardPath);
+    }
+
+    @Override
     public void all(String version) {
         List<String> dataList = Arrays.asList("11", "12", "13", "14", "15", "21", "22", "23", "31", "32", "33", "34", "35", "36", "37", "41", "42", "43", "44", "45", "46", "50", "51", "52", "53", "54", "61", "62", "63", "64", "65");
         for (String province : dataList) {
@@ -271,6 +276,13 @@ public class CardBlacklistServiceImpl implements ICardBlacklistService {
             }
         }
         jedis.close();
+    }
+
+    @Override
+    public Boolean findByCardId(String cardId) {
+        Jedis jedis = new Jedis(redisHost, redisPort);
+        jedis.select(Integer.parseInt(cardId.substring(0, 2)));
+        return StringUtils.isNotBlank(jedis.get(cardId));
     }
 
     public static String backMD5(String inStr) {

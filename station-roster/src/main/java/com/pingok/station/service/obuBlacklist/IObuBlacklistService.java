@@ -28,4 +28,5 @@ public interface IObuBlacklistService {
 
     void jedisInsert(List<BlackObuVo> list, String version);
 
+    Boolean findByCardId(String cardId);
 }

@@ -26,4 +26,8 @@ public interface ICardBlacklistService {
     void insert(List<BlackVo> list, String version);
 
     void jedisInsert(List<BlackVo> list, String version);
+
+    Boolean findByCardId(String cardId);
+
+    void test(String version);
 }
