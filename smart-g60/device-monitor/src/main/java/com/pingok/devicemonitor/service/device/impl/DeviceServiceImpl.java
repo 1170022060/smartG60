@@ -1,6 +1,5 @@
 package com.pingok.devicemonitor.service.device.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.devicemonitor.domain.device.TblDeviceFault;
 import com.pingok.devicemonitor.domain.device.TblDeviceInfo;
@@ -16,7 +15,7 @@ import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import com.ruoyi.system.api.RemoteKafkaService;
-import com.ruoyi.system.api.domain.kafuka.TblKafkaFailInfo;
+import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,10 +76,10 @@ public class DeviceServiceImpl implements IDeviceService {
         JSONObject data = new JSONObject();
         data.put("type", "deviceFault");
         data.put("data", fault.toJSONString());
-        TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();
-        tblKafkaFailInfo.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-        tblKafkaFailInfo.setData(data.toJSONString());
-        remoteKafkaService.send(tblKafkaFailInfo);
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+        kafkaEnum.setData(data.toJSONString());
+        remoteKafkaService.send(kafkaEnum);
 
     }
 

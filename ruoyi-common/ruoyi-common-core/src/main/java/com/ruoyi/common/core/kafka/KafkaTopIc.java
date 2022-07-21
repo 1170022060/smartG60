@@ -29,6 +29,8 @@ public class KafkaTopIc {
 
     public final static String MONITOR_SIGNAL_INFOBOARD_PUBLISH = "monitorSignalInfoBoardPublish";
 
+    public final static String MONITOR_SIGNAL_VDT = "monitorSignalVdt";
+
     public final static String MONITOR_SIGNAL_PILOTLIGHT = "monitorSignalPilotLight";
 
     public final static String SECTOR_LOG = "sectorLog";

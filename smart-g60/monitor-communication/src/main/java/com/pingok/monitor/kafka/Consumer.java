@@ -2,10 +2,11 @@ package com.pingok.monitor.kafka;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.pingok.monitor.domain.infoboard.VmsPublishInfo;
+import com.pingok.monitor.domain.infoboard.VmsInfo;
 import com.pingok.monitor.service.device.IStatusService;
 import com.pingok.monitor.service.infoboard.IVmsService;
 import com.pingok.monitor.service.pilotLight.IPilotLightService;
+import com.pingok.monitor.service.vdt.IVdtService;
 import com.pingok.monitor.service.videoEvent.IVideoEventService;
 import com.pingok.monitor.service.videoEvent.IVideoService;
 import com.ruoyi.common.core.kafka.KafkaGroup;
@@ -19,6 +20,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -41,6 +43,8 @@ public class Consumer {
     private IVideoEventService iVideoEventService;
     @Autowired
     private IVideoService iVideoService;
+    @Autowired
+    private IVdtService iVdtService;
 
 
     /**
@@ -173,14 +177,12 @@ public class Consumer {
     public void infoBoardPublish(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
-            Object msg = message.get();
-            log.info("infoBoardPublish 消费了： Topic:" + topic + ",Message:" + msg);
-            VmsPublishInfo info = JSONObject.parseObject(String.valueOf(msg), VmsPublishInfo.class);
+            log.info("infoBoardPublish 消费了： Topic:" + topic + ",Message:" + message.get());
             try {
-                iVmsService.publish(info);
+                iVmsService.publish(message.get().toString());
                 ack.acknowledge();
             } catch (Exception e) {
-                log.error("infoBoardPublish消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
+                log.error("infoBoardPublish消费者，Topic" + topic + ",Message:" + message.get() + "处理失败。错误信息：" + e.getMessage());
             }
         }
     }
@@ -284,6 +286,20 @@ public class Consumer {
                 if (ret) ack.acknowledge();
             } catch (Exception e) {
                 log.error("pilotLightHandle消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
+            }
+        }
+    }
+
+    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_VDT, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    public void vdtCollect(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        Optional message = Optional.ofNullable(record.value());
+        if (message.isPresent()) {
+            log.info("vdtCollect 消费了： Topic:" + topic + ",Message:" + message.get());
+            try {
+                iVdtService.collect();
+                ack.acknowledge();
+            } catch (Exception e) {
+                log.error("vdtCollect 消费者，Topic" + topic + ",Message:" + message.get() + "处理失败。错误信息：" + e.getMessage());
             }
         }
     }

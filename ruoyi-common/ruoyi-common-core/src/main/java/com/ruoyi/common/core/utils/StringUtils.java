@@ -1,5 +1,7 @@
 package com.ruoyi.common.core.utils;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -479,8 +481,29 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
         return (T) obj;
     }
 
-    //bytes数组转16进制字符串
-    public static String bytesToHexStr(byte[] bytes) {
+    /**
+     * 16进制字符串转bytes数组
+     */
+    public static final byte[] hexStrToBytes(String hex) {
+        if (hex == null || hex.length() == 0) {
+            return null;
+        }
+        String s1 = hex.replaceAll(" ", "");
+        String s2 = s1.replaceAll("-", "");
+        char[] hexChars = s2.toCharArray();
+        // 如果 hex 中的字符不是偶数个, 则忽略最后一个
+        byte[] bytes = new byte[hexChars.length / 2];
+
+        for (int i = 0; i < bytes.length; i++) {
+            bytes[i] = (byte) Integer.parseInt("" + hexChars[i * 2] + hexChars[i * 2 + 1], 16);
+        }
+        return bytes;
+    }
+
+    /**
+     * bytes数组转16进制字符串
+     */
+    public static final String bytesToHexStr(byte[] bytes) {
         final char[] hexArray = "0123456789ABCDEF".toCharArray();
         char[] hexChars = new char[bytes.length * 2];
         for ( int j = 0; j < bytes.length; j++ ) {
@@ -491,7 +514,21 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
         return new String(hexChars);
     }
 
-    //16进制字符串转bytes数组
+    /**
+     * byte[] 转 short[]
+     */
+    public static short[] bytesToShorts(byte[] bytes) {
+        if(bytes == null){
+            return null;
+        }
+        short[] shorts = new short[bytes.length/2];
+        ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).asShortBuffer().get(shorts);
+        return shorts;
+    }
+
+    /**
+     * 16进制字符串转bytes数组
+     */
     public static byte[] hexStrTobytes(String hex) {
         if (hex == null || hex.length() == 0) {
             return null;

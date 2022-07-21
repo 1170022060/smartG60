@@ -17,7 +17,7 @@ import com.ruoyi.system.api.domain.amap.TblAutoNaviMapRecord;
 import com.ruoyi.system.api.domain.baidu.TblBaiDuMapRecord;
 import com.ruoyi.system.api.domain.device.TblDeviceInfo;
 import com.ruoyi.system.api.domain.emergency.TblEmergencySupplies;
-import com.ruoyi.system.api.domain.kafuka.TblKafkaFailInfo;
+import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import com.ruoyi.system.api.domain.release.TblReleasePreset;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -103,10 +103,10 @@ public class EventServiceImpl implements IEventService {
         JSONObject data = new JSONObject();
         data.put("type", "eventRelease");
         data.put("data", event.toJSONString());
-        TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();
-        tblKafkaFailInfo.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-        tblKafkaFailInfo.setData(data.toJSONString());
-        remoteKafkaService.send(tblKafkaFailInfo);
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+        kafkaEnum.setData(data.toJSONString());
+        remoteKafkaService.send(kafkaEnum);
     }
 
     @Override
@@ -426,10 +426,10 @@ public class EventServiceImpl implements IEventService {
         JSONObject data = new JSONObject();
         data.put("type", "eventOccur");
         data.put("data", event.toJSONString());
-        TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();
-        tblKafkaFailInfo.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-        tblKafkaFailInfo.setData(data.toJSONString());
-        remoteKafkaService.send(tblKafkaFailInfo);
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+        kafkaEnum.setData(data.toJSONString());
+        remoteKafkaService.send(kafkaEnum);
 
         return r;
     }
@@ -447,9 +447,9 @@ public class EventServiceImpl implements IEventService {
         data.put("uiState", uiState);
         data.put("szRemark", szRemark);
         data.put("szUser", szUser);
-        TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();
-        tblKafkaFailInfo.setTopIc(KafkaTopIc.UPDATE_EVENT_INFO);
-        tblKafkaFailInfo.setData(data.toJSONString());
-        remoteKafkaService.send(tblKafkaFailInfo);
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.UPDATE_EVENT_INFO);
+        kafkaEnum.setData(data.toJSONString());
+        remoteKafkaService.send(kafkaEnum);
     }
 }

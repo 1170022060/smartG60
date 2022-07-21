@@ -31,18 +31,4 @@ public class AuditListTask {
         }
     }
 
-//    /**
-//     * 稽核预追缴黑名单全量定时任务
-//     */
-//    @Scheduled(cron = "0 1/5 * * * ?")
-//    private void preAll() {
-//        try {
-//            String version = DateUtils.getTimeMinute(DateUtils.getPreTime(DateUtils.getNowDate(),-6));
-//            log.info("AuditListTask开始执行preAll任务，版本号为：" + version);
-//            auditListService.preAll(version);
-//            log.info("AuditListTask执行preAll任务成功");
-//        } catch (Exception e) {
-//            log.error("AuditListTask执行preAll任务失败：" + e.getMessage());
-//        }
-//    }
 }
