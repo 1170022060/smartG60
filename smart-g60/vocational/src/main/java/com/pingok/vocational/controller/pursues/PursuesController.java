@@ -61,7 +61,7 @@ public class PursuesController extends BaseController {
         util.importTemplateExcel(response, "追讨名单");
     }
 
- //   @RequiresPermissions("vocational:pursues:function")
+    @RequiresPermissions("vocational:pursues:function")
     @Log(title = "追讨", businessType = BusinessType.INSERT)
     @GetMapping("/function")
     public AjaxResult pursues(@RequestParam(name = "startTime",required = false) Date startTime, @RequestParam(name = "endTime",required = false) Date endTime)
@@ -70,7 +70,7 @@ public class PursuesController extends BaseController {
         return AjaxResult.success();
     }
 
- //   @RequiresPermissions("vocational:pursues:trans")
+    @RequiresPermissions("vocational:pursues:trans")
     @Log(title = "追讨名单-流水查询", businessType = BusinessType.OTHER)
     @GetMapping("/trans")
     public TableDataInfo trans(@RequestParam(name = "concertId",required = false) String concertId)
@@ -80,7 +80,7 @@ public class PursuesController extends BaseController {
         return getDataTable(info);
     }
 
-//    @RequiresPermissions("vocational:pursues:gantry")
+    @RequiresPermissions("vocational:pursues:gantry")
     @Log(title = "追讨名单-门架查询", businessType = BusinessType.OTHER)
     @GetMapping("/gantry")
     public TableDataInfo gantry(@RequestParam(name = "concertId",required = false) String concertId)
@@ -90,7 +90,7 @@ public class PursuesController extends BaseController {
         return getDataTable(info);
     }
 
- //   @RequiresPermissions("vocational:pursues:lpr")
+    @RequiresPermissions("vocational:pursues:lpr")
     @Log(title = "追讨名单-牌识查询", businessType = BusinessType.OTHER)
     @GetMapping("/lpr")
     public TableDataInfo lpr(@RequestParam(name = "concertId",required = false) String concertId)

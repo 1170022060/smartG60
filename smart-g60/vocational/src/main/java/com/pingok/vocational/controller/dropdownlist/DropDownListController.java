@@ -57,8 +57,7 @@ public class DropDownListController extends BaseController {
     @Autowired
     private TblDeviceCategoryService tblDeviceCategoryService;
 
-    @RequiresPermissions("vocational:dropDownList:field")
-    @Log(title = "所属场地下拉列表查询", businessType = BusinessType.OTHER)
+
     @GetMapping(value="/field")
     public AjaxResult field()
     {
@@ -66,8 +65,6 @@ public class DropDownListController extends BaseController {
         return AjaxResult.success(info);
     }
 
-    @RequiresPermissions("vocational:dropDownList:station")
-    @Log(title = "站编码下拉列表查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/station")
     public AjaxResult station()
     {
@@ -75,8 +72,6 @@ public class DropDownListController extends BaseController {
         return AjaxResult.success(info);
     }
 
-    @RequiresPermissions("vocational:dropDownList:lane")
-    @Log(title = "车道编码下拉列表查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/lane")
     public AjaxResult lane()
     {
@@ -84,8 +79,6 @@ public class DropDownListController extends BaseController {
         return AjaxResult.success(info);
     }
 
-    @RequiresPermissions("vocational:dropDownList:stationLane")
-    @Log(title = "站及对应车道编码下拉列表查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/stationLane")
     public AjaxResult stationLane()
     {
@@ -93,8 +86,6 @@ public class DropDownListController extends BaseController {
         return AjaxResult.success(info);
     }
 
-    @RequiresPermissions("vocational:dropDownList:stationCenter")
-    @Log(title = "站及中心编码下拉列表查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/stationCenter")
     public AjaxResult stationCenter()
     {
@@ -102,8 +93,6 @@ public class DropDownListController extends BaseController {
         return AjaxResult.success(info);
     }
 
-    @RequiresPermissions("vocational:dropDownList:deptUser")
-    @Log(title = "查询部门-人员下拉列表查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/deptUser")
     public AjaxResult deptUser()
     {
@@ -111,8 +100,6 @@ public class DropDownListController extends BaseController {
         return AjaxResult.success(info);
     }
 
-    @RequiresPermissions("vocational:dropDownList:project")
-    @Log(title = "项目信息-下拉列表查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/project")
     public AjaxResult project()
     {
@@ -120,8 +107,6 @@ public class DropDownListController extends BaseController {
         return AjaxResult.success(info);
     }
 
-    @RequiresPermissions("vocational:dropDownList:device")
-    @Log(title = "设备信息-下拉列表查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/device")
     public AjaxResult device()
     {
@@ -129,8 +114,6 @@ public class DropDownListController extends BaseController {
         return AjaxResult.success(info);
     }
 
-    @RequiresPermissions("vocational:dropDownList:suppliesName")
-    @Log(title = "资源名称-下拉列表查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/suppliesName")
     public AjaxResult suppliesName(@RequestParam(name = "suppliesType") Integer suppliesType)
     {
@@ -138,8 +121,6 @@ public class DropDownListController extends BaseController {
         return AjaxResult.success(info);
     }
 
-    @RequiresPermissions("vocational:dropDownList:board")
-    @Log(title = "情报板/限速板-下拉列表查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/board")
     public AjaxResult board(@RequestParam(name = "type") Integer type)
     {
@@ -147,8 +128,6 @@ public class DropDownListController extends BaseController {
         return AjaxResult.success(info);
     }
 
-    @RequiresPermissions("vocational:dropDownList:deviceGantry")
-    @Log(title = "门架设备-下拉列表查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/deviceGantry")
     public AjaxResult deviceGantry()
     {
@@ -156,8 +135,6 @@ public class DropDownListController extends BaseController {
         return AjaxResult.success(info);
     }
 
-    @RequiresPermissions("vocational:dropDownList:preset")
-    @Log(title = "信息发布预设-下拉列表查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/preset")
     public AjaxResult preset(@RequestParam(name = "infoType") Integer infoType)
     {
@@ -165,8 +142,6 @@ public class DropDownListController extends BaseController {
         return AjaxResult.success(info);
     }
 
-    @RequiresPermissions("vocational:dropDownList:post")
-    @Log(title = "岗位下拉列表查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/post")
     public AjaxResult preset()
     {
