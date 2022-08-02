@@ -33,8 +33,8 @@ public class RoadDoctorController extends BaseController {
      *
      * @return
      */
-//    @RequiresPermissions("vocational:roadDoctor:search")
-//    @Log(title = "道路病害管理", businessType = BusinessType.OTHER)
+    @RequiresPermissions("vocational:roadDoctor:search")
+    @Log(title = "道路病害管理", businessType = BusinessType.OTHER)
     @GetMapping("/search")
     public TableDataInfo search(String questName, String pZhuangHao, Date startTime, Date endTime) {
         startPage();

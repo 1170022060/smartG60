@@ -46,7 +46,7 @@ public interface TblEmergencySuppliesMapper extends CommonRepository<TblEmergenc
             "left join  SYS_DICT_DATA f on f.DICT_VALUE=a.SUPPLIES_TYPE and f.DICT_TYPE='supplies_type' " +
             "left join  SYS_DICT_DATA g on g.DICT_VALUE=a.VEH_CLASS and g.DICT_TYPE='veh_class' " +
             "left join  SYS_DICT_DATA h on h.DICT_VALUE=a.VEH_COLOR and h.DICT_TYPE='veh_color' " +
-            "where a.SUPPLIES_TYPE= #{suppliesType}" +
+            "where to_number(a.SUPPLIES_TYPE) = #{suppliesType} " +
             "<when test='suppliesName != null'> " +
             "and a.SUPPLIES_NAME like CONCAT(CONCAT('%',#{suppliesName}),'%') " +
             "</when>"+

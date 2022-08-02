@@ -17,7 +17,6 @@ import com.ruoyi.system.api.RemoteEventService;
 import com.ruoyi.system.api.domain.event.TblEventRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -27,7 +26,6 @@ import java.util.List;
 @Slf4j
 @Service
 public class BridgeServiceImpl implements IBridgeService {
-
 
 
     @Autowired
@@ -60,8 +58,10 @@ public class BridgeServiceImpl implements IBridgeService {
             r = HttpUtil.get(BridgeConfig.HOST + "/monitor/alarm_record/" + BridgeConfig.TOKEN + "/" + warning.getId());
             if (!StringUtils.isEmpty(r)) {
                 JSONObject ret = JSONObject.parseObject(r);
+                log.info(ret.toJSONString());
                 if (ret.getInteger("code") == 200) {
                     ret = ret.getJSONObject("data");
+                    log.info(ret.toJSONString());
                     if (!ret.isEmpty()) {
                         BeanUtils.copyNotNullProperties(JSON.parseObject(ret.toJSONString(), TblBridgeWarning.class), warning);
                         warning.setUpdateTime(DateUtils.getNowDate());
@@ -80,12 +80,15 @@ public class BridgeServiceImpl implements IBridgeService {
         List<TblBridgeInfo> bridgeInfos = tblBridgeInfoMapper.selectAll();
         TblEventRecord eventRecord;
         R re;
+        String host;
         for (TblBridgeInfo bridge : bridgeInfos) {
-            r = HttpUtil.get(BridgeConfig.HOST + "/monitor/alarm_records_by_range_time/" + BridgeConfig.TOKEN + "/" + bridge.getId() + "/" + startTime + "/" + endTime);
+            host = BridgeConfig.HOST + "/monitor/alarm_records_by_range_time/" + BridgeConfig.TOKEN + "/" + bridge.getId() + "/" + DateUtils.dateTime(startTime, DateUtils.YYYYMMDDHHMMSS) + "/" + DateUtils.dateTime(endTime, DateUtils.YYYYMMDDHHMMSS);
+            r = HttpUtil.get(host);
             if (!StringUtils.isEmpty(r)) {
                 JSONObject ret = JSONObject.parseObject(r);
                 if (ret.getInteger("code") == 200) {
                     JSONArray array = ret.getJSONArray("data");
+                    log.info(array.toJSONString());
                     if (!array.isEmpty()) {
                         TblBridgeWarning warning;
                         int size = array.size();
@@ -122,6 +125,7 @@ public class BridgeServiceImpl implements IBridgeService {
                 JSONObject ret = JSONObject.parseObject(r);
                 if (ret.getInteger("code") == 200) {
                     JSONArray array = ret.getJSONArray("data");
+//                    log.info(array.toJSONString());
                     if (!array.isEmpty()) {
                         TblBridgeAcquisition acquisition;
                         JSONObject object;
@@ -161,6 +165,7 @@ public class BridgeServiceImpl implements IBridgeService {
                 JSONObject ret = JSONObject.parseObject(r);
                 if (ret.getInteger("code") == 200) {
                     JSONArray array = ret.getJSONArray("data");
+//                    log.info(array.toJSONString());
                     if (!array.isEmpty()) {
                         TblBridgeCollection collection;
                         JSONObject object;
@@ -200,6 +205,7 @@ public class BridgeServiceImpl implements IBridgeService {
                 JSONObject ret = JSONObject.parseObject(r);
                 if (ret.getInteger("code") == 200) {
                     JSONArray array = ret.getJSONArray("data");
+//                    log.info(array.toJSONString());
                     if (!array.isEmpty()) {
                         TblBridgeInfo bridgeInfo;
                         JSONObject object;
@@ -232,6 +238,7 @@ public class BridgeServiceImpl implements IBridgeService {
             JSONObject ret = JSONObject.parseObject(r);
             if (ret.getInteger("code") == 200) {
                 JSONArray array = ret.getJSONArray("data");
+//                log.info(array.toJSONString());
                 if (!array.isEmpty()) {
                     TblBridgeProject bridgeProject;
                     JSONObject object;

@@ -44,6 +44,13 @@ public class DeviceServiceImpl implements IDeviceService {
     private RemoteKafkaService remoteKafkaService;
 
     @Override
+    public TblDeviceInfo selectByDeviceId(String deviceId) {
+        Example example = new Example(TblDeviceInfo.class);
+        example.createCriteria().andEqualTo("deviceId", deviceId);
+        return tblDeviceInfoMapper.selectOneByExample(example);
+    }
+
+    @Override
     public void deviceFault(TblDeviceFault deviceFault) {
         Example example = new Example(TblDeviceFault.class);
         Example.Criteria criteria = example.createCriteria();
@@ -51,27 +58,27 @@ public class DeviceServiceImpl implements IDeviceService {
         criteria.andEqualTo("faultId", deviceFault.getFaultId());
         criteria.andEqualTo("status", 0);
         TblDeviceFault tblDeviceFault = tblDeviceFaultMapper.selectOneByExample(example);
-        if(tblDeviceFault==null){
+        if (tblDeviceFault == null) {
             tblDeviceFault = new TblDeviceFault();
-            BeanUtils.copyNotNullProperties(deviceFault,tblDeviceFault);
+            BeanUtils.copyNotNullProperties(deviceFault, tblDeviceFault);
             tblDeviceFault.setId(remoteIdProducerService.nextId());
             tblDeviceFault.setCreateTime(DateUtils.getNowDate());
             tblDeviceFault.setStatus(0);
             tblDeviceFaultMapper.insert(tblDeviceFault);
-        }else {
-            BeanUtils.copyNotNullProperties(deviceFault,tblDeviceFault);
+        } else {
+            BeanUtils.copyNotNullProperties(deviceFault, tblDeviceFault);
             tblDeviceFault.setCreateTime(DateUtils.getNowDate());
             tblDeviceFaultMapper.updateByPrimaryKey(tblDeviceFault);
         }
         TblDeviceInfo deviceInfo = tblDeviceInfoMapper.selectByPrimaryKey(tblDeviceFault.getDeviceId());
 
         JSONObject fault = new JSONObject();
-        fault.put("id",tblDeviceFault.getId());
-        fault.put("deviceId",tblDeviceFault.getDeviceId());
-        fault.put("deviceName",deviceInfo.getDeviceName());
-        fault.put("faultId",tblDeviceFault.getFaultId());
-        fault.put("faultDescription",tblDeviceFault.getFaultDescription());
-        fault.put("time",tblDeviceFault.getFaultTime());
+        fault.put("id", tblDeviceFault.getId());
+        fault.put("deviceId", tblDeviceFault.getDeviceId());
+        fault.put("deviceName", deviceInfo.getDeviceName());
+        fault.put("faultId", tblDeviceFault.getFaultId());
+        fault.put("faultDescription", tblDeviceFault.getFaultDescription());
+        fault.put("time", tblDeviceFault.getFaultTime());
 
         JSONObject data = new JSONObject();
         data.put("type", "deviceFault");
@@ -109,11 +116,11 @@ public class DeviceServiceImpl implements IDeviceService {
     }
 
     @Override
-    public List<TblDeviceInfo> findByProtocol(String protocol)  {
+    public List<TblDeviceInfo> findByProtocol(String protocol) {
         Example example = new Example(TblDeviceInfo.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andIsNotNull("deviceIp");
-        criteria.andEqualTo("protocol",protocol);
+        criteria.andEqualTo("protocol", protocol);
         return tblDeviceInfoMapper.selectByExample(example);
     }
 }
