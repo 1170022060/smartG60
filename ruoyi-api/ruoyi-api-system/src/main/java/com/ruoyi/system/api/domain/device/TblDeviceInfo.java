@@ -32,7 +32,7 @@ public class TblDeviceInfo {
 
     /** 立项时间 */
     @Excel(name = "立项时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date itemListTime;
 
     /** 设备类目 */
@@ -65,12 +65,12 @@ public class TblDeviceInfo {
 
     /** 购买日期 */
     @Excel(name = "购买日期")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+//    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date purchaseDate;
 
     /** 安装日期 */
     @Excel(name = "安装日期")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+//    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date installDate;
 
     /** 质保期限(月) */
@@ -155,12 +155,12 @@ public class TblDeviceInfo {
 
     /** 创建时间 */
     @Excel(name = "创建时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /** 更新时间 */
     @Excel(name = "更新时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     /** 创建用户ID */
