@@ -276,6 +276,13 @@ public class ObuBlacklistServiceImpl implements IObuBlacklistService {
         jedis.close();
     }
 
+    @Override
+    public Boolean findByCardId(String cardId) {
+        Jedis jedis = new Jedis(redisHost, redisPort);
+        jedis.select(Integer.parseInt(cardId.substring(0, 2))+100);
+        return StringUtils.isNotBlank(jedis.get(cardId));
+    }
+
     public void unzipInside(String version,String resourcePath){
         //判断生成目录是否生成，如果没有就创建
         File pathFile=new File(resourcePath);
