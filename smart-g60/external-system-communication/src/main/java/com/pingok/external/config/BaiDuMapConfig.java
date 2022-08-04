@@ -1,10 +1,7 @@
 package com.pingok.external.config;
 
-import io.swagger.models.auth.In;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 /**

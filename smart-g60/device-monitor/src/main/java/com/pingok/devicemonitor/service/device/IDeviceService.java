@@ -8,6 +8,13 @@ import java.util.List;
 
 public interface IDeviceService {
 
+    /**
+     * 根据设备编号查询设备信息
+     * @param deviceId
+     * @return
+     */
+    TblDeviceInfo selectByDeviceId(String deviceId);
+
     void deviceFault(TblDeviceFault deviceFault);
     /**
      * 设备心跳

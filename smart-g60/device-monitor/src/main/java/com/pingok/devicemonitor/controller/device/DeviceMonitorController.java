@@ -42,10 +42,15 @@ public class DeviceMonitorController extends BaseController {
     @Autowired
     private RemoteKafkaService remoteKafkaService;
 
+    @GetMapping("/selectByDeviceId")
+    public AjaxResult selectByDeviceId(String deviceId) {
+        return AjaxResult.success(iDeviceService.selectByDeviceId(deviceId));
+    }
+
     @PostMapping
     public AjaxResult updateHeartbeat(@RequestBody TblDeviceStatus deviceStatus) {
         iDeviceService.updateStatus(deviceStatus);
-        if(deviceStatus.getStatus()==0){
+        if (deviceStatus.getStatus() == 0) {
             TblDeviceFault deviceFault = new TblDeviceFault();
             deviceFault.setDeviceId(deviceStatus.getDeviceId());
             deviceFault.setFaultId("hardware");
@@ -66,7 +71,7 @@ public class DeviceMonitorController extends BaseController {
     @GetMapping("/pingHeartbeat")
     public AjaxResult pingHeartbeat() {
         List<TblDeviceInfo> deviceInfos = iDeviceService.findByProtocol("ping");
-        if(deviceInfos != null && deviceInfos.size() > 0) {
+        if (deviceInfos != null && deviceInfos.size() > 0) {
             List<TblDeviceInfo> daasArray = new ArrayList<>();
             List<TblDeviceInfo> monitorArray = new ArrayList<>();
             List<TblDeviceInfo> chargeArray = new ArrayList<>();
@@ -217,7 +222,7 @@ public class DeviceMonitorController extends BaseController {
             }
             KafkaEnum kafkaEnum;
             String topIcCharge = "", topIcMonitor = "";
-            switch(type){
+            switch (type) {
                 case "serverSnmp":
                     topIcCharge = KafkaTopIc.CHARGE_SIGNAL_SERVER_STATUS;
                     topIcMonitor = KafkaTopIc.MONITOR_SIGNAL_SERVER_STATUS;

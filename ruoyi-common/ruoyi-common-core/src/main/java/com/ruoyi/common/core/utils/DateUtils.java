@@ -249,12 +249,13 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      * 时间前推或后推分钟,其中JJ表示分钟.
      */
     public static Date getPreTime(Date date, Integer min) {
+        Date newDate = new Date();
         try {
             Long Time = (date.getTime() / 1000) + min * 60;
-            date.setTime(Time * 1000);
+            newDate.setTime(Time * 1000);
         } catch (Exception e) {
         }
-        return date;
+        return newDate;
     }
 
     /**
