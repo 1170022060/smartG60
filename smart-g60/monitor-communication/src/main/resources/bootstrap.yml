@@ -18,12 +18,12 @@ spring:
     nacos:
       discovery:
         namespace: ed01487a-41a0-480e-a369-39f2be469364
-        group: smartG60
+        group: SMARTG60
         # 服务注册地址
         server-addr: 118.195.255.66:8848
       config:
         namespace: ed01487a-41a0-480e-a369-39f2be469364
-        group: smartG60
+        group: SMARTG60
         # 配置中心地址
         server-addr: 118.195.255.66:8848
         # 配置文件格式
