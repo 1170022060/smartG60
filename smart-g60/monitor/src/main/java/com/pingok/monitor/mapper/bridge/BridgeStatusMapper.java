@@ -26,7 +26,7 @@ public interface BridgeStatusMapper {
             "tbi.ENTIRETY_RATING as \"entiretyRating\", " +
             "tbi.COMPONENT_RATING as \"componentRating\", " +
             "tbi.DEVICE_STATUS as \"deviceStatus\", " +
-            "tbi.UPDATE_TIME as \"time\" " +
+            "to_char(tbi.UPDATE_TIME,'yyyy-MM-dd HH24:mi:ss') as \"time\" " +
             "FROM " +
             "TBL_BRIDGE_INFO tbi " +
             "WHERE 1=1 " +

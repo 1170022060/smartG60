@@ -87,7 +87,7 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_PING_STATUS, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.CHARGE_SIGNAL_PING_STATUS, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
     public void pingStatus(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -103,7 +103,7 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_SWITCH_STATUS, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.CHARGE_SIGNAL_SWITCH_STATUS, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
     public void switchStatus(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -119,7 +119,7 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_FIREWALL_STATUS, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.CHARGE_SIGNAL_FIREWALL_STATUS, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
     public void firewallStatus(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {

@@ -84,6 +84,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
                     }
                     e.setPlanFunctionList(jsonArray);
                 }
+                list.add(e);
             }
         }
         return list;
