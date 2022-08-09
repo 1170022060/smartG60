@@ -1,13 +1,11 @@
-package com.pingok.station.service.demicAreaList.impl;
+package com.pingok.station.service.suspectList.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.pingok.station.domain.demicAreaList.EpidemicArea;
-import com.pingok.station.domain.demicAreaList.vo.DemicVo;
-import com.pingok.station.domain.greenList.GreenPassAppointment;
-import com.pingok.station.domain.greenList.vo.GreenVo;
+import com.pingok.station.domain.suspectList.SuspectArea;
+import com.pingok.station.domain.suspectList.vo.SuspectVo;
 import com.pingok.station.domain.vo.VersionVo;
-import com.pingok.station.mapper.demicAreaList.EpidemicAreaMapper;
-import com.pingok.station.service.demicAreaList.IDemicAreaListService;
+import com.pingok.station.mapper.suspectList.SuspectAreaMapper;
+import com.pingok.station.service.suspectList.ISuspectListService;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
@@ -17,9 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -28,16 +23,12 @@ import java.util.zip.ZipFile;
 import static com.pingok.station.service.cardBlacklist.impl.CardBlacklistServiceImpl.backMD5;
 import static com.pingok.station.service.cardBlacklist.impl.CardBlacklistServiceImpl.delFolder;
 
-/**
- * @author
- * @time 2022/4/13 16:32
- */
 @Slf4j
 @Service
-public class DemicAreaListServiceImpl implements IDemicAreaListService {
+public class SuspectListServiceImpl implements ISuspectListService {
 
     @Autowired
-    private EpidemicAreaMapper epidemicAreaMapper;
+    private SuspectAreaMapper suspectAreaMapper;
 
     @Value("${center.host}")
     private String host;
@@ -45,12 +36,12 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
     @Value("${center.stationGB}")
     private String stationGB;
 
-    @Value("${center.demicPath}")
-    private String demicPath;
+    @Value("${center.suspectPath}")
+    private String suspectPath;
 
     @Override
-    public void demicAreaList(String version) {
-        String url= host + "/api/lane-service/epidemic-area-list";
+    public void suspectList(String version) {
+        String url= host + "/api/lane-service/suspect-invalid-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo=new VersionVo();
         versionVo.setVersion(version);
@@ -69,12 +60,12 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
             byte[] bytes = response.body().bytes();
             if(bytes.length>0)
             {
-                String fileName = version +"Demic"+ ".zip";
-                File file=new File(demicPath);
+                String fileName = version +"Suspect"+ ".zip";
+                File file=new File(suspectPath);
                 if(!file.exists()){
                     file.mkdirs();
                 }
-                String pathName=demicPath+"\\"+fileName;
+                String pathName=suspectPath+"\\"+fileName;
                 file  = new File(pathName);
                 if(!file.exists()){
                     file.createNewFile();
@@ -83,7 +74,7 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
                 fos.write(bytes,0,bytes.length);
                 fos.flush();
                 fos.close();
-                unzipDemic(pathName,demicPath,version);
+                unzipSuspect(pathName,suspectPath,version);
             }
         }
         catch (Exception e){
@@ -92,25 +83,23 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
     }
 
     @Override
-    public void insertDemicArea(List<DemicVo> list,String version) {
-        EpidemicArea epidemicArea =new EpidemicArea();
-        epidemicAreaMapper.deleteAll();
-        for(DemicVo demicVo : list) {
-            BeanUtils.copyNotNullProperties(demicVo,epidemicArea);
-            epidemicArea.setStationID(demicVo.getStationId());
-            epidemicArea.setStationHEX(demicVo.getStationHex());
-            epidemicArea.setStartTime(demicVo.getEffective());
-            epidemicArea.setVersion(version);
-            epidemicAreaMapper.insertDemicArea(epidemicArea);
+    public void insertSuspect(List<SuspectVo> list, String version) {
+        SuspectArea suspectArea =new SuspectArea();
+        suspectAreaMapper.deleteAll();
+        for(SuspectVo suspectVo : list) {
+            BeanUtils.copyNotNullProperties(suspectVo,suspectArea);
+            suspectArea.setStartTime(suspectVo.getEffective());
+            suspectArea.setVersion(version);
+            suspectAreaMapper.insertSuspect(suspectArea);
         }
     }
 
     @Override
     public void test(String version) {
-        unzipDemic(demicPath+"\\2022-07-15.zip",demicPath,version);
+        unzipSuspect(suspectPath+"\\2022-07-29.zip",suspectPath,version);
     }
 
-    public void unzipDemic(String zipPath,String resourcePath,String version){
+    public void unzipSuspect(String zipPath,String resourcePath,String version){
         //判断生成目录是否生成，如果没有就创建
         File pathFile=new File(resourcePath);
         if(!pathFile.exists()){
@@ -145,12 +134,12 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
                 out.close();
                 if(zipEntryName.contains(".zip"))
                 {
-                    unzipDemic(outpath,resourcePath,version);
+                    unzipSuspect(outpath,resourcePath,version);
                 }
                 if(zipEntryName.contains(".json"))
                 {
-                    List<DemicVo> list =jsonAnalysis(outpath);
-                    insertDemicArea(list,version);
+                    List<SuspectVo> list =jsonAnalysis(outpath);
+                    insertSuspect(list,version);
                 }
             }
             zp.close();
@@ -160,7 +149,7 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
         delFolder(resourcePath);
     }
 
-    public static List<DemicVo> jsonAnalysis(String jsonPath){
+    public static List<SuspectVo> jsonAnalysis(String jsonPath){
 
         String jsonStr = "";
         try {
@@ -174,7 +163,7 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
             fileReader.close();
             reader.close();
             jsonStr = sb.toString();
-            List<DemicVo> listStr = JSON.parseArray(jsonStr, DemicVo.class);
+            List<SuspectVo> listStr = JSON.parseArray(jsonStr, SuspectVo.class);
             return listStr;
         } catch (Exception e) {
             e.printStackTrace();

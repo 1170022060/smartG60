@@ -21,7 +21,7 @@ public interface TblOdRecordMapper {
 
     @Select({"<script>" +
             "select  " +
-            "to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "a.HOUR as \"hour\"," +
             "b.STATION_NAME as \"stationId\"," +
             "sum(a.FLOW) as \"flow\" from TBL_OD_RECORD a " +
@@ -45,7 +45,7 @@ public interface TblOdRecordMapper {
 
     @Select({"<script>" +
             "select  " +
-            "to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "a.HOUR as \"hour\"," +
             "b.STATION_NAME as \"stationId\"," +
             "sum(a.FLOW) as \"flow\" from TBL_OD_RECORD a " +
@@ -70,7 +70,7 @@ public interface TblOdRecordMapper {
 
     @Select({"<script>" +
             "select  " +
-            "to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "a.HOUR as \"hour\"," +
             "c.DICT_LABEL as \"vehClass\"," +
             "sum(a.FLOW) as \"flow\" from TBL_OD_RECORD a " +
@@ -88,7 +88,7 @@ public interface TblOdRecordMapper {
 
     @Select({"<script>" +
             "select  " +
-            "to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "a.HOUR as \"hour\"," +
             "c.DICT_LABEL as \"vehClass\"," +
             "sum(a.FLOW) as \"flow\" from TBL_OD_RECORD a " +

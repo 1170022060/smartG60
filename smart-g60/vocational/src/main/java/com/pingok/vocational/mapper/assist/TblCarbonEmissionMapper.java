@@ -18,7 +18,7 @@ public interface TblCarbonEmissionMapper extends CommonRepository<TblCarbonEmiss
 
     @Select({"<script>" +
             "select b.DICT_LABEL as \"carbonType\" ," +
-            "to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "c.DICT_LABEL as \"week\" ," +
             "a.DISCHARGE_AMOUNT as \"dischargeAmount\" from TBL_CARBON_EMISSION a " +
             "left join  SYS_DICT_DATA b on b.DICT_VALUE=to_char(a.CARBON_TYPE) and b.DICT_TYPE='carbon_type' " +

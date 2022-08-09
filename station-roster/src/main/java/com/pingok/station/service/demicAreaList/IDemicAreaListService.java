@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IDemicAreaListService {
     /**
-     * 绿通预约名单全量下载、入库
+     * 中高风险地区名单全量下载、入库
      * @param version 版本号
      */
     void demicAreaList(String version);

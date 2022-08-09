@@ -17,16 +17,16 @@
     <dependencies>
 
         <!-- SpringCloud Alibaba Nacos -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
+<!--        </dependency>-->
 
-        <!-- SpringCloud Alibaba Nacos Config -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-        </dependency>
+<!--        &lt;!&ndash; SpringCloud Alibaba Nacos Config &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>-->
+<!--        </dependency>-->
 
         <!-- SpringBoot Actuator -->
         <dependency>
@@ -58,10 +58,10 @@
             <artifactId>ruoyi-common-datasource</artifactId>
         </dependency>
         <!-- RuoYi Common Log -->
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-common-log</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.ruoyi</groupId>-->
+<!--            <artifactId>ruoyi-common-log</artifactId>-->
+<!--        </dependency>-->
         <!-- RuoYi Common DataScope -->
         <dependency>
             <groupId>com.ruoyi</groupId>
@@ -79,10 +79,10 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-api-system</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.ruoyi</groupId>-->
+<!--            <artifactId>ruoyi-api-system</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>com.ruoyi</groupId>
@@ -95,10 +95,10 @@
             <version>5.7.22</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.kafka</groupId>-->
+<!--            <artifactId>spring-kafka</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>redis.clients</groupId>

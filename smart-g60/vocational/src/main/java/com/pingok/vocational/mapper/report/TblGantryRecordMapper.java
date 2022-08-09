@@ -17,7 +17,7 @@ import java.util.Map;
 public interface TblGantryRecordMapper {
 
     @Select({"<script>" +
-            "select to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "select to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "a.GANTRY_ID as \"gantryId\" ," +
             "a.ETC_LOCAL as \"etcLocal\" ," +
             "a.ETC_ELSE as \"etcElse\" ," +
@@ -42,7 +42,7 @@ public interface TblGantryRecordMapper {
     List<Map> selectGantryRecord(@Param("gantryId") String gantryId,@Param("startDate")  Date startDate,@Param("endDate")  Date endDate);
 
     @Select({"<script>" +
-            "select to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "select to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "a.GANTRY_ID as \"gantryId\" ," +
             "a.ETC_LOCAL as \"etcLocal\" ," +
             "a.ETC_ELSE as \"etcElse\" ," +
