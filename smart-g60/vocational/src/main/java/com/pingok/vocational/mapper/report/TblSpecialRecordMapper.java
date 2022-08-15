@@ -20,7 +20,7 @@ public interface TblSpecialRecordMapper {
             "select b.LANE_NAME as \"laneName\" ," +
             "c.DICT_LABEL as \"laneType\" ," +
             "a.MARK_NAME as \"markName\" ," +
-            "to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "to_char(a.TIME, 'yyyy-mm-dd hh24:mi:ss') as \"time\" ," +
             "a.OPT_ID as \"optId\" ," +
             "a.OPT_NAME as \"optName\" ," +
@@ -57,7 +57,7 @@ public interface TblSpecialRecordMapper {
     List<Map> selectSpecialRecord(@Param("startTime") Date startTime, @Param("endTime")  Date endTime, @Param("stationId") String stationId,@Param("laneId") String laneId);
 
     @Select({"<script>" +
-            "select to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "select to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "b.STATION_NAME as \"stationName\" ," +
             "c.DICT_LABEL as \"type\" ," +
             "count(1) as \"count\"  from TBL_SPECIAL_RECORD a " +
@@ -76,7 +76,7 @@ public interface TblSpecialRecordMapper {
     List<Map> selectSpecialStatistic(@Param("startDate") Date startDate, @Param("endDate")  Date endDate);
 
     @Select({"<script>" +
-            "select to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "select to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "b.STATION_NAME as \"stationName\" ," +
             "c.DICT_LABEL as \"type\" ," +
             "count(1) as \"count\"  from TBL_SPECIAL_RECORD a " +

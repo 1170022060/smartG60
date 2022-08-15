@@ -1,5 +1,7 @@
 package com.pingok.vocational.service.business;
 
+import com.pingok.vocational.domain.business.TblOptWorkInfo;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -23,4 +25,11 @@ public interface IOptWorkInfoService {
      */
     List<Map> selectOptWorkInfo( Date startDate, Date endDate, String stationId, String optName, Integer shift);
 
+    /**
+     * 新增工班信息
+     *
+     * @param tblOptWorkInfo 工班信息
+     * @return 结果
+     */
+    public int insertOptWorkInfo(TblOptWorkInfo tblOptWorkInfo);
 }

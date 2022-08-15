@@ -20,7 +20,7 @@ public interface TblTollForecastRecordMapper extends CommonRepository<TblTollFor
             "select b.DICT_LABEL as \"forecastType\" ," +
             "FORECAST_FLOW as \"forecastFlow\" ," +
             "FORECAST_FEE as \"forecastFee\" ," +
-            "to_char(a.FORECAST_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"forecastDate\" ," +
+            "to_char(a.FORECAST_DATE, 'yyyy-mm-dd') as \"forecastDate\" ," +
             "c.DICT_LABEL as \"week\"  from TBL_TOLL_FORECAST_RECORD a " +
             "left join  SYS_DICT_DATA b on b.DICT_VALUE=to_char(a.FORECAST_TYPE) and b.DICT_TYPE='forecast_type' " +
             "left join  SYS_DICT_DATA c on c.DICT_VALUE=a.WEEK and c.DICT_TYPE='week' " +

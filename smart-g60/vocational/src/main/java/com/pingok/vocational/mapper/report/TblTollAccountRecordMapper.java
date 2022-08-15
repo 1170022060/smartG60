@@ -18,7 +18,7 @@ import java.util.Map;
 public interface TblTollAccountRecordMapper {
 
     @Select({"<script>" +
-            "select to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "select to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "c.DICT_LABEL as \"vehStatus\"," +
             "a.TRANS_NO as \"transNo\" ," +
             "a.CALCULATE_FEE as \"calculateFee\" ," +
@@ -37,7 +37,7 @@ public interface TblTollAccountRecordMapper {
     List<Map> selectAccountRecord(@Param("startDate") Date startDate, @Param("endDate")  Date endDate);
 
     @Select({"<script>" +
-            "select to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "select to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "c.DICT_LABEL as \"vehStatus\"," +
             "a.TRANS_NO as \"transNo\" ," +
             "a.CALCULATE_FEE as \"calculateFee\" ," +

@@ -7,6 +7,8 @@ import com.pingok.station.service.demicAreaList.IDemicAreaListService;
 import com.pingok.station.service.emergList.IEmergListService;
 import com.pingok.station.service.greenList.IGreenListService;
 import com.pingok.station.service.obuBlacklist.IObuBlacklistService;
+import com.pingok.station.service.prefixList.IPrefixListService;
+import com.pingok.station.service.suspectList.ISuspectListService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,10 @@ public class Controller extends BaseController {
     private IEmergListService emergListService;
     @Autowired
     private IDemicAreaListService demicAreaListService;
+    @Autowired
+    private IPrefixListService prefixListService;
+    @Autowired
+    private ISuspectListService suspectListService;
 
     @PostMapping("/blackIncr")
     public AjaxResult blackIncr(@Validated @RequestBody String version)
@@ -140,6 +146,20 @@ public class Controller extends BaseController {
     public AjaxResult demicAreaList(@Validated @RequestBody String version)
     {
         demicAreaListService.demicAreaList(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/prefixList")
+    public AjaxResult prefixList(@Validated @RequestBody String version)
+    {
+        prefixListService.prefixAreaList(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/suspectList")
+    public AjaxResult suspectList(@Validated @RequestBody String version)
+    {
+        suspectListService.test(version);
         return AjaxResult.success();
     }
 }

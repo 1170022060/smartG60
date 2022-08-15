@@ -1,14 +1,12 @@
-package com.pingok.station.service.demicAreaList.impl;
+package com.pingok.station.service.prefixList.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.pingok.station.domain.demicAreaList.EpidemicArea;
 import com.pingok.station.domain.demicAreaList.vo.DemicVo;
-import com.pingok.station.domain.greenList.GreenPassAppointment;
-import com.pingok.station.domain.greenList.vo.GreenVo;
+import com.pingok.station.domain.prefixList.EpidemicPrefixArea;
+import com.pingok.station.domain.prefixList.vo.PrefixVo;
 import com.pingok.station.domain.vo.VersionVo;
-import com.pingok.station.mapper.demicAreaList.EpidemicAreaMapper;
-import com.pingok.station.service.demicAreaList.IDemicAreaListService;
-import com.ruoyi.common.core.utils.bean.BeanUtils;
+import com.pingok.station.mapper.prefixList.EpidemicPrefixAreaMapper;
+import com.pingok.station.service.prefixList.IPrefixListService;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,27 +15,19 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static com.pingok.station.service.cardBlacklist.impl.CardBlacklistServiceImpl.backMD5;
 import static com.pingok.station.service.cardBlacklist.impl.CardBlacklistServiceImpl.delFolder;
 
-/**
- * @author
- * @time 2022/4/13 16:32
- */
 @Slf4j
 @Service
-public class DemicAreaListServiceImpl implements IDemicAreaListService {
+public class PrefixListServiceImpl implements IPrefixListService {
 
     @Autowired
-    private EpidemicAreaMapper epidemicAreaMapper;
+    private EpidemicPrefixAreaMapper epidemicPrefixAreaMapper;
 
     @Value("${center.host}")
     private String host;
@@ -45,12 +35,12 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
     @Value("${center.stationGB}")
     private String stationGB;
 
-    @Value("${center.demicPath}")
-    private String demicPath;
+    @Value("${center.prefixPath}")
+    private String prefixPath;
 
     @Override
-    public void demicAreaList(String version) {
-        String url= host + "/api/lane-service/epidemic-area-list";
+    public void prefixAreaList(String version) {
+        String url= host + "/api/lane-service/epidemic-prefix-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo=new VersionVo();
         versionVo.setVersion(version);
@@ -69,12 +59,12 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
             byte[] bytes = response.body().bytes();
             if(bytes.length>0)
             {
-                String fileName = version +"Demic"+ ".zip";
-                File file=new File(demicPath);
+                String fileName = version +"Prefix"+ ".zip";
+                File file=new File(prefixPath);
                 if(!file.exists()){
                     file.mkdirs();
                 }
-                String pathName=demicPath+"\\"+fileName;
+                String pathName=prefixPath+"\\"+fileName;
                 file  = new File(pathName);
                 if(!file.exists()){
                     file.createNewFile();
@@ -83,7 +73,7 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
                 fos.write(bytes,0,bytes.length);
                 fos.flush();
                 fos.close();
-                unzipDemic(pathName,demicPath,version);
+                unzipPrefix(pathName,prefixPath,version);
             }
         }
         catch (Exception e){
@@ -92,25 +82,24 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
     }
 
     @Override
-    public void insertDemicArea(List<DemicVo> list,String version) {
-        EpidemicArea epidemicArea =new EpidemicArea();
-        epidemicAreaMapper.deleteAll();
-        for(DemicVo demicVo : list) {
-            BeanUtils.copyNotNullProperties(demicVo,epidemicArea);
-            epidemicArea.setStationID(demicVo.getStationId());
-            epidemicArea.setStationHEX(demicVo.getStationHex());
-            epidemicArea.setStartTime(demicVo.getEffective());
-            epidemicArea.setVersion(version);
-            epidemicAreaMapper.insertDemicArea(epidemicArea);
+    public void insertPrefixArea(PrefixVo prefixVo, String version) {
+        EpidemicPrefixArea epidemicPrefixArea=new EpidemicPrefixArea();
+        String[] prefixList=JSON.parseObject(prefixVo.getPrefix(), String[].class);
+        epidemicPrefixAreaMapper.deleteAll();
+        for(String prefix :prefixList)
+        {
+            epidemicPrefixArea.setPrefix(prefix);
+            epidemicPrefixArea.setStartTime(prefixVo.getEffective());
+            epidemicPrefixArea.setVersion(version);
+            epidemicPrefixAreaMapper.insertPrefix(epidemicPrefixArea);
         }
     }
-
     @Override
     public void test(String version) {
-        unzipDemic(demicPath+"\\2022-07-15.zip",demicPath,version);
+        unzipPrefix(prefixPath+"\\2022-07-29.zip",prefixPath,version);
     }
 
-    public void unzipDemic(String zipPath,String resourcePath,String version){
+    public void unzipPrefix(String zipPath,String resourcePath,String version){
         //判断生成目录是否生成，如果没有就创建
         File pathFile=new File(resourcePath);
         if(!pathFile.exists()){
@@ -145,12 +134,12 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
                 out.close();
                 if(zipEntryName.contains(".zip"))
                 {
-                    unzipDemic(outpath,resourcePath,version);
+                    unzipPrefix(outpath,resourcePath,version);
                 }
                 if(zipEntryName.contains(".json"))
                 {
-                    List<DemicVo> list =jsonAnalysis(outpath);
-                    insertDemicArea(list,version);
+                    PrefixVo prefixVo =jsonAnalysis(outpath);
+                    insertPrefixArea(prefixVo,version);
                 }
             }
             zp.close();
@@ -160,7 +149,7 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
         delFolder(resourcePath);
     }
 
-    public static List<DemicVo> jsonAnalysis(String jsonPath){
+    public static PrefixVo jsonAnalysis(String jsonPath){
 
         String jsonStr = "";
         try {
@@ -174,7 +163,7 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
             fileReader.close();
             reader.close();
             jsonStr = sb.toString();
-            List<DemicVo> listStr = JSON.parseArray(jsonStr, DemicVo.class);
+            PrefixVo listStr = JSON.parseObject(jsonStr, PrefixVo.class);
             return listStr;
         } catch (Exception e) {
             e.printStackTrace();

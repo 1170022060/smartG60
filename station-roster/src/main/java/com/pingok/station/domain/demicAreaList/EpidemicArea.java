@@ -20,6 +20,8 @@ public class EpidemicArea implements Serializable {
 
     private Date StartTime;
 
+    private String Version;
+
     public Long getRecordId() {
         return RecordId;
     }
@@ -66,5 +68,13 @@ public class EpidemicArea implements Serializable {
 
     public void setStartTime(Date startTime) {
         StartTime = startTime;
+    }
+
+    public String getVersion() {
+        return Version;
+    }
+
+    public void setVersion(String version) {
+        Version = version;
     }
 }
