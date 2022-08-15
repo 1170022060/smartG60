@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 
 @Data
-@Table(name = "tbl_event_flux")
+@Table(name = "t_event_flux")
 public class TblEventFlux implements Serializable {
 
     private static final long serialVersionUID = 1L;
