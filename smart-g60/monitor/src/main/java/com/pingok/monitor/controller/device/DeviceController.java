@@ -1,5 +1,6 @@
 package com.pingok.monitor.controller.device;
 
+import com.pingok.monitor.domain.device.BaseInfo;
 import com.pingok.monitor.service.device.IDeviceStatusService;
 import com.pingok.monitor.service.deviceInfo.IDeviceInfoService;
 import com.ruoyi.common.core.web.controller.BaseController;
@@ -49,5 +50,19 @@ public class DeviceController extends BaseController {
     @GetMapping
     public AjaxResult findByFieldNum(@RequestParam String fieldNum) {
         return AjaxResult.success(iDeviceInfoService.findByFieldNum(fieldNum));
+    }
+
+    @RequiresPermissions("monitor:device:base")
+    @Log(title = "设备监控服务", businessType = BusinessType.OTHER)
+    @GetMapping("/base")
+    public AjaxResult base() {
+        BaseInfo baseInfo =new BaseInfo();
+        baseInfo.setBaseStation(iDeviceStatusService.selectBaseStation());
+        baseInfo.setBridgeInfo(iDeviceStatusService.selectBridgeInfo());
+        baseInfo.setVMSInfo(iDeviceStatusService.selectVMS());
+        baseInfo.setVDInfo(iDeviceStatusService.selectVD());
+        baseInfo.setCAMInfo(iDeviceStatusService.selectCAM());
+        baseInfo.setPilotLightInfo(iDeviceStatusService.selectPilotLight());
+        return AjaxResult.success(baseInfo);
     }
 }

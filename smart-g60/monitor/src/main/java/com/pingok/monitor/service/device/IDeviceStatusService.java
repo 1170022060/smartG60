@@ -1,6 +1,6 @@
 package com.pingok.monitor.service.device;
 
-import com.pingok.monitor.domain.device.TblDeviceStatus;
+import com.pingok.monitor.domain.device.vo.DeviceInfoVo;
 
 import java.util.List;
 import java.util.Map;
@@ -17,4 +17,11 @@ public interface IDeviceStatusService {
      */
     void checkStatus();
     List<Map> list(Long deviceCategory,String deviceName,String deviceId);
+    List<Map> selectBaseStation();
+    List<Map> selectBridgeInfo();
+    List<DeviceInfoVo> selectVMS();
+    List<DeviceInfoVo> selectVD();
+    List<DeviceInfoVo> selectCAM();
+    List<DeviceInfoVo> selectPilotLight();
+
 }
