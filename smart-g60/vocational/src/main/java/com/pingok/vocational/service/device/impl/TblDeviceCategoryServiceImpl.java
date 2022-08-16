@@ -63,7 +63,10 @@ public class TblDeviceCategoryServiceImpl implements TblDeviceCategoryService {
         {
             tblDeviceCategory.setCategoryNum(PinYinUtil.getPinYinHeadChar(tblDeviceCategory.getCategoryName()));
         }
-        tblDeviceCategory.setCategoryPost(JSON.toJSONString(tblDeviceCategory.getCategoryPostStr()));
+        if(tblDeviceCategory.getCategoryPostStr()!=null)
+        {
+            tblDeviceCategory.setCategoryPost(JSON.toJSONString(tblDeviceCategory.getCategoryPostStr()));
+        }
         tblDeviceCategory.setCreateTime(new Date());
         tblDeviceCategory.setCreateUserId(SecurityUtils.getUserId());
         return tblDeviceCategoryMapper.insert(tblDeviceCategory);
@@ -71,7 +74,10 @@ public class TblDeviceCategoryServiceImpl implements TblDeviceCategoryService {
 
     @Override
     public int updateDeviceCategory(TblDeviceCategory tblDeviceCategory) {
-        tblDeviceCategory.setCategoryPost(JSON.toJSONString(tblDeviceCategory.getCategoryPostStr()));
+        if(tblDeviceCategory.getCategoryPostStr()!=null)
+        {
+            tblDeviceCategory.setCategoryPost(JSON.toJSONString(tblDeviceCategory.getCategoryPostStr()));
+        }
         tblDeviceCategory.setUpdateTime(new Date());
         tblDeviceCategory.setUpdateUserId(SecurityUtils.getUserId());
         return tblDeviceCategoryMapper.updateByPrimaryKeySelective(tblDeviceCategory);
