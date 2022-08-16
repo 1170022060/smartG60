@@ -10,8 +10,9 @@ import java.util.Map;
 public class BaseInfo {
     List<Map> baseStation;
     List<Map> bridgeInfo;
-    List<DeviceInfoVo> VMSInfo;
-    List<DeviceInfoVo> VDInfo;
-    List<DeviceInfoVo> CAMInfo;
+    List<Map> gantryInfo;
+    List<DeviceInfoVo> vmsInfo;
+    List<DeviceInfoVo> vdInfo;
+    List<DeviceInfoVo> camInfo;
     List<DeviceInfoVo> pilotLightInfo;
 }

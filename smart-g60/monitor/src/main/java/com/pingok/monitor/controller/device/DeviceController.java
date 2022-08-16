@@ -59,10 +59,11 @@ public class DeviceController extends BaseController {
         BaseInfo baseInfo =new BaseInfo();
         baseInfo.setBaseStation(iDeviceStatusService.selectBaseStation());
         baseInfo.setBridgeInfo(iDeviceStatusService.selectBridgeInfo());
-        baseInfo.setVMSInfo(iDeviceStatusService.selectVMS());
-        baseInfo.setVDInfo(iDeviceStatusService.selectVD());
-        baseInfo.setCAMInfo(iDeviceStatusService.selectCAM());
+        baseInfo.setVmsInfo(iDeviceStatusService.selectVMS());
+        baseInfo.setVdInfo(iDeviceStatusService.selectVD());
+        baseInfo.setCamInfo(iDeviceStatusService.selectCAM());
         baseInfo.setPilotLightInfo(iDeviceStatusService.selectPilotLight());
+        baseInfo.setGantryInfo(iDeviceStatusService.selectGantry());
         return AjaxResult.success(baseInfo);
     }
 }

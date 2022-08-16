@@ -3,10 +3,7 @@ package com.pingok.monitor.service.device.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.monitor.domain.device.TblDeviceStatus;
 import com.pingok.monitor.domain.device.vo.DeviceInfoVo;
-import com.pingok.monitor.mapper.device.TblBaseStationInfoMapper;
-import com.pingok.monitor.mapper.device.TblBridgeInfoMapper;
-import com.pingok.monitor.mapper.device.TblDeviceInfoMapper;
-import com.pingok.monitor.mapper.device.TblDeviceStatusMapper;
+import com.pingok.monitor.mapper.device.*;
 import com.pingok.monitor.service.device.IDeviceStatusService;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
@@ -31,7 +28,8 @@ public class DeviceStatusServiceImpl implements IDeviceStatusService {
     private TblDeviceInfoMapper tblDeviceInfoMapper;
     @Autowired
     private TblBridgeInfoMapper tblBridgeInfoMapper;
-
+    @Autowired
+    private TblGantryInfoMapper tblGantryInfoMapper;
 
     @Override
     public void checkStatus() {
@@ -64,6 +62,11 @@ public class DeviceStatusServiceImpl implements IDeviceStatusService {
     @Override
     public List<Map> selectBridgeInfo() {
         return tblBridgeInfoMapper.selectBridgeInfo();
+    }
+
+    @Override
+    public List<Map> selectGantry() {
+        return tblGantryInfoMapper.selectGantry();
     }
 
     @Override

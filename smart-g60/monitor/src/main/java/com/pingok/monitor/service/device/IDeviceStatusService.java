@@ -19,6 +19,7 @@ public interface IDeviceStatusService {
     List<Map> list(Long deviceCategory,String deviceName,String deviceId);
     List<Map> selectBaseStation();
     List<Map> selectBridgeInfo();
+    List<Map> selectGantry();
     List<DeviceInfoVo> selectVMS();
     List<DeviceInfoVo> selectVD();
     List<DeviceInfoVo> selectCAM();
