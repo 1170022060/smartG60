@@ -32,7 +32,7 @@ public class RateController extends BaseController {
     @Log(title = "最小费率-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
     public TableDataInfo info(@RequestParam(name = "inStationName",required = false) String inStationName,@RequestParam(name = "exStationId",required = false) String exStationId
-            , @RequestParam(name = "vehClass",required = false) Integer vehClass,@RequestParam(name = "versionNum",required = false) Integer versionNum)
+            , @RequestParam(name = "vehClass",required = false) Integer vehClass,@RequestParam(name = "versionNum",required = false) String versionNum)
     {
         startPage();
         List<Map> info = rateService.selectRate(inStationName,exStationId,vehClass,versionNum);
