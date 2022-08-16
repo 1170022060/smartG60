@@ -32,6 +32,9 @@ public interface TblRateMapper {
             "<when test='inStationId != null'> " +
             " and c.STATION_HEX like CONCAT(CONCAT('%',#{inStationId}),'%') " +
             "</when>"+
+            "<when test='inStationName != null'> " +
+            " and c.STATION_NAME like CONCAT(CONCAT('%',#{inStationName}),'%') " +
+            "</when>"+
             "<when test='exStationId != null'> " +
             " and d.STATION_HEX like CONCAT('3101',#{exStationId})" +
             "</when>"+
@@ -43,7 +46,7 @@ public interface TblRateMapper {
             "</when>"+
             " order by a.EN_ID,a.VEH_CLASS "+
             "</script>"})
-    List<Map> selectRate(@Param("inStationId") String inStationId, @Param("exStationId") String exStationId,@Param("vehClass") Integer vehClass,@Param("versionNum") Integer versionNum);
+    List<Map> selectRate(@Param("inStationName") String inStationName, @Param("exStationId") String exStationId,@Param("vehClass") Integer vehClass,@Param("versionNum") Integer versionNum);
 
     @Select({"<script>" +
             "select a.P_INDEX as \"pIndex\" ," +

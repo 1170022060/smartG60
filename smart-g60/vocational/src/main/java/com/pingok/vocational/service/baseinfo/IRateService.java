@@ -18,7 +18,7 @@ public interface IRateService {
      * @param vehClass 车型
      * @return 最小费率
      */
-    public List<Map> selectRate(String inStationId,String exStationId, Integer vehClass,Integer versionNum);
+    public List<Map> selectRate(String inStationName,String exStationId, Integer vehClass,Integer versionNum);
 
     /**
      * 根据对应最小费率表主键ID查询分省明细
