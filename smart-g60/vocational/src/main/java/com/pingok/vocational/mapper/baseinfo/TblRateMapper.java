@@ -29,9 +29,6 @@ public interface TblRateMapper {
             "left join TBL_BASE_STATION_INFO c on c.STATION_GB=a.EN_ID " +
             "left join TBL_BASE_STATION_INFO d on d.STATION_GB=a.EX_ID " +
             "where 1=1 " +
-            "<when test='inStationId != null'> " +
-            " and c.STATION_HEX like CONCAT(CONCAT('%',#{inStationId}),'%') " +
-            "</when>"+
             "<when test='inStationName != null'> " +
             " and c.STATION_NAME like CONCAT(CONCAT('%',#{inStationName}),'%') " +
             "</when>"+
@@ -46,7 +43,7 @@ public interface TblRateMapper {
             "</when>"+
             " order by a.EN_ID,a.VEH_CLASS "+
             "</script>"})
-    List<Map> selectRate(@Param("inStationName") String inStationName, @Param("exStationId") String exStationId,@Param("vehClass") Integer vehClass,@Param("versionNum") Integer versionNum);
+    List<Map> selectRate(@Param("inStationName") String inStationName, @Param("exStationId") String exStationId,@Param("vehClass") Integer vehClass,@Param("versionNum") String versionNum);
 
     @Select({"<script>" +
             "select a.P_INDEX as \"pIndex\" ," +
@@ -66,7 +63,7 @@ public interface TblRateMapper {
     })
     List<Map> selectInStation();
 
-    @Select({"select VERSION as \"versionNum\" from TBL_RATE a"+
+    @Select({"select distinct VERSION as \"versionNum\" from TBL_RATE a"+
             " order by a.VERSION "
     })
     List<Map> selectVersionNum();

@@ -20,7 +20,7 @@ public class IRateServiceImpl implements IRateService {
     private TblRateMapper tblRateMapper;
 
     @Override
-    public List<Map> selectRate(String inStationName, String exStationId, Integer vehClass,Integer versionNum) {
+    public List<Map> selectRate(String inStationName, String exStationId, Integer vehClass,String versionNum) {
         return tblRateMapper.selectRate(inStationName,  exStationId,  vehClass,  versionNum);
     }
 
