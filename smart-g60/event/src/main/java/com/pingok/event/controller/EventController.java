@@ -153,6 +153,17 @@ public class EventController extends BaseController {
     }
 
     /**
+     * 获取未确认、已确认事件列表
+     *
+     * @return
+     */
+    @RequiresPermissions("event:eventControl:event")
+    @Log(title = "事件管理", businessType = BusinessType.OTHER)
+    @GetMapping("/event")
+    public AjaxResult event() {
+        return AjaxResult.success(iEventService.event());
+    }
+    /**
      * 根据id查询
      */
     @RequiresPermissions("event:eventControl:findById")
