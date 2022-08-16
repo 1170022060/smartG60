@@ -28,8 +28,8 @@ public interface TblRateMapper {
             "left join TBL_BASE_STATION_INFO c on c.STATION_GB=a.EN_ID " +
             "left join TBL_BASE_STATION_INFO d on d.STATION_GB=a.EX_ID " +
             "where 1=1 " +
-            "<when test='stationName != null'> " +
-            " and c.STATION_NAME like CONCAT(CONCAT('%',#{stationName}),'%') " +
+            "<when test='inStationId != null'> " +
+            " and c.STATION_HEX like CONCAT(CONCAT('%',#{inStationId}),'%') " +
             "</when>"+
             "<when test='exStationId != null'> " +
             " and d.STATION_HEX like CONCAT('3101',#{exStationId})" +
@@ -39,7 +39,7 @@ public interface TblRateMapper {
             "</when>"+
             " order by a.EN_ID,a.VEH_CLASS "+
             "</script>"})
-    List<Map> selectRate(@Param("stationName") String stationName, @Param("exStationId") String exStationId,@Param("vehClass") Integer vehClass);
+    List<Map> selectRate(@Param("inStationId") String inStationId, @Param("exStationId") String exStationId,@Param("vehClass") Integer vehClass);
 
     @Select({"<script>" +
             "select a.P_INDEX as \"pIndex\" ," +
@@ -54,4 +54,13 @@ public interface TblRateMapper {
             "</script>"})
     List<Map> selectRateProv(@Param("rateId") Long rateId);
 
+    @Select({"select STATION_HEX as id,STATION_NAME as stationName from TBL_BASE_STATION_INFO info"+
+            " order by info.STATION_HEX "
+    })
+    List<Map> selectInStation();
+
+    @Select({"select VERSION as stationName from TBL_RATE a"+
+            " order by a.VERSION "
+    })
+    List<Map> selectVersionNum();
 }

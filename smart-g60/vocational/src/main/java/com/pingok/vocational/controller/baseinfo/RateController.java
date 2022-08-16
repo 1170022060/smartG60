@@ -2,6 +2,7 @@ package com.pingok.vocational.controller.baseinfo;
 
 import com.pingok.vocational.service.baseinfo.IRateService;
 import com.ruoyi.common.core.web.controller.BaseController;
+import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
@@ -30,10 +31,10 @@ public class RateController extends BaseController {
     @RequiresPermissions("vocational:rate:info")
     @Log(title = "最小费率-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
-    public TableDataInfo info(@RequestParam(name = "stationName",required = false) String stationName,@RequestParam(name = "exStationId",required = false) String exStationId, @RequestParam(name = "vehClass",required = false) Integer vehClass)
+    public TableDataInfo info(@RequestParam(name = "inStationId",required = false) String inStationId,@RequestParam(name = "exStationId",required = false) String exStationId, @RequestParam(name = "vehClass",required = false) Integer vehClass)
     {
         startPage();
-        List<Map> info = rateService.selectRate(stationName,exStationId,vehClass);
+        List<Map> info = rateService.selectRate(inStationId,exStationId,vehClass);
         return getDataTable(info);
     }
 
@@ -45,5 +46,17 @@ public class RateController extends BaseController {
         startPage();
         List<Map> info = rateService.selectRateProv(rateId);
         return getDataTable(info);
+    }
+
+    @GetMapping(value = "/inStation")
+    public AjaxResult inStation() {
+        List<Map> info = rateService.selectInStation();
+        return AjaxResult.success(info);
+    }
+
+    @GetMapping(value = "/versionNum")
+    public AjaxResult versionNum() {
+        List<Map> info = rateService.selectVersionNum();
+        return AjaxResult.success(info);
     }
 }

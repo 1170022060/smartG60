@@ -20,12 +20,22 @@ public class IRateServiceImpl implements IRateService {
     private TblRateMapper tblRateMapper;
 
     @Override
-    public List<Map> selectRate(String stationName, String exStationId, Integer vehClass) {
-        return tblRateMapper.selectRate(stationName,  exStationId,  vehClass);
+    public List<Map> selectRate(String inStationId, String exStationId, Integer vehClass) {
+        return tblRateMapper.selectRate(inStationId,  exStationId,  vehClass);
     }
 
     @Override
     public List<Map> selectRateProv(Long rateId) {
         return tblRateMapper.selectRateProv(rateId);
+    }
+
+    @Override
+    public List<Map> selectInStation() {
+        return tblRateMapper.selectInStation();
+    }
+
+    @Override
+    public List<Map> selectVersionNum() {
+        return tblRateMapper.selectVersionNum();
     }
 }
