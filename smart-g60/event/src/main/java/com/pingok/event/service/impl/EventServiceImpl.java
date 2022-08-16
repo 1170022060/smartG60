@@ -23,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -439,6 +441,14 @@ public class EventServiceImpl implements IEventService {
         tblEventRecord.setUpdateTime(DateUtils.getNowDate());
         tblEventRecord.setUpdateUserId(SecurityUtils.getUserId());
         return tblEventRecordMapper.updateByPrimaryKey(tblEventRecord);
+    }
+
+    @Override
+    public List<TblEventRecord> event() {
+        List<Integer> status= Arrays.asList(0, 1);
+        Example example = new Example(TblEventRecord.class);
+        example.createCriteria().andIn("status", status);
+        return tblEventRecordMapper.selectByExample(example);
     }
 
     private void eventUpdate(Long ubiLogicId, Integer uiState, String szRemark, String szUser) {
