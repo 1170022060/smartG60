@@ -31,10 +31,11 @@ public class RateController extends BaseController {
     @RequiresPermissions("vocational:rate:info")
     @Log(title = "最小费率-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
-    public TableDataInfo info(@RequestParam(name = "inStationId",required = false) String inStationId,@RequestParam(name = "exStationId",required = false) String exStationId, @RequestParam(name = "vehClass",required = false) Integer vehClass)
+    public TableDataInfo info(@RequestParam(name = "inStationId",required = false) String inStationId,@RequestParam(name = "exStationId",required = false) String exStationId
+            , @RequestParam(name = "vehClass",required = false) Integer vehClass,@RequestParam(name = "versionNum",required = false) Integer versionNum)
     {
         startPage();
-        List<Map> info = rateService.selectRate(inStationId,exStationId,vehClass);
+        List<Map> info = rateService.selectRate(inStationId,exStationId,vehClass,versionNum);
         return getDataTable(info);
     }
 

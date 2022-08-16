@@ -16,6 +16,7 @@ public interface TblRateMapper {
             "select a.ID as \"id\" ," +
             "a.EN_PROV as \"enProv\" ," +
             "a.EX_PROV as \"exProv\" ," +
+            "a.VERSION as \"version\","+
             "a.EN_ID as \"enId\" ," +
             "a.EX_ID as \"exId\" ," +
             "c.STATION_NAME as \"enName\" ," +
@@ -37,9 +38,12 @@ public interface TblRateMapper {
             "<when test='vehClass != null'> " +
             "and a.VEH_CLASS= #{vehClass} " +
             "</when>"+
+            "<when test='versionNum != null'> " +
+            "and a.VERSION= #{versionNum} " +
+            "</when>"+
             " order by a.EN_ID,a.VEH_CLASS "+
             "</script>"})
-    List<Map> selectRate(@Param("inStationId") String inStationId, @Param("exStationId") String exStationId,@Param("vehClass") Integer vehClass);
+    List<Map> selectRate(@Param("inStationId") String inStationId, @Param("exStationId") String exStationId,@Param("vehClass") Integer vehClass,@Param("versionNum") Integer versionNum);
 
     @Select({"<script>" +
             "select a.P_INDEX as \"pIndex\" ," +
@@ -54,12 +58,12 @@ public interface TblRateMapper {
             "</script>"})
     List<Map> selectRateProv(@Param("rateId") Long rateId);
 
-    @Select({"select STATION_HEX as id,STATION_NAME as stationName from TBL_BASE_STATION_INFO info"+
+    @Select({"select STATION_HEX as \"id\",STATION_NAME as \"stationName\" from TBL_BASE_STATION_INFO info"+
             " order by info.STATION_HEX "
     })
     List<Map> selectInStation();
 
-    @Select({"select VERSION as stationName from TBL_RATE a"+
+    @Select({"select VERSION as \"versionNum\" from TBL_RATE a"+
             " order by a.VERSION "
     })
     List<Map> selectVersionNum();
