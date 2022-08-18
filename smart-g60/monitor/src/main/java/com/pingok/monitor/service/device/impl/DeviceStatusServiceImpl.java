@@ -70,22 +70,9 @@ public class DeviceStatusServiceImpl implements IDeviceStatusService {
     }
 
     @Override
-    public List<DeviceInfoVo> selectVMS() {
-        return tblDeviceInfoMapper.selectVMS();
+    public List<DeviceInfoVo> selectDeviceInfo(Integer deviceType) {
+
+        return tblDeviceInfoMapper.selectDeviceInfo(deviceType);
     }
 
-    @Override
-    public List<DeviceInfoVo> selectVD() {
-        return tblDeviceInfoMapper.selectVD();
-    }
-
-    @Override
-    public List<DeviceInfoVo> selectCAM() {
-        return tblDeviceInfoMapper.selectCAM();
-    }
-
-    @Override
-    public List<DeviceInfoVo> selectPilotLight() {
-        return tblDeviceInfoMapper.selectPilotLight();
-    }
 }

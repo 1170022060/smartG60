@@ -12,9 +12,31 @@ import java.util.Map;
  */
 public interface TblBridgeInfoMapper {
 
-    @Select("select ID as \"id\" ," +
-            "NAME as \"name\" ," +
-            "SERIAL_NO as \"serialNo\" ," +
-            "'[' || LONGITUDE ||','|| LATITUDE || ']' as \"gps\"  from TBL_BRIDGE_INFO ")
+    @Select("SELECT " +
+            "tbi.ID AS \"id\", " +
+            "tbi.NAME AS \"name\", " +
+            "tbi.SERIAL_NO AS \"serialNo\", " +
+            "'[' || tbi.LONGITUDE || ',' || tbi.LATITUDE || ']' AS \"gps\", " +
+            "tbi.ENTIRETY_RATING AS \"entiretyRating\", " +
+            "tbi.COMPONENT_RATING AS \"componentRating\", " +
+            "tbi.DEVICE_STATUS AS \"deviceStatus\", " +
+            "tbt.TEMPERATURE AS \"temperature\", " +
+            "tbw.ALARM_LEVEL AS \"alarmlevel\", " +
+            "tbw.INCIDENT_DESCRIPTION AS \"incidentdescription\", " +
+            "tbw.ALARM_REASON AS \"alarmReason\", " +
+            "tbw.ALARM_TIME AS \"alarmTime\"  " +
+            "FROM " +
+            "TBL_BRIDGE_INFO tbi " +
+            "LEFT JOIN TBL_BRIDGE_TEMPERATURE tbt ON tbt.DEVICE_ID = tbi.SERIAL_NO " +
+            "LEFT JOIN ( " +
+            "SELECT * FROM (SELECT " +
+            "tbw.*, " +
+            "ROW_NUMBER ( ) OVER ( PARTITION BY tbw.STRUCTURE_ID ORDER BY tbw.ALARM_TIME DESC ) RW  " +
+            "FROM " +
+            "TBL_BRIDGE_WARNING tbw  " +
+            "WHERE " +
+            "tbw.TREATMENT_STATUS = 0) tbw  " +
+            "where tbw.RW = 1 " +
+            ") tbw ON tbw.STRUCTURE_ID = tbi.ID")
     List<Map> selectBridgeInfo();
 }

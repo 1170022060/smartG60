@@ -20,9 +20,6 @@ public interface IDeviceStatusService {
     List<Map> selectBaseStation();
     List<Map> selectBridgeInfo();
     List<Map> selectGantry();
-    List<DeviceInfoVo> selectVMS();
-    List<DeviceInfoVo> selectVD();
-    List<DeviceInfoVo> selectCAM();
-    List<DeviceInfoVo> selectPilotLight();
+    List<DeviceInfoVo> selectDeviceInfo(Integer deviceType);
 
 }

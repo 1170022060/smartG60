@@ -420,9 +420,9 @@ public class EventServiceImpl implements IEventService {
         JSONObject event = new JSONObject();
         event.put("id", tblEventRecord.getId());
         event.put("eventType", tblEventRecordMapper.translateEventType(tblEventRecord.getEventType()));
-        event.put("time", tblEventRecord.getEventTime());
-        event.put("coordinate", tblEventRecord.getLocationInterval());
-        event.put("img", tblEventRecord.getEventPhoto());
+        event.put("eventTime", tblEventRecord.getEventTime());
+        event.put("locationInterval", tblEventRecord.getLocationInterval());
+        event.put("eventPhoto", tblEventRecord.getEventPhoto());
         event.put("video", tblEventRecord.getVideo());
 
         JSONObject data = new JSONObject();
