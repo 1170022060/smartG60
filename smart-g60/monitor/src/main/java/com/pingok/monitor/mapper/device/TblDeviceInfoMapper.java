@@ -1,6 +1,8 @@
 package com.pingok.monitor.mapper.device;
 
 import com.pingok.monitor.domain.device.vo.DeviceInfoVo;
+import io.swagger.models.auth.In;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -12,59 +14,29 @@ import java.util.List;
  */
 public interface TblDeviceInfoMapper {
 
-    @Select("select ID as \"id\" ," +
-            "DEVICE_ID as \"deviceId\" ," +
-            "DEVICE_NAME as \"deviceName\" ," +
-            "DEVICE_BRAND as \"deviceBrand\" ," +
-            "DEVICE_MODEL as \"deviceModel\" ," +
-            "DEVICE_IP as \"deviceIp\" ," +
-            "PORT as \"port\" ," +
-            "DIRECTION as \"direction\" ," +
-            "STATION_BELONG as \"stationBelong\" ," +
-            "PILE_NO as \"pileNo\" ," +
-            "GPS as \"gps\" from TBL_DEVICE_INFO " +
-            "where DEVICE_TYPE =9")
-    public List<DeviceInfoVo> selectVMS();
+    @Select("SELECT " +
+            "tdi.ID AS \"id\", " +
+            "tdi.DEVICE_ID AS \"deviceId\", " +
+            "tdi.DEVICE_NAME AS \"deviceName\", " +
+            "tdi.DEVICE_BRAND AS \"deviceBrand\", " +
+            "tdi.DEVICE_MODEL AS \"deviceModel\", " +
+            "tdi.DEVICE_IP AS \"deviceIp\", " +
+            "tdi.PORT AS \"port\", " +
+            "tdi.DIRECTION AS \"direction\", " +
+            "tdi.STATION_BELONG AS \"stationBelong\", " +
+            "tdi.PILE_NO AS \"pileNo\", " +
+            "tdi.GPS AS \"gps\", " +
+            "TO_CHAR(tds.TIME, 'yyyy-mm-dd hh:mm:ss') AS \"time\", " +
+            "NVL( tds.STATUS, 0 ) AS \"status\", " +
+            "CASE " +
+            "WHEN tds.STATUS IS NULL THEN " +
+            "'状态未知' ELSE tds.STATUS_DESC  " +
+            "END AS \"statusDesc\"  " +
+            "FROM " +
+            "TBL_DEVICE_INFO tdi " +
+            "LEFT JOIN TBL_DEVICE_STATUS tds ON tds.DEVICE_ID = tdi.ID  " +
+            "WHERE " +
+            "tdi.DEVICE_TYPE =#{deviceType}")
+    public List<DeviceInfoVo> selectDeviceInfo(@Param("deviceType") Integer deviceType);
 
-    @Select("select ID as \"id\" ," +
-            "DEVICE_ID as \"deviceId\" ," +
-            "DEVICE_NAME as \"deviceName\" ," +
-            "DEVICE_BRAND as \"deviceBrand\" ," +
-            "DEVICE_MODEL as \"deviceModel\" ," +
-            "DEVICE_IP as \"deviceIp\" ," +
-            "PORT as \"port\" ," +
-            "DIRECTION as \"direction\" ," +
-            "STATION_BELONG as \"stationBelong\" ," +
-            "PILE_NO as \"pileNo\" ," +
-            "GPS as \"gps\" from TBL_DEVICE_INFO " +
-            "where DEVICE_TYPE =11")
-    public List<DeviceInfoVo> selectVD();
-
-    @Select("select ID as \"id\" ," +
-            "DEVICE_ID as \"deviceId\" ," +
-            "DEVICE_NAME as \"deviceName\" ," +
-            "DEVICE_BRAND as \"deviceBrand\" ," +
-            "DEVICE_MODEL as \"deviceModel\" ," +
-            "DEVICE_IP as \"deviceIp\" ," +
-            "PORT as \"port\" ," +
-            "DIRECTION as \"direction\" ," +
-            "STATION_BELONG as \"stationBelong\" ," +
-            "PILE_NO as \"pileNo\" ," +
-            "GPS as \"gps\" from TBL_DEVICE_INFO " +
-            "where DEVICE_TYPE =10")
-    public List<DeviceInfoVo> selectCAM();
-
-    @Select("select ID as \"id\" ," +
-            "DEVICE_ID as \"deviceId\" ," +
-            "DEVICE_NAME as \"deviceName\" ," +
-            "DEVICE_BRAND as \"deviceBrand\" ," +
-            "DEVICE_MODEL as \"deviceModel\" ," +
-            "DEVICE_IP as \"deviceIp\" ," +
-            "PORT as \"port\" ," +
-            "DIRECTION as \"direction\" ," +
-            "STATION_BELONG as \"stationBelong\" ," +
-            "PILE_NO as \"pileNo\" ," +
-            "GPS as \"gps\" from TBL_DEVICE_INFO " +
-            "where DEVICE_TYPE =12")
-    public List<DeviceInfoVo> selectPilotLight();
 }

@@ -15,4 +15,7 @@ public class DeviceInfoVo {
     private String stationBelong;
     private String pileNo;
     private String gps;
+    private String time;
+    private Integer status;
+    private String statusDesc;
 }
