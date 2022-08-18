@@ -1,5 +1,6 @@
 package com.pingok.monitor.domain.device.vo;
 
+import com.pingok.monitor.domain.device.TblReleaseRecord;
 import lombok.Data;
 
 @Data
@@ -18,4 +19,5 @@ public class DeviceInfoVo {
     private String time;
     private Integer status;
     private String statusDesc;
+    private TblReleaseRecord tblReleaseRecord;
 }
