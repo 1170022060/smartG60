@@ -46,7 +46,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
         TblEventRecord eventRecord = tblEventRecordMapper.selectByPrimaryKey(id);
         String[] gps = null;
         if (eventRecord.getLocationInterval() != null) {
-            gps = eventRecord.getLocationInterval().split(",");
+            gps = eventRecord.getLocationInterval().replace("[","").replace("]","").split(",");
         }
         String eventType = eventRecord.getEventType();
         if (eventType != null) {
