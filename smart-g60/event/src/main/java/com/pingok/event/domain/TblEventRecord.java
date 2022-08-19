@@ -32,6 +32,9 @@ public class TblEventRecord implements Serializable {
      */
     private String eventType;
 
+    @Transient
+    private String eventTypeLabel;
+
     /**
      * 位置区间
      */

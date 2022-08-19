@@ -11,8 +11,10 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.common.core.utils.DateUtils;
+import com.ruoyi.common.security.utils.DictUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.*;
+import com.ruoyi.system.api.domain.SysDictData;
 import com.ruoyi.system.api.domain.amap.TblAutoNaviMapRecord;
 import com.ruoyi.system.api.domain.baidu.TblBaiDuMapRecord;
 import com.ruoyi.system.api.domain.device.TblDeviceInfo;
@@ -448,7 +450,19 @@ public class EventServiceImpl implements IEventService {
         List<Integer> status= Arrays.asList(0, 1);
         Example example = new Example(TblEventRecord.class);
         example.createCriteria().andIn("status", status);
-        return tblEventRecordMapper.selectByExample(example);
+        List<TblEventRecord> eventRecordList = tblEventRecordMapper.selectByExample(example);
+        List<SysDictData> sysDictDataList = DictUtils.getDictCache("event_type");
+        if (!sysDictDataList.isEmpty() && sysDictDataList.size() > 0) {
+            for (TblEventRecord tblEventRecord : eventRecordList) {
+                for (SysDictData s : sysDictDataList) {
+                    if (tblEventRecord.getEventType().equals(s.getDictValue()))
+                    {
+                        tblEventRecord.setEventTypeLabel(s.getDictLabel());
+                    }
+                }
+            }
+        }
+        return eventRecordList;
     }
 
     private void eventUpdate(Long ubiLogicId, Integer uiState, String szRemark, String szUser) {
