@@ -136,7 +136,7 @@ public class DropDownListController extends BaseController {
     }
 
     @GetMapping(value="/preset")
-    public AjaxResult preset(@RequestParam(name = "infoType") Integer infoType)
+    public AjaxResult preset(@RequestParam(name = "infoType",required = false) Integer infoType)
     {
         List<Map> info = releasePresetService.selectReleaseInfo(infoType);
         return AjaxResult.success(info);

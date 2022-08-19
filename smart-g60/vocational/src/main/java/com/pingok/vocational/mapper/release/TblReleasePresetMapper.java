@@ -112,13 +112,18 @@ public interface TblReleasePresetMapper extends CommonRepository<TblReleasePrese
     @Select("select * from TBL_RELEASE_PRESET where PRESET_INFO= #{presetInfo} and rownum = 1")
     TblReleasePreset checkPresetInfoUnique(@Param("presetInfo") String presetInfo);
 
-    @Select("select ID as \"id\" ," +
+    @Select({"<script>" +
+            "select ID as \"id\" ," +
             "INFO_TYPE as \"infoType\" , " +
             "PRESET_INFO as \"presetInfo\" , " +
             "TYPEFACE as \"typeface\" , " +
             "TYPEFACE_SIZE as \"typefaceSize\" , " +
             "COLOR as \"color\" , " +
             "PICTURE_TYPE as \"pictureType\" " +
-            "from TBL_RELEASE_PRESET where INFO_TYPE= #{infoType} and STATUS=1 ")
+            "from TBL_RELEASE_PRESET where STATUS=1 " +
+            "<when test='infoType != null'> " +
+            " and INFO_TYPE= #{infoType} " +
+            "</when>"+
+            "</script>"})
     List<Map> selectReleaseInfo(@Param("infoType") Integer infoType);
 }
