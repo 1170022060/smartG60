@@ -157,12 +157,13 @@ public class EventController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("event:eventControl:event")
+
     @Log(title = "事件管理", businessType = BusinessType.OTHER)
     @GetMapping("/event")
     public AjaxResult event() {
         return AjaxResult.success(iEventService.event());
     }
+
     /**
      * 根据id查询
      */
