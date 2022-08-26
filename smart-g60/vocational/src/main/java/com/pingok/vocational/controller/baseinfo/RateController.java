@@ -60,4 +60,14 @@ public class RateController extends BaseController {
         List<Map> info = rateService.selectVersionNum();
         return AjaxResult.success(info);
     }
+
+    @RequiresPermissions("vocational:rate:contrast")
+    @Log(title = "最小费率-历史版本对比", businessType = BusinessType.OTHER)
+    @GetMapping("/contrast")
+    public TableDataInfo contrast(@RequestParam(name = "enID",required = false) String enID,@RequestParam(name = "exId",required = false) String exId, @RequestParam(name = "vehClass",required = false) Integer vehClass)
+    {
+        startPage();
+        List<Map> info = rateService.selectRateContrast(enID,exId,vehClass);
+        return getDataTable(info);
+    }
 }
