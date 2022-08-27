@@ -47,7 +47,6 @@ public class TblDeviceCategoryController extends BaseController {
         return getDataTable(info);
     }
 
-    @RequiresPermissions("vocational:deviceCategory:tree")
     @Log(title = "设备类目-树形查询", businessType = BusinessType.OTHER)
     @GetMapping(value = "/tree")
     public AjaxResult tree()
