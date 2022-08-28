@@ -67,4 +67,37 @@ public interface TblRateMapper {
             " order by a.VERSION "
     })
     List<Map> selectVersionNum();
+
+    @Select({"<script>" +
+            "select a.ID as \"id\" ," +
+            "a.EN_ID as \"enId\" ," +
+            "a.EX_ID as \"exId\" ," +
+            "c.STATION_NAME as \"enName\" ," +
+            "d.STATION_NAME as \"exName\" ," +
+            "b.DICT_LABEL as \"vehClass\"," +
+            "a.FEE as \"fee\" ," +
+            "a.FEE-LAG(a.FEE, 1, 0 ) OVER (ORDER BY a.VERSION) as \"feeContrast\" ," +
+            "a.FEE_95 as \"fee95\" ," +
+            "a.FEE_95-LAG(a.FEE_95, 1, 0 ) OVER (ORDER BY a.VERSION) as \"fee95Contrast\" ," +
+            "a.M as \"m\" ," +
+            "a.M-LAG(a.M, 1, 0) OVER (ORDER BY a.VERSION) as \"mContrast\" , " +
+            "a.VERSION as \"version\" "+
+            " from TBL_RATE a " +
+            "left join  SYS_DICT_DATA b on b.DICT_VALUE=to_char(a.VEH_CLASS) and b.DICT_TYPE='veh_class' " +
+            "left join TBL_BASE_STATION_INFO c on c.STATION_GB=a.EN_ID " +
+            "left join TBL_BASE_STATION_INFO d on d.STATION_GB=a.EX_ID " +
+            "where 1=1 " +
+            "<when test='enID != null'> " +
+            " and a.EN_ID = #{enID}" +
+            "</when>"+
+            "<when test='enID != null'> " +
+            " and a.EX_ID = #{exID}" +
+            "</when>"+
+            "<when test='vehClass != null'> " +
+            "and a.VEH_CLASS= #{vehClass} " +
+            "</when>"+
+            " order by a.VERSION desc "+
+            "</script>"})
+    List<Map> selectRateContrast(@Param("enID") String enID, @Param("exID") String exId,@Param("vehClass") Integer vehClass);
+
 }

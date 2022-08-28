@@ -188,6 +188,10 @@ public class TblDeviceInfo implements Serializable {
     @Excel(name = "备注")
     private String remark;
 
+    /** 安装位置*/
+    @Excel(name = "安装位置")
+    private String fixPosition;
+
     private BigDecimal width;
 
     private BigDecimal high;
@@ -513,6 +517,15 @@ public class TblDeviceInfo implements Serializable {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    public String getFixPosition() {
+        return fixPosition;
+    }
+
+    public void setFixPosition(String fixPosition) {
+        this.fixPosition = fixPosition;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -555,6 +568,7 @@ public class TblDeviceInfo implements Serializable {
                 .append("isControl",getIsControl())
                 .append("protocol",getProtocol())
                 .append("remark", getRemark())
+                .append("fixPosition", getFixPosition())
                 .toString();
     }
 

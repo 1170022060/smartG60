@@ -38,4 +38,9 @@ public class IRateServiceImpl implements IRateService {
     public List<Map> selectVersionNum() {
         return tblRateMapper.selectVersionNum();
     }
+
+    @Override
+    public List<Map> selectRateContrast(String enID, String exId, Integer vehClass) {
+        return tblRateMapper.selectRateContrast(enID,exId,vehClass);
+    }
 }

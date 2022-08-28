@@ -52,7 +52,6 @@ public class DeviceController extends BaseController {
         return AjaxResult.success(iDeviceInfoService.findByFieldNum(fieldNum));
     }
 
-    @RequiresPermissions("monitor:device:base")
     @Log(title = "设备监控服务", businessType = BusinessType.OTHER)
     @GetMapping("/base")
     public AjaxResult base() {
