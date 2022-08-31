@@ -128,6 +128,6 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "and tdf.STATUS = #{status} " +
             "</when>"+
             "</script>"})
-    List<Map> serviceDeviceFault(@Param("fieldNum") String fieldNum,@Param("deviceType") Integer deviceType,@Param("deviceId") Long deviceId,@Param("faultId") String faultId, @Param("faultDescription") String faultDescription, @Param("status") Integer status);
+    List<Map> serviceDeviceFault(@Param("fieldNum") String fieldNum,@Param("deviceType") Integer deviceType,@Param("deviceId") String deviceId,@Param("faultId") String faultId, @Param("faultDescription") String faultDescription, @Param("status") Integer status);
 
 }
