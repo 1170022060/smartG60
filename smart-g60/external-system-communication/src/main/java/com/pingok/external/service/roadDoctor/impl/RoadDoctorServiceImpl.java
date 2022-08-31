@@ -1,28 +1,37 @@
 package com.pingok.external.service.roadDoctor.impl;
 
+import cn.hutool.http.HttpUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.external.config.BaiDuMapConfig;
+import com.pingok.external.config.BeiDouConfig;
 import com.pingok.external.config.RoadDoctorConfig;
 import com.pingok.external.domain.roadDoctor.TblRoadDisease;
 import com.pingok.external.domain.roadDoctor.TblRoadDiseaseReport;
 import com.pingok.external.domain.roadDoctor.TblRoadDiseaseType;
 import com.pingok.external.domain.roadDoctor.TblRoadPatrolInspection;
-import com.pingok.external.mapper.roadDoctor.TblRoadDiseaseMapper;
-import com.pingok.external.mapper.roadDoctor.TblRoadDiseaseReportMapper;
-import com.pingok.external.mapper.roadDoctor.TblRoadDiseaseTypeMapper;
-import com.pingok.external.mapper.roadDoctor.TblRoadPatrolInspectionMapper;
+import com.pingok.external.domain.roadDoctor.vo.*;
+import com.pingok.external.mapper.roadDoctor.*;
 import com.pingok.external.service.roadDoctor.IRoadDoctorService;
 import com.ruoyi.common.core.exception.ServiceException;
+import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.WebServiceUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -38,6 +47,8 @@ public class RoadDoctorServiceImpl implements IRoadDoctorService {
     private TblRoadDiseaseTypeMapper tblRoadDiseaseTypeMapper;
     @Autowired
     private TblRoadDiseaseMapper tblRoadDiseaseMapper;
+    @Autowired
+    private TblRoadDoctorMapper tblRoadDoctorMapper;
 
     @Override
     public void updateDisease() {
@@ -149,6 +160,108 @@ public class RoadDoctorServiceImpl implements IRoadDoctorService {
             throw new ServiceException(e.getMessage());
         } catch (SAXException e) {
             throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Map> list(String questName, String pZhuangHao, Date startTime, Date endTime) {
+        return tblRoadDoctorMapper.list(questName, pZhuangHao, startTime, endTime);
+    }
+
+    @Override
+    public int push(Long id) {
+        TblRoadDisease tblRoadDisease= tblRoadDiseaseMapper.selectByPrimaryKey(id);
+        tblRoadDisease.setStatus(2);
+        return tblRoadDiseaseMapper.updateByPrimaryKeySelective(tblRoadDisease);
+    }
+
+    @Override
+    public LoginVo login(InterfaceVo interfaceVo) {
+        String res = HttpUtil.post(RoadDoctorConfig.HOST +"/json/getAccessToken", JSON.toJSONString(interfaceVo));
+        if (!StringUtils.isEmpty(res)) {
+            JSONObject object = JSONObject.parseObject(res);
+            if (object.getInteger("code") == 200)
+            {
+                JSONObject data = object.getJSONObject("data");
+                LoginVo loginVo=new LoginVo();
+                loginVo.setToken(data.getString("token"));
+                loginVo.setExiresInMinute(data.getInteger("ExiresInMinute"));
+                loginVo.setBeginDate(data.getLong("BeginDate"));
+                loginVo.setCompanyName(data.getString("CompanyName"));
+                return loginVo;
+            }else
+            {
+                throw new SecurityException("获取访问令牌失败：" + object.getString("message"));
+            }
+        }else{
+            throw new SecurityException("获取访问令牌接口返回空");
+        }
+    }
+
+    @Override
+    public String addDisease(DiseaseData diseaseData) {
+        String res = HttpUtil.post(RoadDoctorConfig.HOST +"/maintenance/addDisease", JSON.toJSONString(diseaseData));
+        diseaseData.setDistrict("松江");
+        diseaseData.setBelongcom("上海路桥");
+        if (!StringUtils.isEmpty(res)) {
+            JSONObject object = JSONObject.parseObject(res);
+            if (object.getInteger("code") == 200)
+            {
+                return object.getString("data");
+            }else
+            {
+                throw new SecurityException("病害数据上传失败：" + object.getString("message"));
+            }
+        }else{
+            throw new SecurityException("病害数据上传接口返回空");
+        }
+    }
+
+    @Override
+    public void addDiseaseProc(StatusVo statusVo) {
+        String res = HttpUtil.post(RoadDoctorConfig.HOST +"/maintenance/addDiseaseProc", JSON.toJSONString(statusVo));
+        if (!StringUtils.isEmpty(res)) {
+            JSONObject object = JSONObject.parseObject(res);
+            if (object.getInteger("code") != 200)
+            {
+                throw new SecurityException("病害状态上传失败：" + object.getString("message"));
+            }
+        }else{
+            throw new SecurityException("病害状态上传接口返回空");
+        }
+    }
+
+    @Override
+    public void addDiseasePic(PictureVo pictureVo) {
+        String res = HttpUtil.post(RoadDoctorConfig.HOST +"/maintenance/addDiseasePic", JSON.toJSONString(pictureVo));
+        if (!StringUtils.isEmpty(res)) {
+            JSONObject object = JSONObject.parseObject(res);
+            if (object.getInteger("code") != 200)
+            {
+                throw new SecurityException("病害图片上传失败：" + object.getString("message"));
+            }
+        }else{
+            throw new SecurityException("病害图片上传接口返回空");
+        }
+    }
+
+    @Override
+    public List<String> getBackOrderNums(String token) {
+        JSONObject param = new JSONObject();
+        param.put("token", token);
+        String res = HttpUtil.post(RoadDoctorConfig.HOST +"/maintenance/addDiseasePic", param);
+        if (!StringUtils.isEmpty(res)) {
+            JSONObject object = JSONObject.parseObject(res);
+            if (object.getInteger("code") == 200)
+            {
+                String data= object.getString("data");
+                return JSON.parseArray(data, String.class);
+            }else
+            {
+                throw new SecurityException("病害数据上传失败：" + object.getString("message"));
+            }
+        }else{
+            throw new SecurityException("病害数据上传接口返回空");
         }
     }
 }

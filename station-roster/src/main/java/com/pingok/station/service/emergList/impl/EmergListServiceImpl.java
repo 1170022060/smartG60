@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.pingok.station.domain.emergList.EmgAppend;
 import com.pingok.station.domain.emergList.EmgData;
 import com.pingok.station.domain.emergList.vo.EmgVo;
+import com.pingok.station.domain.tracer.ListTracer;
 import com.pingok.station.domain.vo.VersionVo;
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.mapper.emergList.EmgAppendMapper;
 import com.pingok.station.mapper.emergList.EmgDataMapper;
 import com.pingok.station.service.emergList.IEmergListService;
@@ -34,6 +36,9 @@ public class EmergListServiceImpl implements IEmergListService {
 
     @Autowired
     private EmgDataMapper emgDataMapper;
+
+    @Autowired
+    private ListTracerMapper listTracerMapper;
 
     @Value("${center.host}")
     private String host;
@@ -80,6 +85,17 @@ public class EmergListServiceImpl implements IEmergListService {
                 fos.flush();
                 fos.close();
                 unzipEmg(pathName,emergPath,version);
+                ListTracer listTracer=new ListTracer();
+                listTracer.setListType("emerglist");
+                listTracer.setVersion(version);
+                if(listTracerMapper.selectListType("emerglist")==0)
+                {
+                    listTracerMapper.insertTracer("emerglist");
+                    listTracerMapper.updateTracer(listTracer);
+                }else if (listTracerMapper.selectListType("emerglist")==1)
+                {
+                    listTracerMapper.updateTracer(listTracer);
+                }
             }
         }
         catch (Exception e){
@@ -106,7 +122,7 @@ public class EmergListServiceImpl implements IEmergListService {
         try{
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            if(bytes.length>0)
+            if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version + ".zip";
                 File file=new File(emergPath+"_all");

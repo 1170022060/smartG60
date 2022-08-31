@@ -1,5 +1,6 @@
 package com.pingok.station.task.emergList;
 
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.service.emergList.IEmergListService;
 import com.ruoyi.common.core.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,8 @@ public class EmergListTask {
 
     @Autowired
     private IEmergListService emergListService;
+    @Autowired
+    private ListTracerMapper listTracerMapper;
     /**
      * 抢险救灾增量定时任务
      */
@@ -24,6 +27,7 @@ public class EmergListTask {
     private void increment() {
         try {
             String version = DateUtils.getTimeMinute(DateUtils.getPreTime(DateUtils.getNowDate(),-15));
+            String versionNow=listTracerMapper.selectVersion("emerglist");
             log.info("EmergListTask开始执行increment任务，版本号为：" + version);
             emergListService.increment(version);
             log.info("EmergListTask执行increment任务成功");

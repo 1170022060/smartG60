@@ -42,9 +42,9 @@ public interface IOptInfoService {
     public int insertOptInfo(TblOptInfo tblOptInfo);
 
     /**
-     * 修改场地信息
+     * 修改员工信息
      *
-     * @param tblOptInfo 场地信息
+     * @param tblOptInfo 员工信息
      * @return 结果
      */
     public int updateOptInfo(TblOptInfo tblOptInfo);
@@ -65,4 +65,11 @@ public interface IOptInfoService {
      * @return 结果
      */
     public String checkOptIdUnique(TblOptInfo tblOptInfo);
+
+    /**
+     * 下发员工信息
+     *
+     * @return 结果
+     */
+    public void issueOptInfo();
 }

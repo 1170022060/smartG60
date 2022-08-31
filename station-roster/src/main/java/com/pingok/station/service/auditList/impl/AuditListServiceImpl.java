@@ -8,14 +8,14 @@ import com.pingok.station.domain.auditList.AuditPreTrans;
 import com.pingok.station.domain.auditList.vo.AuditPreVo;
 import com.pingok.station.domain.auditList.vo.AuditVo;
 import com.pingok.station.domain.auditList.vo.TransactionsVo;
-import com.pingok.station.domain.bulkList.vo.BulkVo;
+import com.pingok.station.domain.tracer.ListTracer;
 import com.pingok.station.domain.vo.VersionVo;
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.mapper.auditList.AuditAppendMapper;
 import com.pingok.station.mapper.auditList.AuditDataMapper;
 import com.pingok.station.mapper.auditList.AuditPreMapper;
 import com.pingok.station.mapper.auditList.AuditPreTransMapper;
 import com.pingok.station.service.auditList.IAuditListService;
-import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
@@ -50,6 +50,9 @@ public class AuditListServiceImpl implements IAuditListService {
     @Autowired
     private AuditPreTransMapper auditPreTransMapper;
 
+    @Autowired
+    private ListTracerMapper listTracerMapper;
+
     @Value("${center.host}")
     private String host;
 
@@ -81,7 +84,7 @@ public class AuditListServiceImpl implements IAuditListService {
         try{
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            if(bytes.length>0)
+            if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version + ".zip";
                 File file=new File(auditPath);
@@ -98,8 +101,18 @@ public class AuditListServiceImpl implements IAuditListService {
                 fos.flush();
                 fos.close();
                 unzipIncr(pathName,auditPath);
+                ListTracer listTracer=new ListTracer();
+                listTracer.setListType("auditlist");
+                listTracer.setVersion(version);
+                if(listTracerMapper.selectListType("auditlist")==0)
+                {
+                    listTracerMapper.insertTracer("auditlist");
+                    listTracerMapper.updateTracer(listTracer);
+                }else if (listTracerMapper.selectListType("auditlist")==1)
+                {
+                    listTracerMapper.updateTracer(listTracer);
+                }
             }
-
         }
         catch (Exception e){
             e.printStackTrace();
@@ -125,7 +138,7 @@ public class AuditListServiceImpl implements IAuditListService {
         try{
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            if(bytes.length>0)
+            if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version + ".zip";
                 File file=new File(auditPrePath);
@@ -142,6 +155,17 @@ public class AuditListServiceImpl implements IAuditListService {
                 fos.flush();
                 fos.close();
                 unzipPre(pathName,auditPrePath);
+                ListTracer listTracer=new ListTracer();
+                listTracer.setListType("auditPrelist");
+                listTracer.setVersion(version);
+                if(listTracerMapper.selectListType("auditPrelist")==0)
+                {
+                    listTracerMapper.insertTracer("auditPrelist");
+                    listTracerMapper.updateTracer(listTracer);
+                }else if (listTracerMapper.selectListType("auditPrelist")==1)
+                {
+                    listTracerMapper.updateTracer(listTracer);
+                }
             }
         }
         catch (Exception e){
@@ -168,7 +192,7 @@ public class AuditListServiceImpl implements IAuditListService {
         try{
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            if(bytes.length>0)
+            if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version + ".zip";
                 File file=new File(auditPrePath+"_all");

@@ -1,5 +1,6 @@
 package com.pingok.station.task.bulkList;
 
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.service.bulkList.IBulkListService;
 import com.ruoyi.common.core.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Component;
 public class BulkListTask {
     @Autowired
     private IBulkListService bulkListService;
+    @Autowired
+    private ListTracerMapper listTracerMapper;
 
     /**
      * 大件运输名单全量定时任务
@@ -24,6 +27,7 @@ public class BulkListTask {
     private void bulkList() {
         try {
             String version = DateUtils.getTimeMinute(DateUtils.getPreTime(DateUtils.getNowDate(),-11));
+            String versionNow=listTracerMapper.selectVersion("bulklist");
             log.info("BulkListTask开始执行bulkList任务，版本号为：" + version);
             bulkListService.bulkList(version);
             log.info("BulkListTask执行bulkList任务成功");

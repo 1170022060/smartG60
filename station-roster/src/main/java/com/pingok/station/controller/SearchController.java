@@ -14,7 +14,7 @@ public class SearchController {
     private ICardBlacklistService listService;
 
     @Autowired
-    private IObuBlacklistService obulistService;
+    private IObuBlacklistService obuListService;
 
     @GetMapping("/black")
     public AjaxResult black(@RequestParam(name = "cardId",required = false) String cardId)
@@ -23,8 +23,8 @@ public class SearchController {
     }
 
     @GetMapping("/obuBlack")
-    public AjaxResult obuBlack(@RequestParam(name = "cardId",required = false) String cardId)
+    public AjaxResult obuBlack(@RequestParam(name = "obuId",required = false) String cardId)
     {
-        return AjaxResult.success(obulistService.findByCardId(cardId));
+        return AjaxResult.success(obuListService.findByObuId(cardId));
     }
 }

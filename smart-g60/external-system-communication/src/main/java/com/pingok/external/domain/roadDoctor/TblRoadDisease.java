@@ -72,5 +72,5 @@ public class TblRoadDisease implements Serializable {
      * 桩号
      */
     private String pZhuangHao;
-
+    private Integer status;
 }
