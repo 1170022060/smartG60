@@ -13,6 +13,6 @@ public interface ISmartService {
     int insertServiceFault(TblDeviceFault tblDeviceFault);
 
     List<Map> serviceDeviceStatus(String fieldNum,Integer deviceType,Integer status);
-    List<Map> serviceDeviceFault(String fieldNum, Integer deviceType,Long deviceId, String faultId, String faultDescription,Integer status);
+    List<Map> serviceDeviceFault(String fieldNum, Integer deviceType,String deviceId, String faultId, String faultDescription,Integer status);
     int insertServiceRepair(TblDeviceRepair tblDeviceRepair);
 }
