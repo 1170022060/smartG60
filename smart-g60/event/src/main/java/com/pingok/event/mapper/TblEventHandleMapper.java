@@ -23,6 +23,6 @@ public interface TblEventHandleMapper extends CommonRepository<TblEventHandle> {
             "LEFT JOIN  SYS_USER usr on usr.USER_ID = teh.USER_ID " +
             "WHERE 1=1 " +
             "AND teh.EVENT_ID = #{eventId} " +
-            "ORDER BY teh.HANDLE_TIME DESC")
+            "ORDER BY teh.HANDLE_TIME")
     List<TblEventHandle> findByEventId(@Param("eventId") Long eventId);
 }

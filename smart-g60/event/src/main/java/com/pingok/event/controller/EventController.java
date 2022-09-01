@@ -59,8 +59,8 @@ public class EventController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("event:eventControl:getEventVideo")
-    @Log(title = "事件管理", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("event:eventControl:getEventVideo")
+//    @Log(title = "事件管理", businessType = BusinessType.OTHER)
     @GetMapping("/getEventVideo")
     public AjaxResult getEventVideo(@RequestParam Long eventId) {
         JSONObject data = new JSONObject();
@@ -87,8 +87,8 @@ public class EventController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("event:eventControl:report")
-    @Log(title = "事件管理", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("event:eventControl:report")
+//    @Log(title = "事件管理", businessType = BusinessType.OTHER)
     @GetMapping("/report")
     public AjaxResult report(@RequestParam Long id) {
         return AjaxResult.success(iEventService.report(id));
@@ -143,8 +143,8 @@ public class EventController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("event:eventControl:list")
-    @Log(title = "事件管理", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("event:eventControl:list")
+//    @Log(title = "事件管理", businessType = BusinessType.OTHER)
     @GetMapping("/list")
     public TableDataInfo list(Integer status) {
         startPage();
@@ -158,7 +158,7 @@ public class EventController extends BaseController {
      * @return
      */
 
-    @Log(title = "事件管理", businessType = BusinessType.OTHER)
+//    @Log(title = "事件管理", businessType = BusinessType.OTHER)
     @GetMapping("/event")
     public AjaxResult event() {
         return AjaxResult.success(iEventService.event());
@@ -167,8 +167,7 @@ public class EventController extends BaseController {
     /**
      * 根据id查询
      */
-    @RequiresPermissions("event:eventControl:findById")
-    @Log(title = "事件管理", businessType = BusinessType.OTHER)
+//    @Log(title = "事件管理", businessType = BusinessType.OTHER)
     @GetMapping
     public AjaxResult findById(@RequestParam Long id) {
         return AjaxResult.success(iEventService.findById(id));

@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +76,12 @@ public class EventServiceImpl implements IEventService {
     @Override
     public TblEventRecord report(Long id) {
         TblEventRecord eventRecord = tblEventRecordMapper.selectByPrimaryKey(id);
+        List<SysDictData> sysDictDataList = DictUtils.getDictCache("event_type");
+        for (SysDictData d : sysDictDataList) {
+            if (eventRecord.getEventType().equals(d.getDictValue())) {
+                eventRecord.setEventTypeLabel(d.getDictLabel());
+            }
+        }
         if (eventRecord != null) {
             eventRecord.setEventHandles(tblEventHandleMapper.findByEventId(eventRecord.getId()));
         }
@@ -447,7 +452,7 @@ public class EventServiceImpl implements IEventService {
 
     @Override
     public List<TblEventRecord> event() {
-        List<Integer> status= Arrays.asList(0, 1);
+        List<Integer> status = Arrays.asList(0, 1);
         Example example = new Example(TblEventRecord.class);
         example.createCriteria().andIn("status", status);
         List<TblEventRecord> eventRecordList = tblEventRecordMapper.selectByExample(example);
@@ -455,8 +460,7 @@ public class EventServiceImpl implements IEventService {
         if (!sysDictDataList.isEmpty() && sysDictDataList.size() > 0) {
             for (TblEventRecord tblEventRecord : eventRecordList) {
                 for (SysDictData s : sysDictDataList) {
-                    if (tblEventRecord.getEventType().equals(s.getDictValue()))
-                    {
+                    if (tblEventRecord.getEventType().equals(s.getDictValue())) {
                         tblEventRecord.setEventTypeLabel(s.getDictLabel());
                     }
                 }
