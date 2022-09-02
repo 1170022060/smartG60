@@ -1,9 +1,6 @@
 package com.pingok.monitor.service.pilotLight;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import io.swagger.models.auth.In;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface IPilotLightService {
 
@@ -54,7 +51,6 @@ public interface IPilotLightService {
 
     /**
      * 根据系统 id 查询系统
-     * @param roadId
      * @return
      */
     boolean getRoadInfoById(JSONObject body);

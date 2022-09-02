@@ -26,6 +26,11 @@ public class RemotePilotLightFallbackFactory implements FallbackFactory<RemotePi
             public R sendCmdToDeviceV2(JSONObject body) {
                 return null;
             }
+
+            @Override
+            public R getRtStatus() {
+                return null;
+            }
         };
 
     }

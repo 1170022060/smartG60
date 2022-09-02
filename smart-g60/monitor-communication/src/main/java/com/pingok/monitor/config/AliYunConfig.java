@@ -13,23 +13,31 @@ import org.springframework.stereotype.Component;
 public class AliYunConfig implements InitializingBean {
 
     /**
-     * 密钥id
+     * dass
      */
     @Value("${daas.host}")
     private String dassHost;
 
     /**
-     * 密钥
+     * 事件识别
      */
     @Value("${video.host}")
     private String videoHost;
 
+    /**
+     * 引导灯服务端 host
+     */
+    @Value("${light.host}")
+    private String lightHost;
+
     public static String DASSHOST;
     public static String VIDEOHOST;
+    public static String LIGHTHOST;
 
     @Override
     public void afterPropertiesSet() {
         DASSHOST = dassHost;
         VIDEOHOST = videoHost;
+        LIGHTHOST = lightHost;
     }
 }

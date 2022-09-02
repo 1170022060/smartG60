@@ -1,7 +1,7 @@
-package com.pingok.devicemonitor.controller.infoboard;
+package com.pingok.monitor.controller.infoboard;
 
 import com.alibaba.fastjson.JSONObject;
-import com.pingok.devicemonitor.service.infoboard.IInfoBoardService;
+import com.pingok.monitor.service.infoboard.IInfoBoardService;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
