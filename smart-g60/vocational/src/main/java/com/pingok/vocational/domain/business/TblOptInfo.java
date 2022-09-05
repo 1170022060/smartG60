@@ -1,5 +1,6 @@
 package com.pingok.vocational.domain.business;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.Id;
@@ -34,11 +35,18 @@ public class TblOptInfo implements Serializable {
 
     private Integer status;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     private Long createUserId;
 
     private Long updateUserId;
+
+    private Integer issueStatus;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date issueTime;
 }

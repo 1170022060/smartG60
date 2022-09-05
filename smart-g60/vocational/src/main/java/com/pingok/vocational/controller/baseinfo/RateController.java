@@ -64,10 +64,10 @@ public class RateController extends BaseController {
     @RequiresPermissions("vocational:rate:contrast")
     @Log(title = "最小费率-历史版本对比", businessType = BusinessType.OTHER)
     @GetMapping("/contrast")
-    public TableDataInfo contrast(@RequestParam(name = "enID",required = false) String enID,@RequestParam(name = "exId",required = false) String exId, @RequestParam(name = "vehClass",required = false) Integer vehClass)
+    public TableDataInfo contrast(@RequestParam(name = "enId",required = false) String enId,@RequestParam(name = "exId",required = false) String exId, @RequestParam(name = "vehClass",required = false) Integer vehClass)
     {
         startPage();
-        List<Map> info = rateService.selectRateContrast(enID,exId,vehClass);
+        List<Map> info = rateService.selectRateContrast(enId,exId,vehClass);
         return getDataTable(info);
     }
 }

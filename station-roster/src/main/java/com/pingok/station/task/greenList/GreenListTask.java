@@ -1,5 +1,6 @@
 package com.pingok.station.task.greenList;
 
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.service.greenList.IGreenListService;
 import com.ruoyi.common.core.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Component;
 public class GreenListTask {
     @Autowired
     private IGreenListService greenListService;
+    @Autowired
+    private ListTracerMapper listTracerMapper;
 
     /**
      * 绿通名单全量定时任务
@@ -24,6 +27,7 @@ public class GreenListTask {
     private void greenList() {
         try {
             String version = DateUtils.getTimeMinute(DateUtils.getPreTime(DateUtils.getNowDate(),-10));
+            String versionNow=listTracerMapper.selectVersion("greenlist");
             log.info("GreenListTask开始执行greenList任务，版本号为：" + version);
             greenListService.greenList(version);
             log.info("GreenListTask执行greenList任务成功");

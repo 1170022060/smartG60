@@ -78,4 +78,11 @@ public class OptInfoController extends BaseController {
     {
         return toAjax(optInfoService.updateStatus(id,status));
     }
+
+    @GetMapping(value="/issue")
+    public AjaxResult issue()
+    {
+        optInfoService.issueOptInfo();
+        return AjaxResult.success();
+    }
 }

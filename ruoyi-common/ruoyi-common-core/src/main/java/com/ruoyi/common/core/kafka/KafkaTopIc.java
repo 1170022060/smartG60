@@ -34,4 +34,8 @@ public class KafkaTopIc {
     public final static String MONITOR_SIGNAL_PILOTLIGHT = "monitorSignalPilotLight";
 
     public final static String SECTOR_LOG = "sectorLog";
+
+    public final static String OPT_INFO = "optInfo";
+
+    public final static String OPT_WORK_INFO = "optWorkInfo";
 }

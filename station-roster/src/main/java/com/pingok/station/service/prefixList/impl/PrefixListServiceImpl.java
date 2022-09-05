@@ -1,10 +1,11 @@
 package com.pingok.station.service.prefixList.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.pingok.station.domain.demicAreaList.vo.DemicVo;
 import com.pingok.station.domain.prefixList.EpidemicPrefixArea;
 import com.pingok.station.domain.prefixList.vo.PrefixVo;
+import com.pingok.station.domain.tracer.ListTracer;
 import com.pingok.station.domain.vo.VersionVo;
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.mapper.prefixList.EpidemicPrefixAreaMapper;
 import com.pingok.station.service.prefixList.IPrefixListService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,9 @@ public class PrefixListServiceImpl implements IPrefixListService {
 
     @Autowired
     private EpidemicPrefixAreaMapper epidemicPrefixAreaMapper;
+
+    @Autowired
+    private ListTracerMapper listTracerMapper;
 
     @Value("${center.host}")
     private String host;
@@ -57,7 +61,7 @@ public class PrefixListServiceImpl implements IPrefixListService {
         try{
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            if(bytes.length>0)
+            if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version +"Prefix"+ ".zip";
                 File file=new File(prefixPath);
@@ -74,6 +78,17 @@ public class PrefixListServiceImpl implements IPrefixListService {
                 fos.flush();
                 fos.close();
                 unzipPrefix(pathName,prefixPath,version);
+                ListTracer listTracer=new ListTracer();
+                listTracer.setListType("prefixlist");
+                listTracer.setVersion(version);
+                if(listTracerMapper.selectListType("prefixlist")==0)
+                {
+                    listTracerMapper.insertTracer("prefixlist");
+                    listTracerMapper.updateTracer(listTracer);
+                }else if (listTracerMapper.selectListType("prefixlist")==1)
+                {
+                    listTracerMapper.updateTracer(listTracer);
+                }
             }
         }
         catch (Exception e){
