@@ -11,7 +11,7 @@ public interface IRoadDoctorService {
 
     List<Map> list(String questName, String pZhuangHao, Date startTime, Date endTime);
     int push(Long id);
-    LoginVo login(InterfaceVo interfaceVo);
+    LoginVo login();
     String addDisease(DiseaseData diseaseData);
     void addDiseaseProc(StatusVo statusVo);
     void addDiseasePic(PictureVo pictureVo);

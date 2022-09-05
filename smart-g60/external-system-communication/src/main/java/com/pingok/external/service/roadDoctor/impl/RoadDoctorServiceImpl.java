@@ -176,7 +176,10 @@ public class RoadDoctorServiceImpl implements IRoadDoctorService {
     }
 
     @Override
-    public LoginVo login(InterfaceVo interfaceVo) {
+    public LoginVo login() {
+        InterfaceVo interfaceVo =new InterfaceVo();
+        interfaceVo.setInterfaceUser(RoadDoctorConfig.USER);
+        interfaceVo.setInterfacePwd(RoadDoctorConfig.PASSWORD);
         String res = HttpUtil.post(RoadDoctorConfig.HOST +"/json/getAccessToken", JSON.toJSONString(interfaceVo));
         if (!StringUtils.isEmpty(res)) {
             JSONObject object = JSONObject.parseObject(res);
