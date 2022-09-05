@@ -22,6 +22,7 @@ public interface TblRateMapper {
             "c.STATION_NAME as \"enName\" ," +
             "d.STATION_NAME as \"exName\" ," +
             "b.DICT_LABEL as \"vehClass\"," +
+            "a.VEH_CLASS as \"vehClassNum\"," +
             "a.FEE as \"fee\" ," +
             "a.FEE_95 as \"fee95\" ," +
             "a.M as \"m\"  from TBL_RATE a " +
@@ -87,17 +88,17 @@ public interface TblRateMapper {
             "left join TBL_BASE_STATION_INFO c on c.STATION_GB=a.EN_ID " +
             "left join TBL_BASE_STATION_INFO d on d.STATION_GB=a.EX_ID " +
             "where 1=1 " +
-            "<when test='enID != null'> " +
-            " and a.EN_ID = #{enID}" +
+            "<when test='enId != null'> " +
+            " and a.EN_ID = #{enId}" +
             "</when>"+
-            "<when test='enID != null'> " +
-            " and a.EX_ID = #{exID}" +
+            "<when test='exId != null'> " +
+            " and a.EX_ID = #{exId}" +
             "</when>"+
             "<when test='vehClass != null'> " +
             "and a.VEH_CLASS= #{vehClass} " +
             "</when>"+
             " order by a.VERSION desc "+
             "</script>"})
-    List<Map> selectRateContrast(@Param("enID") String enID, @Param("exID") String exId,@Param("vehClass") Integer vehClass);
+    List<Map> selectRateContrast(@Param("enId") String enId, @Param("exId") String exId,@Param("vehClass") Integer vehClass);
 
 }

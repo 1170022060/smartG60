@@ -31,10 +31,10 @@ public class OptWorkInfoController extends BaseController {
     @RequiresPermissions("vocational:optWork:info")
     @Log(title = "操作员工班信息-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
-    public TableDataInfo info(@RequestParam(name = "startDate",required = false) Date startDate, @RequestParam(name = "endDate",required = false) Date endDate,@RequestParam(name = "stationId",required = false) String stationId,@RequestParam(name = "optName",required = false) String optName,@RequestParam(name = "shift",required = false) Integer shift)
+    public TableDataInfo info(@RequestParam(name = "startDate",required = false) Date startDate, @RequestParam(name = "endDate",required = false) Date endDate,@RequestParam(name = "stationId",required = false) String stationId,@RequestParam(name = "optName",required = false) String optName,@RequestParam(name = "shift",required = false) Integer shift,@RequestParam(name = "optId",required = false) Integer optId)
     {
         startPage();
-        List<Map> info = optWorkInfoService.selectOptWorkInfo(startDate,  endDate,  stationId,  optName,  shift);
+        List<Map> info = optWorkInfoService.selectOptWorkInfo(startDate,  endDate,  stationId,  optName,  shift,optId);
         return getDataTable(info);
     }
 
@@ -44,5 +44,20 @@ public class OptWorkInfoController extends BaseController {
     public AjaxResult add(@Validated @RequestBody TblOptWorkInfo tblOptWorkInfo)
     {
         return toAjax(optWorkInfoService.insertOptWorkInfo(tblOptWorkInfo));
+    }
+
+    @RequiresPermissions("vocational:optWork:status")
+    @Log(title = "工班信息-重置", businessType = BusinessType.UPDATE)
+    @PutMapping("/status")
+    public AjaxResult status(@RequestParam(name = "id") Long id)
+    {
+        return toAjax(optWorkInfoService.updateOptWorkInfo(id));
+    }
+
+    @GetMapping(value="/issue")
+    public AjaxResult issue()
+    {
+        optWorkInfoService.issueOptWorkInfo();
+        return AjaxResult.success();
     }
 }

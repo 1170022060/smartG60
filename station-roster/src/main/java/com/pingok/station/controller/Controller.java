@@ -46,12 +46,14 @@ public class Controller extends BaseController {
         listService.increment(version);
         return AjaxResult.success();
     }
+
     @PostMapping("/test")
     public AjaxResult test(@Validated @RequestBody String version)
     {
-        listService.increment(version);
+        listService.test(version);
         return AjaxResult.success();
     }
+
     @PostMapping("/blackAll")
     public AjaxResult blackAll(@Validated @RequestBody String version)
     {
@@ -72,6 +74,7 @@ public class Controller extends BaseController {
         greenListService.greenList(version);
         return AjaxResult.success();
     }
+
     @PostMapping("/obuBlackIncr")
     public AjaxResult obuBlackIncr(@Validated @RequestBody String version)
     {
@@ -159,7 +162,8 @@ public class Controller extends BaseController {
     @PostMapping("/suspectList")
     public AjaxResult suspectList(@Validated @RequestBody String version)
     {
-        suspectListService.test(version);
+        suspectListService.suspectList(version);
         return AjaxResult.success();
     }
+
 }

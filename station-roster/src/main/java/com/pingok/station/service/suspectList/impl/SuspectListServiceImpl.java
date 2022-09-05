@@ -3,7 +3,9 @@ package com.pingok.station.service.suspectList.impl;
 import com.alibaba.fastjson.JSON;
 import com.pingok.station.domain.suspectList.SuspectArea;
 import com.pingok.station.domain.suspectList.vo.SuspectVo;
+import com.pingok.station.domain.tracer.ListTracer;
 import com.pingok.station.domain.vo.VersionVo;
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.mapper.suspectList.SuspectAreaMapper;
 import com.pingok.station.service.suspectList.ISuspectListService;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
@@ -29,6 +31,9 @@ public class SuspectListServiceImpl implements ISuspectListService {
 
     @Autowired
     private SuspectAreaMapper suspectAreaMapper;
+
+    @Autowired
+    private ListTracerMapper listTracerMapper;
 
     @Value("${center.host}")
     private String host;
@@ -58,7 +63,7 @@ public class SuspectListServiceImpl implements ISuspectListService {
         try{
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            if(bytes.length>0)
+            if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version +"Suspect"+ ".zip";
                 File file=new File(suspectPath);
@@ -75,6 +80,17 @@ public class SuspectListServiceImpl implements ISuspectListService {
                 fos.flush();
                 fos.close();
                 unzipSuspect(pathName,suspectPath,version);
+                ListTracer listTracer=new ListTracer();
+                listTracer.setListType("suspectlist");
+                listTracer.setVersion(version);
+                if(listTracerMapper.selectListType("suspectlist")==0)
+                {
+                    listTracerMapper.insertTracer("suspectlist");
+                    listTracerMapper.updateTracer(listTracer);
+                }else if (listTracerMapper.selectListType("suspectlist")==1)
+                {
+                    listTracerMapper.updateTracer(listTracer);
+                }
             }
         }
         catch (Exception e){

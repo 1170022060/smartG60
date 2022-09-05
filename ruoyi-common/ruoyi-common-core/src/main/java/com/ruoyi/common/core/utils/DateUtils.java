@@ -304,4 +304,30 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
             return false;
         }
     }
+
+    public static Date getNextMillisEndWithMinute0or5(Integer min,Date baseTime) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(baseTime);
+        int minute = calendar.get(Calendar.MINUTE);
+        if (minute < (60-min)) {
+            int add;
+            if(min==5)
+            {
+                add = minute%10 < 5? 5 - minute%10 : 10 - minute%10;
+            }else
+            {
+                add = min-minute % min;
+            }
+            calendar.add(Calendar.MINUTE,add);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            return calendar.getTime();
+        }
+        // 当前时间+1小时
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date endTime = DateUtils.addHours(calendar.getTime(), 1);
+        return endTime;
+    }
 }

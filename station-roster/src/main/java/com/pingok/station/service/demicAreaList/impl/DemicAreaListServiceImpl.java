@@ -3,9 +3,9 @@ package com.pingok.station.service.demicAreaList.impl;
 import com.alibaba.fastjson.JSON;
 import com.pingok.station.domain.demicAreaList.EpidemicArea;
 import com.pingok.station.domain.demicAreaList.vo.DemicVo;
-import com.pingok.station.domain.greenList.GreenPassAppointment;
-import com.pingok.station.domain.greenList.vo.GreenVo;
+import com.pingok.station.domain.tracer.ListTracer;
 import com.pingok.station.domain.vo.VersionVo;
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.mapper.demicAreaList.EpidemicAreaMapper;
 import com.pingok.station.service.demicAreaList.IDemicAreaListService;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
@@ -17,9 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -38,6 +35,9 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
 
     @Autowired
     private EpidemicAreaMapper epidemicAreaMapper;
+
+    @Autowired
+    private ListTracerMapper listTracerMapper;
 
     @Value("${center.host}")
     private String host;
@@ -67,7 +67,7 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
         try{
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            if(bytes.length>0)
+            if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version +"Demic"+ ".zip";
                 File file=new File(demicPath);
@@ -84,6 +84,17 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
                 fos.flush();
                 fos.close();
                 unzipDemic(pathName,demicPath,version);
+                ListTracer listTracer=new ListTracer();
+                listTracer.setListType("demiclist");
+                listTracer.setVersion(version);
+                if(listTracerMapper.selectListType("demiclist")==0)
+                {
+                    listTracerMapper.insertTracer("demiclist");
+                    listTracerMapper.updateTracer(listTracer);
+                }else if (listTracerMapper.selectListType("demiclist")==1)
+                {
+                    listTracerMapper.updateTracer(listTracer);
+                }
             }
         }
         catch (Exception e){
@@ -161,7 +172,6 @@ public class DemicAreaListServiceImpl implements IDemicAreaListService {
     }
 
     public static List<DemicVo> jsonAnalysis(String jsonPath){
-
         String jsonStr = "";
         try {
             FileReader fileReader = new FileReader(jsonPath);

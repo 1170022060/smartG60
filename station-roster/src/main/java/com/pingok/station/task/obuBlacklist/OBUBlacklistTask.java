@@ -1,5 +1,6 @@
 package com.pingok.station.task.obuBlacklist;
 
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.service.obuBlacklist.IObuBlacklistService;
 import com.ruoyi.common.core.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,8 @@ public class OBUBlacklistTask {
 
     @Autowired
     private IObuBlacklistService iObuBlacklistService;
+    @Autowired
+    private ListTracerMapper listTracerMapper;
 
     /**
      * OBU名单增量定时任务
@@ -25,6 +28,7 @@ public class OBUBlacklistTask {
     private void increment() {
         try {
             String version = DateUtils.getTimeMinute(DateUtils.getPreTime(DateUtils.getNowDate(),-5));
+            String versionNow=listTracerMapper.selectVersion("obuBlacklist");
             log.info("OBUBlacklistTask开始执行increment任务，版本号为：" + version);
             iObuBlacklistService.increment(version);
             log.info("OBUBlacklistTask执行increment任务成功");
