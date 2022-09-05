@@ -40,7 +40,7 @@ public class IRateServiceImpl implements IRateService {
     }
 
     @Override
-    public List<Map> selectRateContrast(String enID, String exId, Integer vehClass) {
-        return tblRateMapper.selectRateContrast(enID,exId,vehClass);
+    public List<Map> selectRateContrast(String enId, String exId, Integer vehClass) {
+        return tblRateMapper.selectRateContrast(enId,exId,vehClass);
     }
 }

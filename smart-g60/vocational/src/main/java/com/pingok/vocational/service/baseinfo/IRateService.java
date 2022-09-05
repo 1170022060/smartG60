@@ -34,5 +34,5 @@ public interface IRateService {
 
     public List<Map> selectVersionNum();
 
-    List<Map> selectRateContrast(String enID, String exId, Integer vehClass);
+    List<Map> selectRateContrast(String enId, String exId, Integer vehClass);
 }
