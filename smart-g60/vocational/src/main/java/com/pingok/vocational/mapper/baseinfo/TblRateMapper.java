@@ -22,6 +22,7 @@ public interface TblRateMapper {
             "c.STATION_NAME as \"enName\" ," +
             "d.STATION_NAME as \"exName\" ," +
             "b.DICT_LABEL as \"vehClass\"," +
+            "a.VEH_CLASS as \"vehClassNum\"," +
             "a.FEE as \"fee\" ," +
             "a.FEE_95 as \"fee95\" ," +
             "a.M as \"m\"  from TBL_RATE a " +
