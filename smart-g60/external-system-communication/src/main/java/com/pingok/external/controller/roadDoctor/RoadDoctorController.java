@@ -41,11 +41,4 @@ public class RoadDoctorController extends BaseController {
         List<Map> list = iRoadDoctorService.list(questName, pZhuangHao, startTime, endTime);
         return getDataTable(list);
     }
-
-    @RequiresPermissions("external-system:roadDoctor:push")
-    @Log(title = "道路病害推送", businessType = BusinessType.UPDATE)
-    @PutMapping("/push")
-    public AjaxResult push(@RequestParam(name = "id") Long id) {
-        return toAjax(iRoadDoctorService.push(id));
-    }
 }

@@ -74,4 +74,5 @@ public class TblRoadDisease implements Serializable {
     private String pZhuangHao;
     private Integer status;
     private Integer uploadStatus;
+    private String orderNum;
 }
