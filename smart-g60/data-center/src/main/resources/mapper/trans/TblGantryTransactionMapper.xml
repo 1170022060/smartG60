@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.datacenter.mapper.gantry.TblGantryChargeInfoMapper">
+    
+    <sql id="selectChargeFlowVo">
+        select charge_unit_id, ${time} as statisticsDate, count(DISTINCT vehicle_plate || SUBSTR(trans_time, 0, 16)) as flow
+        from ${table} where to_char(trans_time, 'yyyy-MM-dd') = #{time}
+    </sql>
+
+    <select id="selectChargeFlow" resultType="java.util.Map">
+        <include refid="selectChargeFlowVo"/>
+        <if test="chargeId != null">
+            AND charge_unit_id = #{chargeId}
+        </if>
+        group by charge_unit_id
+        order by charge_unit_id
+    </select>
+</mapper>
