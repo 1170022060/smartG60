@@ -49,7 +49,7 @@ public interface IGantryAlgorithm {
     /**
      * 获取收费单元流量
      */
-    List<ChargeFlowModel> selectChargeFlowList(String startDate, String endDate);
+    List<ChargeFlowModel> selectChargeFlowList(String chargingUnitId, String startDate, String endDate);
 
-    ChargeFlowModel selectChargeFlow(String chargingUnitId, String startDate, String endDate);
+    ChargeFlowModel selectChargeFlow(String chargingUnitId, String statisticsDate);
 }
