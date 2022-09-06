@@ -283,7 +283,7 @@ public class Consumer {
                         ret = iPilotLightService.firmwareVerByArea(jo);
                         break;
                 }
-                if (ret) ack.acknowledge();
+                ack.acknowledge();
             } catch (Exception e) {
                 log.error("pilotLightHandle消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
             }
