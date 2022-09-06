@@ -1,6 +1,7 @@
 package com.pingok.datacenter.mapper.gantry;
 
 import com.pingok.datacenter.domain.gantry.TblGantryChargeInfo;
+import com.pingok.datacenter.domain.gantry.model.ChargeFlowModel;
 import com.ruoyi.common.core.mapper.CommonRepository;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -20,5 +21,7 @@ public interface TblGantryChargeInfoMapper extends CommonRepository<TblGantryCha
 //            "</when>" +
 //            "GROUP BY CHARGE_UNIT_ID " +
 //            "ORDER BY CHARGE_UNIT_ID")
-    List<Map> selectChargeFlow(@Param("table") String table, @Param("chargeId") String chargeId, @Param("time") String transDate);
+    List<ChargeFlowModel> selectChargeFlowList(@Param("table") String table,@Param("statisticsDate") String statisticsDate);
+
+    ChargeFlowModel selectChargeFlow(@Param("table") String table, @Param("chargingUnitId") String chargingUnitId, @Param("statisticsDate") String statisticsDate);
 }

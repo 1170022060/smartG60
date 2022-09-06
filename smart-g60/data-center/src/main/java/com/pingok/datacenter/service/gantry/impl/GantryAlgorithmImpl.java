@@ -1,6 +1,7 @@
 package com.pingok.datacenter.service.gantry.impl;
 
 import com.pingok.datacenter.domain.gantry.TblGantryChargeInfo;
+import com.pingok.datacenter.domain.gantry.model.ChargeFlowModel;
 import com.pingok.datacenter.mapper.gantry.TblGantryAlgorithmMapper;
 import com.pingok.datacenter.mapper.gantry.TblGantryChargeInfoMapper;
 import com.pingok.datacenter.service.gantry.IGantryAlgorithm;
@@ -43,12 +44,12 @@ public class GantryAlgorithmImpl implements IGantryAlgorithm {
     }
 
     @Override
-    public List<TblGantryChargeInfo> selectChargeInfo(String chargeId) {
+    public List<TblGantryChargeInfo> selectChargeInfo(String chargingUnitId) {
         Example example = new Example(TblGantryChargeInfo.class);
         Example.Criteria criteria = example.createCriteria();
         List<TblGantryChargeInfo> list = new ArrayList<>();
-        if(!StringUtils.isEmpty(chargeId)) {
-            criteria.andEqualTo("chargingUnitId", chargeId);
+        if(!StringUtils.isEmpty(chargingUnitId)) {
+            criteria.andEqualTo("chargingUnitId", chargingUnitId);
             TblGantryChargeInfo info = tblGantryChargeInfoMapper.selectOneByExample(example);
             list.add(info);
         } else {
@@ -58,10 +59,14 @@ public class GantryAlgorithmImpl implements IGantryAlgorithm {
     }
 
     @Override
-    public List<Map> selectChargeFlow(String chargeId, String time) {
-//        TBL_GANTRY_TRANSACTION_2022
-        String table = String.format("TBL_GANTRY_TRANSACTION_%s", time.substring(0, 4));
-//        String transDate = time.replace('-', ' ');
-        return tblGantryChargeInfoMapper.selectChargeFlow(table, chargeId, time);
+    public List<ChargeFlowModel> selectChargeFlowList(String statisticsDate) {
+        String table = String.format("TBL_GANTRY_TRANSACTION_%s", statisticsDate.substring(0, 4));
+        return tblGantryChargeInfoMapper.selectChargeFlowList(table, statisticsDate);
+    }
+
+    @Override
+    public ChargeFlowModel selectChargeFlow(String chargingUnitId, String statisticsDate) {
+        String table = String.format("TBL_GANTRY_TRANSACTION_%s", statisticsDate.substring(0, 4));
+        return tblGantryChargeInfoMapper.selectChargeFlow(table, chargingUnitId, statisticsDate);
     }
 }
