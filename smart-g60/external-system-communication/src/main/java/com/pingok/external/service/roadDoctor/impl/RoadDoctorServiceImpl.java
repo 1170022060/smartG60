@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.external.config.BaiDuMapConfig;
 import com.pingok.external.config.BeiDouConfig;
+import com.pingok.external.config.MaintainConfig;
 import com.pingok.external.config.RoadDoctorConfig;
 import com.pingok.external.domain.roadDoctor.TblRoadDisease;
 import com.pingok.external.domain.roadDoctor.TblRoadDiseaseReport;
@@ -40,7 +41,7 @@ public class RoadDoctorServiceImpl implements IRoadDoctorService {
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
     @Autowired
-    private TblRoadPatrolInspectionMapper tblRoadPatrolInspectionMapperl;
+    private TblRoadPatrolInspectionMapper tblRoadPatrolInspectionMapper;
     @Autowired
     private TblRoadDiseaseReportMapper tblRoadDiseaseReportMapper;
     @Autowired
@@ -77,7 +78,7 @@ public class RoadDoctorServiceImpl implements IRoadDoctorService {
                             shotBatch = shotBatchs.getJSONObject(i);
                             example = new Example(TblRoadPatrolInspection.class);
                             example.createCriteria().andEqualTo("bId", shotBatch.getLong("B_Id"));
-                            if (tblRoadPatrolInspectionMapperl.selectOneByExample(example) == null) {
+                            if (tblRoadPatrolInspectionMapper.selectOneByExample(example) == null) {
                                 tblRoadPatrolInspection = new TblRoadPatrolInspection();
                                 tblRoadPatrolInspection.setId(remoteIdProducerService.nextId());
                                 tblRoadPatrolInspection.setBId(shotBatch.getLong("B_Id"));
@@ -91,7 +92,7 @@ public class RoadDoctorServiceImpl implements IRoadDoctorService {
                                 tblRoadPatrolInspection.setBBatchType(shotBatch.getInteger("B_BatchType"));
                                 tblRoadPatrolInspection.setBRemark(shotBatch.getString("B_Remark"));
                                 tblRoadPatrolInspection.setVideo(shotBatch.getString("video"));
-                                tblRoadPatrolInspectionMapperl.insert(tblRoadPatrolInspection);
+                                tblRoadPatrolInspectionMapper.insert(tblRoadPatrolInspection);
                                 r = WebServiceUtils.get(RoadDoctorConfig.HOST + "/GetBatchReport?B_Id=" + tblRoadPatrolInspection.getBId());
                                 if (!r.isEmpty()) {
                                     ret = JSONObject.parseObject(r);
@@ -171,15 +172,15 @@ public class RoadDoctorServiceImpl implements IRoadDoctorService {
     @Override
     public int push(Long id) {
         TblRoadDisease tblRoadDisease= tblRoadDiseaseMapper.selectByPrimaryKey(id);
-        tblRoadDisease.setStatus(2);
+        tblRoadDisease.setUploadStatus(1);
         return tblRoadDiseaseMapper.updateByPrimaryKeySelective(tblRoadDisease);
     }
 
     @Override
     public LoginVo login() {
         InterfaceVo interfaceVo =new InterfaceVo();
-        interfaceVo.setInterfaceUser(RoadDoctorConfig.USER);
-        interfaceVo.setInterfacePwd(RoadDoctorConfig.PASSWORD);
+        interfaceVo.setInterfaceUser(MaintainConfig.USER);
+        interfaceVo.setInterfacePwd(MaintainConfig.PASSWORD);
         String res = HttpUtil.post(RoadDoctorConfig.HOST +"/json/getAccessToken", JSON.toJSONString(interfaceVo));
         if (!StringUtils.isEmpty(res)) {
             JSONObject object = JSONObject.parseObject(res);
@@ -202,10 +203,34 @@ public class RoadDoctorServiceImpl implements IRoadDoctorService {
     }
 
     @Override
-    public String addDisease(DiseaseData diseaseData) {
-        String res = HttpUtil.post(RoadDoctorConfig.HOST +"/maintenance/addDisease", JSON.toJSONString(diseaseData));
-        diseaseData.setDistrict("松江");
+    public String addDisease(Long id,String token) {
+        DiseaseData diseaseData=new DiseaseData();
+        diseaseData.setToken(token);
+        diseaseData.setDistrict("市属");
         diseaseData.setBelongcom("上海路桥");
+        TblRoadDisease roadDisease=tblRoadDiseaseMapper.selectByPrimaryKey(id);
+
+        Example example = new Example(TblRoadDiseaseType.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("questId", roadDisease.getQuestId());
+        TblRoadDiseaseType roadDiseaseType=tblRoadDiseaseTypeMapper.selectOneByExample(example);
+
+        example =new Example(TblRoadDiseaseType.class);
+        criteria = example.createCriteria();
+        criteria.andEqualTo("crId", roadDiseaseType.getCrId());
+        TblRoadDiseaseReport roadDiseaseReport=tblRoadDiseaseReportMapper.selectOneByExample(example);
+
+        example =new Example(TblRoadDiseaseType.class);
+        criteria = example.createCriteria();
+        criteria.andEqualTo("bId", roadDiseaseReport.getCrBid());
+        TblRoadPatrolInspection roadPatrolInspection=tblRoadPatrolInspectionMapper.selectOneByExample(example);
+
+        diseaseData.setReportby("沪杭");
+        diseaseData.setFacilitytype("公路桥梁");
+        //diseaseData.setSid(roadPatrolInspection.getBRoadId());
+
+        String res = HttpUtil.post(RoadDoctorConfig.HOST +"/maintenance/addDisease", JSON.toJSONString(diseaseData));
+
         if (!StringUtils.isEmpty(res)) {
             JSONObject object = JSONObject.parseObject(res);
             if (object.getInteger("code") == 200)
