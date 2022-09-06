@@ -6,16 +6,7 @@
 
 
     <select id="selectChargeFlowList" resultType="com.pingok.datacenter.domain.gantry.model.ChargeFlowModel">
-        select charge_unit_id as chargingUnitId, count(DISTINCT vehicle_plate || SUBSTR(trans_time, 0, 16)) as flow
-        from ${table}
-        <where>
-            to_char(trans_time, 'yyyy-MM-dd') &gt;= #{startDate} and to_char(trans_time, 'yyyy-MM-dd') &lt;= #{endDate}
-        </where>
-        order by charge_unit_id
-    </select>
-
-    <select id="selectChargeFlow" resultType="com.pingok.datacenter.domain.gantry.model.ChargeFlowModel">
-        select charge_unit_id as chargingUnitId, count(DISTINCT vehicle_plate || SUBSTR(trans_time, 0, 16)) as flow
+        select charge_unit_id as chargingUnitId, to_char(trans_time, 'yyyy-MM-dd') as statisticsDate, count(DISTINCT vehicle_plate || SUBSTR(trans_time, 0, 16)) as flow
         from ${table}
         <where>
             to_char(trans_time, 'yyyy-MM-dd') &gt;= #{startDate} and to_char(trans_time, 'yyyy-MM-dd') &lt;= #{endDate}
@@ -23,6 +14,20 @@
                 AND charge_unit_id = #{chargingUnitId}
             </if>
         </where>
+        group by charge_unit_id,to_char(trans_time, 'yyyy-MM-dd')
+        order by charge_unit_id
+    </select>
+
+    <select id="selectChargeFlow" resultType="com.pingok.datacenter.domain.gantry.model.ChargeFlowModel">
+        select charge_unit_id as chargingUnitId, to_char(trans_time, 'yyyy-MM-dd') as statisticsDate, count(DISTINCT vehicle_plate || SUBSTR(trans_time, 0, 16)) as flow
+        from ${table}
+        <where>
+            to_char(trans_time, 'yyyy-MM-dd') = #{statisticsDate}
+            <if test="chargingUnitId != null">
+                AND charge_unit_id = #{chargingUnitId}
+            </if>
+        </where>
+        group by charge_unit_id,to_char(trans_time, 'yyyy-MM-dd')
         order by charge_unit_id
     </select>
 </mapper>

@@ -29,12 +29,12 @@ public class RemoteDataCenterFallbackFactory implements FallbackFactory<RemoteDa
         return new RemoteDataCenterService()
         {
             @Override
-            public R<ChargeFlowModel> selectChargeFlow(String chargingUnitId, String startDate, String endDate) {
+            public R<ChargeFlowModel> selectChargeFlow(String chargingUnitId, String statisticsDate) {
                 return null;
             }
 
             @Override
-            public R<List<ChargeFlowModel>> selectChargeFlowList(String startDate, String endDate) {
+            public R<List<ChargeFlowModel>> selectChargeFlowList(String chargingUnitId, String startDate, String endDate) {
                 return null;
             }
 
