@@ -61,7 +61,8 @@ public class GantryAlgorithmController extends BaseController {
 
     @GetMapping("/selectChargeFlow")
     public AjaxResult selectChargeFlow(@RequestParam(name = "chargingUnitId") String chargingUnitId,
-                                           @RequestParam(name = "statisticsDate") String statisticsDate){
-        return AjaxResult.success(gantryAlgorithm.selectChargeFlow(chargingUnitId, statisticsDate));
+                                       @RequestParam(name = "startDate") String startDate,
+                                       @RequestParam(name = "endDate") String endDate){
+        return AjaxResult.success(gantryAlgorithm.selectChargeFlow(chargingUnitId, startDate, endDate));
     }
 }

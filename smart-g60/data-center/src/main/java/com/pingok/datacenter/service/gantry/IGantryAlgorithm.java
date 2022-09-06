@@ -51,5 +51,5 @@ public interface IGantryAlgorithm {
      */
     List<ChargeFlowModel> selectChargeFlowList(String startDate, String endDate);
 
-    ChargeFlowModel selectChargeFlow(String chargingUnitId, String statisticsDate);
+    ChargeFlowModel selectChargeFlow(String chargingUnitId, String startDate, String endDate);
 }
