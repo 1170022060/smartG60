@@ -1,7 +1,5 @@
 package com.pingok.algorithm.predictCharge.service.impl;
 
-import com.pingok.algorithm.predictCharge.domain.ChargeIntervalDto;
-import com.pingok.algorithm.predictCharge.domain.ChargeIntervalFlowRecordDto;
 import com.pingok.algorithm.predictCharge.domain.DealResult;
 import com.pingok.algorithm.predictCharge.entity.TblAlgPredictChargeRecord;
 import com.pingok.algorithm.predictCharge.mapper.TblAlgPredictChargeRecordMapper;
@@ -63,7 +61,7 @@ public class TblAlgPredictChargeRecordServiceImpl implements TblAlgPredictCharge
             // 收费区间编号
             String chargeIntervalId = dto.getChargingUnitId();
             // 获取每个收费区间日车流量数据
-            R<List<ChargeFlowModel>> resultChargeFlowList = remoteDataCenterService.selectChargeFlowList(startDateStr, endDateStr);
+            R<List<ChargeFlowModel>> resultChargeFlowList = remoteDataCenterService.selectChargeFlowList(chargeIntervalId, startDateStr, endDateStr);
             List<ChargeFlowModel> chargeFlowModelList = resultChargeFlowList == null? null: resultChargeFlowList.getData();
             if (chargeFlowModelList == null || chargeFlowModelList.size() == 0){
                 continue;
