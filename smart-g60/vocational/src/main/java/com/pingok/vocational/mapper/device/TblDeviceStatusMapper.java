@@ -98,8 +98,7 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "handleUser.NICK_NAME AS \"handleUser\", " +
             "creatUser.NICK_NAME AS \"createUser\", " +
             "updateUser.NICK_NAME AS \"updateUser\", " +
-            "tdi.DEVICE_ID AS \"deviceId\", " +
-            "tdi.DEVICE_NAME AS \"deviceName\"  " +
+            "tdi.DEVICE_ID AS \"deviceId\" " +
             "FROM " +
             "TBL_DEVICE_FAULT tdf " +
             "JOIN TBL_DEVICE_INFO tdi ON tdi.ID = tdf.DEVICE_ID " +
