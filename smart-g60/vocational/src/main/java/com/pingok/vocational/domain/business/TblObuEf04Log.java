@@ -6,6 +6,7 @@ import com.ruoyi.common.core.annotation.Excel;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ import java.util.Map;
  * @author ruoyi
  */
 @Table(name = "TBL_OBU_EF04_LOG")
-public class TblObuEf04Log {
+public class TblObuEf04Log implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */

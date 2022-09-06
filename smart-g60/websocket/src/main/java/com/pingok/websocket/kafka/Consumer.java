@@ -54,6 +54,7 @@ public class Consumer {
             JSONObject jsonObject = JSONObject.parseObject(String.valueOf(msg));
             massageLinkApplicationService.cleanCacle();
             massageLinkApplicationService.sendMassage(JSONObject.toJSONString(jsonObject.getJSONObject("data"), SerializerFeature.MapSortField));
+            ack.acknowledge();
         }
     }
 }

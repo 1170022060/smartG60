@@ -38,9 +38,10 @@ public interface TblDeviceInfoService {
      * @param managementSide 管理方
      * @param serviceLife 使用寿命
      * @param deviceName 设备名称
+     * @param deviceType 设备类型(内部)
      * @return 设备对应信息
      */
-    List<Map> selectDeviceInfo(Long deviceCategory, Integer status, Long fieldBelong, String deviceId, Long userSide, Long managementSide, Integer serviceLife, String deviceName);
+    List<Map> selectDeviceInfo(Long deviceCategory, Integer status, Long fieldBelong, String deviceId, Long userSide, Long managementSide, Integer serviceLife, String deviceName,Integer deviceType);
 
     /**
      * 新增设备信息
@@ -95,5 +96,5 @@ public interface TblDeviceInfoService {
      *
      * @return 情报板信息
      */
-    public List<Map> selectInfoBoard(Long deviceCategory,String deviceName,String pileNo,String manufacturer,String deviceModel);
+    public List<Map> selectInfoBoard(Integer deviceType,String deviceName,String pileNo,String manufacturer,String deviceModel);
 }

@@ -249,12 +249,13 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      * 时间前推或后推分钟,其中JJ表示分钟.
      */
     public static Date getPreTime(Date date, Integer min) {
+        Date newDate = new Date();
         try {
             Long Time = (date.getTime() / 1000) + min * 60;
-            date.setTime(Time * 1000);
+            newDate.setTime(Time * 1000);
         } catch (Exception e) {
         }
-        return date;
+        return newDate;
     }
 
     /**
@@ -392,5 +393,31 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         int w = calendar.get(Calendar.DAY_OF_WEEK) - 1;
         if (w < 0) w = 0;
         return w;
+    }
+
+    public static Date getNextMillisEndWithMinute0or5(Integer min,Date baseTime) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(baseTime);
+        int minute = calendar.get(Calendar.MINUTE);
+        if (minute < (60-min)) {
+            int add;
+            if(min==5)
+            {
+                add = minute%10 < 5? 5 - minute%10 : 10 - minute%10;
+            }else
+            {
+                add = min-minute % min;
+            }
+            calendar.add(Calendar.MINUTE,add);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            return calendar.getTime();
+        }
+        // 当前时间+1小时
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date endTime = DateUtils.addHours(calendar.getTime(), 1);
+        return endTime;
     }
 }

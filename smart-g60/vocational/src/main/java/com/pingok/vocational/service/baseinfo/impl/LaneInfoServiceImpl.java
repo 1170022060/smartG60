@@ -64,6 +64,8 @@ public class LaneInfoServiceImpl implements ILaneInfoService {
     @Override
     public int updateStatus(Long id, Integer status) {
         TblLaneInfo tblLaneInfo = tblLaneInfoMapper.selectByPrimaryKey(id);
+        tblLaneInfo.setUpdateTime(new Date());
+        tblLaneInfo.setUpdateUserId(SecurityUtils.getUserId());
         tblLaneInfo.setStatus(status);
         return tblLaneInfoMapper.updateByPrimaryKeySelective(tblLaneInfo);
     }

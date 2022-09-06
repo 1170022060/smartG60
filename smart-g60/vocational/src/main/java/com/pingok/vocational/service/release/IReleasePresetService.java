@@ -28,7 +28,7 @@ public interface IReleasePresetService {
      * @param status 使用状态
      * @return 信息发布预设信息
      */
-    public List<Map> selectReleasePreset(Integer infoType,Integer status);
+    public List<Map> selectReleasePreset(Integer infoType,Integer status,String presetName);
 
     /**
      * 根据预设信息id查询适合发送的设备列表

@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @time 2022/5/6 19:58
  */
 @Data
-@Table(name = "tbl_event_passenger_flow")
+@Table(name = "t_event_passenger_flow")
 public class TblEventPassengerFlow implements Serializable {
 
     private static final long serialVersionUID = 1L;

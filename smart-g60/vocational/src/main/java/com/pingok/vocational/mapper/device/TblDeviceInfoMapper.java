@@ -1,8 +1,6 @@
 package com.pingok.vocational.mapper.device;
 
-import com.pingok.vocational.domain.device.DeviceGetInfo;
 import com.pingok.vocational.domain.device.TblDeviceInfo;
-import com.pingok.vocational.domain.emergency.TblEmergencyGroup;
 import com.ruoyi.common.core.mapper.CommonRepository;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -54,6 +52,7 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "a.DEVICE_MODEL as \"deviceModel\" ," +
             "e.DICT_LABEL as \"status\" ," +
             "a.DEVICE_PHOTO as \"devicePhoto\" ," +
+            "g.DICT_LABEL as \"deviceType\" ," +
             "to_char(a.CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\"," +
             "to_char(a.UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
             "case when a.CREATE_USER_ID is null then null else a.CREATE_USER_ID || ':' || c.USER_NAME end as \"createUserName\"," +
@@ -63,12 +62,16 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "left join  SYS_USER d on a.UPDATE_USER_ID=d.USER_ID " +
             "left join  SYS_DICT_DATA e on e.DICT_VALUE=to_char(a.STATUS) and e.DICT_TYPE='device_status' " +
             "left join TBL_PROJECT_INFO f on a.ITEM_NAME=f.ID " +
+            "left join  SYS_DICT_DATA g on g.DICT_VALUE=to_char(a.DEVICE_TYPE) and g.DICT_TYPE='device_type' " +
             "where 1=1 " +
             "<when test='deviceCategory != null'> " +
-            "and a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory}) " +
+            "and (a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory})) " +
             "</when>"+
             "<when test='status != null'> " +
             "and a.STATUS= #{status} " +
+            "</when>"+
+            "<when test='deviceType != null'> " +
+            "and a.DEVICE_TYPE= #{deviceType} " +
             "</when>"+
             "<when test='fieldBelong != null'> " +
             "and a.FIELD_BELONG= #{fieldBelong} " +
@@ -89,7 +92,7 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "and a.DEVICE_NAME like CONCAT(CONCAT('%',#{deviceName}),'%') " +
             "</when>"+
             "</script>"})
-    public List<Map> selectDeviceInfo(@Param("deviceCategory")Long deviceCategory,@Param("status") Integer status,@Param("fieldBelong") Long fieldBelong, @Param("deviceId")String deviceId,@Param("userSide") Long userSide,@Param("managementSide") Long managementSide,@Param("serviceLife") Integer serviceLife,@Param("deviceName") String deviceName);
+    public List<Map> selectDeviceInfo(@Param("deviceCategory")Long deviceCategory,@Param("status") Integer status,@Param("fieldBelong") Long fieldBelong, @Param("deviceId")String deviceId,@Param("userSide") Long userSide,@Param("managementSide") Long managementSide,@Param("serviceLife") Integer serviceLife,@Param("deviceName") String deviceName,@Param("deviceType") Integer deviceType);
 
     @Select("select * from TBL_DEVICE_INFO where DEVICE_ID= #{deviceId} and rownum = 1")
     TblDeviceInfo checkDeviceIdUnique(@Param("deviceId") String deviceId);
@@ -116,8 +119,8 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "          from TBL_RELEASE_RECORD t) c " +
             " where rn = 1) " +
             "where 1 = 1 " +
-            "<when test='deviceCategory != null'> " +
-            "and a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory}) " +
+            "<when test='deviceType != null'> " +
+            "and a.DEVICE_TYPE= #{deviceType} " +
             "</when>"+
             "<when test='deviceName != null'> " +
             "and a.DEVICE_NAME like CONCAT(CONCAT('%',#{deviceName}),'%') " +
@@ -132,5 +135,5 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "and a.DEVICE_MODEL like CONCAT(CONCAT('%',#{deviceModel}),'%') " +
             "</when>" +
             "</script>"})
-    List<Map> selectInfoBoard(@Param("deviceCategory")Long deviceCategory,@Param("deviceName") String deviceName,@Param("pileNo") String pileNo,@Param("manufacturer")String manufacturer,@Param("deviceModel")String deviceModel);
+    List<Map> selectInfoBoard(@Param("deviceType")Integer deviceType,@Param("deviceName") String deviceName,@Param("pileNo") String pileNo,@Param("manufacturer")String manufacturer,@Param("deviceModel")String deviceModel);
 }

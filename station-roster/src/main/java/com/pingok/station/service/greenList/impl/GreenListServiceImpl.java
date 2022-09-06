@@ -3,7 +3,9 @@ package com.pingok.station.service.greenList.impl;
 import com.alibaba.fastjson.JSON;
 import com.pingok.station.domain.greenList.GreenPassAppointment;
 import com.pingok.station.domain.greenList.vo.GreenVo;
+import com.pingok.station.domain.tracer.ListTracer;
 import com.pingok.station.domain.vo.VersionVo;
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.mapper.greenList.GreenPassAppointmentMapper;
 import com.pingok.station.service.greenList.IGreenListService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +34,12 @@ import static com.pingok.station.service.cardBlacklist.impl.CardBlacklistService
 @Slf4j
 @Service
 public class GreenListServiceImpl implements IGreenListService {
+
     @Autowired
     private GreenPassAppointmentMapper greenPassAppointmentMapper;
+
+    @Autowired
+    private ListTracerMapper listTracerMapper;
 
     @Value("${center.host}")
     private String host;
@@ -63,7 +69,7 @@ public class GreenListServiceImpl implements IGreenListService {
         try{
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            if(bytes.length>0)
+            if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version +"Green"+ ".zip";
                 File file=new File(greenPath);
@@ -80,6 +86,17 @@ public class GreenListServiceImpl implements IGreenListService {
                 fos.flush();
                 fos.close();
                 unzipGreen(pathName,greenPath);
+                ListTracer listTracer=new ListTracer();
+                listTracer.setListType("greenlist");
+                listTracer.setVersion(version);
+                if(listTracerMapper.selectListType("greenlist")==0)
+                {
+                    listTracerMapper.insertTracer("greenlist");
+                    listTracerMapper.updateTracer(listTracer);
+                }else if (listTracerMapper.selectListType("greenlist")==1)
+                {
+                    listTracerMapper.updateTracer(listTracer);
+                }
             }
         }
         catch (Exception e){

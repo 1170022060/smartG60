@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Date;
  * @author ruoyi
  */
 @Table(name = "TBL_OPT_WORK_INFO")
-public class TblOptWorkInfo {
+public class TblOptWorkInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */
@@ -94,6 +95,13 @@ public class TblOptWorkInfo {
     /** 状态 0：未上传 1：已上传 4：上传失败 9：超时*/
     @Excel(name = "状态",readConverterExp = "0=未上传,1=已上传,4=上传失败,9=超时")
     private Integer transStatus;
+
+    private Integer resetStatus;
+
+    private Integer issueStatus;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date issueTime;
 
     public Long getId()
     {
@@ -262,6 +270,30 @@ public class TblOptWorkInfo {
         this.transStatus = transStatus;
     }
 
+    public Integer getResetStatus() {
+        return resetStatus;
+    }
+
+    public void setResetStatus(Integer resetStatus) {
+        this.resetStatus = resetStatus;
+    }
+
+    public Integer getIssueStatus() {
+        return issueStatus;
+    }
+
+    public void setIssueStatus(Integer issueStatus) {
+        this.issueStatus = issueStatus;
+    }
+
+    public Date getIssueTime() {
+        return issueTime;
+    }
+
+    public void setIssueTime(Date issueTime) {
+        this.issueTime = issueTime;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -283,6 +315,9 @@ public class TblOptWorkInfo {
                 .append("obu",getObu())
                 .append("sptcc",getSptcc())
                 .append("transStatus",getTransStatus())
+                .append("resetStatus",getResetStatus())
+                .append("issueStatus",getIssueStatus())
+                .append("issueTime",getIssueTime())
                 .toString();
     }
 }

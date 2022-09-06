@@ -22,7 +22,6 @@ import java.util.Map;
  * @author ruoyi
  */
 @RestController
-@CrossOrigin(origins = "*",maxAge = -1)
 @RequestMapping("/deviceCategory")
 public class TblDeviceCategoryController extends BaseController {
 
@@ -48,7 +47,6 @@ public class TblDeviceCategoryController extends BaseController {
         return getDataTable(info);
     }
 
-    @RequiresPermissions("vocational:deviceCategory:tree")
     @Log(title = "设备类目-树形查询", businessType = BusinessType.OTHER)
     @GetMapping(value = "/tree")
     public AjaxResult tree()

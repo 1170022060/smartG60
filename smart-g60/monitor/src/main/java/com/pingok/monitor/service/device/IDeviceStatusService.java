@@ -1,5 +1,7 @@
 package com.pingok.monitor.service.device;
 
+import com.pingok.monitor.domain.device.vo.DeviceInfoVo;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,5 +11,15 @@ import java.util.Map;
  * @author qiumin
  */
 public interface IDeviceStatusService {
-    List<Map> list(Long deviceCategory);
+
+    /**
+     * 检查设备离线状态
+     */
+    void checkStatus();
+    List<Map> list(Long deviceCategory,String deviceName,String deviceId);
+    List<Map> selectBaseStation();
+    List<Map> selectBridgeInfo();
+    List<Map> selectGantry();
+    List<DeviceInfoVo> selectDeviceInfo(Integer deviceType);
+
 }

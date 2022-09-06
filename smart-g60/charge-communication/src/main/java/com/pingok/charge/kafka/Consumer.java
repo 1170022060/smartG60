@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.charge.domain.sectorlog.vo.SectorLogVo;
 import com.pingok.charge.service.device.IStatusService;
+import com.pingok.charge.service.opt.IOptInfoService;
+import com.pingok.charge.service.opt.IOptWorkInfoService;
 import com.pingok.charge.service.sectorlog.ISectorLogService;
 import com.pingok.charge.service.specialRecord.ISpecialRecordService;
 import com.ruoyi.common.core.kafka.KafkaGroup;
@@ -35,6 +37,10 @@ public class Consumer {
     private ISpecialRecordService iSpecialRecordService;
     @Autowired
     private ISectorLogService iSectorLogService;
+    @Autowired
+    private IOptInfoService iOptInfoService;
+    @Autowired
+    private IOptWorkInfoService iOptWorkInfoService;
 
     @KafkaListener(topics = KafkaTopIc.SECTOR_LOG, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
     public void sectorLog(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
@@ -87,7 +93,7 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_PING_STATUS, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.CHARGE_SIGNAL_PING_STATUS, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
     public void pingStatus(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -103,7 +109,7 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_SWITCH_STATUS, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.CHARGE_SIGNAL_SWITCH_STATUS, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
     public void switchStatus(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -119,7 +125,7 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_FIREWALL_STATUS, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.CHARGE_SIGNAL_FIREWALL_STATUS, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
     public void firewallStatus(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -135,4 +141,35 @@ public class Consumer {
         }
     }
 
+    @KafkaListener(topics = KafkaTopIc.OPT_INFO, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
+    public void optInfo(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        Optional message = Optional.ofNullable(record.value());
+        if (message.isPresent()) {
+            Object msg = message.get();
+            log.info("optInfo 消费了： Topic:" + topic + ",Message:" + msg);
+            JSONObject object = JSONObject.parseObject(String.valueOf(msg));
+            try {
+                iOptInfoService.optInfo(object);
+                ack.acknowledge();
+            } catch (Exception e) {
+                log.error("optInfo消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
+            }
+        }
+    }
+
+    @KafkaListener(topics = KafkaTopIc.OPT_WORK_INFO, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
+    public void optWorkInfo(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        Optional message = Optional.ofNullable(record.value());
+        if (message.isPresent()) {
+            Object msg = message.get();
+            log.info("optWorkInfo 消费了： Topic:" + topic + ",Message:" + msg);
+            JSONObject object = JSONObject.parseObject(String.valueOf(msg));
+            try {
+                iOptWorkInfoService.optWorkInfo(object);
+                ack.acknowledge();
+            } catch (Exception e) {
+                log.error("optWorkInfo消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
+            }
+        }
+    }
 }

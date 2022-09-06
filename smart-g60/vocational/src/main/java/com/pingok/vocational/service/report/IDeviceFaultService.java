@@ -1,8 +1,10 @@
 package com.pingok.vocational.service.report;
 
 import com.pingok.vocational.domain.report.TblDeviceFault;
+import com.pingok.vocational.domain.report.vo.DeviceFaultSearch;
 import com.pingok.vocational.domain.report.vo.DeviceFaultTypeVo;
 import com.pingok.vocational.domain.report.vo.ReportVo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
@@ -50,7 +52,7 @@ public interface IDeviceFaultService {
      * @param status 状态
      * @return
      */
-    List<Map> search(String faultType,Long deviceId,String faultId,String faultDescription,Integer status);
+    List<DeviceFaultSearch> search(String faultType, Long deviceId, String faultId, String faultDescription, Integer status);
 
     /**
      * 通过故障类型、起止时间统计设备故障记录
@@ -69,4 +71,5 @@ public interface IDeviceFaultService {
      * @return 设备故障记录统计
      */
     List<DeviceFaultTypeVo> selectDeviceFaultByTypeList(ReportVo reportVo);
+
 }

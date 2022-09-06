@@ -56,6 +56,8 @@ public class PolicyRecordServiceImpl implements IPolicyRecordService {
     @Override
     public int updateStatus(Long id, Integer status) {
         TblPolicyRecord tblPolicyRecord= tblPolicyRecordMapper.selectByPrimaryKey(id);
+        tblPolicyRecord.setUpdateTime(new Date());
+        tblPolicyRecord.setUpdateUserId(SecurityUtils.getUserId());
         tblPolicyRecord.setStatus(status);
         return tblPolicyRecordMapper.updateByPrimaryKeySelective(tblPolicyRecord);
     }

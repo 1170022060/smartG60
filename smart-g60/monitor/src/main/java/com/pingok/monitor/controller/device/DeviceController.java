@@ -1,5 +1,6 @@
 package com.pingok.monitor.controller.device;
 
+import com.pingok.monitor.domain.device.BaseInfo;
 import com.pingok.monitor.service.device.IDeviceStatusService;
 import com.pingok.monitor.service.deviceInfo.IDeviceInfoService;
 import com.ruoyi.common.core.web.controller.BaseController;
@@ -9,10 +10,7 @@ import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -31,12 +29,19 @@ public class DeviceController extends BaseController {
     @Autowired
     private IDeviceStatusService iDeviceStatusService;
 
+    @PutMapping
+    public AjaxResult checkStatus() {
+        iDeviceStatusService.checkStatus();
+        return AjaxResult.success();
+    }
+
+
     @RequiresPermissions("monitor:device:search")
     @Log(title = "设备监控服务", businessType = BusinessType.OTHER)
     @GetMapping("/search")
-    public TableDataInfo search(Long deviceCategory) {
+    public TableDataInfo search(Long deviceCategory, String deviceName, String deviceId) {
         startPage();
-        List<Map> list = iDeviceStatusService.list(deviceCategory);
+        List<Map> list = iDeviceStatusService.list(deviceCategory, deviceName, deviceId);
         return getDataTable(list);
     }
 
@@ -45,5 +50,19 @@ public class DeviceController extends BaseController {
     @GetMapping
     public AjaxResult findByFieldNum(@RequestParam String fieldNum) {
         return AjaxResult.success(iDeviceInfoService.findByFieldNum(fieldNum));
+    }
+
+    @Log(title = "设备监控服务", businessType = BusinessType.OTHER)
+    @GetMapping("/base")
+    public AjaxResult base() {
+        BaseInfo baseInfo =new BaseInfo();
+        baseInfo.setBaseStation(iDeviceStatusService.selectBaseStation());
+        baseInfo.setBridgeInfo(iDeviceStatusService.selectBridgeInfo());
+        baseInfo.setVmsInfo(iDeviceStatusService.selectDeviceInfo(9));
+        baseInfo.setVdInfo(iDeviceStatusService.selectDeviceInfo(11));
+        baseInfo.setCamInfo(iDeviceStatusService.selectDeviceInfo(10));
+        baseInfo.setPilotLightInfo(iDeviceStatusService.selectDeviceInfo(12));
+        baseInfo.setGantryInfo(iDeviceStatusService.selectGantry());
+        return AjaxResult.success(baseInfo);
     }
 }

@@ -3,6 +3,7 @@ package com.pingok.external.service.baidu.impl;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.external.config.BaiDuMapConfig;
 import com.pingok.external.domain.baidu.TblBaiDuMapRecord;
 import com.pingok.external.mapper.baidu.TblBaiDuMapRecordMapper;
 import com.pingok.external.service.baidu.IBaiDuMapService;
@@ -22,26 +23,6 @@ import tk.mybatis.mapper.entity.Example;
 @Service
 public class BaiDuMapServiceImpl implements IBaiDuMapService {
 
-    @Value("${baidu.host}")
-    private String host;
-
-    @Value("${baidu.ak}")
-    private String ak;
-
-    @Value("${baidu.nodeId}")
-    private Integer nodeId;
-
-    @Value("${baidu.nodeName}")
-    private String nodeName;
-
-    @Value("${baidu.provinceCode}")
-    private Integer provinceCode;
-
-    @Value("${baidu.cityCode}")
-    private Integer cityCode;
-
-    @Value("${baidu.dataType}")
-    private String dataType;
 
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
@@ -57,12 +38,12 @@ public class BaiDuMapServiceImpl implements IBaiDuMapService {
         if (tblBaiDuMapRecord == null) {
             tblBaiDuMapRecord = new TblBaiDuMapRecord();
             BeanUtils.copyNotNullProperties(baiDuMapRecord, tblBaiDuMapRecord);
-            baiDuMapRecord.setAk(ak);
-            tblBaiDuMapRecord.setNodeId(nodeId);
-            tblBaiDuMapRecord.setNodeName(nodeName);
-            tblBaiDuMapRecord.setProvinceCode(provinceCode);
-            tblBaiDuMapRecord.setCityCode(cityCode);
-            tblBaiDuMapRecord.setDataType(dataType);
+            baiDuMapRecord.setAk(BaiDuMapConfig.AK);
+            tblBaiDuMapRecord.setNodeId(BaiDuMapConfig.NODEID);
+            tblBaiDuMapRecord.setNodeName(BaiDuMapConfig.NODENAME);
+            tblBaiDuMapRecord.setProvinceCode(BaiDuMapConfig.PROVINCECODE);
+            tblBaiDuMapRecord.setCityCode(BaiDuMapConfig.CITYCODE);
+            tblBaiDuMapRecord.setDataType(BaiDuMapConfig.DATATYPE);
             tblBaiDuMapRecord.setOnlineFlag(1);
             tblBaiDuMapRecord.setRoadName("G60沪杭高速");
             tblBaiDuMapRecord.setId(remoteIdProducerService.nextId());
@@ -70,7 +51,7 @@ public class BaiDuMapServiceImpl implements IBaiDuMapService {
             tblBaiDuMapRecord.setCreateUserId(SecurityUtils.getUserId());
             tblBaiDuMapRecordMapper.insert(tblBaiDuMapRecord);
         }
-        String r = HttpUtil.post(host, JSON.toJSONString(tblBaiDuMapRecord));
+        String r = HttpUtil.post(BaiDuMapConfig.HOST, JSON.toJSONString(tblBaiDuMapRecord));
         if (!StringUtils.isEmpty(r)) {
             if (r.startsWith("{")) {
                 JSONObject ret = JSONObject.parseObject(r);
@@ -108,7 +89,7 @@ public class BaiDuMapServiceImpl implements IBaiDuMapService {
         TblBaiDuMapRecord tblBaiDuMapRecord = tblBaiDuMapRecordMapper.selectOneByExample(example);
         if (tblBaiDuMapRecord != null) {
             tblBaiDuMapRecord.setOnlineFlag(2);
-            String r = HttpUtil.post(host, JSON.toJSONString(tblBaiDuMapRecord));
+            String r = HttpUtil.post(BaiDuMapConfig.HOST, JSON.toJSONString(tblBaiDuMapRecord));
             if (!StringUtils.isEmpty(r)) {
                 if (r.startsWith("{")) {
                     JSONObject ret = JSONObject.parseObject(r);

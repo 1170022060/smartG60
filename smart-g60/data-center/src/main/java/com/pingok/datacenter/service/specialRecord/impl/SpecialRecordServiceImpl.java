@@ -13,19 +13,16 @@ import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
-import com.ruoyi.system.api.RemoteBaseStationService;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import com.ruoyi.system.api.RemoteKafkaService;
 import com.ruoyi.system.api.RemoteUserService;
 import com.ruoyi.system.api.domain.SysUser;
-import com.ruoyi.system.api.domain.kafuka.TblKafkaFailInfo;
+import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import com.ruoyi.system.api.model.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
-
-import java.util.Date;
 
 /**
  * 特情信息 服务层处理
@@ -91,10 +88,10 @@ public class SpecialRecordServiceImpl implements ISpecialRecordService {
         JSONObject data = new JSONObject();
         data.put("type", "specialRecord");
         data.put("data", param);
-        TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();
-        tblKafkaFailInfo.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-        tblKafkaFailInfo.setData(data.toJSONString());
-        remoteKafkaService.send(tblKafkaFailInfo);
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+        kafkaEnum.setData(data.toJSONString());
+        remoteKafkaService.send(kafkaEnum);
     }
 
     @Override
@@ -134,10 +131,10 @@ public class SpecialRecordServiceImpl implements ISpecialRecordService {
         param.put("Time", DateUtils.getNowDate());
         param.put("OptType", optType);
         param.put("Message", message);
-        TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();
-        tblKafkaFailInfo.setTopIc(KafkaTopIc.SPECIAL_RECORD);
-        tblKafkaFailInfo.setData(param.toJSONString());
-        R r = remoteKafkaService.send(tblKafkaFailInfo);
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.SPECIAL_RECORD);
+        kafkaEnum.setData(param.toJSONString());
+        R r = remoteKafkaService.send(kafkaEnum);
         if (r.getCode() == R.SUCCESS) {
             tblSpecialRecord.setOptType(optType);
             tblSpecialRecord.setHandleMessage(message);

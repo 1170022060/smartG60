@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Date;
  * @author ruoyi
  */
 
-public class IntransitRecordVo {
+public class IntransitRecordVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Date;
  * @author ruoyi
  */
 @Table(name = "TBL_DEVICE_FAULT")
-public class TblDeviceFault {
+public class TblDeviceFault implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */
@@ -81,6 +82,19 @@ public class TblDeviceFault {
     private Long updateUserId;
 
     private String remark;
+
+    /** 故障图片*/
+    private String faultPhoto;
+
+    /** 故障视频*/
+    private String faultVideo;
+
+    /** 故障图片数组*/
+    private String[] faultPhotoStr;
+
+    /** 故障视频数组*/
+    private String[] faultVideoStr;
+
 
     public Long getId()
     {
@@ -203,6 +217,38 @@ public class TblDeviceFault {
     }
 
     public void setUpdateUserId(Long updateUserId) { this.updateUserId = updateUserId; }
+
+    public String getFaultPhoto() {
+        return faultPhoto;
+    }
+
+    public void setFaultPhoto(String faultPhoto) {
+        this.faultPhoto = faultPhoto;
+    }
+
+    public String getFaultVideo() {
+        return faultVideo;
+    }
+
+    public void setFaultVideo(String faultVideo) {
+        this.faultVideo = faultVideo;
+    }
+
+    public String[] getFaultPhotoStr() {
+        return faultPhotoStr;
+    }
+
+    public void setFaultPhotoStr(String[] faultPhotoStr) {
+        this.faultPhotoStr = faultPhotoStr;
+    }
+
+    public String[] getFaultVideoStr() {
+        return faultVideoStr;
+    }
+
+    public void setFaultVideoStr(String[] faultVideoStr) {
+        this.faultVideoStr = faultVideoStr;
+    }
 
     @Override
     public String toString() {

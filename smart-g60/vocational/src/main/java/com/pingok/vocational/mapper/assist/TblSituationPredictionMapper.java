@@ -18,7 +18,7 @@ public interface TblSituationPredictionMapper extends CommonRepository<TblSituat
 
     @Select({"<script>" +
             "select b.DICT_LABEL as \"trafficType\" ," +
-            "to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "a.SECTION_INTERVAL as \"sectionInterval\"," +
             "c.DICT_LABEL as \"week\" ," +
             "a.FLOW as \"flow\" from TBL_SITUATION_PREDICTION a " +

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -17,7 +18,7 @@ import java.util.Date;
  * @author ruoyi
  */
 @Table(name = "TBL_DEVICE_STATUS")
-public class TblDeviceStatus {
+public class TblDeviceStatus implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */

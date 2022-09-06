@@ -2,6 +2,7 @@ package com.pingok.vocational.domain.parkingLot;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Date;
  * @version 1.0.0 2022-04-08
  */
 @Table(name = "TBL_PARKING_LOT")
-public class TblParkingLot {
+public class TblParkingLot implements Serializable {
     /** 版本号 */
     private static final long serialVersionUID = 6058064535609927228L;
 

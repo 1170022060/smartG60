@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.core.annotation.Excel;
 
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Date;
  *
  * @author ruoyi
  */
-public class TblTransSummary {
+public class TblTransSummary implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */

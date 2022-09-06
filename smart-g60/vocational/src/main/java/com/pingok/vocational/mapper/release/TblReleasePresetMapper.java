@@ -26,11 +26,11 @@ public interface TblReleasePresetMapper extends CommonRepository<TblReleasePrese
             "f.DICT_LABEL as \"pictureType\", " +
             "a.STATUS  as \"status\" " +
             "from TBL_RELEASE_PRESET a " +
-            "left join  SYS_DICT_DATA b on b.DICT_VALUE=a.INFO_TYPE and b.DICT_TYPE='release_info_type' " +
-            "left join  SYS_DICT_DATA c on c.DICT_VALUE=a.TYPEFACE and c.DICT_TYPE='release_typeface' " +
-            "left join  SYS_DICT_DATA d on d.DICT_VALUE=a.TYPEFACE_SIZE and d.DICT_TYPE='release_size' " +
-            "left join  SYS_DICT_DATA e on e.DICT_VALUE=a.COLOR and e.DICT_TYPE='release_color' " +
-            "left join  SYS_DICT_DATA f on f.DICT_VALUE=a.PICTURE_TYPE and f.DICT_TYPE='release_picture_type' " +
+            "left join  SYS_DICT_DATA b on b.DICT_VALUE=to_char(a.INFO_TYPE) and b.DICT_TYPE='release_info_type' " +
+            "left join  SYS_DICT_DATA c on c.DICT_VALUE=to_char(a.TYPEFACE) and c.DICT_TYPE='release_typeface' " +
+            "left join  SYS_DICT_DATA d on d.DICT_VALUE=to_char(a.TYPEFACE_SIZE) and d.DICT_TYPE='release_size' " +
+            "left join  SYS_DICT_DATA e on e.DICT_VALUE=to_char(a.COLOR) and e.DICT_TYPE='release_color' " +
+            "left join  SYS_DICT_DATA f on f.DICT_VALUE=to_char(a.PICTURE_TYPE) and f.DICT_TYPE='release_picture_type' " +
             "where 1=1 " +
             "<when test='infoType != null'> " +
             "and a.INFO_TYPE= #{infoType} " +
@@ -38,9 +38,12 @@ public interface TblReleasePresetMapper extends CommonRepository<TblReleasePrese
             "<when test='status != null'> " +
             "and a.STATUS= #{status} " +
             "</when>"+
+            "<when test='presetName != null'> " +
+            "and a.PRESET_NAME like CONCAT(CONCAT('%',#{presetName}),'%') " +
+            "</when>"+
             "order by a.INFO_TYPE, a.CREATE_TIME" +
             "</script>"})
-    List<Map> selectReleasePreset(@Param("infoType") Integer infoType, @Param("status") Integer status);
+    List<Map> selectReleasePreset(@Param("infoType") Integer infoType, @Param("status") Integer status ,@Param("presetName") String presetName);
 
     @Select("select " +
             "DEVICE_ID as \"deviceId\" ," +
@@ -109,13 +112,18 @@ public interface TblReleasePresetMapper extends CommonRepository<TblReleasePrese
     @Select("select * from TBL_RELEASE_PRESET where PRESET_INFO= #{presetInfo} and rownum = 1")
     TblReleasePreset checkPresetInfoUnique(@Param("presetInfo") String presetInfo);
 
-    @Select("select ID as \"id\" ," +
+    @Select({"<script>" +
+            "select ID as \"id\" ," +
             "INFO_TYPE as \"infoType\" , " +
             "PRESET_INFO as \"presetInfo\" , " +
             "TYPEFACE as \"typeface\" , " +
             "TYPEFACE_SIZE as \"typefaceSize\" , " +
             "COLOR as \"color\" , " +
             "PICTURE_TYPE as \"pictureType\" " +
-            "from TBL_RELEASE_PRESET where INFO_TYPE= #{infoType} and STATUS=1 ")
+            "from TBL_RELEASE_PRESET where STATUS=1 " +
+            "<when test='infoType != null'> " +
+            " and INFO_TYPE= #{infoType} " +
+            "</when>"+
+            "</script>"})
     List<Map> selectReleaseInfo(@Param("infoType") Integer infoType);
 }

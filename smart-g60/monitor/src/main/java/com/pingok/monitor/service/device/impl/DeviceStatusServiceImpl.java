@@ -1,8 +1,11 @@
 package com.pingok.monitor.service.device.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.pingok.monitor.mapper.device.TblDeviceStatusMapper;
+import com.pingok.monitor.domain.device.TblDeviceStatus;
+import com.pingok.monitor.domain.device.vo.DeviceInfoVo;
+import com.pingok.monitor.mapper.device.*;
 import com.pingok.monitor.service.device.IDeviceStatusService;
+import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,12 +22,30 @@ import java.util.Map;
 public class DeviceStatusServiceImpl implements IDeviceStatusService {
     @Autowired
     private TblDeviceStatusMapper tblDeviceStatusMapper;
-
-
+    @Autowired
+    private TblBaseStationInfoMapper tblBaseStationInfoMapper;
+    @Autowired
+    private TblDeviceInfoMapper tblDeviceInfoMapper;
+    @Autowired
+    private TblBridgeInfoMapper tblBridgeInfoMapper;
+    @Autowired
+    private TblGantryInfoMapper tblGantryInfoMapper;
 
     @Override
-    public List<Map> list(Long deviceCategory) {
-        List<Map> maps = tblDeviceStatusMapper.list(deviceCategory, SecurityUtils.getUserId());
+    public void checkStatus() {
+        List<TblDeviceStatus> list = tblDeviceStatusMapper.selectAll();
+        for (TblDeviceStatus s : list) {
+            if(Math.abs(DateUtils.getDatePoorMin(s.getTime(),DateUtils.getNowDate()))>=6){
+                s.setStatus(0);
+                s.setStatusDesc("设备离线");
+                tblDeviceStatusMapper.updateByPrimaryKey(s);
+            }
+        }
+    }
+
+    @Override
+    public List<Map> list(Long deviceCategory, String deviceName, String deviceId) {
+        List<Map> maps = tblDeviceStatusMapper.list(deviceCategory, deviceName, deviceId);
         for (Map m : maps) {
             if (m.get("statusDetails") != null) {
                 m.put("statusDetails", JSONObject.parseObject(String.valueOf(m.get("statusDetails"))));
@@ -32,4 +53,26 @@ public class DeviceStatusServiceImpl implements IDeviceStatusService {
         }
         return maps;
     }
+
+    @Override
+    public List<Map> selectBaseStation() {
+        return tblBaseStationInfoMapper.selectBaseStation();
+    }
+
+    @Override
+    public List<Map> selectBridgeInfo() {
+        return tblBridgeInfoMapper.selectBridgeInfo();
+    }
+
+    @Override
+    public List<Map> selectGantry() {
+        return tblGantryInfoMapper.selectGantry();
+    }
+
+    @Override
+    public List<DeviceInfoVo> selectDeviceInfo(Integer deviceType) {
+
+        return tblDeviceInfoMapper.selectDeviceInfo(deviceType);
+    }
+
 }

@@ -48,4 +48,7 @@ public interface TblDeviceCategoryMapper extends CommonRepository<TblDeviceCateg
 
     @Select("select * from TBL_DEVICE_CATEGORY where CATEGORY_NAME= #{categoryName} and PARENT_CATEGORY= #{parentCategory} and rownum = 1")
     TblDeviceCategory checkCategoryNameUnique(@Param("categoryName") String categoryName,@Param("parentCategory") Long parentCategory);
+
+    @Select("select POST_ID as \"postId\",POST_NAME as \"postName\" from SYS_POST where STATUS=0 ")
+    List<Map> selectPost();
 }

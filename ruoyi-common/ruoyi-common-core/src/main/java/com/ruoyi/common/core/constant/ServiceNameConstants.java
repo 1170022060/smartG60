@@ -7,7 +7,10 @@ package com.ruoyi.common.core.constant;
  */
 public class ServiceNameConstants
 {
-
+    /**
+     * 监控服务的serviceid
+     */
+    public static final String MONITOR_SERVICE = "monitor";
     /**
      * 基础业务服务的serviceid
      */

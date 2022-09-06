@@ -3,10 +3,12 @@ package com.pingok.station.service.cardBlacklist.impl;
 import com.alibaba.fastjson.JSON;
 import com.pingok.station.domain.cardBlacklist.BCardAppend;
 import com.pingok.station.domain.cardBlacklist.vo.BlackVo;
+import com.pingok.station.domain.tracer.ListTracer;
 import com.pingok.station.domain.vo.BlackIncrValidateVo;
 import com.pingok.station.domain.vo.RedisValueVo;
 import com.pingok.station.domain.vo.VersionAllVo;
 import com.pingok.station.domain.vo.VersionVo;
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.mapper.cardBlacklist.BCardAppendMapper;
 import com.pingok.station.service.cardBlacklist.ICardBlacklistService;
 import com.ruoyi.common.core.utils.StringUtils;
@@ -37,6 +39,9 @@ public class CardBlacklistServiceImpl implements ICardBlacklistService {
 
     @Autowired
     private BCardAppendMapper bCardAppendMapper;
+
+    @Autowired
+    private ListTracerMapper listTracerMapper;
 
     @Value("${center.host}")
     private String host;
@@ -72,7 +77,7 @@ public class CardBlacklistServiceImpl implements ICardBlacklistService {
         try {
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            if(bytes.length>0)
+            if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version + ".zip";
                 File file = new File(cardPath);
@@ -90,11 +95,27 @@ public class CardBlacklistServiceImpl implements ICardBlacklistService {
                 fos.close();
                 if (version.equals(unzip(pathName, cardPath))) {
                     unzipInside(version, cardPath);
+                    ListTracer listTracer=new ListTracer();
+                    listTracer.setListType("blacklist");
+                    listTracer.setVersion(version);
+                    if(listTracerMapper.selectListType("blacklist")==0)
+                    {
+                        listTracerMapper.insertTracer("blacklist");
+                        listTracerMapper.updateTracer(listTracer);
+                    }else if (listTracerMapper.selectListType("blacklist")==1)
+                    {
+                        listTracerMapper.updateTracer(listTracer);
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void test(String version) {
+        unzipInside(unzip("D:\\blacklist\\BASIC_CARDBLACKLISTINCREDOWN_RES_310201_20220512144151267.zip", cardPath),cardPath);
     }
 
     @Override
@@ -119,7 +140,7 @@ public class CardBlacklistServiceImpl implements ICardBlacklistService {
             try {
                 Response response = call.execute();
                 byte[] bytes = response.body().bytes();
-                if(bytes.length>0)
+                if(bytes.length>0 && response.code()==200)
                 {
                     String fileName = version +"_" +province+ ".zip";
                     File file = new File(cardPath+"_all");
@@ -271,6 +292,13 @@ public class CardBlacklistServiceImpl implements ICardBlacklistService {
             }
         }
         jedis.close();
+    }
+
+    @Override
+    public Boolean findByCardId(String cardId) {
+        Jedis jedis = new Jedis(redisHost, redisPort);
+        jedis.select(Integer.parseInt(cardId.substring(0, 2)));
+        return StringUtils.isNotBlank(jedis.get(cardId));
     }
 
     public static String backMD5(String inStr) {

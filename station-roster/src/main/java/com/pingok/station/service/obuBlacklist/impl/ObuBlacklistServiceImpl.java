@@ -3,7 +3,9 @@ package com.pingok.station.service.obuBlacklist.impl;
 import com.alibaba.fastjson.JSON;
 import com.pingok.station.domain.obuBlacklist.BObuAppend;
 import com.pingok.station.domain.obuBlacklist.vo.BlackObuVo;
+import com.pingok.station.domain.tracer.ListTracer;
 import com.pingok.station.domain.vo.*;
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.mapper.obuBlacklist.BObuAppendMapper;
 import com.pingok.station.service.obuBlacklist.IObuBlacklistService;
 import com.ruoyi.common.core.utils.StringUtils;
@@ -32,6 +34,9 @@ public class ObuBlacklistServiceImpl implements IObuBlacklistService {
 
     @Autowired
     private BObuAppendMapper bObuAppendMapper;
+
+    @Autowired
+    private ListTracerMapper listTracerMapper;
 
     @Value("${center.host}")
     private String host;
@@ -67,7 +72,7 @@ public class ObuBlacklistServiceImpl implements IObuBlacklistService {
         try{
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            if(bytes.length>0)
+            if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version + ".zip";
                 File file=new File(obuPath);
@@ -85,9 +90,19 @@ public class ObuBlacklistServiceImpl implements IObuBlacklistService {
                 fos.close();
                 if (version.equals(unzip(pathName, obuPath))) {
                     unzipInside(version, obuPath);
+                    ListTracer listTracer=new ListTracer();
+                    listTracer.setListType("obuBlacklist");
+                    listTracer.setVersion(version);
+                    if(listTracerMapper.selectListType("obuBlacklist")==0)
+                    {
+                        listTracerMapper.insertTracer("obuBlacklist");
+                        listTracerMapper.updateTracer(listTracer);
+                    }else if (listTracerMapper.selectListType("obuBlacklist")==1)
+                    {
+                        listTracerMapper.updateTracer(listTracer);
+                    }
                 }
             }
-
         }
         catch (Exception e){
             e.printStackTrace();
@@ -116,7 +131,7 @@ public class ObuBlacklistServiceImpl implements IObuBlacklistService {
             try {
                 Response response = call.execute();
                 byte[] bytes = response.body().bytes();
-                if(bytes.length>0)
+                if(bytes.length>0 && response.code()==200)
                 {
                     String fileName = version +"_" +province+ ".zip";
                     File file = new File(obuPath+"_all");
@@ -274,6 +289,13 @@ public class ObuBlacklistServiceImpl implements IObuBlacklistService {
             }
         }
         jedis.close();
+    }
+
+    @Override
+    public Boolean findByObuId(String obuId) {
+        Jedis jedis = new Jedis(redisHost, redisPort);
+        jedis.select(Integer.parseInt(obuId.substring(0, 2))+100);
+        return StringUtils.isNotBlank(jedis.get(obuId));
     }
 
     public void unzipInside(String version,String resourcePath){

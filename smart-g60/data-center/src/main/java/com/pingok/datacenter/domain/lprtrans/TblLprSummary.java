@@ -5,6 +5,7 @@ import com.ruoyi.common.core.annotation.Excel;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Date;
  * @author ruoyi
  */
 @Table(name = "TBL_LPR_SUMMARY")
-public class TblLprSummary {
+public class TblLprSummary implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -40,10 +40,10 @@ public class CustomerProblemsController extends BaseController {
     @RequiresPermissions("vocational:customerProblems:info")
     @Log(title = "客户投诉与咨询记录-分页查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/info")
-    public TableDataInfo info(@RequestParam(name = "handleUserId",required = false) Long handleUserId, @RequestParam(name = "startTime",required = false) Date startTime, @RequestParam(name = "endTime",required = false) Date endTime)
+    public TableDataInfo info(@RequestParam(name = "handleUserId",required = false) Long handleUserId, @RequestParam(name = "startTime",required = false) Date startTime, @RequestParam(name = "endTime",required = false) Date endTime,@RequestParam(name = "handleDept",required = false) Long handleDept)
     {
         startPage();
-        List<Map> info = customerProblemsService.selectCustomerProblems(handleUserId, startTime, endTime);
+        List<Map> info = customerProblemsService.selectCustomerProblems(handleUserId, startTime, endTime ,handleDept);
         return getDataTable(info);
     }
 

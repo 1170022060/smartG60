@@ -15,7 +15,7 @@ import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.system.api.RemoteKafkaService;
-import com.ruoyi.system.api.domain.kafuka.TblKafkaFailInfo;
+import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -59,16 +59,16 @@ public class EventController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("event:eventControl:getEventVideo")
-    @Log(title = "事件管理", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("event:eventControl:getEventVideo")
+//    @Log(title = "事件管理", businessType = BusinessType.OTHER)
     @GetMapping("/getEventVideo")
     public AjaxResult getEventVideo(@RequestParam Long eventId) {
         JSONObject data = new JSONObject();
         data.put("ubiLogicId", eventId);
-        TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();
-        tblKafkaFailInfo.setTopIc(KafkaTopIc.UPDATE_EVENT_VIDEO);
-        tblKafkaFailInfo.setData(data.toJSONString());
-        remoteKafkaService.send(tblKafkaFailInfo);
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.UPDATE_EVENT_VIDEO);
+        kafkaEnum.setData(data.toJSONString());
+        remoteKafkaService.send(kafkaEnum);
         return AjaxResult.success("请求成功，后台正在下载，请等待");
     }
 
@@ -87,8 +87,8 @@ public class EventController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("event:eventControl:report")
-    @Log(title = "事件管理", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("event:eventControl:report")
+//    @Log(title = "事件管理", businessType = BusinessType.OTHER)
     @GetMapping("/report")
     public AjaxResult report(@RequestParam Long id) {
         return AjaxResult.success(iEventService.report(id));
@@ -143,8 +143,8 @@ public class EventController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("event:eventControl:list")
-    @Log(title = "事件管理", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("event:eventControl:list")
+//    @Log(title = "事件管理", businessType = BusinessType.OTHER)
     @GetMapping("/list")
     public TableDataInfo list(Integer status) {
         startPage();
@@ -153,10 +153,21 @@ public class EventController extends BaseController {
     }
 
     /**
+     * 获取未确认、已确认事件列表
+     *
+     * @return
+     */
+
+//    @Log(title = "事件管理", businessType = BusinessType.OTHER)
+    @GetMapping("/event")
+    public AjaxResult event() {
+        return AjaxResult.success(iEventService.event());
+    }
+
+    /**
      * 根据id查询
      */
-    @RequiresPermissions("event:eventControl:findById")
-    @Log(title = "事件管理", businessType = BusinessType.OTHER)
+//    @Log(title = "事件管理", businessType = BusinessType.OTHER)
     @GetMapping
     public AjaxResult findById(@RequestParam Long id) {
         return AjaxResult.success(iEventService.findById(id));

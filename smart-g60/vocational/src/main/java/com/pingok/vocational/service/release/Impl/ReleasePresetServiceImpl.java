@@ -33,8 +33,8 @@ public class ReleasePresetServiceImpl implements IReleasePresetService {
     }
 
     @Override
-    public List<Map> selectReleasePreset(Integer infoType,Integer status) {
-        return tblReleasePresetMapper.selectReleasePreset(infoType, status);
+    public List<Map> selectReleasePreset(Integer infoType,Integer status,String presetName) {
+        return tblReleasePresetMapper.selectReleasePreset(infoType, status,presetName);
     }
 
     @Override
@@ -75,6 +75,8 @@ public class ReleasePresetServiceImpl implements IReleasePresetService {
     @Override
     public int updateStatus(Long id, Integer status) {
         TblReleasePreset tblReleasePreset= tblReleasePresetMapper.selectByPrimaryKey(id);
+        tblReleasePreset.setUpdateTime(new Date());
+        tblReleasePreset.setUpdateUserId(SecurityUtils.getUserId());
         tblReleasePreset.setStatus(status);
         return tblReleasePresetMapper.updateByPrimaryKeySelective(tblReleasePreset);
     }

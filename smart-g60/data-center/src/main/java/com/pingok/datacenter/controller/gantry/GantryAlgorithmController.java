@@ -48,4 +48,20 @@ public class GantryAlgorithmController extends BaseController {
         List<Map> info = gantryAlgorithm.selectGantryAlgorithmPassRecord(gantryId,startTime,endTime);
         return AjaxResult.success(info);
     }
+
+    @GetMapping("/chargeInfo")
+    public AjaxResult chargeInfo(@RequestParam(name = "chargingUnitId",required = false) String chargingUnitId) {
+        return AjaxResult.success(gantryAlgorithm.selectChargeInfo(chargingUnitId));
+    }
+
+    @GetMapping("/selectChargeFlowList")
+    public AjaxResult selectChargeFlowList(@RequestParam(name = "startDate") String startDate, @RequestParam(name = "endDate") String endDate){
+        return AjaxResult.success(gantryAlgorithm.selectChargeFlowList(startDate, endDate));
+    }
+
+    @GetMapping("/selectChargeFlow")
+    public AjaxResult selectChargeFlow(@RequestParam(name = "chargingUnitId") String chargingUnitId,
+                                           @RequestParam(name = "statisticsDate") String statisticsDate){
+        return AjaxResult.success(gantryAlgorithm.selectChargeFlow(chargingUnitId, statisticsDate));
+    }
 }

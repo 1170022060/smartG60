@@ -23,6 +23,7 @@
         <module>charge-communication</module>
         <module>algorithm</module>
         <module>external-system-communication</module>
+        <module>radar-camera-mix</module>
     </modules>
 
     <artifactId>smart-g60</artifactId>

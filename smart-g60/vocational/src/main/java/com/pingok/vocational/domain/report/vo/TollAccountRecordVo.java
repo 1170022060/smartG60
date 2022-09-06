@@ -5,6 +5,7 @@ import com.ruoyi.common.core.annotation.Excel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Date;
  * @author ruoyi
  */
 
-public class TollAccountRecordVo {
+public class TollAccountRecordVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /**

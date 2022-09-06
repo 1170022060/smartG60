@@ -4,7 +4,9 @@ package com.pingok.station.service.bulkList.impl;
 import com.alibaba.fastjson.JSON;
 import com.pingok.station.domain.bulkList.BulkRecord;
 import com.pingok.station.domain.bulkList.vo.BulkVo;
+import com.pingok.station.domain.tracer.ListTracer;
 import com.pingok.station.domain.vo.VersionVo;
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.mapper.bulkList.BulkRecordMapper;
 import com.pingok.station.service.bulkList.IBulkListService;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
@@ -27,8 +29,12 @@ import static com.pingok.station.service.cardBlacklist.impl.CardBlacklistService
 @Slf4j
 @Service
 public class BulkListServiceImpl implements IBulkListService {
+
     @Autowired
     private BulkRecordMapper bulkRecordMapper;
+
+    @Autowired
+    private ListTracerMapper listTracerMapper;
 
     @Value("${center.host}")
     private String host;
@@ -58,7 +64,7 @@ public class BulkListServiceImpl implements IBulkListService {
         try{
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            if(bytes.length>0)
+            if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version + ".zip";
                 File file=new File(bulkPath);
@@ -75,6 +81,17 @@ public class BulkListServiceImpl implements IBulkListService {
                 fos.flush();
                 fos.close();
                 unzipBulk(pathName,bulkPath);
+                ListTracer listTracer=new ListTracer();
+                listTracer.setListType("bulklist");
+                listTracer.setVersion(version);
+                if(listTracerMapper.selectListType("bulklist")==0)
+                {
+                    listTracerMapper.insertTracer("bulklist");
+                    listTracerMapper.updateTracer(listTracer);
+                }else if (listTracerMapper.selectListType("bulklist")==1)
+                {
+                    listTracerMapper.updateTracer(listTracer);
+                }
             }
         }
         catch (Exception e){

@@ -2,7 +2,6 @@ package com.pingok.external.controller.bridge;
 
 import com.pingok.external.service.bridge.IBridgeService;
 import com.pingok.external.service.bridge.IBridgeTemperatureService;
-import com.pingok.external.service.gps.IGpsService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;

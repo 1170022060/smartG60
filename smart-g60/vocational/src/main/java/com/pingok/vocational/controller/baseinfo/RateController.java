@@ -2,6 +2,7 @@ package com.pingok.vocational.controller.baseinfo;
 
 import com.pingok.vocational.service.baseinfo.IRateService;
 import com.ruoyi.common.core.web.controller.BaseController;
+import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
@@ -30,10 +31,11 @@ public class RateController extends BaseController {
     @RequiresPermissions("vocational:rate:info")
     @Log(title = "最小费率-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
-    public TableDataInfo info(@RequestParam(name = "stationName",required = false) String stationName,@RequestParam(name = "exStationId",required = false) String exStationId, @RequestParam(name = "vehClass",required = false) Integer vehClass)
+    public TableDataInfo info(@RequestParam(name = "inStationName",required = false) String inStationName,@RequestParam(name = "exStationId",required = false) String exStationId
+            , @RequestParam(name = "vehClass",required = false) Integer vehClass,@RequestParam(name = "versionNum",required = false) String versionNum)
     {
         startPage();
-        List<Map> info = rateService.selectRate(stationName,exStationId,vehClass);
+        List<Map> info = rateService.selectRate(inStationName,exStationId,vehClass,versionNum);
         return getDataTable(info);
     }
 
@@ -44,6 +46,28 @@ public class RateController extends BaseController {
     {
         startPage();
         List<Map> info = rateService.selectRateProv(rateId);
+        return getDataTable(info);
+    }
+
+    @GetMapping(value = "/inStation")
+    public AjaxResult inStation() {
+        List<Map> info = rateService.selectInStation();
+        return AjaxResult.success(info);
+    }
+
+    @GetMapping(value = "/versionNum")
+    public AjaxResult versionNum() {
+        List<Map> info = rateService.selectVersionNum();
+        return AjaxResult.success(info);
+    }
+
+    @RequiresPermissions("vocational:rate:contrast")
+    @Log(title = "最小费率-历史版本对比", businessType = BusinessType.OTHER)
+    @GetMapping("/contrast")
+    public TableDataInfo contrast(@RequestParam(name = "enId",required = false) String enId,@RequestParam(name = "exId",required = false) String exId, @RequestParam(name = "vehClass",required = false) Integer vehClass)
+    {
+        startPage();
+        List<Map> info = rateService.selectRateContrast(enId,exId,vehClass);
         return getDataTable(info);
     }
 }

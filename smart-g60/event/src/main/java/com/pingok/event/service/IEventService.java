@@ -89,4 +89,6 @@ public interface IEventService {
      * @return
      */
     int update(TblEventRecord tblEventRecord);
+
+    List<TblEventRecord> event();
 }

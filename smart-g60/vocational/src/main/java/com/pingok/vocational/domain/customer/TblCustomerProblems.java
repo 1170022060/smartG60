@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Date;
  * @author ruoyi
  */
 @Table(name = "TBL_CUSTOMER_PROBLEMS")
-public class TblCustomerProblems {
+public class TblCustomerProblems implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */
@@ -48,6 +49,10 @@ public class TblCustomerProblems {
     /** 投诉人联系方式*/
     @Excel(name = "投诉人联系方式")
     private String contactInfo;
+
+    /** 处理部门 */
+    @Excel(name = "处理部门")
+    private Long handleDept;
 
     /** 处理时间 */
     @Excel(name = "处理时间")
@@ -134,6 +139,14 @@ public class TblCustomerProblems {
 
     public void setContactInfo(String contactInfo) {
         this.contactInfo = contactInfo;
+    }
+
+    public Long getHandleDept() {
+        return handleDept;
+    }
+
+    public void setHandleDept(Long handleDept) {
+        this.handleDept = handleDept;
     }
 
     public Date getHandleTime() {

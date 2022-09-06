@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.DateUtil;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Date;
  *
  * @author ruoyi
  */
-public class TblEnTrans{
+public class TblEnTrans implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

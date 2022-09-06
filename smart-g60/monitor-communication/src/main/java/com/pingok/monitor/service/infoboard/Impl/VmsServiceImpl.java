@@ -1,24 +1,31 @@
 package com.pingok.monitor.service.infoboard.Impl;
 
-import com.pingok.monitor.domain.infoboard.MbsAttribute;
-import com.pingok.monitor.domain.infoboard.VmsPublishInfo;
-import com.pingok.monitor.domain.infoboard.VmsPublishScreenInfo;
-import com.pingok.monitor.service.infoboard.IModbusService;
-import com.pingok.monitor.service.infoboard.ISocketService;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.pingok.monitor.domain.common.MbsAttribute;
+import com.pingok.monitor.domain.device.TblDeviceInfo;
+import com.pingok.monitor.domain.infoboard.VmsInfo;
+import com.pingok.monitor.mapper.device.TblDeviceInfoMapper;
+import com.pingok.monitor.service.common.IModbusService;
+import com.pingok.monitor.service.common.ISocketService;
 import com.pingok.monitor.service.infoboard.IVmsService;
 import com.pingok.monitor.utils.config.InfoBoardConfig;
-import com.ruoyi.common.core.constant.Constants;
 import com.ruoyi.common.core.utils.StringUtils;
+import com.serotonin.modbus4j.code.DataType;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.util.List;
 
 /**
  * @author
  * @time 2022/5/2 8:59
  */
+@Slf4j
 @Service
 public class VmsServiceImpl implements IVmsService {
 
@@ -26,17 +33,27 @@ public class VmsServiceImpl implements IVmsService {
     private IModbusService iModbusService;
     @Autowired
     private ISocketService iSocketService;
+    @Autowired
+    private TblDeviceInfoMapper tblDeviceInfoMapper;
 
     @Override
-    public int publish(VmsPublishInfo vmsPublishInfo) {
+    public int publish(String pubInfo) {
         int retCode = 200;
-
-        switch (vmsPublishInfo.getProtocol())
-        {
-            case InfoBoardConfig.SWARCO_CMS_V1d5: publishSwarcoCMSV1d5(vmsPublishInfo); break;
-            case InfoBoardConfig.SWARCO_FMS_V1d5: publishSwarcoFMSV1d5(vmsPublishInfo); break;
-            case InfoBoardConfig.DONGHAI_F: publishDonghaiF(vmsPublishInfo); break;
-            default: retCode = 500; break;
+        JSONObject jo = JSONObject.parseObject(pubInfo);
+        String deviceIds = jo.getString("deviceId");
+        JSONArray infoList = jo.getJSONArray("info");
+        List<VmsInfo> vmsInfoList = JSON.parseArray(JSONObject.toJSONString(infoList), VmsInfo.class);
+        String br = "|";
+        String[] ids = deviceIds.split(br);
+        for(int i = 0 ; i < ids.length; ++i) {
+            TblDeviceInfo dev = tblDeviceInfoMapper.findByDeviceId(ids[i]);
+            switch (dev.getProtocol())
+            {
+                case InfoBoardConfig.SWARCO_CMS_V1d5: retCode = publishSwarcoCMSV1d5(dev, vmsInfoList); break;
+                case InfoBoardConfig.SWARCO_FMS_V1d5: publishSwarcoFMSV1d5(dev, vmsInfoList); break;
+                case InfoBoardConfig.DONGHAI_F: publishDonghaiF(dev, vmsInfoList); break;
+                default: retCode = 500; break;
+            }
         }
 
         return retCode;
@@ -54,60 +71,65 @@ public class VmsServiceImpl implements IVmsService {
     D2 B9 BC E4 D0 D0 B3 B5 20 B1 DC C3 E2 C6 A3 C0 CD BC DD CA BB 文字2
     00 后缀
      */
-    private int publishSwarcoCMSV1d5(VmsPublishInfo vmsPublishInfo) {
+    private int publishSwarcoCMSV1d5(TblDeviceInfo dev, List<VmsInfo> vmsInfoList) {
         int retCode = 200;
         String protocol = InfoBoardConfig.SWARCO_CMS_V1d5;
-        String newline = "<br>";
+        String newline = "|";
 
         //组织报文
         StringBuilder sb = new StringBuilder();
         sb.append(" 01 01 FF FF FF FF FF FF ");
-        for (VmsPublishScreenInfo screenInfo : vmsPublishInfo.getInfo()) {
-            //出字方式、间隔（默认：立即显示 + 5s）
-            sb.append(" 1b 37 31 ");
-            sb.append(" 1b 38 30 30 35 ");
-            //字体、字体大小
-            sb.append(" 1b 39 " + fontCvt(protocol, screenInfo.getFont()));
-            sb.append(" 1b 3a " + fontSizeCvt(protocol, screenInfo.getFontSize()));
-            //图片、图片类型（默认32点阵）
-            if(screenInfo.getPicId() != null) {
-                sb.append( " 1b 36 "+ picCvt(protocol, screenInfo.getPicId()) + " 31 ");
-            }
-            //字符颜色
-            sb.append(" 1b " + fontColorCvt(protocol, screenInfo.getFontColor()));
-            //水平垂直对齐（默认居中）
-            sb.append(" 1b 34 1b 31 ");
-            //文字
-            //解析<br>换行，替换为 1B 0A
-            int sPos = 0, ePos = 0;
-            String line = "";
-            String text = screenInfo.getText();
-            ePos = text.indexOf(newline, sPos);
-            try {
-                while (ePos != -1) {
-                    line = text.substring(sPos, ePos);
+        for (VmsInfo info : vmsInfoList) {
+            //图片、图片类型（默认64点阵 全屏）
+            if(info.getPicId() != null && !info.getPicId().equals("0")) {
+                sb.append( " 1b 36 "+ picCvt(protocol, info.getPicId()) + " 33 ");
+            } else {
+                //出字方式、间隔（默认：立即显示 + 5s）
+                sb.append(" 1b 37 31 ");
+                sb.append(" 1b 38 30 30 35 ");
+                //字体、字体大小
+                sb.append(" 1b 39 " + fontCvt(protocol, info.getFont()));
+                sb.append(" 1b 3a " + fontSizeCvt(protocol, info.getFontSize()));
+                //字符颜色
+                sb.append(" 1b " + fontColorCvt(protocol, info.getFontColor()));
+                //水平垂直对齐（默认居中）
+                sb.append(" 1b 34 1b 31 ");
+                //文字
+                //解析<br>换行，替换为 1B 0A
+                int sPos = 0, ePos = 0;
+                String line = "";
+                String text = StringUtils.isEmpty(info.getText()) ? "" : info.getText();
+                ePos = text.indexOf(newline, sPos);
+                try {
+                    while (ePos != -1) {
+                        line = text.substring(sPos, ePos);
+                        sb.append(StringUtils.bytesToHexStr(line.getBytes("gb2312")));
+                        sb.append(" 1B 0A ");
+                        sPos = ePos + newline.length();
+                        ePos = text.indexOf(newline, sPos);
+                    }
+                    line = text.substring(sPos);
                     sb.append(StringUtils.bytesToHexStr(line.getBytes("gb2312")));
-                    sb.append(" 1B 0A ");
-                    sPos = ePos + newline.length();
+                }catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
                 }
-                line = text.substring(sPos, ePos);
-                sb.append(StringUtils.bytesToHexStr(line.getBytes("gb2312")));
-            }catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
             }
             //换屏
             sb.append("1B0D");
         }
         //去掉最后的 1B0D
         sb.delete(sb.length()-4, sb.length());
-        sb.append("00");
+        sb.append(" 0000000000000000000000000000000000000000000000000000000000000000000000 ");
 
         //发送（modbus tcp）
-        MbsAttribute mbsAttribute = new MbsAttribute(vmsPublishInfo.getDeviceIp(),
-                vmsPublishInfo.getSlaveId(), 3, 1500, Constants.ValueType.INT);
+        MbsAttribute mbsAttribute = new MbsAttribute(dev.getDeviceIp(), dev.getPort(), dev.getSlaveId(),
+                3, Integer.valueOf("1500", 16), 0, DataType.TWO_BYTE_INT_SIGNED);
         try {
-            iModbusService.write(mbsAttribute, sb.toString());
+            byte[] bytes = StringUtils.hexStrToBytes(sb.toString());
+            short[] shorts = StringUtils.bytesToShorts(bytes);
+            iModbusService.writeMultiRegister(mbsAttribute, shorts);
         } catch (Exception e) {
+            log.error("情报板发布失败：" + e.getMessage());
             retCode = 500;
         }
 
@@ -116,51 +138,53 @@ public class VmsServiceImpl implements IVmsService {
 
     /* 世博翰 FMS
      */
-    private int publishSwarcoFMSV1d5(VmsPublishInfo vmsPublishInfo) {
+    private int publishSwarcoFMSV1d5(TblDeviceInfo dev, List<VmsInfo> vmsInfoList) {
         int retCode = 200;
         String protocol = InfoBoardConfig.SWARCO_FMS_V1d5;
 
-        String fmsValue = fmsCvt(protocol, vmsPublishInfo.getFmsValue());
-
-        //发送（modbus tcp）
-        MbsAttribute mbsAttribute = new MbsAttribute(vmsPublishInfo.getDeviceIp(),
-                vmsPublishInfo.getSlaveId(), 3, 1801, Constants.ValueType.SHORT);
-        try {
-            iModbusService.write(mbsAttribute, fmsValue);
-        } catch (Exception e) {
-            retCode = 500;
+        for(VmsInfo info : vmsInfoList) {
+            String fmsValue = fmsCvt(protocol, info.getPicId());
+            //发送（modbus tcp）
+            MbsAttribute mbsAttribute = new MbsAttribute(dev.getDeviceIp(), dev.getPort(), dev.getSlaveId(),
+                    3, Integer.valueOf("1801", 16), 0, DataType.TWO_BYTE_INT_SIGNED);
+            try {
+                iModbusService.writeRegister(mbsAttribute, Short.parseShort(fmsValue));
+            } catch (Exception e) {
+                retCode = 500;
+            }
         }
+
         return retCode;
     }
 
     /* 东海 F板
      */
-    private int publishDonghaiF(VmsPublishInfo vmsPublishInfo) {
+    private int publishDonghaiF(TblDeviceInfo dev, List<VmsInfo> vmsInfoList) {
         int retCode = 200;
         String protocol = InfoBoardConfig.DONGHAI_F;
-        String newline = "<br>";
-        Socket socket = iSocketService.clientSocket(vmsPublishInfo.getDeviceIp(), 8888);
+        String newline = "|";
+        Socket socket = iSocketService.clientSocket(dev.getDeviceIp(), dev.getPort());
 
         //组织报文
         StringBuilder sb = new StringBuilder();
         sb.append("F2")
-            .append(vmsPublishInfo.getSlaveId())
+            .append(dev.getSlaveId())
             .append("F5020105")
-            .append(DonghaiCheckNum(vmsPublishInfo.getSlaveId() + "F5020105"))
+            .append(DonghaiCheckNum(dev.getSlaveId() + "F5020105"))
             .append("F0");
         retCode = iSocketService.writeAndResult(StringUtils.hexStrTobytes(sb.toString()), socket);
         if(retCode == 200) {
-            for (VmsPublishScreenInfo screenInfo : vmsPublishInfo.getInfo()) {
+            for (VmsInfo info : vmsInfoList) {
                 sb.setLength(0);
                 sb.append("F2")
-                    .append(vmsPublishInfo.getSlaveId())
+                    .append(dev.getSlaveId())
                     .append("F5")
-                    .append(fontSizeCvt(protocol, screenInfo.getFontSize()));
+                    .append(fontSizeCvt(protocol, info.getFontSize()));
                 //解析<br>换行，替换为 0a（换行）（0d回车？）
                 int sPos = 0, ePos = 0;
                 float len = 0.0f, lenAfter = 0.0f;
                 String line = "", gb2312 = "";
-                String text = screenInfo.getText();
+                String text = info.getText();
                 ePos = text.indexOf(newline, sPos);
                 StringBuilder sb2 = new StringBuilder();
                 try {
@@ -196,8 +220,8 @@ public class VmsServiceImpl implements IVmsService {
                     e.printStackTrace();
                 }
 
-                sb.append(DonghaiCheckNum(vmsPublishInfo.getSlaveId() + "F5"
-                        + fontSizeCvt(protocol, screenInfo.getFontSize())
+                sb.append(DonghaiCheckNum(dev.getSlaveId() + "F5"
+                        + fontSizeCvt(protocol, info.getFontSize())
                         + sb2.toString())
                 ).append("F0");
 
@@ -205,9 +229,9 @@ public class VmsServiceImpl implements IVmsService {
             }
             sb.setLength(0);
             sb.append("F2")
-                .append(vmsPublishInfo.getSlaveId())
+                .append(dev.getSlaveId())
                 .append("F5020405")
-                .append(DonghaiCheckNum(vmsPublishInfo.getSlaveId() + "F5020405"))
+                .append(DonghaiCheckNum(dev.getSlaveId() + "F5020405"))
                 .append("F0");
             iSocketService.writeAndResult(StringUtils.hexStrTobytes(sb.toString()), socket);
         }
@@ -267,18 +291,27 @@ public class VmsServiceImpl implements IVmsService {
 
     // 图片转换，[in]=图片名，[return]=图片编码
     private String picCvt(String protocol, String picId) {
-        String picCode = "30"; //无图片
+        String picCode = ""; //无图片
         if(protocol == InfoBoardConfig.SWARCO_CMS_V1d5) {
+            if(StringUtils.isEmpty(picId)) return "30";
             switch (picId) { //+0x30
-                case "40": picCode = "52"; break;
-                case "50": picCode = "6b"; break;
-                case "60": picCode = "53"; break;
-                case "70": picCode = "6e"; break;
-                case "80": picCode = "54"; break;
-                case "90": picCode = "6f"; break;
-                case "100": picCode = "55"; break;
-                case "110": picCode = "70"; break;
-                case "120": picCode = "56"; break;
+                case "0": picCode = "30"; break; //无图片
+                case "D7": picCode = "67"; break; //20
+                case "D8": picCode = "68"; break; //25
+                case "D9": picCode = "69"; break; //30
+                case "C1": picCode = "51"; break; //35
+                case "C2": picCode = "52"; break; //40
+                case "DA": picCode = "6A"; break; //45
+                case "DB": picCode = "6B"; break; //50
+                case "DC": picCode = "6C"; break; //55
+                case "C3": picCode = "53"; break; //60
+                case "DD": picCode = "6D"; break; //65
+                case "DE": picCode = "6E"; break; //70
+                case "C4": picCode = "54"; break; //80
+                case "DF": picCode = "6F"; break; //90
+                case "C5": picCode = "55"; break; //100
+                case "E0": picCode = "70"; break; //110
+                case "C6": picCode = "56"; break; //120
             }
         }
         return picCode;

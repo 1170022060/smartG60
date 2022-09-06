@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -22,7 +23,7 @@ import java.util.Date;
  * @author ruoyi
  */
 @Table(name = "TBL_DEVICE_INFO")
-public class TblDeviceInfo {
+public class TblDeviceInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */
@@ -187,9 +188,15 @@ public class TblDeviceInfo {
     @Excel(name = "备注")
     private String remark;
 
+    /** 安装位置*/
+    @Excel(name = "安装位置")
+    private String fixPosition;
+
     private BigDecimal width;
 
     private BigDecimal high;
+
+    private Integer deviceType;
 
     public Long getId()
     {
@@ -510,6 +517,15 @@ public class TblDeviceInfo {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    public String getFixPosition() {
+        return fixPosition;
+    }
+
+    public void setFixPosition(String fixPosition) {
+        this.fixPosition = fixPosition;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -552,6 +568,7 @@ public class TblDeviceInfo {
                 .append("isControl",getIsControl())
                 .append("protocol",getProtocol())
                 .append("remark", getRemark())
+                .append("fixPosition", getFixPosition())
                 .toString();
     }
 
@@ -569,5 +586,13 @@ public class TblDeviceInfo {
 
     public void setHigh(BigDecimal high) {
         this.high = high;
+    }
+
+    public Integer getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(Integer deviceType) {
+        this.deviceType = deviceType;
     }
 }

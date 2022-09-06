@@ -48,9 +48,9 @@ public class TblDeviceInfoServiceImpl implements TblDeviceInfoService {
     }
 
     @Override
-    public List<Map> selectDeviceInfo(Long deviceCategory, Integer status, Long fieldBelong, String deviceId, Long userSide, Long managementSide, Integer serviceLife, String deviceName) {
+    public List<Map> selectDeviceInfo(Long deviceCategory, Integer status, Long fieldBelong, String deviceId, Long userSide, Long managementSide, Integer serviceLife, String deviceName ,Integer deviceType) {
 
-        return tblDeviceInfoMapper.selectDeviceInfo( deviceCategory, status,  fieldBelong,  deviceId,  userSide,  managementSide,serviceLife,deviceName);
+        return tblDeviceInfoMapper.selectDeviceInfo( deviceCategory, status,  fieldBelong,  deviceId,  userSide,  managementSide,serviceLife,deviceName,deviceType);
     }
 
     @Override
@@ -92,6 +92,8 @@ public class TblDeviceInfoServiceImpl implements TblDeviceInfoService {
     @Override
     public int updateStatus(Long id, Integer status) {
         TblDeviceInfo tblDeviceInfo= tblDeviceInfoMapper.selectByPrimaryKey(id);
+        tblDeviceInfo.setUpdateTime(new Date());
+        tblDeviceInfo.setUpdateUserId(SecurityUtils.getUserId());
         tblDeviceInfo.setStatus(status);
         return tblDeviceInfoMapper.updateByPrimaryKeySelective(tblDeviceInfo);
     }
@@ -124,7 +126,7 @@ public class TblDeviceInfoServiceImpl implements TblDeviceInfoService {
     }
 
     @Override
-    public List<Map> selectInfoBoard(Long deviceCategory, String deviceName, String pileNo, String manufacturer, String deviceModel) {
-        return tblDeviceInfoMapper.selectInfoBoard(deviceCategory, deviceName, pileNo, manufacturer, deviceModel);
+    public List<Map> selectInfoBoard(Integer deviceType, String deviceName, String pileNo, String manufacturer, String deviceModel) {
+        return tblDeviceInfoMapper.selectInfoBoard(deviceType, deviceName, pileNo, manufacturer, deviceModel);
     }
 }
