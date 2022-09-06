@@ -6,9 +6,13 @@ import com.pingok.algorithm.predictCharge.domain.DealResult;
 import com.pingok.algorithm.predictCharge.entity.TblAlgPredictChargeRecord;
 import com.pingok.algorithm.predictCharge.mapper.TblAlgPredictChargeRecordMapper;
 import com.pingok.algorithm.predictCharge.service.TblAlgPredictChargeRecordService;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.system.api.RemoteDataCenterService;
 import com.ruoyi.system.api.RemoteIdProducerService;
+import com.ruoyi.system.api.domain.gantry.ChargeFlowModel;
+import com.ruoyi.system.api.domain.gantry.TblGantryChargeInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -29,17 +33,20 @@ public class TblAlgPredictChargeRecordServiceImpl implements TblAlgPredictCharge
     @Resource
     private TblAlgPredictChargeRecordMapper predictChargeRecordMapper;
 
+    @Resource
+    private RemoteDataCenterService remoteDataCenterService;
+
     /**
      * 定时计算当天的收费预测记录
      */
     @Override
     public void autoCurrentDayPredictCharge() throws Exception {
         // 查询G60所有收费区间
-        List<ChargeIntervalDto> chargeIntervalDtoList = new ArrayList<>();
-        ChargeIntervalDto chargeIntervalDto = new ChargeIntervalDto();
-        chargeIntervalDto.setChargeIntervalId("110");
-        chargeIntervalDto.setConstant(3.73921256);
-        chargeIntervalDtoList.add(chargeIntervalDto);
+        R<List<TblGantryChargeInfo>> resultChargeInfo = remoteDataCenterService.chargeInfo(null);
+        List<TblGantryChargeInfo> gantryChargeInfoList = resultChargeInfo == null? null: resultChargeInfo.getData();
+        if (gantryChargeInfoList == null || gantryChargeInfoList.size() == 0){
+            return;
+        }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();
         // 结束日期
@@ -51,35 +58,24 @@ public class TblAlgPredictChargeRecordServiceImpl implements TblAlgPredictCharge
         String currentDate = DateUtils.getDate();
         Date currentTime = new Date();
         TblAlgPredictChargeRecord tempPredictChargeRecord = null;
-        for (ChargeIntervalDto dto : chargeIntervalDtoList) {
+        for (TblGantryChargeInfo dto : gantryChargeInfoList) {
             tempPredictChargeRecord = new TblAlgPredictChargeRecord();
             // 收费区间编号
-            String chargeIntervalId = dto.getChargeIntervalId();
+            String chargeIntervalId = dto.getChargingUnitId();
             // 获取每个收费区间日车流量数据
-            List<ChargeIntervalFlowRecordDto> chargeIntervalFlowRecordDtoList = new ArrayList<>();
-            ChargeIntervalFlowRecordDto chargeIntervalFlowRecordDto = new ChargeIntervalFlowRecordDto();
-            chargeIntervalFlowRecordDto.setChargeIntervalId("110");
-            chargeIntervalFlowRecordDto.setStatisticsDate("2022-06-07");
-            chargeIntervalFlowRecordDto.setFlow(2650L);
-            chargeIntervalFlowRecordDtoList.add(chargeIntervalFlowRecordDto);
-            chargeIntervalFlowRecordDto = new ChargeIntervalFlowRecordDto();
-            chargeIntervalFlowRecordDto.setChargeIntervalId("110");
-            chargeIntervalFlowRecordDto.setStatisticsDate("2022-06-13");
-            chargeIntervalFlowRecordDto.setFlow(2450L);
-            chargeIntervalFlowRecordDtoList.add(chargeIntervalFlowRecordDto);
-            chargeIntervalFlowRecordDto = new ChargeIntervalFlowRecordDto();
-            chargeIntervalFlowRecordDto.setChargeIntervalId("110");
-            chargeIntervalFlowRecordDto.setStatisticsDate("2022-08-29");
-            chargeIntervalFlowRecordDto.setFlow(2750L);
-            chargeIntervalFlowRecordDtoList.add(chargeIntervalFlowRecordDto);
+            R<List<ChargeFlowModel>> resultChargeFlowList = remoteDataCenterService.selectChargeFlowList(startDateStr, endDateStr);
+            List<ChargeFlowModel> chargeFlowModelList = resultChargeFlowList == null? null: resultChargeFlowList.getData();
+            if (chargeFlowModelList == null || chargeFlowModelList.size() == 0){
+                continue;
+            }
             // 数据处理
-            DealResult dealResult = dealChargeIntervalFlowRecord(chargeIntervalFlowRecordDtoList);
+            DealResult dealResult = dealChargeIntervalFlowRecord(chargeFlowModelList);
             // 数据异常，跳过
-            if (dealResult == null || dealResult.getWeeks() == 0 || dealResult.getFirstFlow() == 0 || dealResult.getLastFlow() == 0){
+            if (dealResult.getWeeks() == 0 || dealResult.getFirstFlow() == 0 || dealResult.getLastFlow() == 0){
                 continue;
             }
             // 指数
-            int exponent = (dealResult.getWeeks() - 1) == 0? 1: (dealResult.getWeeks() - 1);
+            int exponent = (dealResult.getWeeks() - 1) <= 0? 1: (dealResult.getWeeks() - 1);
             // 计算平均增长率
             double Gi = Math.pow(((double)dealResult.getFirstFlow() / (double)dealResult.getLastFlow()), (double) 1 / exponent) - 1;
             // 计算该收费区间的日车流量预测
@@ -103,23 +99,23 @@ public class TblAlgPredictChargeRecordServiceImpl implements TblAlgPredictCharge
 
     /**
      * 数据预处理
-     * @param chargeIntervalFlowRecordDtoList
+     * @param chargeFlowModelList
      */
-    private DealResult dealChargeIntervalFlowRecord(List<ChargeIntervalFlowRecordDto> chargeIntervalFlowRecordDtoList) throws Exception{
-        int count = chargeIntervalFlowRecordDtoList.size();
+    private DealResult dealChargeIntervalFlowRecord(List<ChargeFlowModel> chargeFlowModelList) throws Exception{
+        int count = chargeFlowModelList.size();
         if (count == 0){
             return new DealResult();
         }
         DealResult dealResult = new DealResult();
         // 当前星期
         int currentWeek = DateUtils.getWeekOfDate(DateUtils.getDate());
-        List<ChargeIntervalFlowRecordDto> sameWeekList = new ArrayList<>();
+        List<ChargeFlowModel> sameWeekList = new ArrayList<>();
         // 相同星期数据
-        for (ChargeIntervalFlowRecordDto chargeIntervalFlowRecordDto : chargeIntervalFlowRecordDtoList) {
+        for (ChargeFlowModel chargeFlowModel : chargeFlowModelList) {
             // 获取相同星期数据
-            int recordWeek = DateUtils.getWeekOfDate(chargeIntervalFlowRecordDto.getStatisticsDate());
+            int recordWeek = DateUtils.getWeekOfDate(chargeFlowModel.getStatisticsDate());
             if (currentWeek == recordWeek){
-                sameWeekList.add(chargeIntervalFlowRecordDto);
+                sameWeekList.add(chargeFlowModel);
             }
         }
         if (sameWeekList.size() == 0){
@@ -128,15 +124,15 @@ public class TblAlgPredictChargeRecordServiceImpl implements TblAlgPredictCharge
         dealResult.setWeeks(sameWeekList.size());
         // 计算日车流量平均值
         double average = 0.0;
-        OptionalDouble optionalDouble = chargeIntervalFlowRecordDtoList.stream().mapToDouble(ChargeIntervalFlowRecordDto::getFlow).average();
+        OptionalDouble optionalDouble = chargeFlowModelList.stream().mapToDouble(ChargeFlowModel::getFlow).average();
         if (optionalDouble.isPresent()){
             average = optionalDouble.getAsDouble();
         }
         double squareSum = 0.0;
         // 计算流量平方和
-        for (ChargeIntervalFlowRecordDto chargeIntervalFlowRecordDto : chargeIntervalFlowRecordDtoList) {
+        for (ChargeFlowModel chargeFlowModel : chargeFlowModelList) {
             // 日车流量与平均流量差的平方和
-            squareSum = squareSum + Math.pow(chargeIntervalFlowRecordDto.getFlow() - average, 2);
+            squareSum = squareSum + Math.pow(chargeFlowModel.getFlow() - average, 2);
         }
         // 计算σ
         double σ = Math.pow((squareSum / count), (double) 1/2);
@@ -146,14 +142,14 @@ public class TblAlgPredictChargeRecordServiceImpl implements TblAlgPredictCharge
         if (sameWeekList.get(0).getFlow() >= min && sameWeekList.get(0).getFlow() <= max){
             dealResult.setFirstFlow(sameWeekList.get(0).getFlow());
         } else {
-            ChargeIntervalFlowRecordDto retFirst = fillChargeIntervalFlowRecord(sameWeekList.get(0), min, max);
+            ChargeFlowModel retFirst = fillChargeIntervalFlowRecord(sameWeekList.get(0), min, max);
             dealResult.setFirstFlow(retFirst.getFlow());
         }
         // 最后一个星期
         if (sameWeekList.get((sameWeekList.size() - 1)).getFlow() >= min && sameWeekList.get((sameWeekList.size() - 1)).getFlow() <= max){
             dealResult.setLastFlow(sameWeekList.get((sameWeekList.size() - 1)).getFlow());
         } else {
-            ChargeIntervalFlowRecordDto retLast = fillChargeIntervalFlowRecord(sameWeekList.get((sameWeekList.size() - 1)), min, max);
+            ChargeFlowModel retLast = fillChargeIntervalFlowRecord(sameWeekList.get((sameWeekList.size() - 1)), min, max);
             dealResult.setLastFlow(retLast.getFlow());
         }
         return dealResult;
@@ -161,13 +157,13 @@ public class TblAlgPredictChargeRecordServiceImpl implements TblAlgPredictCharge
 
     /**
      * 数据递补
-     * @param chargeIntervalFlowRecordDto
+     * @param chargeFlowModel
      * @param min
      * @param max
      */
-    private ChargeIntervalFlowRecordDto fillChargeIntervalFlowRecord(ChargeIntervalFlowRecordDto chargeIntervalFlowRecordDto, double min, double max) throws Exception{
+    private ChargeFlowModel fillChargeIntervalFlowRecord(ChargeFlowModel chargeFlowModel, double min, double max) throws Exception{
         // 统计日期
-        String statisticsDate = chargeIntervalFlowRecordDto.getStatisticsDate();
+        String statisticsDate = chargeFlowModel.getStatisticsDate();
         // 计算前7天的日期
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();
@@ -175,21 +171,22 @@ public class TblAlgPredictChargeRecordServiceImpl implements TblAlgPredictCharge
         calendar.add(Calendar.DATE, -7);
         String lastStatisticsDate = sdf.format(calendar.getTime());
         // 与当天日期相差42天，直接返回
-        chargeIntervalFlowRecordDto.setStatisticsDate(lastStatisticsDate);
+        chargeFlowModel.setStatisticsDate(lastStatisticsDate);
         int diffSeconds = DateUtils.calSeconds(lastStatisticsDate + " 00:00:00", DateUtils.getDate() + " 00:00:00");
         int diffDays = diffSeconds / (60 * 60 * 24);
         // 超过5周，直接返回
         if (diffDays > 35){
-            return new ChargeIntervalFlowRecordDto();
+            return new ChargeFlowModel();
         }
         // 根据收费区间、统计日期查询车流量数据
-        ChargeIntervalFlowRecordDto result = new ChargeIntervalFlowRecordDto();
+        R<ChargeFlowModel> resultChargeFlowModel = remoteDataCenterService.selectChargeFlow(chargeFlowModel.getChargingUnitId(), chargeFlowModel.getStatisticsDate());
+        ChargeFlowModel result = resultChargeFlowModel == null? new ChargeFlowModel(): resultChargeFlowModel.getData();
         if (result != null && result.getFlow() >= min && result.getFlow() <= max){
             return result;
         } else {
-            fillChargeIntervalFlowRecord(result, min, max);
+            fillChargeIntervalFlowRecord(chargeFlowModel, min, max);
         }
-        return new ChargeIntervalFlowRecordDto();
+        return new ChargeFlowModel();
     }
 
     /**
