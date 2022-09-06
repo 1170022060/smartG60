@@ -59,9 +59,9 @@ public class GantryAlgorithmImpl implements IGantryAlgorithm {
     }
 
     @Override
-    public List<ChargeFlowModel> selectChargeFlowList(String statisticsDate) {
-        String table = String.format("TBL_GANTRY_TRANSACTION_%s", statisticsDate.substring(0, 4));
-        return tblGantryChargeInfoMapper.selectChargeFlowList(table, statisticsDate);
+    public List<ChargeFlowModel> selectChargeFlowList(String startDate, String endDate) {
+        String table = String.format("TBL_GANTRY_TRANSACTION_%s", startDate.substring(0, 4));
+        return tblGantryChargeInfoMapper.selectChargeFlowList(table, startDate, endDate);
     }
 
     @Override

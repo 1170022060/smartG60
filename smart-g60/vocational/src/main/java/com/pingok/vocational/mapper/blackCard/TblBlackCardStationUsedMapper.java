@@ -12,7 +12,8 @@ public interface TblBlackCardStationUsedMapper extends CommonRepository<TblBlack
             "select a.ID as \"id\" , a.STATION_HEX as \"stationHex\", " +
             "c.STATION_NAME as \"stationName\", " +
             "a.OBU_VERSION as \"obuVersion\", " +
-            "a.APPLY_TIME as \"applyTime\", a.CREATE_TIME as \"createTime\", " +
+            "to_char(a.APPLY_TIME,'yyyy-mm-dd hh24:mi:ss') as \"applyTime\", " +
+            "to_char(a.CREATE_TIME,'yyyy-mm-dd hh24:mi:ss') as \"createTime\", " +
             "a.CPC_VERSION as \"cpcVersion\" " +
             "from TBL_BLACK_CARD_STATION_USED a " +
             "left join TBL_BASE_STATION_INFO c on a.STATION_HEX = c.STATION_HEX " +

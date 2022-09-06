@@ -23,19 +23,20 @@ public class BlackCardControl extends BaseController {
     @Autowired
     private IBlackCardService iBlackCardService;
 
-//    @RequiresPermissions("vocational:baseInfo:statusList")
+//    @RequiresPermissions("vocational:baseInfo:blackCard")
     @Log(title = "状态名单分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/list")
-    public TableDataInfo getNowList(@RequestParam(name = "mediaId",required = false) String mediaId,
+    public TableDataInfo getNowList(@RequestParam(name = "mediaType") Integer mediaType,
+                                    @RequestParam(name = "mediaId",required = false) String mediaId,
                                     @RequestParam(name = "startDate",required = false) Date startDate,
                                     @RequestParam(name = "endDate",required = false) Date endDate) {
 
         startPage();
-        List<Map> info = iBlackCardService.getNowList(mediaId, startDate, endDate);
+        List<Map> info = iBlackCardService.getNowList(mediaId, mediaType, startDate, endDate);
         return getDataTable(info);
     }
 
-//    @RequiresPermissions("vocational:baseInfo:statusList")
+//    @RequiresPermissions("vocational:baseInfo:blackCard")
     @Log(title = "收费站在用名单版本分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/stationUsed")
     public TableDataInfo getStationUsedList() {
@@ -44,12 +45,13 @@ public class BlackCardControl extends BaseController {
         return getDataTable(info);
     }
 
-//    @RequiresPermissions("vocational:baseInfo:statusList")
+//    @RequiresPermissions("vocational:baseInfo:blackCard")
     @Log(title = "历史版本分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/record")
-    public TableDataInfo getRecordList(@RequestParam(name = "mediaId",required = false) String mediaId) {
+    public TableDataInfo getRecordList(@RequestParam(name = "mediaType") Integer mediaType,
+                                       @RequestParam(name = "mediaId") String mediaId) {
         startPage();
-        List<Map> info = iBlackCardService.getRecordList(mediaId);
+        List<Map> info = iBlackCardService.getRecordList(mediaId, mediaType);
         return getDataTable(info);
     }
 }
