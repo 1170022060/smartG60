@@ -28,6 +28,10 @@ public class RemoteAlgorithmFallbackFactory implements FallbackFactory<RemoteAlg
             public R<String> saveAlgTrafficStatus(Integer direction) {
                 return null;
             }
+            @Override
+            public R<String> autoCurrentDayPredictCharge() {
+                return null;
+            }
         };
     }
 }
