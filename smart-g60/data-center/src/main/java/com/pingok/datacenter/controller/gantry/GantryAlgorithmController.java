@@ -50,13 +50,18 @@ public class GantryAlgorithmController extends BaseController {
     }
 
     @GetMapping("/chargeInfo")
-    public AjaxResult chargeInfo(@RequestParam(name = "chargeId",required = false) String chargeId) {
-        return AjaxResult.success(gantryAlgorithm.selectChargeInfo(chargeId));
+    public AjaxResult chargeInfo(@RequestParam(name = "chargingUnitId",required = false) String chargingUnitId) {
+        return AjaxResult.success(gantryAlgorithm.selectChargeInfo(chargingUnitId));
     }
 
-    @GetMapping("/chargeFlow")
-    public AjaxResult chargeFlow(@RequestParam(name = "chargeId",required = false) String chargeId,
-                                 @RequestParam(name = "time") String time){
-        return AjaxResult.success(gantryAlgorithm.selectChargeFlow(chargeId, time));
+    @GetMapping("/selectChargeFlowList")
+    public AjaxResult selectChargeFlowList(@RequestParam(name = "statisticsDate") String statisticsDate){
+        return AjaxResult.success(gantryAlgorithm.selectChargeFlowList(statisticsDate));
+    }
+
+    @GetMapping("/selectChargeFlow")
+    public AjaxResult selectChargeFlow(@RequestParam(name = "chargingUnitId") String chargingUnitId,
+                                           @RequestParam(name = "statisticsDate") String statisticsDate){
+        return AjaxResult.success(gantryAlgorithm.selectChargeFlow(chargingUnitId, statisticsDate));
     }
 }

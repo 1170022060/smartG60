@@ -7,6 +7,7 @@ package com.pingok.datacenter.service.gantry;
  */
 
 import com.pingok.datacenter.domain.gantry.TblGantryChargeInfo;
+import com.pingok.datacenter.domain.gantry.model.ChargeFlowModel;
 
 import java.util.List;
 import java.util.Map;
@@ -43,10 +44,12 @@ public interface IGantryAlgorithm {
     /**
      * 获取收费单元信息（含理论日收益预测因子）
      */
-    List<TblGantryChargeInfo> selectChargeInfo(String chargeId);
+    List<TblGantryChargeInfo> selectChargeInfo(String chargingUnitId);
 
     /**
      * 获取收费单元流量
      */
-    List<Map> selectChargeFlow(String chargeId, String time);
+    List<ChargeFlowModel> selectChargeFlowList(String statisticsDate);
+
+    ChargeFlowModel selectChargeFlow(String chargingUnitId, String statisticsDate);
 }
