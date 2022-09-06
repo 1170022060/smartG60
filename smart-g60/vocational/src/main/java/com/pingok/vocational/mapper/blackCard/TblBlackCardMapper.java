@@ -15,17 +15,17 @@ public interface TblBlackCardMapper extends CommonRepository<TblBlackCard> {
             "select a.ID as \"id\", a.MEDIA_ID as \"mediaId\" ," +
             "a.ISSUER_ID as \"issuerId\" , a.INSERT_TIME as \"insertTime\"," +
             "c.DICT_LABEL as \"type\"," +
-            "case when a.STATUS = 1 then '进入状态名单' when a.STATUS = 2 then '解除状态名单' as \"status\"," +
+            "case when a.STATUS = 1 then '进入状态名单' when a.STATUS = 2 then '解除状态名单' end as \"status\"," +
             "a.CREATION_TIME as \"creationTime\" , a.VERSION as \"version\"," +
-            "a.UPDATE_TIME as \"updateTime\" , a.MEDIA_TYPE as \"mediaType\" " +
+            "to_char(a.UPDATE_TIME,'yyyy-mm-dd hh24:mi:ss') as \"updateTime\" , a.MEDIA_TYPE as \"mediaType\" " +
             "from TBL_BLACK_CARD a " +
-            "<when test='a.MEDIA_TYPE == 1'> " +
+            "<when test='mediaType == 1'> " +
             "left join SYS_DICT_DATA c on c.DICT_VALUE = to_char(a.TYPE) and c.DICT_TYPE = 'blackcard_obu_type' " +
             "</when>" +
-            "<when test='a.MEDIA_TYPE == 2'> " +
+            "<when test='mediaType == 2'> " +
             "left join SYS_DICT_DATA c on c.DICT_VALUE = to_char(a.TYPE) and c.DICT_TYPE = 'blackcard_cpc_type' " +
             "</when>" +
-            "where 1=1 " +
+            "where 1=1 and a.MEDIA_TYPE = #{mediaType}" +
             "<when test='mediaId != null'> " +
             " and a.MEDIA_ID like CONCAT(#{mediaId}, '%') " +
             "</when>"+
@@ -36,5 +36,5 @@ public interface TblBlackCardMapper extends CommonRepository<TblBlackCard> {
             " and a.WORK_DATE &lt;= #{endDate} " +
             "</when>" +
             "</script>"})
-    List<Map> selectList(@Param("mediaId") String mediaId,  @Param("startDate") Date startDate, @Param("endDate")  Date endDate);
+    List<Map> selectList(@Param("mediaId") String mediaId, @Param("mediaType") Integer mediaType, @Param("startDate") Date startDate, @Param("endDate")  Date endDate);
 }

@@ -24,8 +24,8 @@ public class BlackCardServiceImpl implements IBlackCardService {
     private TblBlackCardStationUsedMapper tblBlackCardStationUsedMapper;
 
     @Override
-    public List<Map> getNowList(String mediaId, Date startDate, Date endDate) {
-        return tblBlackCardMapper.selectList(mediaId, startDate, endDate);
+    public List<Map> getNowList(String mediaId, Integer mediaType, Date startDate, Date endDate) {
+        return tblBlackCardMapper.selectList(mediaId, mediaType, startDate, endDate);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
     }
 
     @Override
-    public List<Map> getRecordList(String mediaId) {
-        return tblBlackCardLogMapper.selectByMediaId(mediaId);
+    public List<Map> getRecordList(String mediaId, Integer mediaType) {
+        return tblBlackCardLogMapper.selectByMedia(mediaId, mediaType);
     }
 }

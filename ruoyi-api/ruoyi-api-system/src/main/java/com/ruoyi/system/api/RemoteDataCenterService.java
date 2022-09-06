@@ -36,7 +36,7 @@ public interface RemoteDataCenterService {
      * @return
      */
     @GetMapping("/gantryAlgorithm/selectChargeFlowList")
-    R<List<ChargeFlowModel>> selectChargeFlowList(@RequestParam(name = "statisticsDate") String statisticsDate);
+    R<List<ChargeFlowModel>> selectChargeFlowList(@RequestParam(name = "startDate") String startDate, @RequestParam(name = "endDate") String endDate);
 
     /**
      * 获取收费区间数据
