@@ -12,7 +12,7 @@ public interface IRoadDoctorService {
     List<Map> list(String questName, String pZhuangHao, Date startTime, Date endTime);
     int push(Long id);
     LoginVo login();
-    String addDisease(DiseaseData diseaseData);
+    String addDisease(Long id,String token);
     void addDiseaseProc(StatusVo statusVo);
     void addDiseasePic(PictureVo pictureVo);
     List<String> getBackOrderNums(String token);
