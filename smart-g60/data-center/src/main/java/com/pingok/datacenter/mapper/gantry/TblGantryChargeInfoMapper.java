@@ -23,5 +23,5 @@ public interface TblGantryChargeInfoMapper extends CommonRepository<TblGantryCha
 //            "ORDER BY CHARGE_UNIT_ID")
     List<ChargeFlowModel> selectChargeFlowList(@Param("table") String table, @Param("chargingUnitId") String chargingUnitId, @Param("startDate") String startDate, @Param("endDate") String endDate);
 
-    ChargeFlowModel selectChargeFlow(@Param("table") String table, @Param("chargingUnitId") String chargingUnitId, @Param("startDate") String statisticsDate);
+    ChargeFlowModel selectChargeFlow(@Param("table") String table, @Param("chargingUnitId") String chargingUnitId, @Param("statisticsDate") String statisticsDate);
 }
