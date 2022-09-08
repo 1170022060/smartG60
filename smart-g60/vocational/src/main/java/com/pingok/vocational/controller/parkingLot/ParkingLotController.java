@@ -7,10 +7,9 @@ import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 /**
  * 停车场管理
@@ -40,5 +39,12 @@ public class ParkingLotController extends BaseController {
         }
         iParkingLotService.updateSurplus(id, surplus);
         return AjaxResult.success();
+    }
+
+    @RequiresPermissions("vocational:parkingLot:statistics")
+    @Log(title = "停车场管理", businessType = BusinessType.OTHER)
+    @GetMapping("/statistics")
+    public AjaxResult driveAway(@RequestParam(name = "date") Date date) {
+        return AjaxResult.success(iParkingLotService.trafficChange(date));
     }
 }

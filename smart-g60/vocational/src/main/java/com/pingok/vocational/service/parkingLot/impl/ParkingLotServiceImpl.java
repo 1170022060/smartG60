@@ -1,8 +1,10 @@
 package com.pingok.vocational.service.parkingLot.impl;
 
 import com.pingok.vocational.domain.parkingLot.TblParkingLot;
+import com.pingok.vocational.domain.parkingLot.TblParkingStatistics;
 import com.pingok.vocational.domain.parkingLot.TblParkingVehicleInfo;
 import com.pingok.vocational.mapper.parkingLot.TblParkingLotMapper;
+import com.pingok.vocational.mapper.parkingLot.TblParkingStatisticsMapper;
 import com.pingok.vocational.mapper.parkingLot.TblParkingVehicleInfoMapper;
 import com.pingok.vocational.service.parkingLot.IParkingLotService;
 import com.ruoyi.common.core.exception.ServiceException;
@@ -11,6 +13,9 @@ import com.ruoyi.common.security.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.nio.MappedByteBuffer;
+import java.util.*;
 
 /**
  * 停车场 服务层实现层
@@ -24,6 +29,8 @@ public class ParkingLotServiceImpl implements IParkingLotService {
     private TblParkingVehicleInfoMapper tblParkingVehicleInfoMapper;
     @Autowired
     private TblParkingLotMapper tblParkingLotMapper;
+    @Autowired
+    private TblParkingStatisticsMapper tblParkingStatisticsMapper;
 
     @Override
     @Transactional
@@ -51,5 +58,18 @@ public class ParkingLotServiceImpl implements IParkingLotService {
         tblParkingLot.setUpdateTime(DateUtils.getNowDate());
         tblParkingLot.setUpdateUserId(SecurityUtils.getUserId());
         tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
+    }
+
+    @Override
+    public List<Map> trafficChange(Date date) {
+        List<Map> trafficList=tblParkingStatisticsMapper.trafficSum(date);
+        for(Map map :trafficList)
+        {
+            Map trafficCurrent=tblParkingVehicleInfoMapper.trafficCurrent(Long.parseLong(map.get("fieldId").toString()));
+            map.putAll(trafficCurrent);
+            List<Map> trafficStatistics=tblParkingStatisticsMapper.trafficStatistics(date,Long.parseLong(map.get("fieldId").toString()),Integer.parseInt(map.get("vehType").toString()));
+            map.put("hourStatistics",trafficStatistics);
+        }
+        return trafficList;
     }
 }
