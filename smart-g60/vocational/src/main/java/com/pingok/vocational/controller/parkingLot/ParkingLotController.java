@@ -42,7 +42,7 @@ public class ParkingLotController extends BaseController {
     }
 
     @RequiresPermissions("vocational:parkingLot:statistics")
-    @Log(title = "停车场管理", businessType = BusinessType.OTHER)
+    @Log(title = "车流统计", businessType = BusinessType.OTHER)
     @GetMapping("/statistics")
     public AjaxResult driveAway(@RequestParam(name = "date") Date date) {
         return AjaxResult.success(iParkingLotService.trafficChange(date));
