@@ -1,11 +1,15 @@
-package com.pingok.external.domain.roadDoctor.vo;
+package com.pingok.external.domain.maintain.vo;
 
 import lombok.Data;
+
+import javax.persistence.Table;
+
 /**
  * 病害数据格式
  */
 @Data
-public class DiseaseData {
+public class DataVo {
+
     private String token;
     private String district;
     private String belongcom;

@@ -1,4 +1,4 @@
-package com.pingok.external.domain.roadDoctor.vo;
+package com.pingok.external.domain.maintain.vo;
 
 import lombok.Data;
 
