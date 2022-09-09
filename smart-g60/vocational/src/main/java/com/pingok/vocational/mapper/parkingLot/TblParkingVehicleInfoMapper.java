@@ -29,4 +29,15 @@ public interface TblParkingVehicleInfoMapper extends CommonRepository<TblParking
             "pvi.EX_TIME IS NULL  " +
             "AND tpl.FIELD_ID = #{fieldId})")
     Map trafficCurrent(@Param("fieldId") Long fieldId);
+
+
+    @Select("SELECT " +
+            "count(1) AS \"overtime\" " +
+            "FROM " +
+            "TBL_PARKING_VEHICLE_INFO " +
+            "WHERE " +
+            "EX_TIME IS NULL  " +
+            "AND CEIL( ( SYSDATE - EN_TIME ) * 24 ) > (SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.timeout') " +
+            "AND PARKING_ID = #{parkingId}")
+    Map overtime(@Param("parkingId") Long parkingId);
 }

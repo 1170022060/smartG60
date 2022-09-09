@@ -25,4 +25,5 @@ public interface IParkingLotService {
     void updateSurplus(Long id, Integer surplus);
 
     List<Map> trafficChange(Date date);
+    List<Map> parkingPlace();
 }

@@ -1,7 +1,6 @@
 package com.pingok.vocational.service.parkingLot.impl;
 
 import com.pingok.vocational.domain.parkingLot.TblParkingLot;
-import com.pingok.vocational.domain.parkingLot.TblParkingStatistics;
 import com.pingok.vocational.domain.parkingLot.TblParkingVehicleInfo;
 import com.pingok.vocational.mapper.parkingLot.TblParkingLotMapper;
 import com.pingok.vocational.mapper.parkingLot.TblParkingStatisticsMapper;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.MappedByteBuffer;
 import java.util.*;
 
 /**
@@ -71,5 +69,16 @@ public class ParkingLotServiceImpl implements IParkingLotService {
             map.put("hourStatistics",trafficStatistics);
         }
         return trafficList;
+    }
+
+    @Override
+    public List<Map> parkingPlace() {
+        List<Map> parkingPlaceList=tblParkingLotMapper.parkingPlace();
+        for(Map map :parkingPlaceList)
+        {
+            Map overtime=tblParkingVehicleInfoMapper.overtime(Long.parseLong(map.get("id").toString()));
+            map.putAll(overtime);
+        }
+        return parkingPlaceList;
     }
 }
