@@ -65,8 +65,19 @@ public class ParkingLotServiceImpl implements IParkingLotService {
         {
             Map trafficCurrent=tblParkingVehicleInfoMapper.trafficCurrent(Long.parseLong(map.get("fieldId").toString()));
             map.putAll(trafficCurrent);
-            List<Map> trafficStatistics=tblParkingStatisticsMapper.trafficStatistics(date,Long.parseLong(map.get("fieldId").toString()),Integer.parseInt(map.get("vehType").toString()));
-            map.put("hourStatistics",trafficStatistics);
+
+            Map map1=new HashMap<>();
+            Integer trafficDailyBus=tblParkingStatisticsMapper.trafficDaily(date,Long.parseLong(map.get("fieldId").toString()),1);
+            Integer trafficDailyTruck=tblParkingStatisticsMapper.trafficDaily(date,Long.parseLong(map.get("fieldId").toString()),2);
+            map1.put("dailyCumulativeBus",trafficDailyBus);
+            map1.put("dailyCumulativeTruck",trafficDailyTruck);
+
+            map.putAll(map1);
+
+            List<Map> trafficStatisticsBus=tblParkingStatisticsMapper.trafficStatistics(date,Long.parseLong(map.get("fieldId").toString()),1);
+            map.put("hourStatisticsBus",trafficStatisticsBus);
+            List<Map> trafficStatisticsTruck=tblParkingStatisticsMapper.trafficStatistics(date,Long.parseLong(map.get("fieldId").toString()),2);
+            map.put("hourStatisticsTruck",trafficStatisticsTruck);
         }
         return trafficList;
     }
