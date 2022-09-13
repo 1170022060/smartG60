@@ -4,6 +4,7 @@ import com.ruoyi.common.core.constant.ServiceNameConstants;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.api.factory.RemoteAlgorithmFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -28,4 +29,11 @@ public interface RemoteAlgorithmService {
      */
     @PostMapping("/algTrafficStatus/")
     R<String> saveAlgTrafficStatus(@RequestParam("direction") Integer direction);
+
+    /**
+     * 保存收费预测记录
+     * @return
+     */
+    @GetMapping("/predictCharge/autoCurrentDayPredictCharge")
+    R<String> autoCurrentDayPredictCharge();
 }

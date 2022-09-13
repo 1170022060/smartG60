@@ -305,6 +305,96 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         }
     }
 
+    /**
+     *
+     * @param c
+     * @return
+     */
+    public static int calculate(Calendar c){
+        int dayForWeek;
+        if(c.get(Calendar.DAY_OF_WEEK) == 1){
+            dayForWeek = 7;
+        }else{
+            dayForWeek = c.get(Calendar.DAY_OF_WEEK) - 1;}
+        return dayForWeek;
+    }
+    public static Calendar From(Calendar c){
+        switch(calculate(c)){
+            case 1:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)-0);
+                break;
+            case 2:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)-1);
+                break;
+            case 3:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)-2);
+                break;
+            case 4:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)-3);
+                break;
+            case 5:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)-4);
+                break;
+            case 6:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)-5);
+                break;
+            case 7:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)-6);
+        }
+        return c;
+    }
+    public static Calendar To(Calendar c){
+        switch(calculate(c)){
+            case 1:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)+6);
+                break;
+            case 2:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)+5);
+                break;
+            case 3:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)+4);
+                break;
+            case 4:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)+3);
+                break;
+            case 5:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)+2);
+                break;
+            case 6:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)+1);
+                break;
+            case 7:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)+0);
+        }
+        return c;
+    }
+
+    /**
+     * 根据两日期获取期间周数
+     * @param startDate
+     * @param endDate
+     * @return
+     * @throws ParseException
+     */
+    public static Long getWeeks(String startDate,String endDate) throws ParseException {
+        Calendar c1 = Calendar.getInstance();
+        Calendar c2 = Calendar.getInstance();
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+
+        c1.setTime(sdf.parse(startDate));
+        c2.setTime(sdf.parse(endDate));
+
+        long cc1=From(c1).getTimeInMillis()/(1000*3600*24);
+        long cc2=To(c2).getTimeInMillis()/(1000*3600*24);
+
+        return (cc2-cc1+1)/7;
+    }
+
+    /**
+     * 根据日期获取星期
+     * @param date
+     * @return
+     * @throws ParseException
+     */
+    public static int getWeekOfDate(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        try {
+            calendar.setTime(sdf.parse(date));
+        } catch (ParseException e) {
+            return 0;
+        }
+        int w = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        if (w < 0) w = 0;
+        return w;
+    }
+
     public static Date getNextMillisEndWithMinute0or5(Integer min,Date baseTime) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(baseTime);

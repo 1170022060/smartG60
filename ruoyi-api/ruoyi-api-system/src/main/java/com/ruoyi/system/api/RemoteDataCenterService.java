@@ -54,7 +54,7 @@ public interface RemoteDataCenterService {
      * @return
      */
     @GetMapping("/gantryAlgorithm/info")
-    R<List<Map>> info(@RequestParam(name = "startTime", required = false) String startTime, @RequestParam(name = "endTime", required = false) String endTime);
+    R<List<Map>> info(@RequestParam(name = "startTime",required = false) String startTime, @RequestParam(name = "endTime",required = false) String endTime);
 
     /**
      * 根据上下行获取对应门架集合接口
@@ -62,7 +62,7 @@ public interface RemoteDataCenterService {
      * @return
      */
     @GetMapping("/gantryAlgorithm/gantryList")
-    R<List<Map>> gantryList(@RequestParam(name = "direction", required = false) Integer direction);
+    R<List<Map>> gantryList(@RequestParam(name = "direction",required = false) Integer direction);
 
     /**
      * 根据门架编号、开始时间、结束时间、查询门架过车记录接口
@@ -70,5 +70,5 @@ public interface RemoteDataCenterService {
      * @return
      */
     @GetMapping("/gantryAlgorithm/passRecord")
-    R<List<Map>> passRecord(@RequestParam(name = "gantryId", required = false) String gantryId, @RequestParam(name = "startTime", required = false) String startTime, @RequestParam(name = "endTime", required = false) String endTime);
+    R<List<Map>> passRecord(@RequestParam(name = "gantryId",required = false) String gantryId,@RequestParam(name = "startTime",required = false) String startTime, @RequestParam(name = "endTime",required = false) String endTime);
 }
