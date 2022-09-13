@@ -7,6 +7,7 @@ import com.ruoyi.system.api.domain.gantry.TblGantryChargeInfo;
 import com.ruoyi.system.api.factory.RemoteDataCenterFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -20,6 +21,16 @@ import java.util.Map;
 @FeignClient(contextId = "remoteDataCenterService", value = ServiceNameConstants.DATA_CENTER_SERVICE, fallbackFactory = RemoteDataCenterFallbackFactory.class)
 public interface RemoteDataCenterService {
 
+
+    /**
+     * 模拟清分数据统计
+     * @param year
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    @PostMapping("/simulatedSorting")
+    R simulatedSorting(@RequestParam(value = "year") String year, @RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime") String endTime);
 
     /**
      * 获取收费区间流量
