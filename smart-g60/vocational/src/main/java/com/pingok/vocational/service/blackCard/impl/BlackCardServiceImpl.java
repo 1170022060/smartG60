@@ -4,6 +4,7 @@ import com.pingok.vocational.mapper.blackCard.TblBlackCardLogMapper;
 import com.pingok.vocational.mapper.blackCard.TblBlackCardMapper;
 import com.pingok.vocational.mapper.blackCard.TblBlackCardStationUsedMapper;
 import com.pingok.vocational.service.blackCard.IBlackCardService;
+import com.ruoyi.common.core.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,10 @@ public class BlackCardServiceImpl implements IBlackCardService {
     private TblBlackCardStationUsedMapper tblBlackCardStationUsedMapper;
 
     @Override
-    public List<Map> getNowList(String mediaId, Integer mediaType, Date startDate, Date endDate) {
+    public List<Map> getNowList(String mediaId, Integer mediaType, String startDate, String endDate) {
+        if(mediaType == null) {
+            mediaType = 1;
+        }
         return tblBlackCardMapper.selectList(mediaId, mediaType, startDate, endDate);
     }
 
@@ -34,7 +38,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
     }
 
     @Override
-    public List<Map> getRecordList(String mediaId, Integer mediaType) {
-        return tblBlackCardLogMapper.selectByMedia(mediaId, mediaType);
+    public List<Map> getRecordList(String mediaId) {
+        return tblBlackCardLogMapper.selectByMedia(mediaId, 1);
     }
 }

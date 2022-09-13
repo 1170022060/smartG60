@@ -1,6 +1,7 @@
 package com.pingok.vocational.mapper.device;
 
 import com.pingok.vocational.domain.device.TblDeviceInfo;
+import com.pingok.vocational.domain.infoboard.VmsInfoByType;
 import com.ruoyi.common.core.mapper.CommonRepository;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -136,4 +137,23 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "</when>" +
             "</script>"})
     List<Map> selectInfoBoard(@Param("deviceType")Integer deviceType,@Param("deviceName") String deviceName,@Param("pileNo") String pileNo,@Param("manufacturer")String manufacturer,@Param("deviceModel")String deviceModel);
+
+    @Select({"<script>" +
+            "select a.ID as \"id\", a.DEVICE_NAME as \"deviceName\", a.DEVICE_BRAND as \"deviceBrand\", " +
+            "a.DEVICE_MODEL as \"deviceModel\", a.TECH_PARA as \"techPara\", a.DEVICE_IP as \"deviceIp\", " +
+            "a.PORT as \"port\", a.PILE_NO as \"pileNo\", a.DIRECTION as \"direction\", " +
+            "a.GPS as \"gps\", b.STATUS as \"deviceStatus\", b.TIME as \"statusTime\", " +
+            "b.STATUS_DESC as \"statusDesc\", b.STATUS_DETAILS as \"statusDetails\", " +
+            "c.INFO_TYPE as \"infoType\", c.TYPEFACE as \"typeFace\", c.TYPEFACE_SIZE as \"typeFaceSize\", " +
+            "c.COLOR as \"color\", c.PICTURE_TYPE as \"pictureType\" " +
+            " from TBL_DEVICE_INFO a " +
+            " LEFT JOIN TBL_DEVICE_STATUS b on a.ID = b.DEVICE_ID " +
+            " LEFT JOIN TBL_RELEASE_RECORD c on a.DEVICE_ID = c.DEVICE_ID " +
+            "where DEVICE_TYPE = 9 " +
+            "<when test='type != null'> " +
+            "and DEVICE_MODEL = #{type}" +
+            "</when>" +
+            "</script>"
+    })
+    List<VmsInfoByType> getVmsListByType(@Param("type") String type);
 }
