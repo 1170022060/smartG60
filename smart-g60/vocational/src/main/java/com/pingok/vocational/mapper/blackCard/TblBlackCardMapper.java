@@ -17,7 +17,8 @@ public interface TblBlackCardMapper extends CommonRepository<TblBlackCard> {
             "c.DICT_LABEL as \"type\"," +
             "case when a.STATUS = 1 then '进入状态名单' when a.STATUS = 2 then '解除状态名单' end as \"status\"," +
             "a.CREATION_TIME as \"creationTime\" , a.VERSION as \"version\"," +
-            "to_char(a.UPDATE_TIME,'yyyy-mm-dd hh24:mi:ss') as \"updateTime\" , a.MEDIA_TYPE as \"mediaType\" " +
+            "to_char(a.UPDATE_TIME,'yyyy-mm-dd hh24:mi:ss') as \"updateTime\" , a.MEDIA_TYPE as \"mediaType\", " +
+            "a.APPLY_TIME as \"applyTime\" " +
             "from TBL_BLACK_CARD a " +
             "<when test='mediaType == 1'> " +
             "left join SYS_DICT_DATA c on c.DICT_VALUE = to_char(a.TYPE) and c.DICT_TYPE = 'blackcard_obu_type' " +
@@ -30,11 +31,11 @@ public interface TblBlackCardMapper extends CommonRepository<TblBlackCard> {
             " and a.MEDIA_ID like CONCAT(#{mediaId}, '%') " +
             "</when>"+
             "<when test='startDate != null'> " +
-            " and a.WORK_DATE &gt;= #{startDate} " +
+            " and a.CREATION_TIME &gt;= #{startDate} " +
             "</when>"+
             "<when test='endDate != null'> " +
-            " and a.WORK_DATE &lt;= #{endDate} " +
+            " and a.CREATION_TIME &lt;= #{endDate} " +
             "</when>" +
             "</script>"})
-    List<Map> selectList(@Param("mediaId") String mediaId, @Param("mediaType") Integer mediaType, @Param("startDate") Date startDate, @Param("endDate")  Date endDate);
+    List<Map> selectList(@Param("mediaId") String mediaId, @Param("mediaType") Integer mediaType, @Param("startDate") String startDate, @Param("endDate")  String endDate);
 }

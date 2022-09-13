@@ -30,4 +30,6 @@ public class TblBlackCard implements Serializable {
     private Date updateTime;
 
     private Integer mediaType;
+
+    private String applyTime;
 }
