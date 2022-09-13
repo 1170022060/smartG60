@@ -29,6 +29,11 @@ public class RemoteDataCenterFallbackFactory implements FallbackFactory<RemoteDa
         return new RemoteDataCenterService()
         {
             @Override
+            public R simulatedSorting(String year, String startTime, String endTime) {
+                return null;
+            }
+
+            @Override
             public R<ChargeFlowModel> selectChargeFlow(String chargingUnitId, String statisticsDate) {
                 return null;
             }
