@@ -1,13 +1,13 @@
 package com.pingok.datacenter.service.simulatedSorting.impl;
 
 import com.pingok.datacenter.domain.simulatedSorting.TblSimulatedSorting;
+import com.pingok.datacenter.domain.simulatedSorting.vo.SimulatedSortingVo;
 import com.pingok.datacenter.mapper.simulatedSorting.TblSimulatedSortingMapper;
 import com.pingok.datacenter.service.simulatedSorting.ISimulatedSortingService;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,6 +22,11 @@ public class SimulatedSortingServiceImpl implements ISimulatedSortingService {
     private TblSimulatedSortingMapper tblSimulatedSortingMapper;
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
+
+    @Override
+    public List<SimulatedSortingVo> dayStatistics(String startTime, String endTime) {
+        return tblSimulatedSortingMapper.dayStatistics(startTime, endTime);
+    }
 
     @Override
     public void simulatedSorting(String year, String startTime, String endTime) {

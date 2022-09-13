@@ -2,6 +2,7 @@ package com.pingok.datacenter.mapper.simulatedSorting;
 
 
 import com.pingok.datacenter.domain.simulatedSorting.TblSimulatedSorting;
+import com.pingok.datacenter.domain.simulatedSorting.vo.SimulatedSortingVo;
 import com.ruoyi.common.core.mapper.CommonRepository;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -74,4 +75,67 @@ public interface TblSimulatedSortingMapper extends CommonRepository<TblSimulated
             "TO_CHAR( tgt.TRANS_TIME, 'yyyy-mm-dd' ), " +
             "TO_CHAR( tgt.TRANS_TIME, 'hh24' ) "})
     List<TblSimulatedSorting> simulatedSorting(@Param("year") String year, @Param("startTime") String startTime, @Param("endTime")  String endTime);
+
+
+    @Select({"<script>" +
+            "SELECT " +
+            "SORTING_DATE as \"sortingDate\", " +
+            "TRUNC(SUM( DECODE( ROUTE_TYPE, 1, DECODE( MEDIA_TYPE, 2, FEE, 0 ), 0 ) )/100, 2) AS \"inAndOutCpcFee\", " +
+            "TRUNC(SUM( " +
+            "DECODE( ROUTE_TYPE, 1, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 1, FEE, 0 ), 0 ), 0 )  " +
+            ")/100, 2) AS \"inAndOutEtcSvFee\", " +
+            "TRUNC(SUM( " +
+            "DECODE( ROUTE_TYPE, 1, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 2, FEE, 0 ), 0 ), 0 )  " +
+            ")/100, 2) AS \"inAndOutEtcCcFee\", " +
+            "TRUNC(SUM( DECODE( ROUTE_TYPE, 2, DECODE( MEDIA_TYPE, 2, FEE, 0 ), 0 ) )/100, 2) AS \"inCpcFee\", " +
+            "TRUNC(SUM( " +
+            "DECODE( ROUTE_TYPE, 2, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 1, FEE, 0 ), 0 ), 0 )  " +
+            ")/100, 2) AS \"inEtcSvFee\", " +
+            "TRUNC(SUM( " +
+            "DECODE( ROUTE_TYPE, 2, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 2, FEE, 0 ), 0 ), 0 )  " +
+            ")/100, 2) AS \"inEtcCcFee\", " +
+            "TRUNC(SUM( DECODE( ROUTE_TYPE, 3, DECODE( MEDIA_TYPE, 2, FEE, 0 ), 0 ) )/100, 2) AS \"outCpcFee\", " +
+            "TRUNC(SUM( " +
+            "DECODE( ROUTE_TYPE, 3, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 1, FEE, 0 ), 0 ), 0 )  " +
+            ")/100, 2) AS \"outEtcSvFee\", " +
+            "TRUNC(SUM( " +
+            "DECODE( ROUTE_TYPE, 3, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 2, FEE, 0 ), 0 ), 0 )  " +
+            ")/100, 2) AS \"outEtcCcFee\", " +
+            "TRUNC(SUM( DECODE( ROUTE_TYPE, 4, DECODE( MEDIA_TYPE, 2, FEE, 0 ), 0 ) )/100, 2) AS \"passCpcFee\", " +
+            "TRUNC(SUM( " +
+            "DECODE( ROUTE_TYPE, 4, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 1, FEE, 0 ), 0 ), 0 )  " +
+            ")/100, 2) AS \"passEtcSvFee\", " +
+            "TRUNC(SUM( " +
+            "DECODE( ROUTE_TYPE, 4, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 2, FEE, 0 ), 0 ), 0 )  " +
+            ")/100, 2) AS \"passEtcCcFee\", " +
+            "TRUNC((SUM( DECODE( ROUTE_TYPE, 1, DECODE( MEDIA_TYPE, 2, FEE, 0 ), 0 ) ) + SUM( " +
+            "DECODE( ROUTE_TYPE, 1, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 1, FEE, 0 ), 0 ), 0 )  " +
+            ") + SUM( " +
+            "DECODE( ROUTE_TYPE, 1, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 2, FEE, 0 ), 0 ), 0 )  " +
+            ") + SUM( DECODE( ROUTE_TYPE, 2, DECODE( MEDIA_TYPE, 2, FEE, 0 ), 0 ) ) + SUM( " +
+            "DECODE( ROUTE_TYPE, 2, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 1, FEE, 0 ), 0 ), 0 )  " +
+            ") + SUM( " +
+            "DECODE( ROUTE_TYPE, 2, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 2, FEE, 0 ), 0 ), 0 )  " +
+            ") + SUM( DECODE( ROUTE_TYPE, 3, DECODE( MEDIA_TYPE, 2, FEE, 0 ), 0 ) ) + SUM( " +
+            "DECODE( ROUTE_TYPE, 3, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 1, FEE, 0 ), 0 ), 0 )  " +
+            ") + SUM( " +
+            "DECODE( ROUTE_TYPE, 3, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 2, FEE, 0 ), 0 ), 0 )  " +
+            ") + SUM( DECODE( ROUTE_TYPE, 4, DECODE( MEDIA_TYPE, 2, FEE, 0 ), 0 ) ) + SUM( " +
+            "DECODE( ROUTE_TYPE, 4, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 1, FEE, 0 ), 0 ), 0 )  " +
+            ") + SUM( " +
+            "DECODE( ROUTE_TYPE, 4, DECODE( MEDIA_TYPE, 1, DECODE( CARD_TYPE, 2, FEE, 0 ), 0 ), 0 )  " +
+            "))/100, 2) AS \"allFee\"  " +
+            "FROM " +
+            "TBL_SIMULATED_SORTING  " +
+            "where 1=1" +
+            "<when test='startTime != null'> " +
+            "and to_date(SORTING_DATE,'yyyy-mm-dd') <![CDATA[>=]]> to_date(#{startTime},'yyyy-mm-dd') " +
+            "</when>"+
+            "<when test='endTime != null'> " +
+            "and to_date(SORTING_DATE,'yyyy-mm-dd') <![CDATA[<=]]> to_date(#{endTime},'yyyy-mm-dd') " +
+            "</when>"+
+            "GROUP BY " +
+            "SORTING_DATE " +
+            "</script>"})
+    List<SimulatedSortingVo> dayStatistics(@Param("startTime") String startTime, @Param("endTime")  String endTime);
 }
