@@ -1,7 +1,6 @@
 package com.pingok.vocational.service.baseinfo;
 
-import org.apache.ibatis.annotations.Param;
-
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,9 +17,13 @@ public interface IRateService {
      * @param inStationName 入口站名
      * @param exStationId 出口站Id
      * @param vehClass 车型
+     * @param versionNum 版本号
+     * @param provId 省份
+     * @param startTime 开始时间
+     * @param endTime 结束时间
      * @return 最小费率
      */
-    public List<Map> selectRate(String inStationName,String exStationId, Integer vehClass,String versionNum);
+    public List<Map> selectRate(String inStationName, String exStationId, Integer vehClass, String versionNum, String provId, Date startTime, Date endTime);
 
     /**
      * 根据对应最小费率表主键ID查询分省明细

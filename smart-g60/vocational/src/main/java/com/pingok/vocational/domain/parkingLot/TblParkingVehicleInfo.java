@@ -38,6 +38,9 @@ public class TblParkingVehicleInfo implements Serializable {
     /** 车型 */
     private Integer vehClass;
 
+    /** 车型 */
+    private Integer vehClassSub;
+
     /** 车牌颜色 */
     private Integer vehColor;
 
@@ -154,6 +157,14 @@ public class TblParkingVehicleInfo implements Serializable {
      */
     public void setVehClass(Integer vehClass) {
         this.vehClass = vehClass;
+    }
+
+    public Integer getVehClassSub() {
+        return vehClassSub;
+    }
+
+    public void setVehClassSub(Integer vehClassSub) {
+        this.vehClassSub = vehClassSub;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.pingok.vocational.service.parkingLot;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -26,4 +27,5 @@ public interface IParkingLotService {
 
     List<Map> trafficChange(Date date);
     List<Map> parkingPlace();
+    List<Map> passengerFlow(Date date) throws ParseException;
 }

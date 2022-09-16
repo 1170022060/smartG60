@@ -2,6 +2,7 @@ package com.pingok.vocational.service.parkingLot.impl;
 
 import com.pingok.vocational.domain.parkingLot.TblParkingLot;
 import com.pingok.vocational.domain.parkingLot.TblParkingVehicleInfo;
+import com.pingok.vocational.mapper.parkingLot.TblEventPassengerFlowMapper;
 import com.pingok.vocational.mapper.parkingLot.TblParkingLotMapper;
 import com.pingok.vocational.mapper.parkingLot.TblParkingStatisticsMapper;
 import com.pingok.vocational.mapper.parkingLot.TblParkingVehicleInfoMapper;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -29,6 +32,8 @@ public class ParkingLotServiceImpl implements IParkingLotService {
     private TblParkingLotMapper tblParkingLotMapper;
     @Autowired
     private TblParkingStatisticsMapper tblParkingStatisticsMapper;
+    @Autowired
+    private TblEventPassengerFlowMapper tblEventPassengerFlowMapper;
 
     @Override
     @Transactional
@@ -91,5 +96,37 @@ public class ParkingLotServiceImpl implements IParkingLotService {
             map.putAll(overtime);
         }
         return parkingPlaceList;
+    }
+
+    @Override
+    public List<Map> passengerFlow(Date date) throws ParseException {
+        Long time= date.getTime();
+        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
+        Date dateTime = new Date(System.currentTimeMillis());
+        Long dailyTime= formatter.parse(formatter.format(dateTime)).getTime();
+
+        List<Map> passengerFlow=tblEventPassengerFlowMapper.field(time);
+        for(Map map :passengerFlow)
+        {
+            Map humanFlow=tblParkingVehicleInfoMapper.humanFlow(Long.parseLong(map.get("fieldId").toString()));
+            map.putAll(humanFlow);
+
+            List<Map> deviceInfo=tblEventPassengerFlowMapper.device(time,Long.parseLong(map.get("fieldId").toString()));
+            for(Map device :deviceInfo)
+            {
+                Integer dailyTotal=tblEventPassengerFlowMapper.dailyTotal(dailyTime,Long.parseLong(map.get("deviceId").toString()));
+                device.put("dailyTotal",dailyTotal);
+                Integer actualFlow=tblEventPassengerFlowMapper.actualFlow(dailyTime,Long.parseLong(map.get("deviceId").toString()));
+                device.put("actualFlow",actualFlow);
+                Integer peakFlow=tblEventPassengerFlowMapper.peakFlow(dailyTime,Long.parseLong(map.get("deviceId").toString()));
+                device.put("peakFlow",peakFlow);
+                Integer avgFlow=tblEventPassengerFlowMapper.avgFlow(time,Long.parseLong(map.get("deviceId").toString()));
+                device.put("avgFlow",avgFlow);
+                Integer hourFlow=tblEventPassengerFlowMapper.hourFlow(time,Long.parseLong(map.get("deviceId").toString()));
+                device.put("hourFlow",hourFlow);
+            }
+            map.put("device",deviceInfo);
+        }
+        return passengerFlow;
     }
 }

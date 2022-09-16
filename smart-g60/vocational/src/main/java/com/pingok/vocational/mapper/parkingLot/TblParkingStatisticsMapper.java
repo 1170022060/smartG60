@@ -27,13 +27,15 @@ public interface TblParkingStatisticsMapper extends CommonRepository<TblParkingS
             "where FIELD_ID = #{fieldId} and DAY = #{date} and VEH_TYPE = #{vehType}")
     Integer trafficDaily(@Param("date") Date date, @Param("fieldId") Long fieldId,@Param("vehType") Integer vehType);
 
-    @Select("select HOUR as \"hour\"," +
+    @Select("select \"hour\",\"current\" from " +
+            "(select HOUR as \"hour\"," +
             "CURRENT_NUM as \"current\"  from TBL_PARKING_STATISTICS " +
             "where DAY = #{date} " +
             "and FIELD_ID = #{fieldId} " +
             "and VEH_TYPE = #{vehType} " +
             "and rownum<=8" +
-            "order by HOUR desc ")
+            "order by HOUR desc) " +
+            "order by \"hour\" ")
     List<Map> trafficStatistics(@Param("date") Date date, @Param("fieldId") Long fieldId, @Param("vehType") Integer vehType);
 
 }

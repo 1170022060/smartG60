@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,10 +33,12 @@ public class RateController extends BaseController {
     @Log(title = "最小费率-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
     public TableDataInfo info(@RequestParam(name = "inStationName",required = false) String inStationName,@RequestParam(name = "exStationId",required = false) String exStationId
-            , @RequestParam(name = "vehClass",required = false) Integer vehClass,@RequestParam(name = "versionNum",required = false) String versionNum)
+            , @RequestParam(name = "vehClass",required = false) Integer vehClass,@RequestParam(name = "versionNum",required = false) String versionNum
+            , @RequestParam(name = "provId",required = false) String provId,@RequestParam(name = "startTime",required = false) Date startTime
+            , @RequestParam(name = "endTime",required = false) Date endTime)
     {
         startPage();
-        List<Map> info = rateService.selectRate(inStationName,exStationId,vehClass,versionNum);
+        List<Map> info = rateService.selectRate(inStationName,exStationId,vehClass,versionNum,provId,startTime,endTime);
         return getDataTable(info);
     }
 
