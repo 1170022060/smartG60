@@ -9,6 +9,7 @@ import com.ruoyi.common.security.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.Date;
 
 /**
@@ -51,5 +52,11 @@ public class ParkingLotController extends BaseController {
     @GetMapping("/place")
     public AjaxResult place() {
         return AjaxResult.success(iParkingLotService.parkingPlace());
+    }
+
+    @Log(title = "客流量统计", businessType = BusinessType.OTHER)
+    @GetMapping("/passenger")
+    public AjaxResult passenger(@RequestParam(name = "date") Date date) throws ParseException {
+        return AjaxResult.success(iParkingLotService.passengerFlow(date));
     }
 }
