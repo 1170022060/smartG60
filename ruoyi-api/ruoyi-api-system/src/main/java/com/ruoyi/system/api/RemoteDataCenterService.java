@@ -21,6 +21,15 @@ import java.util.Map;
 @FeignClient(contextId = "remoteDataCenterService", value = ServiceNameConstants.DATA_CENTER_SERVICE, fallbackFactory = RemoteDataCenterFallbackFactory.class)
 public interface RemoteDataCenterService {
 
+    /**
+     * 闯关分拣
+     * @param year
+     * @param startTime
+     * @param endTime
+     * @param twoHours
+     * @return
+     */
+    R rushRecord(@RequestParam(value = "year") String year, @RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime") String endTime, @RequestParam(value = "twoHours") String twoHours);
 
     /**
      * 模拟清分数据统计
