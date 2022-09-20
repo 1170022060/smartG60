@@ -15,4 +15,6 @@ public class InfoBoardConfig {
     // 东海 F板
     public static final String DONGHAI_F = "donghai_F";
 
+    // 三思多分区 A板
+    public static final String SANSI_PLIST_MULTI = "sansi_plist_multi";
 }

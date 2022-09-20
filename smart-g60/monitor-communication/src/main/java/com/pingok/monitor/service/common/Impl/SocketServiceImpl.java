@@ -54,17 +54,17 @@ public class SocketServiceImpl implements ISocketService {
 
     @Override
     public int writeAndResult(byte[] bytes, Socket socket) {
-        int retCode = 200;
+        int retCode = 1;
 
         try {
             send(bytes, socket);
             byte[] receive = receive(socket);
             if(receive == null || receive.length == 0){
-                retCode = 500;
+                retCode = -1;
             }
         } catch (Exception e) {
             System.out.println("接收异常，socket：" + socket.toString());
-            retCode = 500;
+            retCode = -1;
         }
 
         return retCode;

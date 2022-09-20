@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.charge.domain.sectorlog.vo.SectorLogVo;
 import com.pingok.charge.service.device.IStatusService;
+import com.pingok.charge.service.gantry.IGantryV2XService;
 import com.pingok.charge.service.opt.IOptInfoService;
 import com.pingok.charge.service.opt.IOptWorkInfoService;
 import com.pingok.charge.service.sectorlog.ISectorLogService;
@@ -41,6 +42,8 @@ public class Consumer {
     private IOptInfoService iOptInfoService;
     @Autowired
     private IOptWorkInfoService iOptWorkInfoService;
+    @Autowired
+    private IGantryV2XService iGantryV2XService;
 
     @KafkaListener(topics = KafkaTopIc.SECTOR_LOG, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
     public void sectorLog(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
@@ -172,4 +175,21 @@ public class Consumer {
             }
         }
     }
+
+    @KafkaListener(topics = KafkaTopIc.CHARGE_SIGNAL_GANTRY_V2X, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
+    public void gantryV2X(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        Optional message = Optional.ofNullable(record.value());
+        if (message.isPresent()) {
+            Object msg = message.get();
+            log.info("gantryV2X 消费了： Topic:" + topic + ",Message:" + msg);
+            JSONObject object = JSONObject.parseObject(String.valueOf(msg));
+            try {
+                iGantryV2XService.sendEvent(object);
+                ack.acknowledge();
+            } catch (Exception e) {
+                log.error("gantryV2X 消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
+            }
+        }
+    }
+
 }

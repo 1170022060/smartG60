@@ -141,11 +141,12 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
     @Select({"<script>" +
             "select a.ID as \"id\", a.DEVICE_NAME as \"deviceName\", a.DEVICE_BRAND as \"deviceBrand\", " +
             "a.DEVICE_MODEL as \"deviceModel\", a.TECH_PARA as \"techPara\", a.DEVICE_IP as \"deviceIp\", " +
-            "a.PORT as \"port\", a.PILE_NO as \"pileNo\", a.DIRECTION as \"direction\", " +
-            "a.GPS as \"gps\", b.STATUS as \"deviceStatus\", b.TIME as \"statusTime\", " +
+            "a.PORT as \"port\", a.SLAVE_ID as \"slaveId\", a.PILE_NO as \"pileNo\", a.DIRECTION as \"direction\", " +
+            "a.GPS as \"gps\", a.PROTOCOL as \"protocol\", a.WIDTH as \"width\", a.HIGH as \"high\", " +
+            "b.STATUS as \"deviceStatus\", b.TIME as \"statusTime\", " +
             "b.STATUS_DESC as \"statusDesc\", b.STATUS_DETAILS as \"statusDetails\", " +
             "c.INFO_TYPE as \"infoType\", c.TYPEFACE as \"typeFace\", c.TYPEFACE_SIZE as \"typeFaceSize\", " +
-            "c.COLOR as \"color\", c.PICTURE_TYPE as \"pictureType\" " +
+            "c.COLOR as \"color\", c.PICTURE_TYPE as \"pictureType\", c.RECENT_5 as \"recent5\" " +
             " from TBL_DEVICE_INFO a " +
             " LEFT JOIN TBL_DEVICE_STATUS b on a.ID = b.DEVICE_ID " +
             " LEFT JOIN TBL_RELEASE_RECORD c on a.DEVICE_ID = c.DEVICE_ID " +
@@ -153,7 +154,10 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "<when test='type != null'> " +
             "and DEVICE_MODEL = #{type}" +
             "</when>" +
+            "<when test='protocol != null'> " +
+            "and PROTOCOL = #{protocol}" +
+            "</when>" +
             "</script>"
     })
-    List<VmsInfoByType> getVmsListByType(@Param("type") String type);
+    List<VmsInfoByType> getVmsListByType(@Param("type") String type, @Param("protocol") String protocol);
 }
