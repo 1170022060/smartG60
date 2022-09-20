@@ -2,6 +2,8 @@ package com.pingok.charge.service.transimage.impl;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
+import com.pingok.charge.config.CenterConfig;
+import com.pingok.charge.config.DaasConfig;
 import com.pingok.charge.domain.transimage.vo.Image;
 import com.pingok.charge.domain.transimage.vo.ImageArr;
 import com.pingok.charge.domain.transimage.vo.ImageArrEnum;
@@ -25,18 +27,13 @@ import java.util.Map;
 @Slf4j
 public class TransImageServiceImpl implements ITransImageService {
 
-    @Value("${daas.host}")
-    private String daasHost;
-
-    @Value("${centerHost}")
-    private String centerHost;
 
     @Override
     public ImageArr getImageArr(String gid, String transDate) {
         Map<String, Object> body = new HashMap<>();
         body.put("Gid", gid);
         body.put("TransDate", transDate);
-        String r = HttpUtil.post(centerHost + "/api/Lane/LaneImage", body.toString());
+        String r = HttpUtil.post(CenterConfig.HOST + "/api/Lane/LaneImage", body.toString());
         ImageArr ret = null;
         if (!StringUtils.isEmpty(r)) {
             ret = JSON.parseObject(r, ImageArr.class);
@@ -50,7 +47,7 @@ public class TransImageServiceImpl implements ITransImageService {
         body.put("LaneHex", laneHex);
         body.put("Gid", gid);
         body.put("TransDate", transDate);
-        String r = HttpUtil.post(centerHost + "/api/Lane/LaneImage", body.toString());
+        String r = HttpUtil.post(CenterConfig.HOST + "/api/Lane/LaneImage", body.toString());
         Image ret = null;
         if (!StringUtils.isEmpty(r)) {
             ret = JSON.parseObject(r, Image.class);
@@ -60,7 +57,7 @@ public class TransImageServiceImpl implements ITransImageService {
 
     @Override
     public void updateImageArr(ImageArrEnum imageArrEnum) {
-        String r = HttpUtil.post(daasHost + "/data-center/transImage/imageArr", JSON.toJSONString(imageArrEnum));
+        String r = HttpUtil.post(DaasConfig.HOST + "/data-center/transImage/imageArr", JSON.toJSONString(imageArrEnum));
         R ret;
         if (!StringUtils.isEmpty(r)) {
             ret = JSON.parseObject(r, R.class);
@@ -74,7 +71,7 @@ public class TransImageServiceImpl implements ITransImageService {
 
     @Override
     public void updateImage(ImageEnum imageEnum) {
-        String r = HttpUtil.post(daasHost + "/data-center/transImage/image", JSON.toJSONString(imageEnum));
+        String r = HttpUtil.post(DaasConfig.HOST + "/data-center/transImage/image", JSON.toJSONString(imageEnum));
         R ret;
         if (!StringUtils.isEmpty(r)) {
             ret = JSON.parseObject(r, R.class);

@@ -22,7 +22,7 @@ public class RushTask {
         String year = DateUtils.dateYear();
         String startTime = DateUtils.getTimeHour() + ":00:00";
         String endTime = DateUtils.getTimeHour() + ":59:59";
-        String twoHours = DateUtils.dateTime(DateUtils.getPreTime(DateUtils.getNowDate(),-60),DateUtils.YYYYMMDDHHMM) + ":00:00";
+        String twoHours = DateUtils.dateTime(DateUtils.getPreTime(DateUtils.getNowDate(),-120),DateUtils.YYYYMMDDHHMM) + ":00:00";
         R r = remoteDataCenterService.rushRecord(year, startTime, endTime,twoHours);
         if (r.getCode() == R.SUCCESS) {
             log.info("闯关分拣定时任务执行成功");
