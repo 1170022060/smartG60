@@ -2,7 +2,6 @@ package com.pingok.monitor.kafka;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.pingok.monitor.domain.infoboard.VmsInfo;
 import com.pingok.monitor.service.device.IStatusService;
 import com.pingok.monitor.service.infoboard.IVmsService;
 import com.pingok.monitor.service.pilotLight.IPilotLightService;
@@ -20,7 +19,6 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -180,10 +178,10 @@ public class Consumer {
             log.info("infoBoardPublish 消费了： Topic:" + topic + ",Message:" + message.get());
             try {
                 iVmsService.publish(message.get().toString());
-                ack.acknowledge();
             } catch (Exception e) {
                 log.error("infoBoardPublish消费者，Topic" + topic + ",Message:" + message.get() + "处理失败。错误信息：" + e.getMessage());
             }
+            ack.acknowledge();
         }
     }
 

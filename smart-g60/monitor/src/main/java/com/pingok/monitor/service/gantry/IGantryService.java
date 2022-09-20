@@ -2,6 +2,7 @@ package com.pingok.monitor.service.gantry;
 
 import com.pingok.monitor.domain.gantry.TblGantryStatus;
 import com.pingok.monitor.domain.gantry.vo.GantryEnum;
+import com.pingok.monitor.domain.gantry.vo.GantryV2X;
 
 /**
  * 门架 业务层
@@ -21,4 +22,11 @@ public interface IGantryService {
      * @return
      */
     TblGantryStatus findById(Long id);
+
+    /**
+     * 车路协同接口：向门架系统发送
+     * @param data 事件内容
+     * @return true-成功失败
+     */
+    boolean gantryV2X(GantryV2X data);
 }
