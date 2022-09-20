@@ -44,6 +44,7 @@ public class RushServiceImpl implements IRushService {
     public void rushRecord(String year, String startTime, String endTime, String twoHours) {
         List<TblRushRecord> list = tblRushRecordMapper.rushRecord(year, startTime, endTime, twoHours);
         for (TblRushRecord r : list) {
+            r.setStatus(0);
             r.setId(remoteIdProducerService.nextId());
             r.setReliability(new BigDecimal(50));
             tblRushRecordMapper.insert(r);
