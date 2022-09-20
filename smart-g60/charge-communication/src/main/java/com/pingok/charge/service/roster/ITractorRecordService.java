@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 牵引车名单 业务层
+ * BigDecimal名单 业务层
  *
  * @author ruoyi
  */

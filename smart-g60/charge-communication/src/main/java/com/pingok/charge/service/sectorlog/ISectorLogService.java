@@ -4,7 +4,7 @@ package com.pingok.charge.service.sectorlog;
 import com.pingok.charge.domain.sectorlog.vo.SectorLogVo;
 
 /**
- * 牵引车名单 业务层
+ * 车道日志 业务层
  *
  * @author ruoyi
  */

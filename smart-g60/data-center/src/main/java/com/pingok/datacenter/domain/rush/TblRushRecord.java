@@ -1,5 +1,6 @@
 package com.pingok.datacenter.domain.rush;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.models.auth.In;
 import lombok.Data;
 
@@ -35,6 +36,7 @@ public class TblRushRecord implements Serializable {
     private Integer vehColor;
 
     /** 识别时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date transTime;
 
     /** 车道Node十六进制 */
@@ -56,6 +58,7 @@ public class TblRushRecord implements Serializable {
     private Integer status;
 
     /** 确认时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date confirmTime;
 
     /** 可信度 */

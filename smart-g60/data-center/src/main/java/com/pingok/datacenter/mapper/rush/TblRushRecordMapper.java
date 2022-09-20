@@ -15,35 +15,43 @@ import java.util.List;
  */
 public interface TblRushRecordMapper extends CommonRepository<TblRushRecord> {
     @Select({"SELECT " +
-            "exlpr.VEH_PLATE as \"vehPlate\", " +
-            "exlpr.VEH_COLOR as \"vehColor\", " +
-            "exlpr.TRANS_TIME as \"transTime\", " +
-            "tli.MARK_NAME as \"markName\", " +
-            "tli.LANE_NAME as \"laneName\", " +
-            "tli.LANE_HEX as \"laneHex\", " +
-            "tbsi.STATION_NAME as \"stationName\", " +
-            "tbsi.STATION_HEX as \"stationHex\" " +
+            "a.*  " +
+            "FROM " +
+            "( " +
+            "SELECT " +
+            "row_number ( ) over ( PARTITION BY exlpr.VEH_PLATE, exlpr.VEH_COLOR, exlpr.LANE_HEX ORDER BY exlpr.TRANS_TIME DESC ) AS \"rowNumber\", " +
+            "trim(exlpr.VEH_PLATE) AS \"vehPlate\", " +
+            "exlpr.VEH_COLOR AS \"vehColor\", " +
+            "exlpr.TRANS_TIME AS \"transTime\", " +
+            "tli.MARK_NAME AS \"markName\", " +
+            "tli.LANE_NAME AS \"laneName\", " +
+            "tli.LANE_HEX AS \"laneHex\", " +
+            "tbsi.STATION_NAME AS \"stationName\", " +
+            "tbsi.STATION_HEX AS \"stationHex\"  " +
             "FROM " +
             "TBL_EX_LPR_TRANS_${year} exlpr " +
-            "LEFT JOIN TBL_EX_TRANS_${year} ex ON exlpr.VEH_PLATE = ex.VEH_PLATE  " +
-            "AND ex.LANE_HEX = exlpr.LANE_HEX  " +
-            "AND ABS( ROUND( TO_NUMBER( ex.TRANS_TIME - exlpr.TRANS_TIME ) * 24 * 60 * 60 ) ) <= 300 " +
+            "LEFT JOIN TBL_EX_TRANS_${year} ex ON ex.VEH_PLATE = exlpr.VEH_PLATE  " +
+            "AND ex.VEH_COLOR = exlpr.VEH_COLOR " +
             "JOIN TBL_LANE_INFO tli ON tli.LANE_HEX = exlpr.LANE_HEX " +
             "JOIN TBL_BASE_STATION_INFO tbsi ON tbsi.NET_WORK = tli.NET_WORK  " +
             "AND tbsi.STATION_ID = tli.STATION_ID  " +
             "WHERE " +
-            "ex.VEH_PLATE IS NULL  " +
-            "AND exlpr.TRANS_TIME >= to_date( #{startTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
-            "AND exlpr.TRANS_TIME <= to_date( #{endTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
-            "AND exlpr.VEH_PLATE IN ( " +
+            "1 = 1  " +
+            "AND exlpr.TRANS_TIME >= to_date( ${startTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
+            "AND exlpr.TRANS_TIME <= to_date( ${endTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
+            "AND EX.VEH_PLATE IS NULL  " +
+            "AND trim(exlpr.VEH_PLATE) IN ( " +
             "SELECT " +
             "SUBSTR( VEHICLE_PLATE, 0, LENGTH( VEHICLE_PLATE ) - 2 )  " +
             "FROM " +
             "TBL_GANTRY_TRANSACTION_${year}  " +
             "WHERE " +
-            "TRANS_TIME >= to_date( #{twoHours}, 'yyyy-mm-dd hh24:mi:ss' )  " +
-            "AND TRANS_TIME <= to_date( #{endTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
-            ")"})
+            "TRANS_TIME >= to_date( ${twoHours}, 'yyyy-mm-dd hh24:mi:ss' )  " +
+            "AND TRANS_TIME <= to_date( ${endTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
+            ")  " +
+            ") a  " +
+            "WHERE " +
+            "a.\"rowNumber\" = 1"})
     List<TblRushRecord> rushRecord(@Param("year") String year, @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("twoHours") String twoHours);
 
     @Select({"<script>" +
