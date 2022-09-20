@@ -37,8 +37,8 @@ public interface TblRushRecordMapper extends CommonRepository<TblRushRecord> {
             "AND tbsi.STATION_ID = tli.STATION_ID  " +
             "WHERE " +
             "1 = 1  " +
-            "AND exlpr.TRANS_TIME >= to_date( ${startTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
-            "AND exlpr.TRANS_TIME <= to_date( ${endTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
+            "AND exlpr.TRANS_TIME >= to_date( #{startTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
+            "AND exlpr.TRANS_TIME <= to_date( #{endTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
             "AND EX.VEH_PLATE IS NULL  " +
             "AND trim(exlpr.VEH_PLATE) IN ( " +
             "SELECT " +
@@ -46,8 +46,8 @@ public interface TblRushRecordMapper extends CommonRepository<TblRushRecord> {
             "FROM " +
             "TBL_GANTRY_TRANSACTION_${year}  " +
             "WHERE " +
-            "TRANS_TIME >= to_date( ${twoHours}, 'yyyy-mm-dd hh24:mi:ss' )  " +
-            "AND TRANS_TIME <= to_date( ${endTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
+            "TRANS_TIME >= to_date( #{twoHours}, 'yyyy-mm-dd hh24:mi:ss' )  " +
+            "AND TRANS_TIME <= to_date( #{endTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
             ")  " +
             ") a  " +
             "WHERE " +
@@ -73,17 +73,17 @@ public interface TblRushRecordMapper extends CommonRepository<TblRushRecord> {
             "TBL_RUSH_RECORD trr " +
             "LEFT JOIN SYS_USER usr ON usr.USER_ID = trr.CONFIRM_USER_ID " +
             "where 1=1 " +
-            "<when test='startTime != null'> " +
-            "and trr.STATION_NAME = #{stationName} " +
+            "<when test='stationName != null'> " +
+            "and trr.STATION_NAME like '%'||#{stationName}||'%' " +
             "</when>" +
             "<when test='vehPlate != null'> " +
             "and trr.VEH_PLATE like '%'||#{vehPlate}||'%' " +
             "</when>" +
             "<when test='startTime != null'> " +
-            "and to_date(trr.TRANS_TIME,'yyyy-mm-dd') <![CDATA[>=]]> to_date(#{startTime},'yyyy-mm-dd') " +
+            "and trr.TRANS_TIME <![CDATA[>=]]> to_date(#{startTime},'yyyy-mm-dd hh24:mi:ss') " +
             "</when>" +
             "<when test='endTime != null'> " +
-            "and to_date(trr.TRANS_TIME,'yyyy-mm-dd') <![CDATA[<=]]> to_date(#{endTime},'yyyy-mm-dd') " +
+            "and trr.TRANS_TIME <![CDATA[<=]]> to_date(#{endTime},'yyyy-mm-dd hh24:mi:ss') " +
             "</when>" +
             "</script>"})
     List<TblRushRecord> list(@Param("stationName") String stationName, @Param("vehPlate") String vehPlate, @Param("startTime") String startTime, @Param("endTime") String endTime);
