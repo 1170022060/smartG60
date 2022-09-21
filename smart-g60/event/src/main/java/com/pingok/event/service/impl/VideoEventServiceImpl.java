@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author
@@ -36,6 +38,8 @@ public class VideoEventServiceImpl implements IVideoEventService {
     private TblEventVehicleEventMapper tblEventVehicleEventMapper;
     @Autowired
     private TblEventPlateInfoMapper tblEventPlateInfoMapper;
+    @Autowired
+    private TblParkingVehicleInfoMapper tblParkingVehicleInfoMapper;
     @Autowired
     private IEventService iEventService;
     @Autowired
@@ -143,6 +147,49 @@ public class VideoEventServiceImpl implements IVideoEventService {
         } else {
             BeanUtils.copyNotNullProperties(tblEventParkingEvent, eventParkingEvent);
             tblEventParkingEventMapper.updateByPrimaryKey(eventParkingEvent);
+        }
+    }
+
+    @Override
+    public void parkVehInfo(TblEventPlateInfo tblEventPlateInfo) {
+        List<Long> in= Arrays.asList(1L, 2L, 3L,4L);
+        List<Long> out= Arrays.asList(5L, 6L, 7L,8L);
+        if(in.contains(tblEventPlateInfo.getUbiSourceId()))
+        {
+            TblParkingVehicleInfo tblParkingVehicleInfo=new TblParkingVehicleInfo();
+            tblParkingVehicleInfo.setId(remoteIdProducerService.nextId());
+            tblParkingVehicleInfo.setEnTime(new Date(tblEventPlateInfo.getUbiTime()));
+            tblParkingVehicleInfo.setVehPlate(tblEventPlateInfo.getSzText());
+            tblParkingVehicleInfo.setVehClass(tblEventPlateInfo.getUiStatType());
+            tblParkingVehicleInfo.setVehClassSub(tblEventPlateInfo.getUiSubType());
+            tblParkingVehicleInfo.setVehColor(tblEventPlateInfo.getUiColor());
+            if (tblEventPlateInfo.getUbiSourceId() == 1L)
+            {
+                tblParkingVehicleInfo.setParkingId(1L);
+            }
+            else if (tblEventPlateInfo.getUbiSourceId() == 2L)
+            {
+                tblParkingVehicleInfo.setParkingId(2L);
+            }
+            else if (tblEventPlateInfo.getUbiSourceId() == 3L)
+            {
+                tblParkingVehicleInfo.setParkingId(3L);
+            }
+            else if (tblEventPlateInfo.getUbiSourceId() == 4L)
+            {
+                tblParkingVehicleInfo.setParkingId(4L);
+            }
+            tblParkingVehicleInfoMapper.insert(tblParkingVehicleInfo);
+        }
+        if(out.contains(tblEventPlateInfo.getUbiSourceId()))
+        {
+            Example example = new Example(TblParkingVehicleInfo.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("vehPlate", tblEventPlateInfo.getSzText());
+            criteria.andEqualTo("exTime", null);
+            TblParkingVehicleInfo tblParkingVehicleInfo=tblParkingVehicleInfoMapper.selectOneByExample(example);
+            tblParkingVehicleInfo.setExTime(new Date(tblEventPlateInfo.getUbiTime()));
+            tblParkingVehicleInfoMapper.insert(tblParkingVehicleInfo);
         }
     }
 }
