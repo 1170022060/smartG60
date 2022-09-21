@@ -1,5 +1,6 @@
 package com.pingok.datacenter.controller.trans;
 
+import com.pingok.datacenter.domain.trans.TblSectionRecord;
 import com.pingok.datacenter.domain.trans.vo.EnTransEnum;
 import com.pingok.datacenter.domain.trans.vo.EnTransInfo;
 import com.pingok.datacenter.domain.trans.vo.ExTransEnum;
@@ -38,13 +39,23 @@ public class TransController extends BaseController {
         if(enTransEnum.getTblEnTrans()!=null)
         {
             enTransInfo.setInsertEnTrans(transService.insertEnTrans(enTransEnum.getTblEnTrans()));
+            transService.insertSection(enTransEnum.getTblEnTrans().getWorkDate(),enTransEnum.getTblEnTrans().getLaneHex().substring(4,7),1);
             if(enTransEnum.getTblEnEtcPass()!=null)
             {
                 enTransInfo.setInsertEnEtcPass(transService.insertEnEtcPass(enTransEnum.getTblEnEtcPass(),enTransInfo.getInsertEnTrans()));
+                if(enTransEnum.getTblEnEtcPass().getEtcCardNet().equals("3101"))
+                {
+                    transService.updateSection(enTransEnum.getTblEnTrans().getWorkDate(),enTransEnum.getTblEnTrans().getLaneHex().substring(4,7),1,1);
+                }
+                else
+                {
+                    transService.updateSection(enTransEnum.getTblEnTrans().getWorkDate(),enTransEnum.getTblEnTrans().getLaneHex().substring(4,7),1,2);
+                }
             }
             if(enTransEnum.getTblEnMtcPass()!=null)
             {
                 enTransInfo.setInsertEnMtcPass(transService.insertEnMtcPass(enTransEnum.getTblEnMtcPass(),enTransInfo.getInsertEnTrans()));
+                transService.updateSection(enTransEnum.getTblEnTrans().getWorkDate(),enTransEnum.getTblEnTrans().getLaneHex().substring(4,7),1,3);
             }
             enTransInfo.setInsertEnTransSummary(transService.insertEnTransSummary(enTransEnum));
         }
@@ -60,12 +71,35 @@ public class TransController extends BaseController {
         {
             exTransInfo.setInsertExTrans(transService.insertExTrans(exTransEnum.getTblExTrans()));
             Long recordId=exTransInfo.getInsertExTrans().getRecordId();
+            transService.insertSection(exTransEnum.getTblExTrans().getWorkDate(),exTransEnum.getTblExTrans().getLaneHex().substring(4,7),2);
             if(exTransEnum.getTblExEtcPass()!=null)
             {
+                if(exTransEnum.getTblExTrans().getPassType()==5)
+                {
+                    if(exTransEnum.getTblExEtcPass().getEtcCardNet().equals("3101"))
+                    {
+                        transService.updateSection(exTransEnum.getTblExTrans().getWorkDate(), exTransEnum.getTblExTrans().getLaneHex().substring(4, 7), 2, 1);
+                    }
+                    else
+                    {
+                        transService.updateSection(exTransEnum.getTblExTrans().getWorkDate(), exTransEnum.getTblExTrans().getLaneHex().substring(4, 7), 2, 2);
+                    }
+                }
                 exTransInfo.setInsertExEtcPass(transService.insertExEtcPass(exTransEnum.getTblExEtcPass(),recordId));
             }
             if(exTransEnum.getTblExMtcPass()!=null)
             {
+                if(exTransEnum.getTblExTrans().getPassType()==6)
+                {
+                    if(exTransEnum.getTblExMtcPass().getCpcCardEnNet().equals("3101"))
+                    {
+                        transService.updateSection(exTransEnum.getTblExTrans().getWorkDate(), exTransEnum.getTblExTrans().getLaneHex().substring(4, 7), 2, 3);
+                    }
+                    else
+                    {
+                        transService.updateSection(exTransEnum.getTblExTrans().getWorkDate(), exTransEnum.getTblExTrans().getLaneHex().substring(4, 7), 2, 4);
+                    }
+                }
                 exTransInfo.setInsertExMtcPass(transService.insertExMtcPass(exTransEnum.getTblExMtcPass(),recordId));
             }
             if(exTransEnum.getTblExPaperPass()!=null)
@@ -78,7 +112,6 @@ public class TransController extends BaseController {
             }
             exTransInfo.setInsertExTransSummary(transService.insertExTransSummary(exTransEnum));
         }
-
         return AjaxResult.success(exTransInfo);
     }
 

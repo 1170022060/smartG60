@@ -18,6 +18,7 @@ import com.ruoyi.system.api.RemoteKafkaService;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -209,6 +210,7 @@ public class EventController extends BaseController {
     @PostMapping("/plateInfo")
     public AjaxResult plateInfo(@RequestBody TblEventPlateInfo tblEventPlateInfo) {
         iVideoEventService.plateInfo(tblEventPlateInfo);
+        iVideoEventService.parkVehInfo(tblEventPlateInfo);
         return AjaxResult.success();
     }
 

@@ -8,9 +8,11 @@ import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,6 +49,9 @@ public class TransServiceImpl implements ITransService {
 
     @Autowired
     private TblTransSummaryMapper tblTransSummaryMapper;
+
+    @Autowired
+    private TblSectionRecordMapper tblSectionRecordMapper;
 
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
@@ -130,6 +135,57 @@ public class TransServiceImpl implements ITransService {
             result++;
         }
         return result;
+    }
+
+    @Override
+    public void insertSection(Date workDate,String stationId, Integer direction) {
+        Example example = new Example(TblSectionRecord.class);
+        example.createCriteria().andEqualTo("workDate", workDate);
+        example.createCriteria().andEqualTo("stationId", stationId);
+        example.createCriteria().andEqualTo("direction", direction);
+        if(tblSectionRecordMapper.selectOneByExample(example)==null)
+        {
+            TblSectionRecord tblSectionRecord=new TblSectionRecord();
+            tblSectionRecord.setId(remoteIdProducerService.nextId());
+            tblSectionRecord.setWorkDate(workDate);
+            tblSectionRecord.setDirection(direction);
+            tblSectionRecord.setEtcLocal(0);
+            tblSectionRecord.setEtcElse(0);
+            tblSectionRecord.setMtcTrans(0);
+            tblSectionRecord.setMtcSingle(0);
+            tblSectionRecord.setLicense(0);
+            tblSectionRecord.setAmount(0);
+            tblSectionRecordMapper.insert(tblSectionRecord);
+        }
+    }
+
+    @Override
+    public void updateSection(Date workDate,String stationId, Integer direction,Integer type) {
+        Example example = new Example(TblSectionRecord.class);
+        example.createCriteria().andEqualTo("workDate", workDate);
+        example.createCriteria().andEqualTo("stationId", stationId);
+        example.createCriteria().andEqualTo("direction", direction);
+        TblSectionRecord tblSectionRecord=tblSectionRecordMapper.selectOneByExample(example);
+        if(type==1)
+        {
+            tblSectionRecord.setEtcLocal(tblSectionRecord.getEtcLocal()+1);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
+        if(type==2)
+        {
+            tblSectionRecord.setEtcElse(tblSectionRecord.getEtcElse()+1);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
+        if(type==3)
+        {
+            tblSectionRecord.setMtcSingle(tblSectionRecord.getMtcTrans()+1);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
+        if(type==4)
+        {
+            tblSectionRecord.setMtcTrans(tblSectionRecord.getMtcTrans()+1);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
     }
 
     @Override

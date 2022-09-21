@@ -5,6 +5,7 @@ import com.pingok.datacenter.domain.trans.vo.EnTransEnum;
 import com.pingok.datacenter.domain.trans.vo.ExInfoVo;
 import com.pingok.datacenter.domain.trans.vo.ExTransEnum;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -76,6 +77,9 @@ public interface ITransService {
      */
     public int insertExTransSplit(ExInfoVo exInfoVo, List<TblExTransSplit> tblExTransSplit);
 
+    public void insertSection(Date workDate,String stationId,Integer direction);
+
+    public void updateSection(Date workDate,String stationId, Integer direction,Integer type);
 
     /**
      * 入口流水表入汇总表
