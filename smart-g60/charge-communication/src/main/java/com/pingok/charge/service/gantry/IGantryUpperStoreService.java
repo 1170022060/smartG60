@@ -45,7 +45,24 @@ public interface IGantryUpperStoreService {
      */
     List<TblGantrySumTravelImage> saveVisu(String reqFileName, JSONArray data);
 
-    void saveBaseInfo(String data);
-    void saveTghbu(String data);
-    void saveSpecialEvent(String data);
+    /**
+     * 门架基础信息上传
+     * @param reqFileName
+     * @param data
+     */
+    void saveBaseInfo(String reqFileName,String data);
+
+    /**
+     * 暂存门架运行状态数据
+     * @param reqFileName
+     * @param data
+     */
+    void saveTghbu(String reqFileName,String data);
+
+    /**
+     * 暂存门架异常事件
+     * @param reqFileName
+     * @param data
+     */
+    void saveSpecialEvent(String reqFileName,String data);
 }

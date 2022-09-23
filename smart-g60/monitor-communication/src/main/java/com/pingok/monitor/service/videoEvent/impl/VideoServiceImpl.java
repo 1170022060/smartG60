@@ -1,6 +1,7 @@
 package com.pingok.monitor.service.videoEvent.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.pingok.monitor.config.AliYunConfig;
 import com.pingok.monitor.service.videoEvent.IVideoService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.api.RemoteFileService;
@@ -26,9 +27,6 @@ import java.io.InputStream;
 @Service
 public class VideoServiceImpl implements IVideoService {
 
-    @Value("${video.host}")
-    private String host;
-
     @Autowired
     private RemoteFileService remoteFileService;
 
@@ -42,7 +40,7 @@ public class VideoServiceImpl implements IVideoService {
                 .add("szUser", szUser)
                 .build();
         final Request request = new Request.Builder()
-                .url(host + "/api/event/update/" + ubiLogicId)
+                .url(AliYunConfig.VIDEOHOST + "/api/event/update/" + ubiLogicId)
                 .post(formBody)
                 .build();
         Call call = client.newCall(request);
@@ -72,7 +70,7 @@ public class VideoServiceImpl implements IVideoService {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .get()
-                .url(host + "/fileInfo/get-img-by-id/" + imgId)
+                .url(AliYunConfig.VIDEOHOST + "/fileInfo/get-img-by-id/" + imgId)
                 .build();
         Call call = client.newCall(request);
         try {
@@ -102,7 +100,7 @@ public class VideoServiceImpl implements IVideoService {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .get()
-                .url(host + "/api/get-event-video-by-id/" + ubiLogicId + "?uiEventType=" + uiEventType + "&uiVideoType=" + uiVideoType)
+                .url(AliYunConfig.VIDEOHOST + "/api/get-event-video-by-id/" + ubiLogicId + "?uiEventType=" + uiEventType + "&uiVideoType=" + uiVideoType)
                 .build();
         Call call = client.newCall(request);
         try {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,16 +12,12 @@ import java.util.Date;
  *
  * @author ruoyi
  */
-public class TblExTransSplit {
+public class TblExTransSplit implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /** 主键 */
-    @Id
-    private Long id;
-
-    /** ETC：4发行方编号 +8卡号 + 8入口unix时间 CPC：”0000” + 8卡号 + 8入口unix时间 纸圈：”00” + 10车道Node十六进制码 + 8出口unix出口时间  */
-    private String passId;
+    /** 索引：与CPC、ETC、PAPER共用SEQ */
+    private Long recordId;
 
     /** 省份顺序 */
     private Integer provIndex;
@@ -69,20 +66,12 @@ public class TblExTransSplit {
     /** 表名   */
     private String tableName;
 
-    public Long getId() {
-        return id;
+    public Long getRecordId() {
+        return recordId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPassId() {
-        return passId;
-    }
-
-    public void setPassId(String passId) {
-        this.passId = passId;
+    public void setRecordId(Long recordId) {
+        this.recordId = recordId;
     }
 
     public Integer getProvIndex() {

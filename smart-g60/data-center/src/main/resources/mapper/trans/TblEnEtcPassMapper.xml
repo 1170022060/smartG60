@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.datacenter.mapper.trans.TblEnEtcPassMapper">
+
+    <resultMap type="com.pingok.datacenter.domain.trans.TblEnEtcPass" id="TblEnEtcPassResult">
+        <id     property="recordId"  column="record_id"   />
+        <result property="transTime"  column="trans_time"   />
+        <result property="vehLwh"  column="veh_lwh"   />
+        <result property="etcCardId"  column="etc_card_id"   />
+        <result property="etcCardVer"  column="etc_card_ver"   />
+        <result property="etcCardNet"  column="etc_card_net"   />
+        <result property="etcCardProvider"  column="etc_card_provider"   />
+        <result property="etcCardPlate"  column="etc_card_plate"   />
+        <result property="etcCardColor"  column="etc_card_color"   />
+        <result property="etcCardVeh"  column="etc_card_veh"   />
+        <result property="etcCardType"  column="etc_card_type"   />
+        <result property="obuId"  column="obu_id"   />
+        <result property="obuVer"  column="obu_ver"   />
+        <result property="obuProvider"  column="obu_provider"   />
+        <result property="obuPlate"  column="obu_plate"   />
+        <result property="obuColor"  column="obu_color"   />
+        <result property="obuVeh"  column="obu_veh"   />
+        <result property="balance"  column="balance"   />
+        <result property="transNo"  column="trans_no"   />
+        <result property="terminalTransId"  column="terminal_trans_id"   />
+        <result property="mac"  column="mac"   />
+        <result property="tac"  column="tac"   />
+        <result property="usedTime"  column="used_time"   />
+    </resultMap>
+
+    <insert id="insertEnEtcPass" parameterType="com.pingok.datacenter.domain.trans.TblEnEtcPass">
+        insert into ${tableName}(
+            <if test="transTime!= null ">trans_time,</if>
+            <if test="vehLwh!= null ">veh_lwh,</if>
+            <if test="etcCardId!= null ">etc_card_id,</if>
+            <if test="etcCardVer!= null ">etc_card_ver,</if>
+            <if test="etcCardNet!= null ">etc_card_net,</if>
+            <if test="etcCardProvider!= null ">etc_card_provider,</if>
+            <if test="etcCardPlate!= null ">etc_card_plate,</if>
+            <if test="etcCardColor!= null ">etc_card_color,</if>
+            <if test="etcCardVeh!= null ">etc_card_veh,</if>
+            <if test="etcCardType!= null ">etc_card_type,</if>
+            <if test="obuId!= null ">obu_id,</if>
+            <if test="obuVer!= null ">obu_ver,</if>
+            <if test="obuProvider!= null ">obu_provider,</if>
+            <if test="obuPlate!= null ">obu_plate,</if>
+            <if test="obuColor!= null ">obu_color,</if>
+            <if test="obuVeh!= null ">obu_veh,</if>
+            <if test="balance!= null ">balance,</if>
+            <if test="transNo!= null ">trans_no,</if>
+            <if test="terminalTransId!= null ">terminal_trans_id,</if>
+            <if test="mac!= null ">mac,</if>
+            <if test="tac!= null ">tac,</if>
+            <if test="usedTime!= null ">used_time,</if>
+            record_id
+        )values(
+            <if test="transTime != null ">#{transTime},</if>
+            <if test="vehLwh != null ">#{vehLwh},</if>
+            <if test="etcCardId != null ">#{etcCardId},</if>
+            <if test="etcCardVer != null ">#{etcCardVer},</if>
+            <if test="etcCardNet != null ">#{etcCardNet},</if>
+            <if test="etcCardProvider != null ">#{etcCardProvider},</if>
+            <if test="etcCardPlate != null ">#{etcCardPlate},</if>
+            <if test="etcCardColor != null ">#{etcCardColor},</if>
+            <if test="etcCardVeh != null ">#{etcCardVeh},</if>
+            <if test="etcCardType != null ">#{etcCardType},</if>
+            <if test="obuId != null ">#{obuId},</if>
+            <if test="obuVer != null ">#{obuVer},</if>
+            <if test="obuProvider != null ">#{obuProvider},</if>
+            <if test="obuPlate != null ">#{obuPlate},</if>
+            <if test="obuColor != null ">#{obuColor},</if>
+            <if test="obuVeh != null ">#{obuVeh},</if>
+            <if test="balance != null ">#{balance},</if>
+            <if test="transNo != null ">#{transNo},</if>
+            <if test="terminalTransId != null ">#{terminalTransId},</if>
+            <if test="mac != null ">#{mac},</if>
+            <if test="tac != null ">#{tac},</if>
+            <if test="usedTime != null ">#{usedTime},</if>
+            #{recordId}
+        )
+    </insert>
+</mapper>

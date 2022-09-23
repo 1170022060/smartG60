@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.station.mapper.demicAreaList.EpidemicAreaMapper">
+    <resultMap type="com.pingok.station.domain.demicAreaList.EpidemicArea" id="EpidemicAreaResult">
+        <id     property="RecordId"      column="RecordId"       />
+        <result property="StationID"  column="StationID"   />
+        <result property="StationHEX"  column="StationHEX"   />
+        <result property="StationName"  column="StationName"   />
+        <result property="RegionName"  column="RegionName"   />
+        <result property="StartTime"  column="StartTime"   />
+        <result property="Version"  column="Version"   />
+    </resultMap>
+    <insert id="insertDemicArea" parameterType="com.pingok.station.domain.demicAreaList.EpidemicArea">
+        insert into EpidemicArea(
+        <if test="StationID != null ">StationID,</if>
+        <if test="StationHEX != null ">StationHEX,</if>
+        <if test="StationName != null ">StationName,</if>
+        <if test="RegionName != null ">RegionName,</if>
+        <if test="StartTime != null ">StartTime,</if>
+        <if test="Version != null ">Version</if>
+        )values(
+        <if test="StationID != null ">#{StationID},</if>
+        <if test="StationHEX != null ">#{StationHEX},</if>
+        <if test="StationName != null ">#{StationName},</if>
+        <if test="RegionName != null ">#{RegionName},</if>
+        <if test="StartTime != null ">#{StartTime},</if>
+        <if test="Version != null ">#{Version}</if>
+        )
+    </insert>
+    <delete id="deleteAll">
+        delete from EpidemicArea
+    </delete>
+</mapper>

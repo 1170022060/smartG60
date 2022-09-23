@@ -2,6 +2,8 @@ package com.pingok.algorithm.carbonEmission.service;
 
 import com.pingok.algorithm.carbonEmission.entity.TblAlgVehCarbonEmission;
 
+import java.util.List;
+
 /**
  * 碳排放业务接口
  */
@@ -18,4 +20,18 @@ public interface TblAlgVehCarbonEmissionService {
      * @return
      */
     TblAlgVehCarbonEmission getAlgVehCarbonEmission(String queryTime);
+
+    /**
+     * 查询车辆碳排放列表
+     * @param tblAlgVehCarbonEmission
+     * @return
+     */
+    List<TblAlgVehCarbonEmission> listByBean(TblAlgVehCarbonEmission tblAlgVehCarbonEmission);
+
+    /**
+     * 查询车辆碳排放详情
+     * @param tblAlgVehCarbonEmission
+     * @return
+     */
+    TblAlgVehCarbonEmission selectByBean(TblAlgVehCarbonEmission tblAlgVehCarbonEmission);
 }

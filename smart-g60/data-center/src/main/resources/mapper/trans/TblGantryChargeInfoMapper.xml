@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.datacenter.mapper.gantry.TblGantryChargeInfoMapper">
+
+
+    <select id="selectChargeFlowList" resultType="com.pingok.datacenter.domain.gantry.model.ChargeFlowModel">
+        select charge_unit_id as chargingUnitId, to_char(trans_time, 'yyyy-MM-dd') as statisticsDate, count(DISTINCT vehicle_plate || SUBSTR(trans_time, 0, 16)) as flow
+        from ${table}
+        <where>
+            to_char(trans_time, 'yyyy-MM-dd') &gt;= #{startDate} and to_char(trans_time, 'yyyy-MM-dd') &lt;= #{endDate}
+            <if test="chargingUnitId != null">
+                AND charge_unit_id = #{chargingUnitId}
+            </if>
+        </where>
+        group by charge_unit_id,to_char(trans_time, 'yyyy-MM-dd')
+        order by charge_unit_id
+    </select>
+
+    <select id="selectChargeFlow" resultType="com.pingok.datacenter.domain.gantry.model.ChargeFlowModel">
+        select charge_unit_id as chargingUnitId, to_char(trans_time, 'yyyy-MM-dd') as statisticsDate, count(DISTINCT vehicle_plate || SUBSTR(trans_time, 0, 16)) as flow
+        from ${table}
+        <where>
+            to_char(trans_time, 'yyyy-MM-dd') = #{statisticsDate}
+            <if test="chargingUnitId != null">
+                AND charge_unit_id = #{chargingUnitId}
+            </if>
+        </where>
+        group by charge_unit_id,to_char(trans_time, 'yyyy-MM-dd')
+        order by charge_unit_id
+    </select>
+</mapper>

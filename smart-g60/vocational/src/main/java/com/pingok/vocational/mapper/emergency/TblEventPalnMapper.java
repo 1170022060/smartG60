@@ -21,8 +21,8 @@ public interface TblEventPalnMapper extends CommonRepository<TblEventPaln> {
             "EVENT_TYPE AS \"eventType\", " +
             "PLAN_FUNCTION AS \"planFunction\", " +
             "STATUS AS \"status\", " +
-            "CREATE_TIME AS \"createTime\", " +
-            "UPDATE_TIME AS \"updateTime\", " +
+            "to_char(CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\"," +
+            "to_char(UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
             "CREATE_USER_ID AS \"createUserId\", " +
             "UPDATE_USER_ID AS \"updateUserId\"  " +
             "FROM " +
@@ -35,8 +35,8 @@ public interface TblEventPalnMapper extends CommonRepository<TblEventPaln> {
             "SELECT " +
             "tep.ID AS \"id\", " +
             "tep.PLAN_TITLE AS \"planTitle\", " +
-            "tep.CREATE_TIME AS \"createTime\", " +
-            "tep.UPDATE_TIME AS \"updateTime\", " +
+            "to_char(tep.CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\"," +
+            "to_char(tep.UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
             "tep.STATUS  as \"status\", " +
             "CASE tep.STATUS " +
             "WHEN 1 THEN " +

@@ -1,15 +1,10 @@
 package com.pingok.kafka.service;
 
-import com.pingok.kafka.domain.TblKafkaFailInfo;
-
-import java.util.List;
+import com.pingok.kafka.domain.KafkaEnum;
 
 public interface KafkaService {
 
-    void send(TblKafkaFailInfo tblKafkaFailInfo);
+    void send(KafkaEnum kafkaEnum);
 
-    List<TblKafkaFailInfo> findAll();
-
-    int delete(Long id);
 
 }

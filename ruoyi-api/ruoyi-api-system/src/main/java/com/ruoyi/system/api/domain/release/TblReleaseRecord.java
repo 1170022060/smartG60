@@ -26,7 +26,7 @@ public class TblReleaseRecord {
 
     /** 设备Id */
     @Excel(name = "设备Id")
-    private Long deviceId;
+    private String deviceId;
 
     /** 信息类型 */
     @Excel(name = "信息类型")
@@ -42,7 +42,7 @@ public class TblReleaseRecord {
 
     /** 字体大小 */
     @Excel(name = "字体大小")
-    private Integer typefaceSize;
+    private String typefaceSize;
 
     /** 字体颜色 */
     @Excel(name = "字体颜色")

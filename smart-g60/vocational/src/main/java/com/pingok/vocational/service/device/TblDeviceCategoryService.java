@@ -92,4 +92,11 @@ public interface TblDeviceCategoryService {
      * @return 结果
      */
     public String checkCategoryNameUnique(TblDeviceCategory tblDeviceCategory);
+
+    /**
+     * 查询岗位下拉列表
+     *
+     * @return 结果
+     */
+    public List<Map> selectPost();
 }

@@ -1,13 +1,16 @@
 package com.pingok.vod.service.impl;
 
 import cn.hutool.http.HttpUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.vod.config.VodConfig;
 import com.pingok.vod.domain.TblDeviceInfo;
 import com.pingok.vod.domain.TblMonitorPreset;
 import com.pingok.vod.mapper.TblMonitorPresetMapper;
 import com.pingok.vod.service.IDeviceInfoService;
 import com.pingok.vod.service.IMonitorPresetService;
+import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.IdUtils;
 import com.ruoyi.common.core.utils.StringUtils;
@@ -15,7 +18,6 @@ import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -31,14 +33,6 @@ import java.util.List;
 @Service
 public class MonitorPresetServiceImpl implements IMonitorPresetService {
 
-    @Value("${vod.host}")
-    private String host;
-
-    @Value("${vod.user}")
-    private String user;
-
-    @Value("${vod.pwd}")
-    private String pwd;
 
     @Autowired
     private TblMonitorPresetMapper tblMonitorPresetMapper;
@@ -50,20 +44,21 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
     @Override
     public JSONArray getCameraStatus() {
         HashMap<String, Object> paramMap = new HashMap<>();
-        paramMap.put("req_type", "get_camera_status_request");
+        paramMap.put("req_type", "get_camera_request");
         HashMap<String, Object> retHeader = new HashMap<>();
         retHeader.put("guid", IdUtils.fastUUID());
-        retHeader.put("user", user);
-        retHeader.put("pwd", pwd);
+        retHeader.put("user", VodConfig.USER);
+        retHeader.put("pwd", VodConfig.PWD);
         paramMap.put("req_header", retHeader);
-        String post = HttpUtil.post(host, paramMap);
+        String post = HttpUtil.post(VodConfig.HOST, JSON.toJSONString(paramMap));
         JSONArray cameraStatus = null;
         JSONObject ret;
         if (!StringUtils.isEmpty(post)) {
             ret = JSONObject.parseObject(post);
             if (ret.getJSONObject("ret_header").containsKey("code") && ret.getJSONObject("ret_header").getString("code").equals("0")) {
                 cameraStatus = ret.getJSONObject("ret_body").getJSONArray("camera_status_list");
-
+            }else {
+                throw new ServiceException(ret.getJSONObject("ret_header").getString("msg"));
             }
         }
         return cameraStatus;
@@ -80,12 +75,12 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
         retBody = new HashMap<>();
         paramMap.put("req_type", "get_vod_curtime_request");
         retHeader.put("guid", IdUtils.fastUUID());
-        retHeader.put("user", user);
-        retHeader.put("pwd", pwd);
+        retHeader.put("user", VodConfig.USER);
+        retHeader.put("pwd", VodConfig.PWD);
         paramMap.put("req_header", retHeader);
         retBody.put("session_id", id);
         paramMap.put("req_body", retBody);
-        String post = HttpUtil.post(host, paramMap);
+        String post = HttpUtil.post(VodConfig.HOST, paramMap);
         if (!StringUtils.isEmpty(post)) {
             JSONObject req = JSONObject.parseObject(post);
             r.put("code", req.getJSONObject("ret_header").getIntValue("code"));
@@ -108,15 +103,15 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
         retBody = new HashMap<>();
         paramMap.put("req_type", "vod_control_request");
         retHeader.put("guid", IdUtils.fastUUID());
-        retHeader.put("user", user);
-        retHeader.put("pwd", pwd);
+        retHeader.put("user", VodConfig.USER);
+        retHeader.put("pwd", VodConfig.PWD);
         paramMap.put("req_header", retHeader);
         retBody.put("session_id", id);
         retBody.put("control_type", type);
         retBody.put("play_speed", playSpeed);
         retBody.put("seek_time", seekTime);
         paramMap.put("req_body", retBody);
-        String post = HttpUtil.post(host, paramMap);
+        String post = HttpUtil.post(VodConfig.HOST, paramMap);
         if (!StringUtils.isEmpty(post)) {
             JSONObject req = JSONObject.parseObject(post);
             r.put("code", req.getJSONObject("ret_header").getIntValue("code"));
@@ -136,12 +131,12 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
         retBody = new HashMap<>();
         paramMap.put("req_type", "stop_vod_request");
         retHeader.put("guid", IdUtils.fastUUID());
-        retHeader.put("user", user);
-        retHeader.put("pwd", pwd);
+        retHeader.put("user", VodConfig.USER);
+        retHeader.put("pwd", VodConfig.PWD);
         paramMap.put("req_header", retHeader);
         retBody.put("session_id", id);
         paramMap.put("req_body", retBody);
-        String post = HttpUtil.post(host, paramMap);
+        String post = HttpUtil.post(VodConfig.HOST, paramMap);
         if (!StringUtils.isEmpty(post)) {
             JSONObject req = JSONObject.parseObject(post);
             r.put("code", req.getJSONObject("ret_header").getIntValue("code"));
@@ -162,14 +157,14 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
         retBody = new HashMap<>();
         paramMap.put("req_type", "start_vod_request");
         retHeader.put("guid", IdUtils.fastUUID());
-        retHeader.put("user", user);
-        retHeader.put("pwd", pwd);
+        retHeader.put("user", VodConfig.USER);
+        retHeader.put("pwd", VodConfig.PWD);
         paramMap.put("req_header", retHeader);
         retBody.put("camera_id", Integer.valueOf(tblDeviceInfo.getDeviceId()));
         retBody.put("start_time", start);
         retBody.put("end_time", end);
         paramMap.put("req_body", retBody);
-        String post = HttpUtil.post(host, paramMap);
+        String post = HttpUtil.post(VodConfig.HOST, paramMap);
         if (!StringUtils.isEmpty(post)) {
             JSONObject req = JSONObject.parseObject(post);
             r.put("code", req.getJSONObject("ret_header").getIntValue("code"));
@@ -195,14 +190,14 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
         retBody = new HashMap<>();
         paramMap.put("req_type", "get_record_list_request");
         retHeader.put("guid", IdUtils.fastUUID());
-        retHeader.put("user", user);
-        retHeader.put("pwd", pwd);
+        retHeader.put("user", VodConfig.USER);
+        retHeader.put("pwd", VodConfig.PWD);
         paramMap.put("req_header", retHeader);
         retBody.put("camera_id", Integer.valueOf(tblDeviceInfo.getDeviceId()));
         retBody.put("start_time", startTime);
         retBody.put("end_time", endTime);
         paramMap.put("req_body", retBody);
-        String post = HttpUtil.post(host, paramMap);
+        String post = HttpUtil.post(VodConfig.HOST, paramMap);
         if (!StringUtils.isEmpty(post)) {
             JSONObject req = JSONObject.parseObject(post);
             if (req.getJSONObject("ret_header").containsKey("code") && req.getJSONObject("ret_header").getString("code").equals("0")) {
@@ -224,8 +219,8 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
         retBody = new HashMap<>();
         paramMap.put("req_type", "ptz_control_request");
         retHeader.put("guid", IdUtils.fastUUID());
-        retHeader.put("user", user);
-        retHeader.put("pwd", pwd);
+        retHeader.put("user", VodConfig.USER);
+        retHeader.put("pwd", VodConfig.PWD);
         paramMap.put("req_header", retHeader);
         retBody.put("camera_id", Integer.valueOf(tblDeviceInfo.getDeviceId()));
         retBody.put("ptz_control_type", type);
@@ -234,7 +229,7 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
         retBody.put("ptz_param3", 0);
         retBody.put("ptz_param4", 0);
         paramMap.put("req_body", retBody);
-        String post = HttpUtil.post(host, paramMap);
+        String post = HttpUtil.post(VodConfig.HOST, paramMap);
         if (!StringUtils.isEmpty(post)) {
             JSONObject req = JSONObject.parseObject(post);
             r.put("code", req.getJSONObject("ret_header").getIntValue("code"));
@@ -260,12 +255,12 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
             retBody = new HashMap<>();
             paramMap.put("req_type", "stop_live_request");
             retHeader.put("guid", IdUtils.fastUUID());
-            retHeader.put("user", user);
-            retHeader.put("pwd", pwd);
+            retHeader.put("user", VodConfig.USER);
+            retHeader.put("pwd", VodConfig.PWD);
             paramMap.put("req_header", retHeader);
             retBody.put("camera_id", cameraId);
             paramMap.put("req_body", retBody);
-            post = HttpUtil.post(host, paramMap);
+            post = HttpUtil.post(VodConfig.HOST, paramMap);
             if (!StringUtils.isEmpty(post)) {
                 req = JSONObject.parseObject(post);
                 if (!req.getJSONObject("ret_header").containsKey("code") || !req.getJSONObject("ret_header").getString("code").equals("0")) {
@@ -295,12 +290,12 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
             retBody = new HashMap<>();
             paramMap.put("req_type", "start_live_request");
             retHeader.put("guid", IdUtils.fastUUID());
-            retHeader.put("user", user);
-            retHeader.put("pwd", pwd);
+            retHeader.put("user", VodConfig.USER);
+            retHeader.put("pwd", VodConfig.PWD);
             paramMap.put("req_header", retHeader);
             retBody.put("camera_id", cameraId);
             paramMap.put("req_body", retBody);
-            post = HttpUtil.post(host, paramMap);
+            post = HttpUtil.post(VodConfig.HOST, paramMap);
             if (!StringUtils.isEmpty(post)) {
                 req = JSONObject.parseObject(post);
                 if (req.getJSONObject("ret_header").containsKey("code") && req.getJSONObject("ret_header").getString("code").equals("0")) {
@@ -354,10 +349,10 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
         paramMap.put("req_type", "get_camera_request");
         HashMap<String, Object> retHeader = new HashMap<>();
         retHeader.put("guid", IdUtils.fastUUID());
-        retHeader.put("user", user);
-        retHeader.put("pwd", pwd);
+        retHeader.put("user", VodConfig.USER);
+        retHeader.put("pwd", VodConfig.PWD);
         paramMap.put("req_header", retHeader);
-        String post = HttpUtil.post(host, paramMap);
+        String post = HttpUtil.post(VodConfig.HOST, paramMap);
         JSONArray cameraList = null;
         JSONObject ret;
         if (!StringUtils.isEmpty(post)) {
@@ -379,12 +374,12 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
         retBody = new HashMap<>();
         paramMap.put("req_type", "stream_alive_request");
         retHeader.put("guid", IdUtils.fastUUID());
-        retHeader.put("user", user);
-        retHeader.put("pwd", pwd);
+        retHeader.put("user", VodConfig.USER);
+        retHeader.put("pwd", VodConfig.PWD);
         paramMap.put("req_header", retHeader);
         retBody.put("id", id);
         paramMap.put("req_body", retBody);
-        String post = HttpUtil.post(host, paramMap);
+        String post = HttpUtil.post(VodConfig.HOST, paramMap);
         if (!StringUtils.isEmpty(post)) {
             JSONObject req = JSONObject.parseObject(post);
             if (!req.getJSONObject("ret_header").containsKey("code") || !req.getJSONObject("ret_header").getString("code").equals("0")) {

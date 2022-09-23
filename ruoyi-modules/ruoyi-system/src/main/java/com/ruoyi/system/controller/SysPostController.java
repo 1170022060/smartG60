@@ -2,6 +2,9 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.security.annotation.InnerAuth;
+import com.ruoyi.system.api.domain.SysPost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +24,6 @@ import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.common.security.utils.SecurityUtils;
-import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.service.ISysPostService;
 
 /**
@@ -127,5 +129,45 @@ public class SysPostController extends BaseController
     {
         List<SysPost> posts = postService.selectPostAll();
         return AjaxResult.success(posts);
+    }
+
+
+    /**
+     * 根据岗位名称获取详细信息
+     */
+    @InnerAuth
+    @GetMapping(value = "/getInfoByNameInner/{postName}")
+    public AjaxResult getInfoByNameInner(@PathVariable String postName)
+    {
+        return AjaxResult.success(postService.selectPostByName(postName));
+    }
+
+    /**
+     * 根据岗位编号获取详细信息
+     */
+    @InnerAuth
+    @GetMapping(value = "/getInfoInner/{postId}")
+    public AjaxResult getInfoInner(@PathVariable Long postId)
+    {
+        return AjaxResult.success(postService.selectPostById(postId));
+    }
+
+    /**
+     * 新增岗位
+     */
+    @InnerAuth
+    @PostMapping(value = "/addInner")
+    public AjaxResult addInner(@Validated @RequestBody SysPost post)
+    {
+        if (UserConstants.NOT_UNIQUE.equals(postService.checkPostNameUnique(post)))
+        {
+            return AjaxResult.error("新增岗位'" + post.getPostName() + "'失败，岗位名称已存在");
+        }
+        else if (UserConstants.NOT_UNIQUE.equals(postService.checkPostCodeUnique(post)))
+        {
+            return AjaxResult.error("新增岗位'" + post.getPostName() + "'失败，岗位编码已存在");
+        }
+        post.setCreateBy(SecurityUtils.getUsername());
+        return toAjax(postService.insertPost(post));
     }
 }

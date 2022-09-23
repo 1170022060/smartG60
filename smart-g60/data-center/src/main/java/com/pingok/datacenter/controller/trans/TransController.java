@@ -38,13 +38,14 @@ public class TransController extends BaseController {
         if(enTransEnum.getTblEnTrans()!=null)
         {
             enTransInfo.setInsertEnTrans(transService.insertEnTrans(enTransEnum.getTblEnTrans()));
-        }
-        if(enTransEnum.getTblEnTransPass()!=null)
-        {
-            enTransInfo.setInsertEnTransPass(transService.insertEnTransPass(enTransEnum.getTblEnTransPass()));
-        }
-        if(enTransEnum.getTblEnTrans()!=null && enTransEnum.getTblEnTransPass()!=null)
-        {
+            if(enTransEnum.getTblEnEtcPass()!=null)
+            {
+                enTransInfo.setInsertEnEtcPass(transService.insertEnEtcPass(enTransEnum.getTblEnEtcPass(),enTransInfo.getInsertEnTrans()));
+            }
+            if(enTransEnum.getTblEnMtcPass()!=null)
+            {
+                enTransInfo.setInsertEnMtcPass(transService.insertEnMtcPass(enTransEnum.getTblEnMtcPass(),enTransInfo.getInsertEnTrans()));
+            }
             enTransInfo.setInsertEnTransSummary(transService.insertEnTransSummary(enTransEnum));
         }
         return AjaxResult.success(enTransInfo);
@@ -58,20 +59,26 @@ public class TransController extends BaseController {
         if(exTransEnum.getTblExTrans()!=null)
         {
             exTransInfo.setInsertExTrans(transService.insertExTrans(exTransEnum.getTblExTrans()));
-        }
-        if(exTransEnum.getTblExTransPass()!=null)
-        {
-            exTransInfo.setInsertExTransPass(transService.insertExTransPass(exTransEnum.getTblExTransPass()));
-
+            Long recordId=exTransInfo.getInsertExTrans().getRecordId();
+            if(exTransEnum.getTblExEtcPass()!=null)
+            {
+                exTransInfo.setInsertExEtcPass(transService.insertExEtcPass(exTransEnum.getTblExEtcPass(),recordId));
+            }
+            if(exTransEnum.getTblExMtcPass()!=null)
+            {
+                exTransInfo.setInsertExMtcPass(transService.insertExMtcPass(exTransEnum.getTblExMtcPass(),recordId));
+            }
+            if(exTransEnum.getTblExPaperPass()!=null)
+            {
+                exTransInfo.setInsertExPaperPass(transService.insertExPaperPass(exTransEnum.getTblExPaperPass(),recordId));
+            }
             if(exTransEnum.getTblExTransSplit()!=null)
             {
                 exTransInfo.setInsertExTransSplit(transService.insertExTransSplit(exTransInfo.getInsertExTrans(),exTransEnum.getTblExTransSplit()));
             }
-        }
-        if(exTransEnum.getTblExTrans()!=null && exTransEnum.getTblExTransPass()!=null)
-        {
             exTransInfo.setInsertExTransSummary(transService.insertExTransSummary(exTransEnum));
         }
+
         return AjaxResult.success(exTransInfo);
     }
 

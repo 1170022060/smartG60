@@ -16,7 +16,7 @@ import com.ruoyi.common.security.utils.DictUtils;
 import com.ruoyi.system.api.RemoteConfigService;
 import com.ruoyi.system.api.RemoteKafkaService;
 import com.ruoyi.system.api.domain.SysDictData;
-import com.ruoyi.system.api.domain.kafuka.TblKafkaFailInfo;
+import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,10 +42,15 @@ public class DeviceMonitorController extends BaseController {
     @Autowired
     private RemoteKafkaService remoteKafkaService;
 
+    @GetMapping("/selectByDeviceId")
+    public AjaxResult selectByDeviceId(String deviceId) {
+        return AjaxResult.success(iDeviceService.selectByDeviceId(deviceId));
+    }
+
     @PostMapping
     public AjaxResult updateHeartbeat(@RequestBody TblDeviceStatus deviceStatus) {
         iDeviceService.updateStatus(deviceStatus);
-        if(deviceStatus.getStatus()==0){
+        if (deviceStatus.getStatus() == 0) {
             TblDeviceFault deviceFault = new TblDeviceFault();
             deviceFault.setDeviceId(deviceStatus.getDeviceId());
             deviceFault.setFaultId("hardware");
@@ -66,7 +71,7 @@ public class DeviceMonitorController extends BaseController {
     @GetMapping("/pingHeartbeat")
     public AjaxResult pingHeartbeat() {
         List<TblDeviceInfo> deviceInfos = iDeviceService.findByProtocol("ping");
-        if(deviceInfos != null && deviceInfos.size() > 0) {
+        if (deviceInfos != null && deviceInfos.size() > 0) {
             List<TblDeviceInfo> daasArray = new ArrayList<>();
             List<TblDeviceInfo> monitorArray = new ArrayList<>();
             List<TblDeviceInfo> chargeArray = new ArrayList<>();
@@ -109,18 +114,18 @@ public class DeviceMonitorController extends BaseController {
                     }
                 }
             }
-            TblKafkaFailInfo tblKafkaFailInfo;
+            KafkaEnum kafkaEnum;
             if (chargeArray != null && chargeArray.size() > 0) {
-                tblKafkaFailInfo = new TblKafkaFailInfo();
-                tblKafkaFailInfo.setTopIc(KafkaTopIc.CHARGE_SIGNAL_PING_STATUS);
-                tblKafkaFailInfo.setData(JSON.toJSONString(chargeArray));
-                remoteKafkaService.send(tblKafkaFailInfo);
+                kafkaEnum = new KafkaEnum();
+                kafkaEnum.setTopIc(KafkaTopIc.CHARGE_SIGNAL_PING_STATUS);
+                kafkaEnum.setData(JSON.toJSONString(chargeArray));
+                remoteKafkaService.send(kafkaEnum);
             }
             if (monitorArray != null && monitorArray.size() > 0) {
-                tblKafkaFailInfo = new TblKafkaFailInfo();
-                tblKafkaFailInfo.setTopIc(KafkaTopIc.MONITOR_SIGNAL_PING_STATUS);
-                tblKafkaFailInfo.setData(JSON.toJSONString(monitorArray));
-                remoteKafkaService.send(tblKafkaFailInfo);
+                kafkaEnum = new KafkaEnum();
+                kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SIGNAL_PING_STATUS);
+                kafkaEnum.setData(JSON.toJSONString(monitorArray));
+                remoteKafkaService.send(kafkaEnum);
             }
             if (daasArray != null && daasArray.size() > 0) {
                 TblDeviceStatus deviceStatus;
@@ -215,9 +220,9 @@ public class DeviceMonitorController extends BaseController {
                     }
                 }
             }
-            TblKafkaFailInfo tblKafkaFailInfo;
+            KafkaEnum kafkaEnum;
             String topIcCharge = "", topIcMonitor = "";
-            switch(type){
+            switch (type) {
                 case "serverSnmp":
                     topIcCharge = KafkaTopIc.CHARGE_SIGNAL_SERVER_STATUS;
                     topIcMonitor = KafkaTopIc.MONITOR_SIGNAL_SERVER_STATUS;
@@ -232,16 +237,16 @@ public class DeviceMonitorController extends BaseController {
                     break;
             }
             if (chargeArray != null && chargeArray.size() > 0) {
-                tblKafkaFailInfo = new TblKafkaFailInfo();
-                tblKafkaFailInfo.setTopIc(topIcCharge);
-                tblKafkaFailInfo.setData(JSON.toJSONString(chargeArray));
-                remoteKafkaService.send(tblKafkaFailInfo);
+                kafkaEnum = new KafkaEnum();
+                kafkaEnum.setTopIc(topIcCharge);
+                kafkaEnum.setData(JSON.toJSONString(chargeArray));
+                remoteKafkaService.send(kafkaEnum);
             }
             if (monitorArray != null && monitorArray.size() > 0) {
-                tblKafkaFailInfo = new TblKafkaFailInfo();
-                tblKafkaFailInfo.setTopIc(topIcMonitor);
-                tblKafkaFailInfo.setData(JSON.toJSONString(monitorArray));
-                remoteKafkaService.send(tblKafkaFailInfo);
+                kafkaEnum = new KafkaEnum();
+                kafkaEnum.setTopIc(topIcMonitor);
+                kafkaEnum.setData(JSON.toJSONString(monitorArray));
+                remoteKafkaService.send(kafkaEnum);
             }
             if (daasArray != null && daasArray.size() > 0) {
                 TblDeviceStatus deviceStatus;

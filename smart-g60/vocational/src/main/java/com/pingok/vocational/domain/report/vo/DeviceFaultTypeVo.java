@@ -4,12 +4,14 @@ import com.ruoyi.common.core.annotation.Excel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.io.Serializable;
+
 /**
  * 设备故障(按故障类型导出)
  *
  * @author ruoyi
  */
-public class DeviceFaultTypeVo {
+public class DeviceFaultTypeVo implements Serializable {
 
     /** 故障类型 */
     @Excel(name = "故障类型")

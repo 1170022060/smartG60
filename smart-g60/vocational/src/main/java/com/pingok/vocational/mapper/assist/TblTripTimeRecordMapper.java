@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public interface TblTripTimeRecordMapper extends CommonRepository<TblTripTimeRecord> {
     @Select({"<script>" +
-            "select to_char(a.FORECAST_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"forecastDate\" ," +
+            "select to_char(a.FORECAST_DATE, 'yyyy-mm-dd') as \"forecastDate\" ," +
             "a.TRIP_TIME as \"tripTime\" ," +
             "a.FORECAST_ROAD as \"forecastRoad\" ," +
             "case when a.CREATE_USER_ID is null then null else a.CREATE_USER_ID || ':' || b.USER_NAME end as \"createUserName\" from TBL_TRIP_TIME_RECORD a " +

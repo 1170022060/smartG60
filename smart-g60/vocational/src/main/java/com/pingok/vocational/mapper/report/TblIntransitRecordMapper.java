@@ -18,7 +18,7 @@ import java.util.Map;
 public interface TblIntransitRecordMapper{
 
     @Select({"<script>" +
-            "select to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "select to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "a.ETC_LOCAL as \"etcLocal\" ," +
             "a.ETC_ELSE as \"etcElse\" ," +
             "a.ETC_LOCAL+a.ETC_ELSE as \"etcTotal\" ," +
@@ -39,7 +39,7 @@ public interface TblIntransitRecordMapper{
     List<Map> selectIntransitRecord(@Param("startDate") Date startDate, @Param("endDate")  Date endDate);
 
     @Select({"<script>" +
-            "select to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "select to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "a.ETC_LOCAL as \"etcLocal\" ," +
             "a.ETC_ELSE as \"etcElse\" ," +
             "a.ETC_LOCAL+a.ETC_ELSE as \"etcTotal\" ," +

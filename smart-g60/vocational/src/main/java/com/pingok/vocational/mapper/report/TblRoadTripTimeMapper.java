@@ -20,7 +20,7 @@ import java.util.Map;
 public interface TblRoadTripTimeMapper extends CommonRepository<TblRoadTripTime> {
 
     @Select({"<script>" +
-            "select to_char(a.ACTUAL_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"actualDate\" ," +
+            "select to_char(a.ACTUAL_DATE, 'yyyy-mm-dd') as \"actualDate\" ," +
             "b.STATION_NAME as \"enStationId\" ," +
             "c.STATION_NAME as \"exStationId\" ," +
             "a.HOUR as \"hour\" ," +
@@ -42,7 +42,7 @@ public interface TblRoadTripTimeMapper extends CommonRepository<TblRoadTripTime>
     List<Map> selectRoadTripTime(@Param("hour") Integer hour,@Param("startDate")  Date startDate,@Param("endDate")  Date endDate);
 
     @Select({"<script>" +
-            "select to_char(a.ACTUAL_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"actualDate\" ," +
+            "select to_char(a.ACTUAL_DATE, 'yyyy-mm-dd') as \"actualDate\" ," +
             "b.STATION_NAME as \"enStationId\" ," +
             "c.STATION_NAME as \"exStationId\" ," +
             "a.HOUR as \"hour\" ," +
@@ -64,7 +64,7 @@ public interface TblRoadTripTimeMapper extends CommonRepository<TblRoadTripTime>
     List<RoadTripTimeVo> selectRoadTripTimeList(ReportVo reportVo);
 
     @Select("SELECT null as \"id\"," +
-            "to_char(ACTUAL_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"actualDate\"," +
+            "to_char(ACTUAL_DATE, 'yyyy-mm-dd') as \"actualDate\"," +
             "EN_STATION as \"enStationId\"," +
             "EX_STATION as \"exStationId\"," +
             "Hour as \"hour\"," +

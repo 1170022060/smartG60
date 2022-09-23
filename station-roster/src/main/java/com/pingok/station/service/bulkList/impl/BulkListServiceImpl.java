@@ -4,9 +4,12 @@ package com.pingok.station.service.bulkList.impl;
 import com.alibaba.fastjson.JSON;
 import com.pingok.station.domain.bulkList.BulkRecord;
 import com.pingok.station.domain.bulkList.vo.BulkVo;
+import com.pingok.station.domain.tracer.ListTracer;
 import com.pingok.station.domain.vo.VersionVo;
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.mapper.bulkList.BulkRecordMapper;
 import com.pingok.station.service.bulkList.IBulkListService;
+import com.ruoyi.common.core.utils.bean.BeanUtils;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -29,15 +29,25 @@ import static com.pingok.station.service.cardBlacklist.impl.CardBlacklistService
 @Slf4j
 @Service
 public class BulkListServiceImpl implements IBulkListService {
+
     @Autowired
     private BulkRecordMapper bulkRecordMapper;
+
+    @Autowired
+    private ListTracerMapper listTracerMapper;
 
     @Value("${center.host}")
     private String host;
 
+    @Value("${center.bulkPath}")
+    private String bulkPath;
+
+    @Value("${center.stationGB}")
+    private String stationGB;
+
     @Override
     public void bulkList(String version) {
-        String url="http://10.131.4.18:18180/api/lane-service/trucq-all-list";
+        String url= host +"/api/lane-service/trucq-all-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo=new VersionVo();
         versionVo.setVersion(version);
@@ -45,7 +55,7 @@ public class BulkListServiceImpl implements IBulkListService {
         RequestBody requestBody =  RequestBody.create(MediaType.parse("application/json"),jsonStr);
         final Request request = new Request.Builder()
                 .url(url)
-                .addHeader("AuthCode","S0004310010010")
+                .addHeader("AuthCode",stationGB)
                 .addHeader("Json-Md5",backMD5(jsonStr))
                 .post(requestBody)
                 .build();
@@ -54,33 +64,35 @@ public class BulkListServiceImpl implements IBulkListService {
         try{
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            File pathFile=new File("D:\\bulkList");
-            if(!pathFile.exists()){
-                pathFile.mkdirs();
-            }
-
-            String contentHeader = response.header("Content-Disposition");
-            String fileName="Bulk.zip";
-            if(contentHeader.contains("filename="))
+            if(bytes.length>0 && response.code()==200)
             {
-                String str1 = contentHeader.substring(0, contentHeader.indexOf("filename="));
-                String str2 = contentHeader.substring(str1.length() + 9);
-                if(str2.contains(".zip"))
+                String fileName = version + ".zip";
+                File file=new File(bulkPath);
+                if(!file.exists()){
+                    file.mkdirs();
+                }
+                String pathName=bulkPath +"\\"+fileName;
+                file  = new File(pathName);
+                if(!file.exists()){
+                    file.createNewFile();
+                }
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(bytes,0,bytes.length);
+                fos.flush();
+                fos.close();
+                unzipBulk(pathName,bulkPath);
+                ListTracer listTracer=new ListTracer();
+                listTracer.setListType("bulklist");
+                listTracer.setVersion(version);
+                if(listTracerMapper.selectListType("bulklist")==0)
                 {
-                    fileName = str2;
+                    listTracerMapper.insertTracer("bulklist");
+                    listTracerMapper.updateTracer(listTracer);
+                }else if (listTracerMapper.selectListType("bulklist")==1)
+                {
+                    listTracerMapper.updateTracer(listTracer);
                 }
             }
-
-            String pathName="D:\\bulkList"+"\\"+fileName;
-            File file  = new File(pathName);
-            if(!file.exists()){
-                file.createNewFile();
-            }
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(bytes,0,bytes.length);
-            fos.flush();
-            fos.close();
-            unzipBulk(pathName,"D:\\bulkList");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -92,30 +104,10 @@ public class BulkListServiceImpl implements IBulkListService {
         BulkRecord bulkRecord=new BulkRecord();
         bulkRecordMapper.deleteAll();
         for(BulkVo bulkVo : list) {
-            bulkRecord.setCertNo(bulkVo.getCertNo());
-            bulkRecord.setProvinces(bulkVo.getProvinces());
-            bulkRecord.setEnStationId(bulkVo.getEnStationId());
-            bulkRecord.setEnStationName(bulkVo.getEnStationName());
-            bulkRecord.setExStationId(bulkVo.getExStationId());
-            bulkRecord.setExStationName(bulkVo.getExStationName());
-            bulkRecord.setTractorVehicleId(bulkVo.getTractorVehicleId());
-            bulkRecord.setTrailerVehicleId(bulkVo.getTrailerVehicleId());
-            bulkRecord.setStartPassDate(bulkVo.getStartPassDate());
-            bulkRecord.setEndPassDate(bulkVo.getEndPassDate());
-            bulkRecord.setCarriorUnit(bulkVo.getCarriorUnit());
-            bulkRecord.setGoodsInfo(bulkVo.getGoodsInfo());
+            BeanUtils.copyNotNullProperties(bulkVo,bulkRecord);
             bulkRecord.setVehicleweight(bulkVo.getWeight());
             bulkRecord.setVehiclelength(bulkVo.getLength());
-            bulkRecord.setWidth(bulkVo.getWidth());
-            bulkRecord.setHeight(bulkVo.getHeight());
-            bulkRecord.setAlexCount(bulkVo.getAlexCount());
-            bulkRecord.setTyleCount(bulkVo.getTyleCount());
-            bulkRecord.setAlexsLoad(bulkVo.getAlexsLoad());
-            bulkRecord.setRoads(bulkVo.getRoads());
-            bulkRecord.setPassCount(bulkVo.getPassCount());
             bulkRecord.setDescript(bulkVo.getDesc());
-            bulkRecord.setOrgUnit(bulkVo.getOrgUnit());
-            bulkRecord.setCertificationDate(bulkVo.getCertificationDate());
             bulkRecordMapper.insertBulk(bulkRecord);
         }
     }
@@ -155,7 +147,7 @@ public class BulkListServiceImpl implements IBulkListService {
                 out.close();
                 if(zipEntryName.contains(".zip"))
                 {
-                    unzipBulk(outpath,"D:\\bulkList");
+                    unzipBulk(outpath,resourcePath);
                 }
                 if(zipEntryName.contains(".json"))
                 {

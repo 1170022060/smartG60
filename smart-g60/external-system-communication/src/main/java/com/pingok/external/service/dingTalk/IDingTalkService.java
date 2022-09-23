@@ -1,13 +1,25 @@
 package com.pingok.external.service.dingTalk;
 
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.Map;
+
 public interface IDingTalkService {
+
+
     /**
      * 获取token
      */
-    void gettoken();
+    String gettoken();
+
 
     /**
-     * 更新部门列表
+     * 事件订阅
+     * @param msg_signature
+     * @param timeStamp
+     * @param nonce
+     * @param json
+     * @return
      */
-    void updateDepartmentList(Long deptId);
+    Map<String, String> callBack(String msg_signature, String timeStamp, String nonce, JSONObject json);
 }

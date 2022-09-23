@@ -49,7 +49,7 @@ public interface TblDeviceInfoLaneMapper extends CommonRepository<TblDeviceInfoL
             "left join TBL_PROJECT_INFO f on a.ITEM_NAME=f.ID " +
             "where CONCAT('3101',CONCAT(a.STATION_BELONG,a.LANE_BELONG)) =#{laneHex}" +
             "<when test='deviceCategory != null'> " +
-            "and a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory}) " +
+            "and (a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory})) " +
             "</when>"+
             "<when test='status != null'> " +
             "and a.STATUS= #{status} " +

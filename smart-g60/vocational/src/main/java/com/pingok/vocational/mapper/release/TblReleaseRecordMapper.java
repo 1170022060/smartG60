@@ -22,6 +22,7 @@ public interface TblReleaseRecordMapper extends CommonRepository<TblReleaseRecor
             "a.DEVICE_NAME as \"deviceName\" ," +
             "a.PILE_NO as \"pileNo\" ," +
             "b.DICT_LABEL as \"infoType\" , " +
+            "a.PRESET_NAME as \"presetName\" , " +
             "a.PRESET_INFO as \"presetInfo\" , " +
             "c.DICT_LABEL as \"typeface\" , " +
             "d.DICT_LABEL as \"typefaceSize\" , " +

@@ -13,7 +13,7 @@ import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import com.ruoyi.system.api.RemoteKafkaService;
-import com.ruoyi.system.api.domain.kafuka.TblKafkaFailInfo;
+import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -93,9 +93,9 @@ public class DeviceHeartbeatServiceImpl implements IDeviceHeartbeatService {
         JSONObject data = new JSONObject();
         data.put("type", "camera");
         data.put("data", array);
-        TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();
-        tblKafkaFailInfo.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-        tblKafkaFailInfo.setData(data.toJSONString());
-        remoteKafkaService.send(tblKafkaFailInfo);
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+        kafkaEnum.setData(data.toJSONString());
+        remoteKafkaService.send(kafkaEnum);
     }
 }

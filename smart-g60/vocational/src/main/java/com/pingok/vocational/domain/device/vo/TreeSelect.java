@@ -1,7 +1,9 @@
 package com.pingok.vocational.domain.device.vo;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.pingok.vocational.domain.device.TblDeviceCategory;
+import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.system.api.domain.SysDept;
 
 import java.io.Serializable;
@@ -23,6 +25,9 @@ public class TreeSelect implements Serializable
     /** 节点名称 */
     private String label;
 
+    /** 岗位 */
+    private Long[] post;
+
     /** 子节点 */
     private List<TreeSelect> children;
 
@@ -31,18 +36,19 @@ public class TreeSelect implements Serializable
 
     }
 
-    public TreeSelect(SysDept dept)
+    public TreeSelect(TblDeviceCategory tblDeviceCategory)
     {
-        this.value = dept.getDeptId();
-        this.label = dept.getDeptName();
-        this.children = dept.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
-    }
-
-    public TreeSelect(TblDeviceCategory menu)
-    {
-        this.value = menu.getId();
-        this.label = menu.getCategoryName();
-        this.children = menu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+        this.value = tblDeviceCategory.getId();
+        this.label = tblDeviceCategory.getCategoryName();
+        if(StringUtils.isNull(tblDeviceCategory.getCategoryPost()))
+        {
+            this.post = null;
+        }
+        else
+        {
+            this.post = JSON.parseObject(tblDeviceCategory.getCategoryPost(), Long[].class);
+        }
+        this.children = tblDeviceCategory.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     public Long getValue()
@@ -63,6 +69,14 @@ public class TreeSelect implements Serializable
     public void setLabel(String label)
     {
         this.label = label;
+    }
+
+    public Long[] getPost() {
+        return post;
+    }
+
+    public void setPost(Long[] post) {
+        this.post = post;
     }
 
     public List<TreeSelect> getChildren()

@@ -32,8 +32,8 @@ public class EventPalnController extends BaseController {
     /**
      * 获取应急预案列表
      */
-    @RequiresPermissions("vocational:eventPaln:findByEventType")
-    @Log(title = "应急预案管理", businessType = BusinessType.UPDATE)
+//    @RequiresPermissions("vocational:eventPaln:findByEventType")
+//    @Log(title = "应急预案管理", businessType = BusinessType.UPDATE)
     @GetMapping("/findByEventType")
     public AjaxResult findByEventType(@RequestParam Long id) {
         return AjaxResult.success(iEventPalnService.findByEventType(id));
@@ -42,7 +42,7 @@ public class EventPalnController extends BaseController {
     /**
      * 停用/启用
      */
-    @RequiresPermissions("vocational:eventPaln:edit")
+    @RequiresPermissions("vocational:eventPaln:disableOrEnable")
     @Log(title = "应急预案管理", businessType = BusinessType.UPDATE)
     @PutMapping("/disableOrEnable")
     public AjaxResult disableOrEnable(@RequestParam Long id, @RequestParam Integer status) {

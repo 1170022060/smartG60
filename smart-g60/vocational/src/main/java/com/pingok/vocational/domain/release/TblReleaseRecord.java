@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Date;
  * @author ruoyi
  */
 @Table(name = "TBL_RELEASE_RECORD")
-public class TblReleaseRecord {
+public class TblReleaseRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */
@@ -31,6 +32,10 @@ public class TblReleaseRecord {
     /** 信息类型 */
     @Excel(name = "信息类型")
     private Integer infoType;
+
+    /** 预设名称 */
+    @Excel(name = "预设名称")
+    private String presetName;
 
     /** 预设信息 */
     @Excel(name = "预设信息")
@@ -102,6 +107,14 @@ public class TblReleaseRecord {
         this.infoType = infoType;
     }
 
+    @Size(min = 0, max = 48, message = "预设名称不能超过48个字符")
+    public String getPresetName() {
+        return presetName;
+    }
+
+    public void setPresetName(String presetName) {
+        this.presetName = presetName;
+    }
     @Size(min = 0, max = 100, message = "预设信息不能超过100个字符")
     public String getPresetInfo()
     {
@@ -186,6 +199,7 @@ public class TblReleaseRecord {
                 .append("id", getId())
                 .append("deviceId",getDeviceId())
                 .append("infoType", getInfoType())
+                .append("presetName", getPresetName())
                 .append("presetInfo", getPresetInfo())
                 .append("typeface", getTypeface())
                 .append("typefaceSize", getTypefaceSize())

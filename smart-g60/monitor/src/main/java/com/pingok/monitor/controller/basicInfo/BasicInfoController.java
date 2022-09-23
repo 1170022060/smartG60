@@ -27,7 +27,6 @@ public class BasicInfoController extends BaseController {
     @Autowired
     private IDeviceInfoService iDeviceInfoService;
 
-    @RequiresPermissions("monitor:basicInfo:findByUser")
     @Log(title = "收费站监控服务", businessType = BusinessType.OTHER)
     @GetMapping(value = "/findByUser")
     public AjaxResult findByUser() {

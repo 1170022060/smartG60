@@ -11,18 +11,21 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.common.core.utils.DateUtils;
+import com.ruoyi.common.security.utils.DictUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.*;
+import com.ruoyi.system.api.domain.SysDictData;
 import com.ruoyi.system.api.domain.amap.TblAutoNaviMapRecord;
 import com.ruoyi.system.api.domain.baidu.TblBaiDuMapRecord;
 import com.ruoyi.system.api.domain.device.TblDeviceInfo;
 import com.ruoyi.system.api.domain.emergency.TblEmergencySupplies;
-import com.ruoyi.system.api.domain.kafuka.TblKafkaFailInfo;
+import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import com.ruoyi.system.api.domain.release.TblReleasePreset;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +76,12 @@ public class EventServiceImpl implements IEventService {
     @Override
     public TblEventRecord report(Long id) {
         TblEventRecord eventRecord = tblEventRecordMapper.selectByPrimaryKey(id);
+        List<SysDictData> sysDictDataList = DictUtils.getDictCache("event_type");
+        for (SysDictData d : sysDictDataList) {
+            if (eventRecord.getEventType().equals(d.getDictValue())) {
+                eventRecord.setEventTypeLabel(d.getDictLabel());
+            }
+        }
         if (eventRecord != null) {
             eventRecord.setEventHandles(tblEventHandleMapper.findByEventId(eventRecord.getId()));
         }
@@ -103,10 +112,10 @@ public class EventServiceImpl implements IEventService {
         JSONObject data = new JSONObject();
         data.put("type", "eventRelease");
         data.put("data", event.toJSONString());
-        TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();
-        tblKafkaFailInfo.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-        tblKafkaFailInfo.setData(data.toJSONString());
-        remoteKafkaService.send(tblKafkaFailInfo);
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+        kafkaEnum.setData(data.toJSONString());
+        remoteKafkaService.send(kafkaEnum);
     }
 
     @Override
@@ -418,18 +427,18 @@ public class EventServiceImpl implements IEventService {
         JSONObject event = new JSONObject();
         event.put("id", tblEventRecord.getId());
         event.put("eventType", tblEventRecordMapper.translateEventType(tblEventRecord.getEventType()));
-        event.put("time", tblEventRecord.getEventTime());
-        event.put("coordinate", tblEventRecord.getLocationInterval());
-        event.put("img", tblEventRecord.getEventPhoto());
+        event.put("eventTime", tblEventRecord.getEventTime());
+        event.put("locationInterval", tblEventRecord.getLocationInterval());
+        event.put("eventPhoto", tblEventRecord.getEventPhoto());
         event.put("video", tblEventRecord.getVideo());
 
         JSONObject data = new JSONObject();
         data.put("type", "eventOccur");
         data.put("data", event.toJSONString());
-        TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();
-        tblKafkaFailInfo.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-        tblKafkaFailInfo.setData(data.toJSONString());
-        remoteKafkaService.send(tblKafkaFailInfo);
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+        kafkaEnum.setData(data.toJSONString());
+        remoteKafkaService.send(kafkaEnum);
 
         return r;
     }
@@ -441,15 +450,34 @@ public class EventServiceImpl implements IEventService {
         return tblEventRecordMapper.updateByPrimaryKey(tblEventRecord);
     }
 
+    @Override
+    public List<TblEventRecord> event() {
+        List<Integer> status = Arrays.asList(0, 1);
+        Example example = new Example(TblEventRecord.class);
+        example.createCriteria().andIn("status", status);
+        List<TblEventRecord> eventRecordList = tblEventRecordMapper.selectByExample(example);
+        List<SysDictData> sysDictDataList = DictUtils.getDictCache("event_type");
+        if (!sysDictDataList.isEmpty() && sysDictDataList.size() > 0) {
+            for (TblEventRecord tblEventRecord : eventRecordList) {
+                for (SysDictData s : sysDictDataList) {
+                    if (tblEventRecord.getEventType().equals(s.getDictValue())) {
+                        tblEventRecord.setEventTypeLabel(s.getDictLabel());
+                    }
+                }
+            }
+        }
+        return eventRecordList;
+    }
+
     private void eventUpdate(Long ubiLogicId, Integer uiState, String szRemark, String szUser) {
         JSONObject data = new JSONObject();
         data.put("ubiLogicId", ubiLogicId);
         data.put("uiState", uiState);
         data.put("szRemark", szRemark);
         data.put("szUser", szUser);
-        TblKafkaFailInfo tblKafkaFailInfo = new TblKafkaFailInfo();
-        tblKafkaFailInfo.setTopIc(KafkaTopIc.UPDATE_EVENT_INFO);
-        tblKafkaFailInfo.setData(data.toJSONString());
-        remoteKafkaService.send(tblKafkaFailInfo);
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.UPDATE_EVENT_INFO);
+        kafkaEnum.setData(data.toJSONString());
+        remoteKafkaService.send(kafkaEnum);
     }
 }

@@ -8,6 +8,8 @@ import java.util.List;
 @Data
 public class ExTransEnum {
     private TblExTrans tblExTrans;
-    private TblExTransPass tblExTransPass;
+    private TblExEtcPass tblExEtcPass;
+    private TblExMtcPass tblExMtcPass;
+    private TblExPaperPass tblExPaperPass;
     private List<TblExTransSplit> tblExTransSplit;
 }

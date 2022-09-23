@@ -60,6 +60,14 @@ public class GantryUpperController {
         return AjaxResult.success();
     }
 
+    @PostMapping("/log")
+    public AjaxResult handlelog(@RequestBody JSONObject data) {
+        iGantryUpperService.handleLog(data);
+        return AjaxResult.success();
+    }
+
+
+
     @PostMapping("/GetErrorData")
     public AjaxResult GetErrorData(@RequestBody GetErrorDataModel data) {
         return iGantryUpperService.GetErrorData(data);

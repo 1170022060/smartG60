@@ -3,8 +3,12 @@ package com.pingok.station.controller;
 import com.pingok.station.service.auditList.IAuditListService;
 import com.pingok.station.service.bulkList.IBulkListService;
 import com.pingok.station.service.cardBlacklist.*;
+import com.pingok.station.service.demicAreaList.IDemicAreaListService;
+import com.pingok.station.service.emergList.IEmergListService;
 import com.pingok.station.service.greenList.IGreenListService;
 import com.pingok.station.service.obuBlacklist.IObuBlacklistService;
+import com.pingok.station.service.prefixList.IPrefixListService;
+import com.pingok.station.service.suspectList.ISuspectListService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 @RestController
 @RequestMapping("/list")
@@ -28,11 +31,26 @@ public class Controller extends BaseController {
     private IBulkListService bulkListService;
     @Autowired
     private IAuditListService auditListService;
+    @Autowired
+    private IEmergListService emergListService;
+    @Autowired
+    private IDemicAreaListService demicAreaListService;
+    @Autowired
+    private IPrefixListService prefixListService;
+    @Autowired
+    private ISuspectListService suspectListService;
 
     @PostMapping("/blackIncr")
     public AjaxResult blackIncr(@Validated @RequestBody String version)
     {
         listService.increment(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/test")
+    public AjaxResult test(@Validated @RequestBody String version)
+    {
+        listService.test(version);
         return AjaxResult.success();
     }
 
@@ -56,6 +74,7 @@ public class Controller extends BaseController {
         greenListService.greenList(version);
         return AjaxResult.success();
     }
+
     @PostMapping("/obuBlackIncr")
     public AjaxResult obuBlackIncr(@Validated @RequestBody String version)
     {
@@ -84,16 +103,66 @@ public class Controller extends BaseController {
         return AjaxResult.success();
     }
 
+    @PostMapping("/emergListAll")
+    public AjaxResult emergListAll(@Validated @RequestBody String version)
+    {
+        emergListService.all(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/unzipEmergListAll")
+    public AjaxResult unzipEmergListAll(@Validated @RequestBody String version)
+    {
+        emergListService.unzipAll(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/auditIncr")
+    public AjaxResult auditIncr(@Validated @RequestBody String version)
+    {
+        auditListService.increment(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/auditBlackAll")
+    public AjaxResult auditBlackAll(@Validated @RequestBody String version)
+    {
+        auditListService.all(version);
+        return AjaxResult.success();
+    }
+
     @PostMapping("/unzipAuditBlackAll")
     public AjaxResult unzipAuditBlackAll(@Validated @RequestBody String version)
     {
         auditListService.unzipAll(version);
         return AjaxResult.success();
     }
-    @PostMapping("/zip")
-    public AjaxResult zip()
+
+    @PostMapping("/unzipAuditPreAll")
+    public AjaxResult unzipAuditPreAll(@Validated @RequestBody String version)
     {
-        auditListService.file();
+        auditListService.preAll(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/demicAreaList")
+    public AjaxResult demicAreaList(@Validated @RequestBody String version)
+    {
+        demicAreaListService.demicAreaList(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/prefixList")
+    public AjaxResult prefixList(@Validated @RequestBody String version)
+    {
+        prefixListService.prefixAreaList(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/suspectList")
+    public AjaxResult suspectList(@Validated @RequestBody String version)
+    {
+        suspectListService.suspectList(version);
         return AjaxResult.success();
     }
 

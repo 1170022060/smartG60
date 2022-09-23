@@ -3,14 +3,15 @@ package com.pingok.station.service.cardBlacklist.impl;
 import com.alibaba.fastjson.JSON;
 import com.pingok.station.domain.cardBlacklist.BCardAppend;
 import com.pingok.station.domain.cardBlacklist.vo.BlackVo;
+import com.pingok.station.domain.tracer.ListTracer;
 import com.pingok.station.domain.vo.BlackIncrValidateVo;
 import com.pingok.station.domain.vo.RedisValueVo;
 import com.pingok.station.domain.vo.VersionAllVo;
 import com.pingok.station.domain.vo.VersionVo;
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.mapper.cardBlacklist.BCardAppendMapper;
 import com.pingok.station.service.cardBlacklist.ICardBlacklistService;
 import com.ruoyi.common.core.utils.StringUtils;
-import com.ruoyi.common.redis.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +36,18 @@ import java.util.zip.ZipFile;
 @Slf4j
 @Service
 public class CardBlacklistServiceImpl implements ICardBlacklistService {
+
     @Autowired
     private BCardAppendMapper bCardAppendMapper;
 
+    @Autowired
+    private ListTracerMapper listTracerMapper;
+
     @Value("${center.host}")
     private String host;
+
+    @Value("${center.stationGB}")
+    private String stationGB;
 
     @Value("${center.cardPath}")
     private String cardPath;
@@ -60,7 +68,7 @@ public class CardBlacklistServiceImpl implements ICardBlacklistService {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonStr);
         final Request request = new Request.Builder()
                 .url(url)
-                .addHeader("AuthCode", "S0004310010010")
+                .addHeader("AuthCode", stationGB)
                 .addHeader("Json-Md5", backMD5(jsonStr))
                 .post(requestBody)
                 .build();
@@ -69,22 +77,36 @@ public class CardBlacklistServiceImpl implements ICardBlacklistService {
         try {
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            String fileName = version + ".zip";
-            File file = new File(cardPath);
-            if (!file.exists()) {
-                file.mkdir();
-            }
-            String pathName = cardPath + "\\" + fileName;
-            file = new File(pathName);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(bytes, 0, bytes.length);
-            fos.flush();
-            fos.close();
-            if (version.equals(unzip(pathName, cardPath))) {
-                unzipInside(version, cardPath);
+            if(bytes.length>0 && response.code()==200)
+            {
+                String fileName = version + ".zip";
+                File file = new File(cardPath);
+                if (!file.exists()) {
+                    file.mkdir();
+                }
+                String pathName = cardPath + "\\" + fileName;
+                file = new File(pathName);
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(bytes, 0, bytes.length);
+                fos.flush();
+                fos.close();
+                if (version.equals(unzip(pathName, cardPath))) {
+                    unzipInside(version, cardPath);
+                    ListTracer listTracer=new ListTracer();
+                    listTracer.setListType("blacklist");
+                    listTracer.setVersion(version);
+                    if(listTracerMapper.selectListType("blacklist")==0)
+                    {
+                        listTracerMapper.insertTracer("blacklist");
+                        listTracerMapper.updateTracer(listTracer);
+                    }else if (listTracerMapper.selectListType("blacklist")==1)
+                    {
+                        listTracerMapper.updateTracer(listTracer);
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,19 +114,24 @@ public class CardBlacklistServiceImpl implements ICardBlacklistService {
     }
 
     @Override
+    public void test(String version) {
+        unzipInside(unzip("D:\\blacklist\\BASIC_CARDBLACKLISTINCREDOWN_RES_310201_20220512144151267.zip", cardPath),cardPath);
+    }
+
+    @Override
     public void all(String version) {
         List<String> dataList = Arrays.asList("11", "12", "13", "14", "15", "21", "22", "23", "31", "32", "33", "34", "35", "36", "37", "41", "42", "43", "44", "45", "46", "50", "51", "52", "53", "54", "61", "62", "63", "64", "65");
-        for (String data : dataList) {
-            String url = "http://10.131.4.18:18180/api/lane-service/black-all-list";
+        for (String province : dataList) {
+            String url = host+"/api/lane-service/black-all-list";
             OkHttpClient client = new OkHttpClient();
             VersionAllVo versionAllVo = new VersionAllVo();
             versionAllVo.setVersion(version);
-            versionAllVo.setProvinceId(data);
+            versionAllVo.setProvinceId(province);
             String jsonStr = JSON.toJSONString(versionAllVo);
             RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonStr);
             final Request request = new Request.Builder()
                     .url(url)
-                    .addHeader("AuthCode", "S0004310010010")
+                    .addHeader("AuthCode", stationGB)
                     .addHeader("Json-Md5", backMD5(jsonStr))
                     .post(requestBody)
                     .build();
@@ -113,33 +140,27 @@ public class CardBlacklistServiceImpl implements ICardBlacklistService {
             try {
                 Response response = call.execute();
                 byte[] bytes = response.body().bytes();
-                File pathFile = new File("D:\\blacklist");
-                if (!pathFile.exists()) {
-                    pathFile.mkdirs();
-                }
-                File pathFileInside = new File("D:\\blacklist" + "\\" + data);
-                if (!pathFileInside.exists()) {
-                    pathFileInside.mkdirs();
-                }
-                String contentHeader = response.header("Content-Disposition");
-                String fileName = "BlackAll.zip";
-                if (contentHeader.contains("filename=")) {
-                    String str1 = contentHeader.substring(0, contentHeader.indexOf("filename="));
-                    String str2 = contentHeader.substring(str1.length() + 9);
-                    if (str2.contains(".zip")) {
-                        fileName = str2;
+                if(bytes.length>0 && response.code()==200)
+                {
+                    String fileName = version +"_" +province+ ".zip";
+                    File file = new File(cardPath+"_all");
+                    if (!file.exists()) {
+                        file.mkdirs();
                     }
+                    file = new File(cardPath+"_all" + "\\" + province);
+                    if (!file.exists()) {
+                        file.mkdirs();
+                    }
+                    String pathName = cardPath+"_all" + "\\" + province + "\\" + fileName;
+                    file = new File(pathName);
+                    if (!file.exists()) {
+                        file.createNewFile();
+                    }
+                    FileOutputStream fos = new FileOutputStream(file);
+                    fos.write(bytes, 0, bytes.length);
+                    fos.flush();
+                    fos.close();
                 }
-
-                String pathName = "D:\\blacklist" + "\\" + data + "\\" + fileName;
-                File file = new File(pathName);
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-                FileOutputStream fos = new FileOutputStream(file);
-                fos.write(bytes, 0, bytes.length);
-                fos.flush();
-                fos.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -149,45 +170,49 @@ public class CardBlacklistServiceImpl implements ICardBlacklistService {
     public void unzipAll(String version) {
         ZipFile zp = null;
         List<String> dataList = Arrays.asList("11", "12", "13", "14", "15", "21", "22", "23", "31", "32", "33", "34", "35", "36", "37", "41", "42", "43", "44", "45", "46", "50", "51", "52", "53", "54", "61", "62", "63", "64", "65");
-        for (String data : dataList) {
-            String zipPath = "D:\\blacklist" + "\\" + data + "\\" + version + "_" + data + ".zip";
-            try {
-                //指定编码，否则压缩包里面不能有中文目录
-                zp = new ZipFile(zipPath, Charset.forName("gbk"));
-                //遍历里面的文件及文件夹
-                Enumeration entries = zp.entries();
-                while (entries.hasMoreElements()) {
-                    ZipEntry entry = (ZipEntry) entries.nextElement();
-                    String zipEntryName = entry.getName();
-                    InputStream in = zp.getInputStream(entry);
-                    String outpath = ("D:\\blacklist" + "\\" + data + "\\" + zipEntryName).replace("/", File.separator);
-                    File fileDelete = new File(outpath);
-                    //判断路径是否存在，不存在则创建文件路径
-                    File file = new File(outpath.substring(0, outpath.lastIndexOf(File.separator)));
-                    if (!file.exists()) {
-                        file.mkdirs();
-                    }
-                    //判断文件全路径是否为文件夹,如果是,不需要解压
-                    if (new File(outpath).isDirectory())
-                        continue;
-                    OutputStream out = new FileOutputStream(outpath);
-                    byte[] bf = new byte[2048];
-                    int len;
-                    while ((len = in.read(bf)) > 0) {
-                        out.write(bf, 0, len);
-                    }
-                    in.close();
-                    out.close();
-                    if (zipEntryName.contains(".json")) {
-                        List<BlackVo> list = jsonAnalysis(outpath);
-                        jedisInsert(list, version);
-                        fileDelete.delete();
+        File zipFile;
+        for (String province : dataList) {
+            String zipPath = cardPath+"_all" + "\\" + province + "\\" + version + "_" + province + ".zip";
+            zipFile = new File(zipPath);
+            if (zipFile.exists()) {
+                try {
+                    //指定编码，否则压缩包里面不能有中文目录
+                    zp = new ZipFile(zipPath, Charset.forName("gbk"));
+                    //遍历里面的文件及文件夹
+                    Enumeration entries = zp.entries();
+                    while (entries.hasMoreElements()) {
+                        ZipEntry entry = (ZipEntry) entries.nextElement();
+                        String zipEntryName = entry.getName();
+                        InputStream in = zp.getInputStream(entry);
+                        String outpath = (cardPath + "_all" + "\\" + province + "\\" + zipEntryName).replace("/", File.separator);
+                        File fileDelete = new File(outpath);
+                        //判断路径是否存在，不存在则创建文件路径
+                        File file = new File(outpath.substring(0, outpath.lastIndexOf(File.separator)));
+                        if (!file.exists()) {
+                            file.mkdirs();
+                        }
+                        //判断文件全路径是否为文件夹,如果是,不需要解压
+                        if (new File(outpath).isDirectory())
+                            continue;
+                        OutputStream out = new FileOutputStream(outpath);
+                        byte[] bf = new byte[2048];
+                        int len;
+                        while ((len = in.read(bf)) > 0) {
+                            out.write(bf, 0, len);
+                        }
+                        in.close();
+                        out.close();
+                        if (zipEntryName.contains(".json")) {
+                            List<BlackVo> list = jsonAnalysis(outpath);
+                            jedisInsert(list, version);
+                            fileDelete.delete();
 
+                        }
                     }
+                    zp.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                zp.close();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
@@ -267,6 +292,13 @@ public class CardBlacklistServiceImpl implements ICardBlacklistService {
             }
         }
         jedis.close();
+    }
+
+    @Override
+    public Boolean findByCardId(String cardId) {
+        Jedis jedis = new Jedis(redisHost, redisPort);
+        jedis.select(Integer.parseInt(cardId.substring(0, 2)));
+        return StringUtils.isNotBlank(jedis.get(cardId));
     }
 
     public static String backMD5(String inStr) {

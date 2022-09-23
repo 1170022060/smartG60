@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.station.mapper.suspectList.SuspectAreaMapper">
+    <resultMap type="com.pingok.station.domain.suspectList.SuspectArea" id="SuspectAreaResult">
+        <id     property="RecordId"      column="RecordId"       />
+        <result property="VehicleId"  column="VehicleId"   />
+        <result property="Reason"  column="Reason"   />
+        <result property="EndTime"  column="EndTime"   />
+        <result property="StartTime"  column="StartTime"   />
+        <result property="Version"  column="Version"   />
+    </resultMap>
+    <insert id="insertSuspect" parameterType="com.pingok.station.domain.suspectList.SuspectArea">
+        insert into SuspectArea(
+        <if test="VehicleId != null ">VehicleId,</if>
+        <if test="Reason != null ">Reason,</if>
+        <if test="EndTime != null ">EndTime,</if>
+        <if test="StartTime != null ">StartTime,</if>
+        <if test="Version != null ">Version</if>
+        )values(
+        <if test="VehicleId != null ">#{VehicleId},</if>
+        <if test="Reason != null ">#{Reason},</if>
+        <if test="EndTime != null ">#{EndTime},</if>
+        <if test="StartTime != null ">#{StartTime},</if>
+        <if test="Version != null ">#{Version}</if>
+        )
+    </insert>
+    <delete id="deleteAll">
+        delete from SuspectArea
+    </delete>
+</mapper>

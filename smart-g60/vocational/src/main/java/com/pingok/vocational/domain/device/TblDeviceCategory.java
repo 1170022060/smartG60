@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.Map;
  * @author ruoyi
  */
 @Table(name = "TBL_DEVICE_CATEGORY")
-public class TblDeviceCategory {
+public class TblDeviceCategory implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */
@@ -64,6 +65,14 @@ public class TblDeviceCategory {
 
     /** 子菜单 */
     private List<TblDeviceCategory> children = new ArrayList<TblDeviceCategory>();
+
+    /** 绑定岗位*/
+    @Excel(name = "绑定岗位")
+    private String categoryPost;
+
+    /** 绑定岗位数组*/
+    @Excel(name = "绑定岗位数组")
+    private Long[] categoryPostStr;
 
     @Transient
     private List<Map> deviceInfos;
@@ -175,5 +184,21 @@ public class TblDeviceCategory {
 
     public void setDeviceInfos(List<Map> deviceInfos) {
         this.deviceInfos = deviceInfos;
+    }
+
+    public String getCategoryPost() {
+        return categoryPost;
+    }
+
+    public void setCategoryPost(String categoryPost) {
+        this.categoryPost = categoryPost;
+    }
+
+    public Long[] getCategoryPostStr() {
+        return categoryPostStr;
+    }
+
+    public void setCategoryPostStr(Long[] categoryPostStr) {
+        this.categoryPostStr = categoryPostStr;
     }
 }

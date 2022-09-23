@@ -18,7 +18,7 @@ import java.util.Map;
 public interface TblSectionRecordMapper {
 
     @Select({"<script>" +
-            "select to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "select to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "b.STATION_NAME as \"stationId\"," +
             "c.DICT_LABEL as \"direction\"," +
             "a.ETC_LOCAL as \"etcLocal\" ," +
@@ -49,7 +49,7 @@ public interface TblSectionRecordMapper {
     List<Map> selectSectionRecord(@Param("stationId") String stationId, @Param("startDate") Date startDate, @Param("endDate")  Date endDate,@Param("direction") Integer direction);
 
     @Select({"<script>" +
-            "select to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"workDate\" ," +
+            "select to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "b.STATION_NAME as \"stationId\"," +
             "c.DICT_LABEL as \"direction\"," +
             "a.ETC_LOCAL as \"etcLocal\" ," +

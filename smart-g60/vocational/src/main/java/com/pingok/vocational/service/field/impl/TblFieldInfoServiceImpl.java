@@ -1,6 +1,5 @@
 package com.pingok.vocational.service.field.impl;
 
-import com.pingok.vocational.domain.baseinfo.vo.StationInfo;
 import com.pingok.vocational.domain.field.TblFieldInfo;
 import com.pingok.vocational.domain.field.vo.FieldVo;
 import com.pingok.vocational.mapper.field.TblFieldInfoMapper;
@@ -66,6 +65,8 @@ public class TblFieldInfoServiceImpl implements TblFieldInfoService {
     @Override
     public int updateStatus(Long id, Integer status) {
         TblFieldInfo tblFieldInfo= tblFieldInfoMapper.selectByPrimaryKey(id);
+        tblFieldInfo.setUpdateTime(new Date());
+        tblFieldInfo.setUpdateUserId(SecurityUtils.getUserId());
         tblFieldInfo.setStatus(status);
         return tblFieldInfoMapper.updateByPrimaryKeySelective(tblFieldInfo);
     }

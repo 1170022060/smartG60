@@ -16,11 +16,13 @@ public interface TblRateMapper {
             "select a.ID as \"id\" ," +
             "a.EN_PROV as \"enProv\" ," +
             "a.EX_PROV as \"exProv\" ," +
+            "a.VERSION as \"version\","+
             "a.EN_ID as \"enId\" ," +
             "a.EX_ID as \"exId\" ," +
             "c.STATION_NAME as \"enName\" ," +
             "d.STATION_NAME as \"exName\" ," +
             "b.DICT_LABEL as \"vehClass\"," +
+            "a.VEH_CLASS as \"vehClassNum\"," +
             "a.FEE as \"fee\" ," +
             "a.FEE_95 as \"fee95\" ," +
             "a.M as \"m\"  from TBL_RATE a " +
@@ -28,8 +30,8 @@ public interface TblRateMapper {
             "left join TBL_BASE_STATION_INFO c on c.STATION_GB=a.EN_ID " +
             "left join TBL_BASE_STATION_INFO d on d.STATION_GB=a.EX_ID " +
             "where 1=1 " +
-            "<when test='stationName != null'> " +
-            " and c.STATION_NAME like CONCAT(CONCAT('%',#{stationName}),'%') " +
+            "<when test='inStationName != null'> " +
+            " and c.STATION_NAME like CONCAT(CONCAT('%',#{inStationName}),'%') " +
             "</when>"+
             "<when test='exStationId != null'> " +
             " and d.STATION_HEX like CONCAT('3101',#{exStationId})" +
@@ -37,9 +39,12 @@ public interface TblRateMapper {
             "<when test='vehClass != null'> " +
             "and a.VEH_CLASS= #{vehClass} " +
             "</when>"+
+            "<when test='versionNum != null'> " +
+            "and a.VERSION= #{versionNum} " +
+            "</when>"+
             " order by a.EN_ID,a.VEH_CLASS "+
             "</script>"})
-    List<Map> selectRate(@Param("stationName") String stationName, @Param("exStationId") String exStationId,@Param("vehClass") Integer vehClass);
+    List<Map> selectRate(@Param("inStationName") String inStationName, @Param("exStationId") String exStationId,@Param("vehClass") Integer vehClass,@Param("versionNum") String versionNum);
 
     @Select({"<script>" +
             "select a.P_INDEX as \"pIndex\" ," +
@@ -53,5 +58,47 @@ public interface TblRateMapper {
             " order by a.P_INDEX "+
             "</script>"})
     List<Map> selectRateProv(@Param("rateId") Long rateId);
+
+    @Select({"select STATION_HEX as \"id\",STATION_NAME as \"stationName\" from TBL_BASE_STATION_INFO info"+
+            " order by info.STATION_HEX "
+    })
+    List<Map> selectInStation();
+
+    @Select({"select distinct VERSION as \"versionNum\" from TBL_RATE a"+
+            " order by a.VERSION "
+    })
+    List<Map> selectVersionNum();
+
+    @Select({"<script>" +
+            "select a.ID as \"id\" ," +
+            "a.EN_ID as \"enId\" ," +
+            "a.EX_ID as \"exId\" ," +
+            "c.STATION_NAME as \"enName\" ," +
+            "d.STATION_NAME as \"exName\" ," +
+            "b.DICT_LABEL as \"vehClass\"," +
+            "a.FEE as \"fee\" ," +
+            "a.FEE-LAG(a.FEE, 1, 0 ) OVER (ORDER BY a.VERSION) as \"feeContrast\" ," +
+            "a.FEE_95 as \"fee95\" ," +
+            "a.FEE_95-LAG(a.FEE_95, 1, 0 ) OVER (ORDER BY a.VERSION) as \"fee95Contrast\" ," +
+            "a.M as \"m\" ," +
+            "a.M-LAG(a.M, 1, 0) OVER (ORDER BY a.VERSION) as \"mContrast\" , " +
+            "a.VERSION as \"version\" "+
+            " from TBL_RATE a " +
+            "left join  SYS_DICT_DATA b on b.DICT_VALUE=to_char(a.VEH_CLASS) and b.DICT_TYPE='veh_class' " +
+            "left join TBL_BASE_STATION_INFO c on c.STATION_GB=a.EN_ID " +
+            "left join TBL_BASE_STATION_INFO d on d.STATION_GB=a.EX_ID " +
+            "where 1=1 " +
+            "<when test='enId != null'> " +
+            " and a.EN_ID = #{enId}" +
+            "</when>"+
+            "<when test='exId != null'> " +
+            " and a.EX_ID = #{exId}" +
+            "</when>"+
+            "<when test='vehClass != null'> " +
+            "and a.VEH_CLASS= #{vehClass} " +
+            "</when>"+
+            " order by a.VERSION desc "+
+            "</script>"})
+    List<Map> selectRateContrast(@Param("enId") String enId, @Param("exId") String exId,@Param("vehClass") Integer vehClass);
 
 }

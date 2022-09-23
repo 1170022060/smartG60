@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Date;
  * @author ruoyi
  */
 @Table(name = "TBL_TRACTOR_LIST_RECORD")
-public class TblTractorListRecord {
+public class TblTractorListRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */

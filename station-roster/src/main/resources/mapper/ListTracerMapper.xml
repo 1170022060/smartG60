@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.station.mapper.tracer.ListTracerMapper">
+    <resultMap type="com.pingok.station.domain.tracer.ListTracer" id="ListTracerResult">
+        <id     property="ListType" column="ListType"  />
+        <result property="Version"  column="Version"   />
+    </resultMap>
+
+    <select id="selectListType" resultType="Integer">
+        select count(1) from ListTracer where ListType = #{listType}
+    </select>
+
+    <select id="selectVersion" resultType="String">
+        select Version from ListTracer where ListType = #{listType}
+    </select>
+
+    <insert id="insertTracer" parameterType="com.pingok.station.domain.tracer.ListTracer">
+        insert into ListTracer(
+        ListType
+        )values(
+        #{listType}
+        )
+    </insert>
+
+    <update id="updateTracer" parameterType="com.pingok.station.domain.tracer.ListTracer">
+        update ListTracer
+        <set>
+        Version = #{version}
+        </set>
+        where ListType = #{listType}
+    </update>
+</mapper>

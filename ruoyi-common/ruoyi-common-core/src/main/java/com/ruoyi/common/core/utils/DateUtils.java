@@ -28,6 +28,8 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     public static String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 
+    public static String YYYY_MM_DD_HH = "yyyy-MM-dd HH";
+
     private static String[] parsePatterns = {
             "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM",
             "yyyy/MM/dd", "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm", "yyyy/MM",
@@ -57,6 +59,10 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     public static final String getTime() {
         return dateTimeNow(YYYY_MM_DD_HH_MM_SS);
+    }
+
+    public static final String getTimeHour() {
+        return dateTimeNow(YYYY_MM_DD_HH);
     }
 
     public static final String dateTimeNow() {
@@ -105,6 +111,14 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     public static final String dateTime() {
         Date now = new Date();
         return DateFormatUtils.format(now, "yyyyMMdd");
+    }
+
+    /**
+     * 获取当前年份
+     */
+    public static final String dateYear() {
+        Date now = new Date();
+        return DateFormatUtils.format(now, "yyyy");
     }
 
     /**
@@ -249,11 +263,175 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      * 时间前推或后推分钟,其中JJ表示分钟.
      */
     public static Date getPreTime(Date date, Integer min) {
+        Date newDate = new Date();
         try {
             Long Time = (date.getTime() / 1000) + min * 60;
-            date.setTime(Time * 1000);
+            newDate.setTime(Time * 1000);
         } catch (Exception e) {
         }
-        return date;
+        return newDate;
+    }
+
+    /**
+     * 根据两个时间字符串，比较大小
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    public static Boolean compareTo(String startTime, String endTime) {
+        try {
+            int diff = startTime.compareTo(endTime);
+
+            return diff > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 判断当前时间是否在[startTime, endTime]区间，注意时间格式要一致
+     *
+     * @param nowTime 当前时间 例：12:00:00
+     * @param startTime 开始时间 例：6:00:00
+     * @param endTime 结束时间 例：23:00:00
+     * @return
+     */
+    public static boolean isEffectiveDate(Date nowTime, Date startTime, Date endTime) {
+        if (nowTime.getTime() == startTime.getTime()
+                || nowTime.getTime() == endTime.getTime()) {
+            return true;
+        }
+        Calendar date = Calendar.getInstance();
+        date.setTime(nowTime);
+
+        Calendar begin = Calendar.getInstance();
+        begin.setTime(startTime);
+
+        Calendar end = Calendar.getInstance();
+        end.setTime(endTime);
+
+        if (date.after(begin) && date.before(end)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     *
+     * @param c
+     * @return
+     */
+    public static int calculate(Calendar c){
+        int dayForWeek;
+        if(c.get(Calendar.DAY_OF_WEEK) == 1){
+            dayForWeek = 7;
+        }else{
+            dayForWeek = c.get(Calendar.DAY_OF_WEEK) - 1;}
+        return dayForWeek;
+    }
+    public static Calendar From(Calendar c){
+        switch(calculate(c)){
+            case 1:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)-0);
+                break;
+            case 2:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)-1);
+                break;
+            case 3:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)-2);
+                break;
+            case 4:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)-3);
+                break;
+            case 5:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)-4);
+                break;
+            case 6:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)-5);
+                break;
+            case 7:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)-6);
+        }
+        return c;
+    }
+    public static Calendar To(Calendar c){
+        switch(calculate(c)){
+            case 1:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)+6);
+                break;
+            case 2:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)+5);
+                break;
+            case 3:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)+4);
+                break;
+            case 4:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)+3);
+                break;
+            case 5:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)+2);
+                break;
+            case 6:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)+1);
+                break;
+            case 7:c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR)+0);
+        }
+        return c;
+    }
+
+    /**
+     * 根据两日期获取期间周数
+     * @param startDate
+     * @param endDate
+     * @return
+     * @throws ParseException
+     */
+    public static Long getWeeks(String startDate,String endDate) throws ParseException {
+        Calendar c1 = Calendar.getInstance();
+        Calendar c2 = Calendar.getInstance();
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+
+        c1.setTime(sdf.parse(startDate));
+        c2.setTime(sdf.parse(endDate));
+
+        long cc1=From(c1).getTimeInMillis()/(1000*3600*24);
+        long cc2=To(c2).getTimeInMillis()/(1000*3600*24);
+
+        return (cc2-cc1+1)/7;
+    }
+
+    /**
+     * 根据日期获取星期
+     * @param date
+     * @return
+     * @throws ParseException
+     */
+    public static int getWeekOfDate(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        try {
+            calendar.setTime(sdf.parse(date));
+        } catch (ParseException e) {
+            return 0;
+        }
+        int w = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        if (w < 0) w = 0;
+        return w;
+    }
+
+    public static Date getNextMillisEndWithMinute0or5(Integer min,Date baseTime) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(baseTime);
+        int minute = calendar.get(Calendar.MINUTE);
+        if (minute < (60-min)) {
+            int add;
+            if(min==5)
+            {
+                add = minute%10 < 5? 5 - minute%10 : 10 - minute%10;
+            }else
+            {
+                add = min-minute % min;
+            }
+            calendar.add(Calendar.MINUTE,add);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            return calendar.getTime();
+        }
+        // 当前时间+1小时
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date endTime = DateUtils.addHours(calendar.getTime(), 1);
+        return endTime;
     }
 }

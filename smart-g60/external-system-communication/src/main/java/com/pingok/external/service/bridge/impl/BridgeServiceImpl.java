@@ -4,6 +4,7 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.external.config.BridgeConfig;
 import com.pingok.external.domain.bridge.*;
 import com.pingok.external.mapper.bridge.*;
 import com.pingok.external.service.bridge.IBridgeService;
@@ -16,7 +17,6 @@ import com.ruoyi.system.api.RemoteEventService;
 import com.ruoyi.system.api.domain.event.TblEventRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -27,11 +27,6 @@ import java.util.List;
 @Service
 public class BridgeServiceImpl implements IBridgeService {
 
-    @Value("${bridge.host}")
-    private String host;
-
-    @Value("${bridge.token}")
-    private String token;
 
     @Autowired
     private RemoteEventService remoteEventService;
@@ -60,11 +55,13 @@ public class BridgeServiceImpl implements IBridgeService {
         List<TblBridgeWarning> bridgeWarnings = tblBridgeWarningMapper.selectByExample(example);
         String r;
         for (TblBridgeWarning warning : bridgeWarnings) {
-            r = HttpUtil.get(host + "/monitor/alarm_record/" + token + "/" + warning.getId());
+            r = HttpUtil.get(BridgeConfig.HOST + "/monitor/alarm_record/" + BridgeConfig.TOKEN + "/" + warning.getId());
             if (!StringUtils.isEmpty(r)) {
                 JSONObject ret = JSONObject.parseObject(r);
+                log.info(ret.toJSONString());
                 if (ret.getInteger("code") == 200) {
                     ret = ret.getJSONObject("data");
+                    log.info(ret.toJSONString());
                     if (!ret.isEmpty()) {
                         BeanUtils.copyNotNullProperties(JSON.parseObject(ret.toJSONString(), TblBridgeWarning.class), warning);
                         warning.setUpdateTime(DateUtils.getNowDate());
@@ -83,18 +80,22 @@ public class BridgeServiceImpl implements IBridgeService {
         List<TblBridgeInfo> bridgeInfos = tblBridgeInfoMapper.selectAll();
         TblEventRecord eventRecord;
         R re;
+        String host;
         for (TblBridgeInfo bridge : bridgeInfos) {
-            r = HttpUtil.get(host + "/monitor/alarm_records_by_range_time/" + token + "/" + bridge.getId() + "/" + startTime + "/" + endTime);
+            host = BridgeConfig.HOST + "/monitor/alarm_records_by_range_time/" + BridgeConfig.TOKEN + "/" + bridge.getId() + "/" + DateUtils.dateTime(startTime, DateUtils.YYYYMMDDHHMMSS) + "/" + DateUtils.dateTime(endTime, DateUtils.YYYYMMDDHHMMSS);
+            r = HttpUtil.get(host);
             if (!StringUtils.isEmpty(r)) {
                 JSONObject ret = JSONObject.parseObject(r);
                 if (ret.getInteger("code") == 200) {
                     JSONArray array = ret.getJSONArray("data");
+                    log.info(array.toJSONString());
                     if (!array.isEmpty()) {
                         TblBridgeWarning warning;
                         int size = array.size();
                         for (int i = 0; i < size; i++) {
                             warning = JSON.parseObject(array.getJSONObject(i).toJSONString(), TblBridgeWarning.class);
                             warning.setCreateTime(DateUtils.getNowDate());
+                            warning.setUpdateTime(DateUtils.getNowDate());
                             tblBridgeWarningMapper.insert(warning);
                             eventRecord = new TblEventRecord();
                             eventRecord.setEventType("30");
@@ -120,11 +121,12 @@ public class BridgeServiceImpl implements IBridgeService {
         String r;
         List<TblBridgeInfo> bridgeInfos = tblBridgeInfoMapper.selectAll();
         for (TblBridgeInfo bridge : bridgeInfos) {
-            r = HttpUtil.get(host + "/monitor/sensors/" + token + "/" + bridge.getId());
+            r = HttpUtil.get(BridgeConfig.HOST + "/monitor/sensors/" + BridgeConfig.TOKEN + "/" + bridge.getId());
             if (!StringUtils.isEmpty(r)) {
                 JSONObject ret = JSONObject.parseObject(r);
                 if (ret.getInteger("code") == 200) {
                     JSONArray array = ret.getJSONArray("data");
+//                    log.info(array.toJSONString());
                     if (!array.isEmpty()) {
                         TblBridgeAcquisition acquisition;
                         JSONObject object;
@@ -135,6 +137,7 @@ public class BridgeServiceImpl implements IBridgeService {
                             if (acquisition == null) {
                                 acquisition = JSON.parseObject(object.toJSONString(), TblBridgeAcquisition.class);
                                 acquisition.setCreateTime(DateUtils.getNowDate());
+                                acquisition.setUpdateTime(DateUtils.getNowDate());
                                 tblBridgeAcquisitionMapper.insert(acquisition);
                             } else {
                                 BeanUtils.copyNotNullProperties(JSON.parseObject(object.toJSONString(), TblBridgeAcquisition.class), acquisition);
@@ -159,11 +162,12 @@ public class BridgeServiceImpl implements IBridgeService {
         String r;
         List<TblBridgeInfo> bridgeInfos = tblBridgeInfoMapper.selectAll();
         for (TblBridgeInfo bridge : bridgeInfos) {
-            r = HttpUtil.get(host + "/monitor/acquisitions/" + token + "/" + bridge.getId());
+            r = HttpUtil.get(BridgeConfig.HOST + "/monitor/acquisitions/" + BridgeConfig.TOKEN + "/" + bridge.getId());
             if (!StringUtils.isEmpty(r)) {
                 JSONObject ret = JSONObject.parseObject(r);
                 if (ret.getInteger("code") == 200) {
                     JSONArray array = ret.getJSONArray("data");
+//                    log.info(array.toJSONString());
                     if (!array.isEmpty()) {
                         TblBridgeCollection collection;
                         JSONObject object;
@@ -174,6 +178,7 @@ public class BridgeServiceImpl implements IBridgeService {
                             if (collection == null) {
                                 collection = JSON.parseObject(object.toJSONString(), TblBridgeCollection.class);
                                 collection.setCreateTime(DateUtils.getNowDate());
+                                collection.setUpdateTime(DateUtils.getNowDate());
                                 tblBridgeCollectionMapper.insert(collection);
                             } else {
                                 BeanUtils.copyNotNullProperties(JSON.parseObject(object.toJSONString(), TblBridgeCollection.class), collection);
@@ -198,11 +203,12 @@ public class BridgeServiceImpl implements IBridgeService {
         String r;
         List<TblBridgeProject> bridgeProjects = tblBridgeProjectMapper.selectAll();
         for (TblBridgeProject project : bridgeProjects) {
-            r = HttpUtil.get(host + "/monitor/bridges/" + token + "/" + project.getId());
+            r = HttpUtil.get(BridgeConfig.HOST + "/monitor/bridges/" + BridgeConfig.TOKEN + "/" + project.getId());
             if (!StringUtils.isEmpty(r)) {
                 JSONObject ret = JSONObject.parseObject(r);
                 if (ret.getInteger("code") == 200) {
                     JSONArray array = ret.getJSONArray("data");
+//                    log.info(array.toJSONString());
                     if (!array.isEmpty()) {
                         TblBridgeInfo bridgeInfo;
                         JSONObject object;
@@ -213,6 +219,7 @@ public class BridgeServiceImpl implements IBridgeService {
                             if (bridgeInfo == null) {
                                 bridgeInfo = JSON.parseObject(object.toJSONString(), TblBridgeInfo.class);
                                 bridgeInfo.setCreateTime(DateUtils.getNowDate());
+                                bridgeInfo.setUpdateTime(DateUtils.getNowDate());
                                 tblBridgeInfoMapper.insert(bridgeInfo);
                             } else {
                                 BeanUtils.copyNotNullProperties(JSON.parseObject(object.toJSONString(), TblBridgeInfo.class), bridgeInfo);
@@ -230,11 +237,12 @@ public class BridgeServiceImpl implements IBridgeService {
 
     @Override
     public void updateProjectInfo() {
-        String r = HttpUtil.get(host + "/monitor/projects/" + token);
+        String r = HttpUtil.get(BridgeConfig.HOST + "/monitor/projects/" + BridgeConfig.TOKEN);
         if (!StringUtils.isEmpty(r)) {
             JSONObject ret = JSONObject.parseObject(r);
             if (ret.getInteger("code") == 200) {
                 JSONArray array = ret.getJSONArray("data");
+//                log.info(array.toJSONString());
                 if (!array.isEmpty()) {
                     TblBridgeProject bridgeProject;
                     JSONObject object;
@@ -245,6 +253,7 @@ public class BridgeServiceImpl implements IBridgeService {
                         if (bridgeProject == null) {
                             bridgeProject = JSON.parseObject(object.toJSONString(), TblBridgeProject.class);
                             bridgeProject.setCreateTime(DateUtils.getNowDate());
+                            bridgeProject.setUpdateTime(DateUtils.getNowDate());
                             tblBridgeProjectMapper.insert(bridgeProject);
                         } else {
                             BeanUtils.copyNotNullProperties(JSON.parseObject(object.toJSONString(), TblBridgeProject.class), bridgeProject);

@@ -37,9 +37,4 @@ public class GantryUpperController {
         return AjaxResult.success();
     }
 
-    @PostMapping("/log")
-    public AjaxResult log(@RequestBody JSONObject data) {
-        iGantryUpperService.log(data);
-        return AjaxResult.success();
-    }
 }

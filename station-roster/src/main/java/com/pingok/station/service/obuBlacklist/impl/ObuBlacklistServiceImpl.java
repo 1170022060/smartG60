@@ -3,7 +3,9 @@ package com.pingok.station.service.obuBlacklist.impl;
 import com.alibaba.fastjson.JSON;
 import com.pingok.station.domain.obuBlacklist.BObuAppend;
 import com.pingok.station.domain.obuBlacklist.vo.BlackObuVo;
+import com.pingok.station.domain.tracer.ListTracer;
 import com.pingok.station.domain.vo.*;
+import com.pingok.station.mapper.tracer.ListTracerMapper;
 import com.pingok.station.mapper.obuBlacklist.BObuAppendMapper;
 import com.pingok.station.service.obuBlacklist.IObuBlacklistService;
 import com.ruoyi.common.core.utils.StringUtils;
@@ -33,9 +35,17 @@ public class ObuBlacklistServiceImpl implements IObuBlacklistService {
     @Autowired
     private BObuAppendMapper bObuAppendMapper;
 
+    @Autowired
+    private ListTracerMapper listTracerMapper;
+
     @Value("${center.host}")
     private String host;
 
+    @Value("${center.obuPath}")
+    private String obuPath;
+
+    @Value("${center.stationGB}")
+    private String stationGB;
 
     @Value("${spring.redis.host}")
     private String redisHost;
@@ -53,7 +63,7 @@ public class ObuBlacklistServiceImpl implements IObuBlacklistService {
         RequestBody requestBody =  RequestBody.create(MediaType.parse("application/json"),jsonStr);
         final Request request = new Request.Builder()
                 .url(url)
-                .addHeader("AuthCode","S0004310010010")
+                .addHeader("AuthCode",stationGB)
                 .addHeader("Json-Md5",backMD5(jsonStr))
                 .post(requestBody)
                 .build();
@@ -62,34 +72,37 @@ public class ObuBlacklistServiceImpl implements IObuBlacklistService {
         try{
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            File pathFile=new File("D:\\obuBlacklist");
-            if(!pathFile.exists()){
-                pathFile.mkdirs();
-            }
-
-            String contentHeader = response.header("Content-Disposition");
-            String fileName="obuBlack.zip";
-            if(contentHeader.contains("filename="))
+            if(bytes.length>0 && response.code()==200)
             {
-                String str1 = contentHeader.substring(0, contentHeader.indexOf("filename="));
-                String str2 = contentHeader.substring(str1.length() + 9);
-                if(str2.contains(".zip"))
-                {
-                    fileName = str2;
+                String fileName = version + ".zip";
+                File file=new File(obuPath);
+                if(!file.exists()){
+                    file.mkdirs();
+                }
+                String pathName= obuPath +"\\"+fileName;
+                file  = new File(pathName);
+                if(!file.exists()){
+                    file.createNewFile();
+                }
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(bytes,0,bytes.length);
+                fos.flush();
+                fos.close();
+                if (version.equals(unzip(pathName, obuPath))) {
+                    unzipInside(version, obuPath);
+                    ListTracer listTracer=new ListTracer();
+                    listTracer.setListType("obuBlacklist");
+                    listTracer.setVersion(version);
+                    if(listTracerMapper.selectListType("obuBlacklist")==0)
+                    {
+                        listTracerMapper.insertTracer("obuBlacklist");
+                        listTracerMapper.updateTracer(listTracer);
+                    }else if (listTracerMapper.selectListType("obuBlacklist")==1)
+                    {
+                        listTracerMapper.updateTracer(listTracer);
+                    }
                 }
             }
-
-            String pathName="D:\\obuBlacklist"+"\\"+fileName;
-            File file  = new File(pathName);
-            if(!file.exists()){
-                file.createNewFile();
-            }
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(bytes,0,bytes.length);
-            fos.flush();
-            fos.close();
-
-            unzipInside(unzip(pathName,"D:\\obuBlacklist"),"D:\\obuBlacklist");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -99,17 +112,17 @@ public class ObuBlacklistServiceImpl implements IObuBlacklistService {
     @Override
     public void all(String version) {
         List<String> dataList= Arrays.asList("11","12", "13", "14", "15", "21", "22", "23", "31", "32", "33", "34", "35", "36", "37", "41", "42", "43", "44", "45", "46", "50", "51", "52", "53", "54", "61", "62", "63", "64", "65");
-        for(String data : dataList) {
+        for(String province : dataList) {
             String url = host+"/api/lane-service/obu-black-all-list";
             OkHttpClient client = new OkHttpClient();
             VersionAllVo versionAllVo = new VersionAllVo();
             versionAllVo.setVersion(version);
-            versionAllVo.setProvinceId(data);
+            versionAllVo.setProvinceId(province);
             String jsonStr = JSON.toJSONString(versionAllVo);
             RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonStr);
             final Request request = new Request.Builder()
                     .url(url)
-                    .addHeader("AuthCode", "S0004310010010")
+                    .addHeader("AuthCode", stationGB)
                     .addHeader("Json-Md5", backMD5(jsonStr))
                     .post(requestBody)
                     .build();
@@ -118,33 +131,27 @@ public class ObuBlacklistServiceImpl implements IObuBlacklistService {
             try {
                 Response response = call.execute();
                 byte[] bytes = response.body().bytes();
-                File pathFile = new File("D:\\obuBlacklist");
-                if (!pathFile.exists()) {
-                    pathFile.mkdirs();
-                }
-                File pathFileInside = new File("D:\\obuBlacklist"+"\\"+data);
-                if (!pathFileInside.exists()) {
-                    pathFileInside.mkdirs();
-                }
-                String contentHeader = response.header("Content-Disposition");
-                String fileName = "obuBlackAll.zip";
-                if (contentHeader.contains("filename=")) {
-                    String str1 = contentHeader.substring(0, contentHeader.indexOf("filename="));
-                    String str2 = contentHeader.substring(str1.length() + 9);
-                    if (str2.contains(".zip")) {
-                        fileName = str2;
+                if(bytes.length>0 && response.code()==200)
+                {
+                    String fileName = version +"_" +province+ ".zip";
+                    File file = new File(obuPath+"_all");
+                    if (!file.exists()) {
+                        file.mkdirs();
                     }
+                    file = new File(obuPath+"_all" + "\\" + province);
+                    if (!file.exists()) {
+                        file.mkdirs();
+                    }
+                    String pathName = obuPath+"_all" + "\\" + province + "\\" + fileName;
+                    file = new File(pathName);
+                    if (!file.exists()) {
+                        file.createNewFile();
+                    }
+                    FileOutputStream fos = new FileOutputStream(file);
+                    fos.write(bytes, 0, bytes.length);
+                    fos.flush();
+                    fos.close();
                 }
-
-                String pathName = "D:\\obuBlacklist"+"\\"+data + "\\" + fileName;
-                File file = new File(pathName);
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-                FileOutputStream fos = new FileOutputStream(file);
-                fos.write(bytes, 0, bytes.length);
-                fos.flush();
-                fos.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -154,44 +161,48 @@ public class ObuBlacklistServiceImpl implements IObuBlacklistService {
     public void unzipAll(String version){
         ZipFile zp=null;
         List<String> dataList=Arrays.asList("11","12", "13", "14", "15", "21", "22", "23", "31", "32", "33", "34", "35", "36", "37", "41", "42", "43", "44", "45", "46", "50", "51", "52", "53", "54", "61", "62", "63", "64", "65");
-        for(String data : dataList) {
-            String zipPath = "D:\\obuBlacklist" + "\\" +data+ "\\" + version + "_" + data + ".zip";
-            try {
-                //指定编码，否则压缩包里面不能有中文目录
-                zp = new ZipFile(zipPath, Charset.forName("gbk"));
-                //遍历里面的文件及文件夹
-                Enumeration entries = zp.entries();
-                while (entries.hasMoreElements()) {
-                    ZipEntry entry = (ZipEntry) entries.nextElement();
-                    String zipEntryName = entry.getName();
-                    InputStream in = zp.getInputStream(entry);
-                    String outpath = ("D:\\obuBlacklist" + "\\" +data+ "\\"+ zipEntryName).replace("/", File.separator);
-                    File fileDelete = new File(outpath);
-                    //判断路径是否存在，不存在则创建文件路径
-                    File file = new File(outpath.substring(0, outpath.lastIndexOf(File.separator)));
-                    if (!file.exists()) {
-                        file.mkdirs();
+        File zipFile;
+        for(String province : dataList) {
+            String zipPath = obuPath+"_all" + "\\" +province+ "\\" + version + "_" + province + ".zip";
+            zipFile = new File(zipPath);
+            if (zipFile.exists()) {
+                try {
+                    //指定编码，否则压缩包里面不能有中文目录
+                    zp = new ZipFile(zipPath, Charset.forName("gbk"));
+                    //遍历里面的文件及文件夹
+                    Enumeration entries = zp.entries();
+                    while (entries.hasMoreElements()) {
+                        ZipEntry entry = (ZipEntry) entries.nextElement();
+                        String zipEntryName = entry.getName();
+                        InputStream in = zp.getInputStream(entry);
+                        String outpath = (obuPath + "_all" + "\\" + province + "\\" + zipEntryName).replace("/", File.separator);
+                        File fileDelete = new File(outpath);
+                        //判断路径是否存在，不存在则创建文件路径
+                        File file = new File(outpath.substring(0, outpath.lastIndexOf(File.separator)));
+                        if (!file.exists()) {
+                            file.mkdirs();
+                        }
+                        //判断文件全路径是否为文件夹,如果是,不需要解压
+                        if (new File(outpath).isDirectory())
+                            continue;
+                        OutputStream out = new FileOutputStream(outpath);
+                        byte[] bf = new byte[2048];
+                        int len;
+                        while ((len = in.read(bf)) > 0) {
+                            out.write(bf, 0, len);
+                        }
+                        in.close();
+                        out.close();
+                        if (zipEntryName.contains(".json")) {
+                            List<BlackObuVo> list = jsonAnalysis(outpath);
+                            jedisInsert(list, version);
+                            fileDelete.delete();
+                        }
                     }
-                    //判断文件全路径是否为文件夹,如果是,不需要解压
-                    if (new File(outpath).isDirectory())
-                        continue;
-                    OutputStream out = new FileOutputStream(outpath);
-                    byte[] bf = new byte[2048];
-                    int len;
-                    while ((len = in.read(bf)) > 0) {
-                        out.write(bf, 0, len);
-                    }
-                    in.close();
-                    out.close();
-                    if (zipEntryName.contains(".json")) {
-                        List<BlackObuVo> list = jsonAnalysis(outpath);
-                        jedisInsert(list, version);
-                        fileDelete.delete();
-                    }
+                    zp.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                zp.close();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
@@ -278,6 +289,13 @@ public class ObuBlacklistServiceImpl implements IObuBlacklistService {
             }
         }
         jedis.close();
+    }
+
+    @Override
+    public Boolean findByObuId(String obuId) {
+        Jedis jedis = new Jedis(redisHost, redisPort);
+        jedis.select(Integer.parseInt(obuId.substring(0, 2))+100);
+        return StringUtils.isNotBlank(jedis.get(obuId));
     }
 
     public void unzipInside(String version,String resourcePath){

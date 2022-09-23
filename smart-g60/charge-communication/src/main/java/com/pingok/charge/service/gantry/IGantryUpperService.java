@@ -13,7 +13,28 @@ import java.util.stream.Stream;
 public interface IGantryUpperService {
 
     /**
-     * 上传ETC 门架交易小时批次汇总
+     * 上传门架异常事件数据
+     * @param reqFileName
+     * @param data
+     */
+    void updateSpecialEvent(String reqFileName, JSONObject data);
+
+    /**
+     * 上传门架运行状态数据
+     * @param reqFileName
+     * @param data
+     */
+    void updateTghbu(String reqFileName, JSONObject data);
+
+    /**
+     * 上传门架基础信息数据
+     * @param reqFileName
+     * @param data
+     */
+    void updateBaseInfo(String reqFileName, JSONObject data);
+
+    /**
+     * 上传门架日志文件
      * @param reqFileName
      * @param data
      */

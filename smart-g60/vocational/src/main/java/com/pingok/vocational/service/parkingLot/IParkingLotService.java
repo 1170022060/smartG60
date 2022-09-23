@@ -1,5 +1,9 @@
 package com.pingok.vocational.service.parkingLot;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 停车场 业务层
  *
@@ -19,4 +23,7 @@ public interface IParkingLotService {
      * @param surplus 剩余车位
      */
     void updateSurplus(Long id, Integer surplus);
+
+    List<Map> trafficChange(Date date);
+    List<Map> parkingPlace();
 }

@@ -2,6 +2,8 @@ package com.ruoyi.system.api.factory;
 
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.api.RemoteDeviceMonitorService;
+import com.ruoyi.system.api.domain.device.TblDeviceInfo;
+import com.ruoyi.system.api.domain.device.TblDeviceStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
@@ -22,6 +24,16 @@ public class RemoteDeviceMonitorFallbackFactory implements FallbackFactory<Remot
 
             @Override
             public R serverHeartbeat() {
+                return null;
+            }
+
+            @Override
+            public R<TblDeviceInfo> selectByDeviceId(String deviceId) {
+                return null;
+            }
+
+            @Override
+            public R updateHeartbeat(TblDeviceStatus deviceStatus) {
                 return null;
             }
         };

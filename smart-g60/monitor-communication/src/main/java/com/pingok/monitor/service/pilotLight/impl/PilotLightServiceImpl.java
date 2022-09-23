@@ -8,8 +8,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonBooleanFormatVisitor;
 import com.pingok.monitor.service.pilotLight.IPilotLightService;
 import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.common.security.utils.DictUtils;
 import com.ruoyi.system.api.domain.SysDictData;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,28 +20,52 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author
  * @time 2022/5/12 9:56
  */
+@Slf4j
 @Service
 public class PilotLightServiceImpl implements IPilotLightService {
 
-    @Value("${daas.host}")
+    @Value("${light.host}")
     private String host;
 //    private String host = "localhost:6060/api";
 
+    @Autowired
+    private RedisService redisService;
+
     private static final int[][] paramValues = {
-            {8,3,0,0,0,0,0},
-            {2,3,0,0,0,0,0},
-            {8,3,8,1,3,3,1},
-            {2,3,1,1,3,3,1},
-            {0,0,9,4,0,0,0},
-            {6,1,0,0,0,0,0},
-            {8,4,8,4,3,3,1},
-            {0,0,0,0,0,0,0}
+            {8,3,0,0,0,5,0,0,7},
+            {2,3,0,0,0,5,0,0,7},
+            {8,3,8,1,3,5,1,3,7},
+            {2,3,1,1,3,5,1,3,7},
+            {0,0,9,4,0,5,0,0,7},
+            {6,1,0,0,0,5,0,0,7},
+            {8,4,8,4,3,5,1,3,7},
+            {0,0,0,0,0,5,0,0,7}
     };
+
+    private String getToken() {
+        String token = redisService.getCacheObject("light_token");
+        if(StringUtils.isEmpty(token)) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("username", "上海匝道系统");
+            params.put("password", "shanghai123");
+            params.put("system", 1);
+            String resp = HttpUtil.post(host + "/user/login", params);
+            if(!resp.isEmpty()) {
+                JSONObject ret = JSON.parseObject(resp);
+                token = ret.getJSONObject("data").getString("token");
+                redisService.setCacheObject("light_token", token, 71l, TimeUnit.HOURS);
+            } else {
+                log.error("引导灯-登录失败！");
+            }
+        }
+        return token;
+    }
 
     private JSONObject login(Integer system) {
         JSONObject body = new JSONObject();
@@ -365,21 +392,20 @@ public class PilotLightServiceImpl implements IPilotLightService {
     @Override
     public boolean sendCmdToDeviceV2(JSONObject body) {
         boolean ret = false;
-        List<SysDictData> types = DictUtils.getDictCache("pilotlight_paramtype");
+        List<SysDictData> types = DictUtils.getDictCache("light_cmdType");
         SysDictData find = types.stream()
-                .filter(t -> t.getDictLabel() == body.get("command"))
+                .filter(t -> t.getDictValue().equals(body.getString("cmdType")))
                 .findFirst().orElse(null);
         if(find != null) {
-            JSONObject login = login(3);
-            if(200 == login.getInteger("status")) {
-                Object token = login.get("token");
-                String deviceId = (String) body.get("deviceId");
+//            JSONObject login = login(3);
+            String token = getToken();
+            if(!StringUtils.isEmpty(token)) {
+                String deviceId = body.getString("deviceId");
                 JSONObject send = new JSONObject();
-                send.put("token", body.get("token"));
+                send.put("token", token);
                 send.put("command", getParamV2(find.getDictValue(), deviceId));
-                send.put("detail", null);
-                String resp = HttpUtil.post(host + "/pilotLight/command/device/send", JSON.toJSONString(send));
-                logout(token);
+//                send.put("detail", null);
+                String resp = HttpUtil.post(host + "/command/device/send", JSON.toJSONString(send));
                 if (!StringUtils.isEmpty(resp)) {
                     JSONObject jo = JSON.parseObject(resp);
                     if (200 == jo.getInteger("status")) {
@@ -707,7 +733,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
         jo.put("key",6); jo.put("value", values[5]); ja.add(jo);
         jo.put("key",7); jo.put("value", values[6]); ja.add(jo);
         jo.put("key",8); jo.put("value", values[7]); ja.add(jo);
-        jo.put("key",9); jo.put("value", 7); ja.add(jo);
+        jo.put("key",9); jo.put("value", values[8]); ja.add(jo);
 
         ret.put("param", ja);
         return ret;

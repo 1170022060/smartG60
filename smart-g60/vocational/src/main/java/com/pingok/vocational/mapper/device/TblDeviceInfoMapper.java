@@ -1,8 +1,7 @@
 package com.pingok.vocational.mapper.device;
 
-import com.pingok.vocational.domain.device.DeviceGetInfo;
 import com.pingok.vocational.domain.device.TblDeviceInfo;
-import com.pingok.vocational.domain.emergency.TblEmergencyGroup;
+import com.pingok.vocational.domain.infoboard.VmsInfoByType;
 import com.ruoyi.common.core.mapper.CommonRepository;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -54,6 +53,7 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "a.DEVICE_MODEL as \"deviceModel\" ," +
             "e.DICT_LABEL as \"status\" ," +
             "a.DEVICE_PHOTO as \"devicePhoto\" ," +
+            "g.DICT_LABEL as \"deviceType\" ," +
             "to_char(a.CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\"," +
             "to_char(a.UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
             "case when a.CREATE_USER_ID is null then null else a.CREATE_USER_ID || ':' || c.USER_NAME end as \"createUserName\"," +
@@ -63,12 +63,16 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "left join  SYS_USER d on a.UPDATE_USER_ID=d.USER_ID " +
             "left join  SYS_DICT_DATA e on e.DICT_VALUE=to_char(a.STATUS) and e.DICT_TYPE='device_status' " +
             "left join TBL_PROJECT_INFO f on a.ITEM_NAME=f.ID " +
+            "left join  SYS_DICT_DATA g on g.DICT_VALUE=to_char(a.DEVICE_TYPE) and g.DICT_TYPE='device_type' " +
             "where 1=1 " +
             "<when test='deviceCategory != null'> " +
-            "and a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory}) " +
+            "and (a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory})) " +
             "</when>"+
             "<when test='status != null'> " +
             "and a.STATUS= #{status} " +
+            "</when>"+
+            "<when test='deviceType != null'> " +
+            "and a.DEVICE_TYPE= #{deviceType} " +
             "</when>"+
             "<when test='fieldBelong != null'> " +
             "and a.FIELD_BELONG= #{fieldBelong} " +
@@ -89,7 +93,7 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "and a.DEVICE_NAME like CONCAT(CONCAT('%',#{deviceName}),'%') " +
             "</when>"+
             "</script>"})
-    public List<Map> selectDeviceInfo(@Param("deviceCategory")Long deviceCategory,@Param("status") Integer status,@Param("fieldBelong") Long fieldBelong, @Param("deviceId")String deviceId,@Param("userSide") Long userSide,@Param("managementSide") Long managementSide,@Param("serviceLife") Integer serviceLife,@Param("deviceName") String deviceName);
+    public List<Map> selectDeviceInfo(@Param("deviceCategory")Long deviceCategory,@Param("status") Integer status,@Param("fieldBelong") Long fieldBelong, @Param("deviceId")String deviceId,@Param("userSide") Long userSide,@Param("managementSide") Long managementSide,@Param("serviceLife") Integer serviceLife,@Param("deviceName") String deviceName,@Param("deviceType") Integer deviceType);
 
     @Select("select * from TBL_DEVICE_INFO where DEVICE_ID= #{deviceId} and rownum = 1")
     TblDeviceInfo checkDeviceIdUnique(@Param("deviceId") String deviceId);
@@ -99,4 +103,57 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
 
     @Select("select ID as \"id\",DEVICE_NAME || '_' || DEVICE_ID as \"deviceName\" from TBL_DEVICE_INFO order by DEVICE_ID")
     List<Map> selectDeviceName();
+
+    @Select({"<script>" +
+            "select " +
+            "a.DEVICE_ID as \"deviceId\" ," +
+            "a.DEVICE_NAME as \"deviceName\" ," +
+            "b.DICT_LABEL as \"manufacturer\" ," +
+            "a.DEVICE_MODEL as \"deviceModel\" ," +
+            "a.PILE_NO as \"pileNo\" ," +
+            "c.PRESET_INFO as \"text\" ," +
+            "a.DEVICE_PHOTO as \"devicePhoto\" from TBL_DEVICE_INFO a " +
+            "left join SYS_DICT_DATA b on b.DICT_VALUE=a.MANUFACTURER and b.DICT_TYPE='manufacturer' " +
+            "left join TBL_RELEASE_RECORD c on c.DEVICE_ID=a.DEVICE_ID and c.ID in (select ID " +
+            "  from (select t.*,                " +
+            "               row_number() over(partition by t.DEVICE_ID order by t.PRESET_TIME desc) rn " +
+            "          from TBL_RELEASE_RECORD t) c " +
+            " where rn = 1) " +
+            "where 1 = 1 " +
+            "<when test='deviceType != null'> " +
+            "and a.DEVICE_TYPE= #{deviceType} " +
+            "</when>"+
+            "<when test='deviceName != null'> " +
+            "and a.DEVICE_NAME like CONCAT(CONCAT('%',#{deviceName}),'%') " +
+            "</when>"+
+            "<when test='pileNo != null'> " +
+            "and a.PILE_NO like CONCAT(CONCAT('%',#{pileNo}),'%') " +
+            "</when>"+
+            "<when test='manufacturer != null'> " +
+            "and a.MANUFACTURER =#{manufacturer} " +
+            "</when>"+
+            "<when test='deviceModel != null'> " +
+            "and a.DEVICE_MODEL like CONCAT(CONCAT('%',#{deviceModel}),'%') " +
+            "</when>" +
+            "</script>"})
+    List<Map> selectInfoBoard(@Param("deviceType")Integer deviceType,@Param("deviceName") String deviceName,@Param("pileNo") String pileNo,@Param("manufacturer")String manufacturer,@Param("deviceModel")String deviceModel);
+
+    @Select({"<script>" +
+            "select a.ID as \"id\", a.DEVICE_NAME as \"deviceName\", a.DEVICE_BRAND as \"deviceBrand\", " +
+            "a.DEVICE_MODEL as \"deviceModel\", a.TECH_PARA as \"techPara\", a.DEVICE_IP as \"deviceIp\", " +
+            "a.PORT as \"port\", a.PILE_NO as \"pileNo\", a.DIRECTION as \"direction\", " +
+            "a.GPS as \"gps\", b.STATUS as \"deviceStatus\", b.TIME as \"statusTime\", " +
+            "b.STATUS_DESC as \"statusDesc\", b.STATUS_DETAILS as \"statusDetails\", " +
+            "c.INFO_TYPE as \"infoType\", c.TYPEFACE as \"typeFace\", c.TYPEFACE_SIZE as \"typeFaceSize\", " +
+            "c.COLOR as \"color\", c.PICTURE_TYPE as \"pictureType\" " +
+            " from TBL_DEVICE_INFO a " +
+            " LEFT JOIN TBL_DEVICE_STATUS b on a.ID = b.DEVICE_ID " +
+            " LEFT JOIN TBL_RELEASE_RECORD c on a.DEVICE_ID = c.DEVICE_ID " +
+            "where DEVICE_TYPE = 9 " +
+            "<when test='type != null'> " +
+            "and DEVICE_MODEL = #{type}" +
+            "</when>" +
+            "</script>"
+    })
+    List<VmsInfoByType> getVmsListByType(@Param("type") String type);
 }

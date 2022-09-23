@@ -4,12 +4,14 @@ import com.ruoyi.common.core.annotation.Excel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.io.Serializable;
+
 /**
  * 事件记录表(按类型导出)
  *
  * @author ruoyi
  */
-public class EventRecordTypeVo {
+public class EventRecordTypeVo implements Serializable {
 
     /** 事件类型 */
     @Excel(name = "事件类型")

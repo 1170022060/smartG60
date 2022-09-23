@@ -79,27 +79,32 @@ public class GantryUpperController extends BaseController {
                         }
                         break; //交易上传
                     case "GBUPLOAD_ETCSU":
-                        List<TblGantrySumTransaction> gantrySumTransactions = iGantryUpperStoreService.saveEtcsu(reqFileName,JSONArray.parseArray(sb.toString()));
+                        List<TblGantrySumTransaction> gantrySumTransactions = iGantryUpperStoreService.saveEtcsu(reqFileName, JSONArray.parseArray(sb.toString()));
                         if (gantrySumTransactions != null && gantrySumTransactions.size() > 0) {
                             iGantryUpperService.updateEtcsu(reqFileName, gantrySumTransactions);
                         }
                         break; //交易小时汇总上传
                     case "GBUPLOAD_VISU":
-                        List<TblGantrySumTravelImage> gantrySumTravelImages = iGantryUpperStoreService.saveVisu(reqFileName,JSONArray.parseArray(sb.toString()));
+                        List<TblGantrySumTravelImage> gantrySumTravelImages = iGantryUpperStoreService.saveVisu(reqFileName, JSONArray.parseArray(sb.toString()));
                         if (gantrySumTravelImages != null && gantrySumTravelImages.size() > 0) {
                             iGantryUpperService.updateVisu(reqFileName, gantrySumTravelImages);
                         }
                         break; //牌识小时汇总上传
                     case "GBUPLOAD_LOGBUPLOAD":
-
+                        iGantryUpperService.updateLog(reqFileName, sb.toString());
                         break; //日志文件按需调取
                     case "GBUPLOAD_VEHICLEMONITOR":
                         break; //车检器数据
                     case "RM_BASEINFOUPLOAD":
+                        iGantryUpperStoreService.saveBaseInfo(reqFileName, sb.toString());
+                        iGantryUpperService.updateBaseInfo(reqFileName,JSONObject.parseObject(sb.toString()));
                         break;//基础信息数据
                     case "RM_TGHBU":
+                        iGantryUpperStoreService.saveTghbu(reqFileName,sb.toString());
+                        iGantryUpperService.updateTghbu(reqFileName,JSONObject.parseObject(sb.toString()));
                         break; //运行状态数据
                     case "RM_SPECIALEVENTUPLOAD":
+                        iGantryUpperStoreService.saveSpecialEvent(reqFileName,sb.toString());
                         break; //异常事件
                 }
             }

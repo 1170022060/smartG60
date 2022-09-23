@@ -5,6 +5,7 @@ import com.ruoyi.common.core.annotation.Excel;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 /**
  * OBU EF04省份子表 TBL_OBU_EF04_LOG_PROV
@@ -12,7 +13,7 @@ import javax.validation.constraints.Size;
  * @author ruoyi
  */
 @Table(name = "TBL_OBU_EF04_LOG_PROV")
-public class TblObuEf04LogProv {
+public class TblObuEf04LogProv implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
+/** 已废弃（2022-08-24）
  * @author
  * @time 2022/5/2 8:46
  */
@@ -23,8 +23,8 @@ public class InfoBoardController {
     private IInfoBoardService iInfoBoardService;
 
     @PostMapping("/publish")
-    public AjaxResult publish(@RequestBody JSONObject vmsPublishInfo) {
-        iInfoBoardService.publish(vmsPublishInfo);
-        return AjaxResult.success();
+    public AjaxResult publish(@RequestBody JSONObject pubInfo) {
+        int ret = iInfoBoardService.publish(pubInfo);
+        return ret == 200 ? AjaxResult.success() : AjaxResult.error();
     }
 }
