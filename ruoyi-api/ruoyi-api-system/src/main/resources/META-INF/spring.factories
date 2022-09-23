@@ -1,28 +1,28 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.ruoyi.system.api.factory.RemoteUserFallbackFactory,\
-  com.ruoyi.system.api.factory.RemoteLogFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteFileFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteAlgorithmFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteAmapFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteBaiDuFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteBaseStationFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteBridgeFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteConfigFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteDataCenterFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteDeptFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteDeviceInfoFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteDeviceMonitorFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteEmergencySuppliesFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteEventFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteGpsFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteIdProducerbackFactory, \
-  com.ruoyi.system.api.factory.RemoteInfoBoardFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteKafkaFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteReleaseFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteMonitorFallbackFactory, \
-  com.ruoyi.system.api.factory.RemotePilotLightFallbackFactory, \
-  com.ruoyi.system.api.factory.RemotePostFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteRoleFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteVodFallbackFactory, \
-  com.ruoyi.system.api.factory.RemoteVdtMonitorFallbackFactory, \
+  com.ruoyi.system.api.factory.RemoteLogFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteFileFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteAlgorithmFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteAmapFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteBaiDuFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteBaseStationFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteBridgeFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteConfigFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteDataCenterFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteDeptFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteDeviceInfoFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteDeviceMonitorFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteEmergencySuppliesFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteEventFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteGpsFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteIdProducerbackFactory,\
+  com.ruoyi.system.api.factory.RemoteInfoBoardFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteKafkaFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteReleaseFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteMonitorFallbackFactory,\
+  com.ruoyi.system.api.factory.RemotePilotLightFallbackFactory,\
+  com.ruoyi.system.api.factory.RemotePostFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteRoleFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteVodFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteVdtMonitorFallbackFactory,\
   com.ruoyi.system.api.factory.RemoteRoadDoctorFallbackFactory

@@ -40,7 +40,7 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "and tdi.DEVICE_TYPE = #{deviceType} " +
             "</when>" +
             "<when test='status != null'> " +
-            "and tds.STATUS = #{status} " +
+            "and nvl(tds.STATUS,0) = #{status} " +
             "</when>"+
             "</script>")
     List<Map> serviceDevice(@Param("fieldNum") String fieldNum, @Param("deviceType") Integer deviceType, @Param("status") Integer status);

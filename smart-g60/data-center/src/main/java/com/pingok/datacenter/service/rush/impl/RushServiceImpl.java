@@ -52,7 +52,7 @@ public class RushServiceImpl implements IRushService {
     }
 
     @Override
-    public List<TblRushRecord> list(String stationName,String vehPlate, String startTime, String endTime) {
-        return tblRushRecordMapper.list(stationName, vehPlate,startTime, endTime);
+    public List<TblRushRecord> list(String stationName, String vehPlate, String startTime, String endTime) {
+        return tblRushRecordMapper.list(stationName, vehPlate, startTime, endTime);
     }
 }

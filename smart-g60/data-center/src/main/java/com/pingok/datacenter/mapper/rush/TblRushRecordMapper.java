@@ -3,6 +3,7 @@ package com.pingok.datacenter.mapper.rush;
 
 import com.pingok.datacenter.domain.rush.TblRushRecord;
 import com.ruoyi.common.core.mapper.CommonRepository;
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -14,6 +15,8 @@ import java.util.List;
  * @author xia
  */
 public interface TblRushRecordMapper extends CommonRepository<TblRushRecord> {
+
+
     @Select({"SELECT " +
             "a.*  " +
             "FROM " +
@@ -21,7 +24,7 @@ public interface TblRushRecordMapper extends CommonRepository<TblRushRecord> {
             "SELECT " +
             "row_number ( ) over ( PARTITION BY exlpr.VEH_PLATE, exlpr.VEH_COLOR, exlpr.LANE_HEX ORDER BY exlpr.TRANS_TIME DESC ) AS \"rowNumber\", " +
             "trim(exlpr.VEH_PLATE) AS \"vehPlate\", " +
-            "exlpr.VEH_COLOR AS \"vehColor\", " +
+            "sdd.DICT_LABEL AS \"vehColorDesc\", " +
             "exlpr.TRANS_TIME AS \"transTime\", " +
             "tli.MARK_NAME AS \"markName\", " +
             "tli.LANE_NAME AS \"laneName\", " +
@@ -30,6 +33,7 @@ public interface TblRushRecordMapper extends CommonRepository<TblRushRecord> {
             "tbsi.STATION_HEX AS \"stationHex\"  " +
             "FROM " +
             "TBL_EX_LPR_TRANS_${year} exlpr " +
+            "LEFT JOIN SYS_DICT_DATA sdd on sdd.DICT_TYPE = 'veh_color' and sdd.DICT_VALUE = exlpr.VEH_COLOR " +
             "LEFT JOIN TBL_EX_TRANS_${year} ex ON ex.VEH_PLATE = exlpr.VEH_PLATE  " +
             "AND ex.VEH_COLOR = exlpr.VEH_COLOR " +
             "JOIN TBL_LANE_INFO tli ON tli.LANE_HEX = exlpr.LANE_HEX " +

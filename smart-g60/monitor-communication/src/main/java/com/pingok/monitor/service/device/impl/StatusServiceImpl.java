@@ -129,7 +129,7 @@ public class StatusServiceImpl implements IStatusService {
                 deviceStatus.setStatus(0);
                 deviceStatus.setStatusDesc("离线");
             }
-            post = HttpUtil.post(host + "/device-monitor/deviceMonitor", deviceStatus.toString());
+            post = HttpUtil.post(host + "/device-monitor/deviceMonitor", JSON.toJSONString(deviceStatus));
             if (!StringUtils.isEmpty(post)) {
                 ret = JSON.parseObject(post, R.class);
                 if (R.FAIL == ret.getCode()) {
