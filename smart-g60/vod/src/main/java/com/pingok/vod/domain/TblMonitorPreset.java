@@ -3,6 +3,7 @@ package com.pingok.vod.domain;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * @version 1.0.0 2022-03-25
  */
 @Table(name = "TBL_MONITOR_PRESET")
-public class TblMonitorPreset {
+public class TblMonitorPreset  implements Serializable {
 
     /** id */
     @Id

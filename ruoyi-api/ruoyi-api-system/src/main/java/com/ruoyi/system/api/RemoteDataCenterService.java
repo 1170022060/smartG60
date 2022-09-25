@@ -29,6 +29,7 @@ public interface RemoteDataCenterService {
      * @param twoHours
      * @return
      */
+    @PostMapping("/rush")
     R rushRecord(@RequestParam(value = "year") String year, @RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime") String endTime, @RequestParam(value = "twoHours") String twoHours);
 
     /**

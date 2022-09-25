@@ -43,15 +43,14 @@ public class DeviceHeartbeatServiceImpl implements IDeviceHeartbeatService {
         TblDeviceStatus tblDeviceStatus;
         TblDeviceStatusLog tblDeviceStatusLog;
         JSONObject o;
-        Example example = new Example(TblDeviceStatus.class);
-        Example.Criteria criteria = example.createCriteria();
-        JSONArray array = new JSONArray();
+        Example example;
         JSONObject status;
         for (int i = 0; i < heartbeat.size(); i++) {
             o = heartbeat.getJSONObject(i);
             tblDeviceInfo = iDeviceInfoService.findByDeviceId(o.getString("id"));
             if (tblDeviceInfo != null) {
-                criteria.andEqualTo("deviceId", tblDeviceInfo.getId());
+                example = new Example(TblDeviceStatus.class);
+                example.createCriteria().andEqualTo("deviceId", tblDeviceInfo.getId());
                 tblDeviceStatus = tblDeviceStatusMapper.selectOneByExample(example);
                 if (tblDeviceStatus == null) {
                     tblDeviceStatus = new TblDeviceStatus();
@@ -80,22 +79,15 @@ public class DeviceHeartbeatServiceImpl implements IDeviceHeartbeatService {
                 tblDeviceStatusLog.setTime(tblDeviceStatus.getTime());
                 tblDeviceStatusLogMapper.insert(tblDeviceStatusLog);
 
-                status = new JSONObject();
-                status.put("id", tblDeviceInfo.getId());
-                status.put("deviceId", tblDeviceInfo.getDeviceId());
-                status.put("status", tblDeviceStatus.getStatus());
-                status.put("statusDesc", tblDeviceStatus.getStatusDesc());
-                status.put("time", tblDeviceStatus.getTime());
-                array.add(status);
+                KafkaEnum kafkaEnum = new KafkaEnum();
+                kafkaEnum.setTopIc(KafkaTopIc.GIS_UPDATE_STATUS);
+                JSONObject data = new JSONObject();
+                data.put("code", tblDeviceInfo.getDeviceId());
+                data.put("status", tblDeviceStatus.getStatus() == 0 ? 1 : 0);
+                data.put("type", "camera");
+                kafkaEnum.setData(data.toJSONString());
+                remoteKafkaService.send(kafkaEnum);
             }
         }
-
-        JSONObject data = new JSONObject();
-        data.put("type", "camera");
-        data.put("data", array);
-        KafkaEnum kafkaEnum = new KafkaEnum();
-        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-        kafkaEnum.setData(data.toJSONString());
-        remoteKafkaService.send(kafkaEnum);
     }
 }

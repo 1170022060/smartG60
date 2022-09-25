@@ -70,4 +70,7 @@ public class TblRushRecord implements Serializable {
     @Transient
     private String confirmUser;
 
+    @Transient
+    private String vehColorDesc;
+
 }

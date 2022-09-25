@@ -13,17 +13,17 @@ spring:
     name: vod
   profiles:
     # 环境配置
-    active: dev
+    active: online
   cloud:
     nacos:
       discovery:
         # 服务注册地址
-        server-addr: 497c8310e9.qicp.vip:22292
+        server-addr: 10.31.42.130:8848
       config:
         #namespace: ed01487a-41a0-480e-a369-39f2be469364
         #group: SMARTG60
         # 配置中心地址
-        server-addr: 497c8310e9.qicp.vip:22292
+        server-addr: 10.31.42.130:8848
         # 配置文件格式
         file-extension: yml
         # 共享配置

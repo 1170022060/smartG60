@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 设备信息 服务层处理
@@ -34,17 +33,11 @@ public class DeviceInfoServiceImpl implements IDeviceInfoService {
     }
 
     @Override
-    public List<Map> findAllByType(Integer type) {
-        List<Map> list = null;
-        switch (type) {
-            case 1:
-                list = tblDeviceInfoMapper.findAllCamera();
-                break;
-            case 2:
-                list = tblDeviceInfoMapper.findAllCameraByUserId(SecurityUtils.getUserId());
-                break;
-        }
-        return list;
+    public List<TblDeviceInfo> findAllByType() {
+        Example example = new Example(TblDeviceInfo.class);
+        example.orderBy("deviceId").asc();
+        example.createCriteria().andEqualTo("deviceType", 8);
+        return tblDeviceInfoMapper.selectByExample(example);
     }
 
     @Override
@@ -72,20 +65,22 @@ public class DeviceInfoServiceImpl implements IDeviceInfoService {
 
     @Override
     public void updateCameraList(JSONArray jsonArray) {
-        Example example = new Example(TblDeviceInfo.class);
-        Example.Criteria criteria = example.createCriteria();
+        Example example;
         JSONObject camera;
         TblDeviceInfo tblDeviceInfo;
         for (int i = 0; i < jsonArray.size(); i++) {
             camera = jsonArray.getJSONObject(i);
-            criteria.andEqualTo("deviceId", camera.getString("id"));
+            example = new Example(TblDeviceInfo.class);
+            example.createCriteria().andEqualTo("deviceId", camera.getString("id"));
             tblDeviceInfo = tblDeviceInfoMapper.selectOneByExample(example);
             if (tblDeviceInfo == null) {
                 tblDeviceInfo = new TblDeviceInfo();
                 tblDeviceInfo.setId(remoteIdProducerService.nextId());
                 tblDeviceInfo.setCreateTime(DateUtils.getNowDate());
+                tblDeviceInfo.setDeviceId(camera.getString("id"));
                 tblDeviceInfo.setDeviceName(camera.getString("name"));
                 tblDeviceInfo.setIsControl(camera.getInteger("ptz_able"));
+                tblDeviceInfo.setDeviceType(8);
                 tblDeviceInfoMapper.insert(tblDeviceInfo);
             } else {
                 tblDeviceInfo.setUpdateTime(DateUtils.getNowDate());

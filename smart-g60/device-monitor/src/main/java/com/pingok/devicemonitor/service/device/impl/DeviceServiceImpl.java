@@ -91,7 +91,6 @@ public class DeviceServiceImpl implements IDeviceService {
     }
 
     @Override
-    @Transactional
     public void updateStatus(TblDeviceStatus deviceStatus) {
 
         TblDeviceStatusLog deviceStatusLog = new TblDeviceStatusLog();
