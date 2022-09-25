@@ -101,6 +101,7 @@ public class VmsServiceImpl implements IVmsService {
                 ping = IpUtils.ping(dev.getDeviceIp());
                 JSONObject jo = new JSONObject();
                 jo.put("devId", dev.getId());
+                jo.put("devCode", dev.getDeviceId());
                 jo.put("ping", ping);
                 ret.add(jo);
             }
