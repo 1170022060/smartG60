@@ -122,7 +122,7 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
             KafkaEnum kafkaEnum = new KafkaEnum();
             kafkaEnum.setTopIc(KafkaTopIc.GIS_UPDATE_STATUS);
             JSONObject data = new JSONObject();
-            data.put("code", jo.getString("code"));
+            data.put("code", jo.getString("devCode"));
             data.put("status", devStatus.getStatus() == 0 ? 1 : 0);
             data.put("type", "vms");
             kafkaEnum.setData(data.toJSONString());
