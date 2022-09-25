@@ -109,7 +109,7 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
             }
             devStatus.setDeviceId(devId);
             devStatus.setStatus(ping);
-            devStatus.setStatusDesc(ping == 0 ? "正常" : "离线");
+            devStatus.setStatusDesc(ping == 0 ? "离线" : "正常");
             devStatus.setTime(DateUtils.getNowDate());
             if (bExist) tblDeviceStatusMapper.updateByPrimaryKey(devStatus);
             else tblDeviceStatusMapper.insert(devStatus);

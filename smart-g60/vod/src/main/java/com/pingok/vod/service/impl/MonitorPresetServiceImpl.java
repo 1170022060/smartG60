@@ -57,7 +57,7 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
             ret = JSONObject.parseObject(post);
             if (ret.getJSONObject("ret_header").containsKey("code") && ret.getJSONObject("ret_header").getString("code").equals("0")) {
                 cameraStatus = ret.getJSONObject("ret_body").getJSONArray("camera_status_list");
-            }else {
+            } else {
                 throw new ServiceException(ret.getJSONObject("ret_header").getString("msg"));
             }
         }
@@ -108,15 +108,16 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
         paramMap.put("req_header", retHeader);
         retBody.put("session_id", id);
         retBody.put("control_type", type);
-        if(StringUtils.isNotNull(playSpeed)){
+        if (StringUtils.isNotNull(playSpeed)) {
             retBody.put("play_speed", playSpeed);
         }
-        if(StringUtils.isNotNull(seekTime)) {
+        if (StringUtils.isNotNull(seekTime)) {
             retBody.put("seek_time", seekTime);
         }
         paramMap.put("req_body", retBody);
         String post = HttpUtil.post(VodConfig.HOST, JSON.toJSONString(paramMap));
         if (!StringUtils.isEmpty(post)) {
+            log.info("vodControl----------" + post);
             JSONObject req = JSONObject.parseObject(post);
             r.put("code", req.getJSONObject("ret_header").getIntValue("code"));
             r.put("msg", req.getJSONObject("ret_header").getString("msg"));
@@ -232,6 +233,7 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
         log.info(JSON.toJSONString(paramMap));
         String post = HttpUtil.post(VodConfig.HOST, JSON.toJSONString(paramMap));
         if (!StringUtils.isEmpty(post)) {
+            log.info("ptzControl----------" + post);
             JSONObject req = JSONObject.parseObject(post);
             r.put("code", req.getJSONObject("ret_header").getIntValue("code"));
             r.put("msg", req.getJSONObject("ret_header").getString("msg"));
@@ -366,7 +368,7 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
         HashMap<String, Object> retBody;
         String post;
         JSONObject req;
-        for(Long id : ids){
+        for (Long id : ids) {
             paramMap = new HashMap<>();
             retHeader = new HashMap<>();
             retBody = new HashMap<>();
