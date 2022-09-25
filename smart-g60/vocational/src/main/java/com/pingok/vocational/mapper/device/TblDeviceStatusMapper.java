@@ -129,4 +129,13 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "</script>"})
     List<Map> serviceDeviceFault(@Param("fieldNum") String fieldNum,@Param("deviceType") Integer deviceType,@Param("deviceId") String deviceId,@Param("faultId") String faultId, @Param("faultDescription") String faultDescription, @Param("status") Integer status);
 
+    @Select("<script>" +
+            "select a.ID as \"id\", a.DEVICE_NAME as \"deviceName\", a.DEVICE_TYPE as \"deviceType\", " +
+            "b.STATUS as \"deviceStatus\", b.TIME as \"statusTime\", " +
+            "b.STATUS_DESC as \"statusDesc\", b.STATUS_DETAILS as \"statusDetails\" " +
+            " from TBL_DEVICE_INFO a " +
+            " LEFT JOIN TBL_DEVICE_STATUS b on a.ID = b.DEVICE_ID " +
+            "where FIELD_BELONG = 4 " +
+            "</script>")
+    List<Map> getDeviceStatusDesc();
 }

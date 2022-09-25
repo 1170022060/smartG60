@@ -185,6 +185,20 @@ public class Consumer {
         }
     }
 
+    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PING, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    public void infoBoardPing(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        Optional message = Optional.ofNullable(record.value());
+        if (message.isPresent()) {
+            log.info("infoBoardPing 消费了： Topic:" + topic + ",Message:" + message.get());
+            try {
+                iVmsService.collect(message.get().toString());
+            } catch (Exception e) {
+                log.error("infoBoardPing 消费者，Topic" + topic + ",Message:" + message.get() + "处理失败。错误信息：" + e.getMessage());
+            }
+            ack.acknowledge();
+        }
+    }
+
     @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_PILOTLIGHT, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
     public void pilotLightHandle(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
@@ -281,10 +295,10 @@ public class Consumer {
                         ret = iPilotLightService.firmwareVerByArea(jo);
                         break;
                 }
-                ack.acknowledge();
             } catch (Exception e) {
                 log.error("pilotLightHandle消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
             }
+            ack.acknowledge();
         }
     }
 

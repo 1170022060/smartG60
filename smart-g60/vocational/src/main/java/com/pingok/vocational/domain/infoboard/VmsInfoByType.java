@@ -57,4 +57,6 @@ public class VmsInfoByType {
     private String pictureType;
 
     private String recent5;
+
+    private String publishContent;
 }

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.core.annotation.Excel;
 import lombok.Data;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,11 +15,13 @@ import java.util.Date;
  * @author ruoyi
  */
 @Data
-public class TblReleaseRecord {
+@Table(name="TBL_RELEASE_RECORD")
+public class TblReleaseRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */
     @Excel(name = "ID")
+    @Id
     private Long id;
 
     /** 设备Id */

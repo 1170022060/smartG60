@@ -20,14 +20,26 @@ public class InfoBoardController {
     @Autowired
     private IInfoBoardService iInfoBoardService;
 
+    @GetMapping
+    public AjaxResult collect() {
+        iInfoBoardService.collect();
+        return AjaxResult.success();
+    }
+
     @PostMapping("/publish")
     public AjaxResult publish(@RequestBody JSONObject pubInfo) {
+//        return AjaxResult.error();
         int ret = iInfoBoardService.publish(pubInfo);
         return ret == 200 ? AjaxResult.success() : AjaxResult.error();
     }
 
-    @PostMapping()
-    public AjaxResult notifyResult(@RequestBody JSONArray result) {
+    @PostMapping("/notifyResult")
+    public AjaxResult notifyResult(@RequestBody JSONObject result) {
         return AjaxResult.success(iInfoBoardService.notifyResult(result));
+    }
+
+    @PostMapping("/notifyPing")
+    public AjaxResult notifyPing(@RequestBody JSONArray result) {
+        return AjaxResult.success(iInfoBoardService.notifyPing(result));
     }
 }

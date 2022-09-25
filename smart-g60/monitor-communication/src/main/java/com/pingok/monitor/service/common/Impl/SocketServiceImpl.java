@@ -54,7 +54,7 @@ public class SocketServiceImpl implements ISocketService {
 
     @Override
     public int writeAndResult(byte[] bytes, Socket socket) {
-        int retCode = 1;
+        int retCode = 200;
 
         try {
             send(bytes, socket);

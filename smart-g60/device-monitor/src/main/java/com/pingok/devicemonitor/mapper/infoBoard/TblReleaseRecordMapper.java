@@ -10,6 +10,8 @@ import java.util.List;
 
 @Mapper
 public interface TblReleaseRecordMapper extends CommonRepository<TblReleaseRecord> {
-    @Select("SELECT * FROM TBL_RELEASE_RECORD where 1=1 and DEVICE_ID = #{deviceId} ")
+    @Select("SELECT ID as \"id\", DEVICE_ID as \"deviceId\", PRESET_USER_ID as \"presetUserId\"," +
+            "STATUS as \"status\", PUBLISH_CONTENT as \"publishContent\" " +
+            " FROM TBL_RELEASE_RECORD where 1=1 and DEVICE_ID = #{deviceId} ")
     TblReleaseRecord findByDeviceId(@Param("deviceId") String deviceId);
 }

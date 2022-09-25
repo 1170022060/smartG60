@@ -8,6 +8,8 @@ import com.pingok.monitor.domain.common.MbsAttribute;
  */
 public interface IModbusService {
     byte[] readHoldingRegister(MbsAttribute mbs);
-    boolean writeRegister(MbsAttribute mbs, short value);
-    void writeMultiRegister(MbsAttribute mbs, short[] values);
+    int writeRegister(MbsAttribute mbs, short value);
+    int writeRegister(String portName, Integer slaveId, Integer address, Short value);
+    int writeMultiRegister(MbsAttribute mbs, short[] values);
+    int writeMultiRegister(String portName, Integer slaveId, Integer address, short[] value);
 }

@@ -1,4 +1,4 @@
-package com.pingok.monitor.domain.infoboard;
+package com.pingok.devicemonitor.domain.infoBoard;
 
 import lombok.Data;
 

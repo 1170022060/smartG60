@@ -3,9 +3,11 @@ package com.pingok.devicemonitor.controller.pilotLight;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.devicemonitor.service.pilotLight.IPilotLightService;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
+import com.ruoyi.system.api.RemoteKafkaService;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,28 @@ public class PilotLightController extends BaseController {
 
     @Autowired
     private IPilotLightService iPilotLightService;
+    @Autowired
+    private RemoteKafkaService remoteKafkaService;
+
+    /**
+     * 引导灯控制
+     * @param params：cmdType-预设模式； deviceId-设备ID；
+     * @return
+     */
+    @PostMapping("/send")
+    public AjaxResult send(@RequestBody JSONObject params) {
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SIGNAL_PILOTLIGHT);
+        params.put("kafkaType", "commandSendV2");
+        kafkaEnum.setData(JSON.toJSONString(params));
+        R r = remoteKafkaService.send(kafkaEnum);
+        return AjaxResult.success();
+    }
+
+    @GetMapping("/rtStatus")
+    public AjaxResult getRtStatus(@RequestParam(required = false) Integer roadId) {
+        return AjaxResult.success(iPilotLightService.getRtStatus(roadId));
+    }
 
     @PostMapping("/user/password")
     public AjaxResult passwordV1(@RequestBody JSONObject body) {
@@ -203,14 +227,14 @@ public class PilotLightController extends BaseController {
     }
 
 //    @PostMapping("/command/device/send")
-    @PostMapping("/send")
-    public AjaxResult sendCmdToDeviceV2(@RequestBody JSONObject body) {
+//    @PostMapping("/send")
+//    public AjaxResult sendCmdToDeviceV2(@RequestBody JSONObject body) {
 //        KafkaEnum kafkaEnum = new KafkaEnum();
 //        kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SIGNAL_PILOTLIGHT);
 //        body.put("kafkaType", "commandSendV2");
 //        kafkaEnum.setData(JSON.toJSONString(body));
-        return AjaxResult.success();
-    }
+//        return AjaxResult.success();
+//    }
 
     /*
     获取设备当前数据
@@ -228,11 +252,11 @@ public class PilotLightController extends BaseController {
         return AjaxResult.success();
     }
 //    @GetMapping("/fogArea/sys/get")
-    @GetMapping("/rtStatus")
-    public AjaxResult getRtStatusV2(@RequestParam("roadId") Integer roadId) {
-        iPilotLightService.collectRtStatus();
-        return AjaxResult.success();
-    }
+//    @GetMapping("/rtStatus")
+//    public AjaxResult getRtStatusV2(@RequestParam("roadId") Integer roadId) {
+//        iPilotLightService.collectRtStatus();
+//        return AjaxResult.success();
+//    }
 
     /*
     获取设备历史数据
