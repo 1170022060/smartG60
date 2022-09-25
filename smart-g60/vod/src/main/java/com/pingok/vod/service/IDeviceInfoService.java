@@ -16,7 +16,7 @@ public interface IDeviceInfoService {
 
     TblDeviceInfo findById(Long id);
 
-    List<Map> findAllByType(Integer type);
+    List<TblDeviceInfo> findAllByType();
 
     void add(TblDeviceInfo tblDeviceInfo);
 

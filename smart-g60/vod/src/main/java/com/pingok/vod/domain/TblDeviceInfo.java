@@ -189,6 +189,16 @@ public class TblDeviceInfo {
 
     private BigDecimal high;
 
+    private Integer deviceType;
+    public Integer getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(Integer deviceType) {
+        this.deviceType = deviceType;
+    }
+
+
 //    /** 用户是否存在此设备标识 默认不存在 */
 //    private boolean flag = false;
 

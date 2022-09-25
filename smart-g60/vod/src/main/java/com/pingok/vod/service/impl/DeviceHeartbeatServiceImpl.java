@@ -43,15 +43,15 @@ public class DeviceHeartbeatServiceImpl implements IDeviceHeartbeatService {
         TblDeviceStatus tblDeviceStatus;
         TblDeviceStatusLog tblDeviceStatusLog;
         JSONObject o;
-        Example example = new Example(TblDeviceStatus.class);
-        Example.Criteria criteria = example.createCriteria();
+        Example example;
         JSONArray array = new JSONArray();
         JSONObject status;
         for (int i = 0; i < heartbeat.size(); i++) {
             o = heartbeat.getJSONObject(i);
             tblDeviceInfo = iDeviceInfoService.findByDeviceId(o.getString("id"));
             if (tblDeviceInfo != null) {
-                criteria.andEqualTo("deviceId", tblDeviceInfo.getId());
+                example = new Example(TblDeviceStatus.class);
+                example.createCriteria().andEqualTo("deviceId", tblDeviceInfo.getId());
                 tblDeviceStatus = tblDeviceStatusMapper.selectOneByExample(example);
                 if (tblDeviceStatus == null) {
                     tblDeviceStatus = new TblDeviceStatus();
@@ -89,13 +89,5 @@ public class DeviceHeartbeatServiceImpl implements IDeviceHeartbeatService {
                 array.add(status);
             }
         }
-
-        JSONObject data = new JSONObject();
-        data.put("type", "camera");
-        data.put("data", array);
-        KafkaEnum kafkaEnum = new KafkaEnum();
-        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-        kafkaEnum.setData(data.toJSONString());
-        remoteKafkaService.send(kafkaEnum);
     }
 }

@@ -18,7 +18,7 @@ public interface IMonitorPresetService {
 
     JSONObject getVodCurtime(Long id);
 
-    JSONObject vodControl(Long id,String type,Integer playSpeed,String seekTime);
+    JSONObject vodControl(Long id,String type,String playSpeed,String seekTime);
 
     JSONObject stopVod(Long id);
 
@@ -26,7 +26,7 @@ public interface IMonitorPresetService {
 
     JSONArray getRecordList(Long id, String startTime, String endTime);
 
-    JSONObject ptzControl(Long id, String type, Integer param);
+    JSONObject ptzControl(Long id, String type, String param);
 
     void stopLive(List<Long> ids);
 
@@ -37,4 +37,6 @@ public interface IMonitorPresetService {
     List<Object> findByUserId();
 
     JSONArray getCameraList();
+
+    void streamAlive(List<Long> ids);
 }
