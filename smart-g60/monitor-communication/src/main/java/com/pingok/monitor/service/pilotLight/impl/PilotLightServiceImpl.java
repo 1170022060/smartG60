@@ -719,22 +719,21 @@ public class PilotLightServiceImpl implements IPilotLightService {
     JSONObject getParamV2(String value, String deviceId) {
         JSONObject ret = new JSONObject();
         JSONArray ja = new JSONArray();
-        JSONObject jo = new JSONObject();
         Integer index = Integer.parseInt(value);
         if(index < 0 || index > 7) return null;
         int[] values = paramValues[index];
 
         ret.put("cmdId", 11);
         ret.put("deviceId", deviceId);
-        jo.put("key",1); jo.put("value", values[0]); ja.add(jo);
-        jo.put("key",2); jo.put("value", values[1]); ja.add(jo);
-        jo.put("key",3); jo.put("value", values[2]); ja.add(jo);
-        jo.put("key",4); jo.put("value", values[3]); ja.add(jo);
-        jo.put("key",5); jo.put("value", values[4]); ja.add(jo);
-        jo.put("key",6); jo.put("value", values[5]); ja.add(jo);
-        jo.put("key",7); jo.put("value", values[6]); ja.add(jo);
-        jo.put("key",8); jo.put("value", values[7]); ja.add(jo);
-        jo.put("key",9); jo.put("value", values[8]); ja.add(jo);
+        JSONObject jo1 = new JSONObject(); jo1.put("key",1); jo1.put("value", values[0]); ja.add(jo1);
+        JSONObject jo2 = new JSONObject(); jo2.put("key",2); jo2.put("value", values[1]); ja.add(jo2);
+        JSONObject jo3 = new JSONObject(); jo3.put("key",3); jo3.put("value", values[2]); ja.add(jo3);
+        JSONObject jo4 = new JSONObject(); jo4.put("key",4); jo4.put("value", values[3]); ja.add(jo4);
+        JSONObject jo5 = new JSONObject(); jo5.put("key",5); jo5.put("value", values[4]); ja.add(jo5);
+        JSONObject jo6 = new JSONObject(); jo6.put("key",6); jo6.put("value", values[5]); ja.add(jo6);
+        JSONObject jo7 = new JSONObject(); jo7.put("key",7); jo7.put("value", values[6]); ja.add(jo7);
+        JSONObject jo8 = new JSONObject(); jo8.put("key",8); jo8.put("value", values[7]); ja.add(jo8);
+        JSONObject jo9 = new JSONObject(); jo9.put("key",9); jo9.put("value", values[8]); ja.add(jo9);
 
         ret.put("param", ja);
         return ret;
