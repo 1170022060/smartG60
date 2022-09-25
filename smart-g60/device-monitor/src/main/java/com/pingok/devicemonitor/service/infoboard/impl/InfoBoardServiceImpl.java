@@ -5,26 +5,21 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.devicemonitor.domain.device.TblDeviceInfo;
 import com.pingok.devicemonitor.domain.device.TblDeviceStatus;
-import com.pingok.devicemonitor.domain.infoBoard.DevInfo;
 import com.pingok.devicemonitor.domain.infoBoard.TblReleaseRecord;
-import com.pingok.devicemonitor.domain.infoBoard.VmsInfo;
 import com.pingok.devicemonitor.mapper.device.TblDeviceInfoMapper;
 import com.pingok.devicemonitor.mapper.device.TblDeviceStatusMapper;
 import com.pingok.devicemonitor.mapper.infoBoard.TblReleaseRecordMapper;
 import com.pingok.devicemonitor.service.infoboard.IInfoBoardService;
 import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.common.core.utils.DateUtils;
-import com.ruoyi.common.core.utils.ip.IpUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import com.ruoyi.system.api.RemoteKafkaService;
-import com.ruoyi.system.api.RemoteReleaseService;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -100,13 +95,14 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
         //更新状态表
         int ret = 200;
 
-        for(int i = 0; i < result.size(); ++i) {
+        for (int i = 0; i < result.size(); ++i) {
             JSONObject jo = result.getJSONObject(i);
             Long devId = jo.getLong("devId");
+            log.info(jo.getLong("devId") + "----" + jo.getBoolean("ping"));
             Integer ping = jo.getBoolean("ping") ? 1 : 0;
             boolean bExist = true;
             TblDeviceStatus devStatus = tblDeviceStatusMapper.findByDeviceId(devId);
-            if(devStatus == null) {
+            if (devStatus == null) {
                 devStatus = new TblDeviceStatus();
                 devStatus.setId(remoteIdProducerService.nextId());
                 bExist = false;
@@ -115,14 +111,14 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
             devStatus.setStatus(ping);
             devStatus.setStatusDesc(ping == 0 ? "正常" : "离线");
             devStatus.setTime(DateUtils.getNowDate());
-            if(bExist) tblDeviceStatusMapper.updateByPrimaryKey(devStatus);
+            if (bExist) tblDeviceStatusMapper.updateByPrimaryKey(devStatus);
             else tblDeviceStatusMapper.insert(devStatus);
 
 
             KafkaEnum kafkaEnum = new KafkaEnum();
             kafkaEnum.setTopIc(KafkaTopIc.GIS_UPDATE_STATUS);
             JSONObject data = new JSONObject();
-            data.put("code", jo.getString("code"));
+            data.put("code", jo.getString("devCode"));
             data.put("status", devStatus.getStatus() == 0 ? 1 : 0);
             data.put("type", "vms");
             kafkaEnum.setData(data.toJSONString());

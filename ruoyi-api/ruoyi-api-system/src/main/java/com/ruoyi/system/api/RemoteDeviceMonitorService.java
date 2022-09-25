@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(contextId = "remoteDeviceMonitorService", value = ServiceNameConstants.DEVICE_MONITOR_SERVICE, fallbackFactory = RemoteDeviceMonitorFallbackFactory.class)
 public interface RemoteDeviceMonitorService {
 
+
+    @GetMapping("/deviceMonitor/pingHeartbeat")
+    R pingHeartbeat();
     /**
      * 服务器心跳接口
      *

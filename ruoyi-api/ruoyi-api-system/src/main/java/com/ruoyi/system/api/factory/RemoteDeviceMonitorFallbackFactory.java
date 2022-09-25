@@ -23,6 +23,11 @@ public class RemoteDeviceMonitorFallbackFactory implements FallbackFactory<Remot
         return new RemoteDeviceMonitorService() {
 
             @Override
+            public R pingHeartbeat() {
+                return null;
+            }
+
+            @Override
             public R serverHeartbeat() {
                 return null;
             }

@@ -16,6 +16,16 @@ public class DeviceMonitorTask {
     @Autowired
     private RemoteDeviceMonitorService remoteDeviceMonitorService;
 
+
+    public void pingHeartbeat() {
+        R r = remoteDeviceMonitorService.pingHeartbeat();
+        if (r.getCode() == 200) {
+            log.info("deviceMonitorTask定时任务pingHeartbeat----成功");
+        } else {
+            log.error("deviceMonitorTask定时任务pingHeartbeat----失败：" + r.getMsg());
+        }
+    }
+
     public void serverHeartbeat() {
         R r = remoteDeviceMonitorService.serverHeartbeat();
         if (r.getCode() == 200) {
