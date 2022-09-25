@@ -201,5 +201,10 @@ public class TblDeviceInfo implements Serializable {
      */
     private String protocol;
 
+    /**
+     * 设备类型
+     */
+    private Integer deviceType;
+
     private static final long serialVersionUID = 1L;
 }

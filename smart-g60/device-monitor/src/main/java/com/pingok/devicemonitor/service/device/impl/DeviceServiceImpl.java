@@ -12,6 +12,7 @@ import com.pingok.devicemonitor.mapper.device.TblDeviceStatusMapper;
 import com.pingok.devicemonitor.service.device.IDeviceService;
 import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.common.core.utils.DateUtils;
+import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import com.ruoyi.system.api.RemoteKafkaService;
@@ -111,6 +112,19 @@ public class DeviceServiceImpl implements IDeviceService {
         } else {
             BeanUtils.copyNotNullProperties(deviceStatus, ds);
             tblDeviceStatusMappr.updateByPrimaryKey(ds);
+        }
+
+        KafkaEnum kafkaEnum;
+        TblDeviceInfo info = tblDeviceInfoMapper.selectByPrimaryKey(deviceStatus.getDeviceId());
+        if(StringUtils.isNotNull(info) && info.getDeviceType() == 11){
+            kafkaEnum = new KafkaEnum();
+            kafkaEnum.setTopIc(KafkaTopIc.GIS_UPDATE_STATUS);
+            JSONObject data = new JSONObject();
+            data.put("code", info.getDeviceId());
+            data.put("status", ds.getStatus() == 0 ? 1 : 0);
+            data.put("type", "vd");
+            kafkaEnum.setData(data.toJSONString());
+            remoteKafkaService.send(kafkaEnum);
         }
     }
 
