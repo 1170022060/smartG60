@@ -103,7 +103,7 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
         for(int i = 0; i < result.size(); ++i) {
             JSONObject jo = result.getJSONObject(i);
             Long devId = jo.getLong("devId");
-            Integer ping = jo.getBoolean("ping") ? 0 : 1;
+            Integer ping = jo.getBoolean("ping") ? 1 : 0;
             boolean bExist = true;
             TblDeviceStatus devStatus = tblDeviceStatusMapper.findByDeviceId(devId);
             if(devStatus == null) {
@@ -117,6 +117,16 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
             devStatus.setTime(DateUtils.getNowDate());
             if(bExist) tblDeviceStatusMapper.updateByPrimaryKey(devStatus);
             else tblDeviceStatusMapper.insert(devStatus);
+
+
+            KafkaEnum kafkaEnum = new KafkaEnum();
+            kafkaEnum.setTopIc(KafkaTopIc.GIS_UPDATE_STATUS);
+            JSONObject data = new JSONObject();
+            data.put("code", jo.getString("code"));
+            data.put("status", devStatus.getStatus() == 0 ? 1 : 0);
+            data.put("type", "vms");
+            kafkaEnum.setData(data.toJSONString());
+            remoteKafkaService.send(kafkaEnum);
         }
 
         return ret;
