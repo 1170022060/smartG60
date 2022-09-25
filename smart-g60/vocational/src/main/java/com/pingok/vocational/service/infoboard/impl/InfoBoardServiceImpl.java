@@ -8,6 +8,7 @@ import com.pingok.vocational.domain.release.TblReleasePreset;
 import com.pingok.vocational.mapper.device.TblDeviceInfoMapper;
 import com.pingok.vocational.mapper.release.TblReleasePresetMapper;
 import com.pingok.vocational.service.infoboard.IInfoBoardService;
+import com.ruoyi.common.core.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
         VmsInfoByTypeList X = new VmsInfoByTypeList();
 
         for (VmsInfoByType v : list) {
+            if(StringUtils.isEmpty(v.getDeviceModel())) continue;
             switch (v.getDeviceModel()) {
                 case "A板": A.getVmsList().add(v); break;
                 case "F板": F.getVmsList().add(v); break;

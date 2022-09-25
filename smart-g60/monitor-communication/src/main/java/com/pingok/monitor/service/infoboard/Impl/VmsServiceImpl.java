@@ -6,23 +6,26 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.monitor.domain.common.MbsAttribute;
 import com.pingok.monitor.domain.device.TblDeviceInfo;
+import com.pingok.monitor.domain.device.TblDeviceStatus;
 import com.pingok.monitor.domain.infoboard.DevInfo;
 import com.pingok.monitor.domain.infoboard.VmsPubInfo;
 import com.pingok.monitor.mapper.device.TblDeviceInfoMapper;
+import com.pingok.monitor.mapper.device.TblDeviceStatusMapper;
 import com.pingok.monitor.service.common.IModbusService;
 import com.pingok.monitor.service.common.ISocketService;
 import com.pingok.monitor.service.infoboard.IVmsService;
 import com.pingok.monitor.utils.ByteUtils;
 import com.pingok.monitor.utils.config.InfoBoardConfig;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.common.core.utils.ip.IpUtils;
 import com.serotonin.modbus4j.code.DataType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -59,28 +62,52 @@ public class VmsServiceImpl implements IVmsService {
         }
 
         int ret = 0;
-        JSONArray result = new JSONArray(); // 反馈结果
+        // 反馈结果
+        JSONObject result = new JSONObject();
+        result.put("pubContent", JSON.toJSONString(dataList));
+        JSONArray jaResult = new JSONArray();
         String playlst = genPlaylst(devInfoList, pubList);
         for(int i = 0 ; i < devInfoList.size(); ++i) {
             DevInfo dev = devInfoList.get(i);
-//            TblDeviceInfo dev = tblDeviceInfoMapper.findByDeviceId(devInfoList.getString(i));
             switch (dev.getProtocol())
             {
-                case InfoBoardConfig.SWARCO_CMS_V1d5: ret = publishSwarcoCMSV1d5(dev, pubList.get(0)); break;
-                case InfoBoardConfig.SWARCO_FMS_V1d5: ret = publishSwarcoFMSV1d5(dev, pubList.get(0)); break;
+                case InfoBoardConfig.SWARCO: ret = publishSwarcoCMSV1d5(dev, pubList.get(0)); break;
+                case InfoBoardConfig.SANSI_XS: ret = publishSansiXS(dev, pubList.get(0)); break;
                 case InfoBoardConfig.DONGHAI_F: ret = publishDonghaiF(dev, pubList.get(0)); break;
                 case InfoBoardConfig.SANSI_PLIST_MULTI: ret = publishSansiPlistMulti(dev, playlst); break;
                 default: retCode = 500; break;
             }
             JSONObject joRet = new JSONObject();
-            joRet.put(dev.getId(), ret);
-            result.add(joRet);
+            joRet.put("devId", dev.getDevId());
+            joRet.put("ret", ret);
+            jaResult.add(joRet);
         }
+        result.put("devList", jaResult);
 
         //通知
         notifyResult(result);
 
         return retCode;
+    }
+
+    @Override
+    public void collect(String devInfo) {
+        List<TblDeviceInfo> devList = JSON.parseArray(devInfo, TblDeviceInfo.class);
+        boolean ping = true;
+        JSONArray ret = new JSONArray();
+        try {
+            for(int i = 0; i < devList.size(); ++i) {
+                TblDeviceInfo dev = devList.get(i);
+                ping = IpUtils.ping(dev.getDeviceIp());
+                JSONObject jo = new JSONObject();
+                jo.put("devId", dev.getId());
+                jo.put("ping", ping);
+                ret.add(jo);
+            }
+            notifyPing(ret);
+        } catch (Exception ex) {
+            log.error("情报板采集异常：", ex.getMessage());
+        }
     }
 
     /* 世博翰 CMS
@@ -97,16 +124,16 @@ public class VmsServiceImpl implements IVmsService {
      */
     private int publishSwarcoCMSV1d5(DevInfo dev, List<VmsPubInfo> vmsInfoList) {
         int retCode = 200;
-        String protocol = InfoBoardConfig.SWARCO_CMS_V1d5;
-        String newline = "|";
+        String protocol = InfoBoardConfig.SWARCO;
+        String newline = "<br>";
 
         //组织报文
         StringBuilder sb = new StringBuilder();
         sb.append(" 01 01 FF FF FF FF FF FF ");
         for (VmsPubInfo info : vmsInfoList) {
             //图片、图片类型（默认64点阵 全屏）
-            if(info.getPicId() != null && !info.getPicId().equals("0")) {
-                sb.append( " 1b 36 "+ picCvt(protocol, info.getPicId()) + " 33 ");
+            if(!StringUtils.isEmpty(info.getPicId())) {
+                sb.append( " 1b 36 "+ picCvt(protocol, info.getPicId()) + " 32 ");
             } else {
                 //出字方式、间隔（默认：立即显示 + 5s）
                 sb.append(" 1b 37 31 ");
@@ -151,7 +178,13 @@ public class VmsServiceImpl implements IVmsService {
         try {
             byte[] bytes = StringUtils.hexStrToBytes(sb.toString());
             short[] shorts = StringUtils.bytesToShorts(bytes);
-            iModbusService.writeMultiRegister(mbsAttribute, shorts);
+            if(dev.getDevId().equals("F1")) {
+                retCode = iModbusService.writeMultiRegister("COM22",1,0x1500, shorts);
+            }else if(dev.getDevId().equals("F2")) {
+                retCode = iModbusService.writeMultiRegister("COM23",1,0x1500, shorts);
+            }else {
+                retCode = iModbusService.writeMultiRegister(mbsAttribute, shorts);
+            }
         } catch (Exception e) {
             log.error("情报板发布失败：" + e.getMessage());
             retCode = 500;
@@ -160,11 +193,30 @@ public class VmsServiceImpl implements IVmsService {
         return retCode;
     }
 
-    /* 世博翰 FMS
+
+    /* 三思限速板（串口）
+    * */
+//    private int publishSansiXS_S1(DevInfo dev, List<VmsPubInfo> vmsInfoList) {
+//        int retCode = 200;
+//        String protocol = InfoBoardConfig.SANSI_XS;
+//        for(VmsPubInfo info : vmsInfoList) {
+//            String fmsValue = fmsCvt(protocol, info.getPicId());
+//            //发送（modbus rtu）
+//            try {
+//                retCode = iModbusService.writeRegister("COM12", dev.getSlave(),
+//                        0x1801, Short.parseShort(fmsValue, 16));
+//            } catch (Exception e) {
+//                retCode = -1;
+//            }
+//        }
+//        return retCode;
+//    }
+
+    /* 三思限速板（tcp）
      */
-    private int publishSwarcoFMSV1d5(DevInfo dev, List<VmsPubInfo> vmsInfoList) {
+    private int publishSansiXS(DevInfo dev, List<VmsPubInfo> vmsInfoList) {
         int retCode = 200;
-        String protocol = InfoBoardConfig.SWARCO_FMS_V1d5;
+        String protocol = InfoBoardConfig.SANSI_XS;
 
         for(VmsPubInfo info : vmsInfoList) {
             String fmsValue = fmsCvt(protocol, info.getPicId());
@@ -172,9 +224,14 @@ public class VmsServiceImpl implements IVmsService {
             MbsAttribute mbsAttribute = new MbsAttribute(dev.getIp(), dev.getPort(), dev.getSlave(),
                     3, Integer.valueOf("1801", 16), 0, DataType.TWO_BYTE_INT_SIGNED);
             try {
-                iModbusService.writeRegister(mbsAttribute, Short.parseShort(fmsValue));
+                if(dev.getDevId().equals("S1")) {
+                    retCode = iModbusService.writeRegister("COM12", dev.getSlave(),
+                            0x1801, Short.parseShort(fmsValue, 16));
+                }else {
+                    retCode = iModbusService.writeRegister(mbsAttribute, Short.parseShort(fmsValue, 16));
+                }
             } catch (Exception e) {
-                retCode = 500;
+                retCode = -1;
             }
         }
 
@@ -182,26 +239,29 @@ public class VmsServiceImpl implements IVmsService {
     }
 
     /* 东海 F板
+       正常用7C：24*24 最多12个字； 78：32*32
      */
     private int publishDonghaiF(DevInfo dev, List<VmsPubInfo> vmsInfoList) {
         int retCode = 200;
         String protocol = InfoBoardConfig.DONGHAI_F;
-        String newline = "|";
+        String newline = "<br>";
         Socket socket = iSocketService.clientSocket(dev.getIp(), dev.getPort());
 
         //组织报文
         StringBuilder sb = new StringBuilder();
+        String sid = String.format("%02d",dev.getSlave());
+        //DonghaiCheckNum返回 114，还需要转成16进制
         sb.append("F2")
-            .append(dev.getSlave())
+            .append(sid)
             .append("F5020105")
-            .append(DonghaiCheckNum(dev.getSlave() + "F5020105"))
+            .append(DonghaiCheckNum(sid + "F5020105"))
             .append("F0");
         retCode = iSocketService.writeAndResult(StringUtils.hexStrTobytes(sb.toString()), socket);
         if(retCode == 200) {
             for (VmsPubInfo info : vmsInfoList) {
                 sb.setLength(0);
                 sb.append("F2")
-                    .append(dev.getSlave())
+                    .append(sid)
                     .append("F5")
                     .append(fontSizeCvt(protocol, info.getTypeface()));
                 //解析<br>换行，替换为 0a（换行）（0d回车？）
@@ -244,7 +304,7 @@ public class VmsServiceImpl implements IVmsService {
                     e.printStackTrace();
                 }
 
-                sb.append(DonghaiCheckNum(dev.getSlave() + "F5"
+                sb.append(DonghaiCheckNum(sid + "F5"
                         + fontSizeCvt(protocol, info.getTypeface())
                         + sb2.toString())
                 ).append("F0");
@@ -253,9 +313,9 @@ public class VmsServiceImpl implements IVmsService {
             }
             sb.setLength(0);
             sb.append("F2")
-                .append(dev.getSlave())
+                .append(sid)
                 .append("F5020405")
-                .append(DonghaiCheckNum(dev.getSlave() + "F5020405"))
+                .append(DonghaiCheckNum(sid + "F5020405"))
                 .append("F0");
             iSocketService.writeAndResult(StringUtils.hexStrTobytes(sb.toString()), socket);
         }
@@ -309,7 +369,7 @@ public class VmsServiceImpl implements IVmsService {
         if(devInfoList.size() > 0) {
             DevInfo dev = devInfoList.get(0);
             String newline = System.getProperty("line.separator");
-            if(dev.getProtocol() == InfoBoardConfig.SANSI_PLIST_MULTI) {
+            if(dev.getProtocol().equals(InfoBoardConfig.SANSI_PLIST_MULTI)) {
                 StringBuilder playlst1 = new StringBuilder();
                 playlst1.append("[playlist]" + newline);
                 playlst1.append("nwindows=" + pubList.size());
@@ -374,6 +434,7 @@ public class VmsServiceImpl implements IVmsService {
         catch (Exception ex)
         {
             log.error("情报板发布：上传文件异常！" + ex.getMessage());
+            recv = -1;
         }
         return recv;
     }
@@ -415,7 +476,7 @@ public class VmsServiceImpl implements IVmsService {
     // 字体转换，[in]=字体名，[return]=字体编码
     private String fontCvt(String protocol, String font) {
         String fontCode = "30";
-        if(protocol == InfoBoardConfig.SWARCO_CMS_V1d5) {
+        if(protocol == InfoBoardConfig.SWARCO) {
             switch (font) { //+0x30
                 case "黑体": fontCode = "30"; break;
                 case "楷体": fontCode = "31"; break;
@@ -429,7 +490,7 @@ public class VmsServiceImpl implements IVmsService {
     // 字体大小转换，[in]=字体大小，[return]=字体大小编码
     private String fontSizeCvt(String protocol, String fontSize) {
         String fontSizeCode = "33";
-        if(protocol == InfoBoardConfig.SWARCO_CMS_V1d5) {
+        if(protocol == InfoBoardConfig.SWARCO) {
             switch (fontSize) { //+0x30
                 case "16": fontSizeCode = "31"; break;
                 case "24": fontSizeCode = "32"; break;
@@ -440,8 +501,8 @@ public class VmsServiceImpl implements IVmsService {
         else if(protocol == InfoBoardConfig.DONGHAI_F) {
             switch (fontSize) {
                 case "16":
-                case "24":
-                case "32": fontSizeCode = "7C"; break;
+                case "24": fontSizeCode = "7C"; break;
+                case "32":
                 case "36":
                 case "48": fontSizeCode = "78"; break;
             }
@@ -452,7 +513,7 @@ public class VmsServiceImpl implements IVmsService {
     // 字体颜色转换，[in]=字体颜色，[return]=字体颜色编码
     private String fontColorCvt(String protocol, String fontColor) {
         String fontColorCode = "21";
-        if(protocol == InfoBoardConfig.SWARCO_CMS_V1d5) {
+        if(protocol == InfoBoardConfig.SWARCO) {
             switch (fontColor) {
                 case "红": fontColorCode = "20"; break;
                 case "绿": fontColorCode = "21"; break;
@@ -465,26 +526,26 @@ public class VmsServiceImpl implements IVmsService {
     // 图片转换，[in]=图片名，[return]=图片编码
     private String picCvt(String protocol, String picId) {
         String picCode = ""; //无图片
-        if(protocol == InfoBoardConfig.SWARCO_CMS_V1d5) {
+        if(protocol == InfoBoardConfig.SWARCO) {
             if(StringUtils.isEmpty(picId)) return "30";
             switch (picId) { //+0x30
                 case "0": picCode = "30"; break; //无图片
-                case "D7": picCode = "67"; break; //20
-                case "D8": picCode = "68"; break; //25
-                case "D9": picCode = "69"; break; //30
-                case "C1": picCode = "51"; break; //35
-                case "C2": picCode = "52"; break; //40
-                case "DA": picCode = "6A"; break; //45
-                case "DB": picCode = "6B"; break; //50
-                case "DC": picCode = "6C"; break; //55
-                case "C3": picCode = "53"; break; //60
-                case "DD": picCode = "6D"; break; //65
-                case "DE": picCode = "6E"; break; //70
-                case "C4": picCode = "54"; break; //80
-                case "DF": picCode = "6F"; break; //90
-                case "C5": picCode = "55"; break; //100
-                case "E0": picCode = "70"; break; //110
-                case "C6": picCode = "56"; break; //120
+                case "20": picCode = "67"; break; //20
+                case "25": picCode = "68"; break;
+                case "30": picCode = "69"; break;
+                case "35": picCode = "51"; break;
+                case "40": picCode = "52"; break;
+                case "45": picCode = "6A"; break;
+                case "50": picCode = "6B"; break;
+                case "55": picCode = "6C"; break;
+                case "60": picCode = "53"; break;
+                case "65": picCode = "6D"; break;
+                case "70": picCode = "6E"; break;
+                case "80": picCode = "54"; break;
+                case "90": picCode = "6F"; break;
+                case "100": picCode = "55"; break;
+                case "110": picCode = "70"; break;
+                case "120": picCode = "56"; break;
             }
         }
         return picCode;
@@ -493,7 +554,7 @@ public class VmsServiceImpl implements IVmsService {
     // 限速转换，[in]=限速值，[return]=限速编码
     private String fmsCvt(String protocol, String fmsValue) {
         String fmsCode = "16"; //限速80
-        if(protocol == InfoBoardConfig.SWARCO_FMS_V1d5) {
+        if(protocol == InfoBoardConfig.SANSI_XS) {
             switch (fmsValue) {
                 case "40": fmsCode = "12"; break;
                 case "50": fmsCode = "13"; break;
@@ -522,13 +583,13 @@ public class VmsServiceImpl implements IVmsService {
     }
 
     //通知
-    private void notifyResult(JSONArray result) {
+    private void notifyResult(JSONObject result) {
         String post;
         R ret;
         int time = 1;
         while (true) {
             try {
-                post = HttpUtil.post("localhost:9308" + "/infoBoard", JSON.toJSONString(result));
+                post = HttpUtil.post("127.0.0.1:9308" + "/infoBoard/notifyResult", JSON.toJSONString(result));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         ret = JSON.parseObject(post, R.class);
@@ -544,6 +605,33 @@ public class VmsServiceImpl implements IVmsService {
                 }
             } catch (InterruptedException e) {
                 log.error(JSON.toJSONString(result) + "转发发布通知异常：" + e.getMessage());
+            }
+            time += 2;
+        }
+    }
+
+    private void notifyPing(JSONArray result) {
+        String post;
+        R ret;
+        int time = 1;
+        while (true) {
+            try {
+                post = HttpUtil.post("127.0.0.1:9308" + "/infoBoard/notifyPing", JSON.toJSONString(result));
+                if (!StringUtils.isEmpty(post)) {
+                    if (post.startsWith("{")) {
+                        ret = JSON.parseObject(post, R.class);
+                        if (R.SUCCESS == ret.getCode()) {
+                            break;
+                        } else {
+                            log.error(JSON.toJSONString(result) + "转发采集通知失败：" + ret.getMsg());
+                        }
+                    } else {
+                        log.error(JSON.toJSONString(result) + "转发采集通知状态未知");
+                    }
+                    Thread.sleep(time * 1000);
+                }
+            } catch (InterruptedException e) {
+                log.error(JSON.toJSONString(result) + "转发采集通知异常：" + e.getMessage());
             }
             time += 2;
         }

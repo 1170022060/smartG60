@@ -69,4 +69,12 @@ public class SmartServiceController extends BaseController {
     {
         return toAjax(smartService.insertServiceRepair(tblDeviceRepair));
     }
+
+    @Log(title = "设备监控-服务区-设备状态", businessType = BusinessType.OTHER)
+    @GetMapping("/getDeviceStatus")
+    public AjaxResult getDeviceStatusDesc()
+    {
+        return AjaxResult.success(smartService.getDeviceStatusDesc());
+    }
+
 }
