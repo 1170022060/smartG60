@@ -44,7 +44,6 @@ public class DeviceHeartbeatServiceImpl implements IDeviceHeartbeatService {
         TblDeviceStatusLog tblDeviceStatusLog;
         JSONObject o;
         Example example;
-        JSONArray array = new JSONArray();
         JSONObject status;
         for (int i = 0; i < heartbeat.size(); i++) {
             o = heartbeat.getJSONObject(i);
@@ -80,13 +79,14 @@ public class DeviceHeartbeatServiceImpl implements IDeviceHeartbeatService {
                 tblDeviceStatusLog.setTime(tblDeviceStatus.getTime());
                 tblDeviceStatusLogMapper.insert(tblDeviceStatusLog);
 
-                status = new JSONObject();
-                status.put("id", tblDeviceInfo.getId());
-                status.put("deviceId", tblDeviceInfo.getDeviceId());
-                status.put("status", tblDeviceStatus.getStatus());
-                status.put("statusDesc", tblDeviceStatus.getStatusDesc());
-                status.put("time", tblDeviceStatus.getTime());
-                array.add(status);
+                KafkaEnum kafkaEnum = new KafkaEnum();
+                kafkaEnum.setTopIc(KafkaTopIc.GIS_UPDATE_STATUS);
+                JSONObject data = new JSONObject();
+                data.put("code", tblDeviceInfo.getDeviceId());
+                data.put("status", tblDeviceStatus.getStatus() == 0 ? 1 : 0);
+                data.put("type", "camera");
+                kafkaEnum.setData(data.toJSONString());
+                remoteKafkaService.send(kafkaEnum);
             }
         }
     }

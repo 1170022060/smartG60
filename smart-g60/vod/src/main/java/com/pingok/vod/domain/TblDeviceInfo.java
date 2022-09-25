@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -17,7 +18,7 @@ import java.util.Date;
  * @author ruoyi
  */
 @Table(name = "TBL_DEVICE_INFO")
-public class TblDeviceInfo {
+public class TblDeviceInfo  implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */

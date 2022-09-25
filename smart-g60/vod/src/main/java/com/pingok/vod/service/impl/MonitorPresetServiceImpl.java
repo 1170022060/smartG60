@@ -174,7 +174,7 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
             r.put("msg", req.getJSONObject("ret_header").getString("msg"));
             if (req.getJSONObject("ret_header").containsKey("code") && req.getJSONObject("ret_header").getString("code").equals("0")) {
                 r.put("sessionId", req.getJSONObject("ret_body").getString("session_id"));
-                r.put("url", req.getJSONObject("ret_body").getString("vod_hls_url"));
+                r.put("url", req.getJSONObject("ret_body").getString("vod_flv_url"));
             }
         }
         return r;
@@ -297,7 +297,7 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
                     reqBody = req.getJSONObject("ret_body");
                     liveUrl = new JSONObject();
                     liveUrl.put("id", cameraId);
-                    liveUrl.put("url", reqBody.getString("live_hls_url"));
+                    liveUrl.put("url", reqBody.getString("live_flv_url"));
                     liveUrls.add(liveUrl);
                 } else {
                     log.error("设备编号为：" + cameraId + " 的相机开始实时视频失败，错误：" + req.getJSONObject("ret_header").getString("msg"));
