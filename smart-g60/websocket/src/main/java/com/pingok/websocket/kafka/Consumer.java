@@ -55,6 +55,7 @@ public class Consumer {
             massageLinkApplicationService.cleanCacle();
             massageLinkApplicationService.sendMassage(JSONObject.toJSONString(jsonObject.getJSONObject("data"), SerializerFeature.MapSortField));
             ack.acknowledge();
+            log.info("broadcast 消费了： Topic:" + topic + ",Message:" + msg);
         }
     }
 }

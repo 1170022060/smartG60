@@ -59,11 +59,13 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "updateUser.NICK_NAME AS \"updateUser\", " +
             "tdi.DEVICE_ID AS \"deviceNum\", " +
             "tdi.DEVICE_NAME AS \"deviceName\",  " +
-            "tdf.DEVICE_ID AS \"deviceId\",  " +
-            "tdi.DEVICE_CATEGORY AS \"deviceCategory\"  " +
+            "tdf.DEVICE_ID AS \"deviceId\", " +
+            "tdc.CATEGORY_NAME AS \"deviceCategory\"," +
+            "tdi.PILE_NO as \"pileNo\" " +
             "FROM " +
             "TBL_DEVICE_FAULT tdf " +
             "JOIN TBL_DEVICE_INFO tdi ON tdi.ID = tdf.DEVICE_ID " +
+            "LEFT JOIN TBL_DEVICE_CATEGORY tdc ON tdc.ID = tdi.DEVICE_CATEGORY " +
             "LEFT JOIN  SYS_USER handleUser ON handleUser.USER_ID = tdf.HANDLE_USER_ID " +
             "LEFT JOIN  SYS_USER creatUser ON creatUser.USER_ID = tdf.CREATE_USER_ID " +
             "LEFT JOIN  SYS_USER updateUser ON updateUser.USER_ID = tdf.UPDATE_USER_ID UNION " +
@@ -103,10 +105,12 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "tdi.DEVICE_ID AS \"deviceNum\", " +
             "tdi.DEVICE_NAME AS \"deviceName\",  " +
             "tdf.DEVICE_ID AS \"deviceId\",  " +
-            "tdi.DEVICE_CATEGORY AS \"deviceCategory\"  " +
+            "tdc.CATEGORY_NAME AS \"deviceCategory\"," +
+            "tdi.PILE_NO as \"pileNo\" " +
             "FROM " +
             "TBL_DEVICE_FAULT tdf " +
-            "JOIN TBL_GANTRY_INFO tdi ON tdi.ID = tdf.DEVICE_ID " +
+            "JOIN TBL_DEVICE_INFO tdi ON tdi.ID = tdf.DEVICE_ID " +
+            "LEFT JOIN TBL_DEVICE_CATEGORY tdc ON tdc.ID = tdi.DEVICE_CATEGORY " +
             "LEFT JOIN  SYS_USER handleUser ON handleUser.USER_ID = tdf.HANDLE_USER_ID " +
             "LEFT JOIN  SYS_USER creatUser ON creatUser.USER_ID = tdf.CREATE_USER_ID " +
             "LEFT JOIN  SYS_USER updateUser ON updateUser.USER_ID = tdf.UPDATE_USER_ID UNION " +
@@ -146,10 +150,12 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "tdi.DEVICE_ID AS \"deviceNum\", " +
             "tdi.DEVICE_NAME AS \"deviceName\",  " +
             "tdf.DEVICE_ID AS \"deviceId\",  " +
-            "tdi.DEVICE_CATEGORY AS \"deviceCategory\"  " +
+            "tdc.CATEGORY_NAME AS \"deviceCategory\"," +
+            "tdi.PILE_NO as \"pileNo\" " +
             "FROM " +
             "TBL_DEVICE_FAULT tdf " +
-            "JOIN TBL_DEVICE_INFO_LANE tdi ON tdi.ID = tdf.DEVICE_ID " +
+            "JOIN TBL_DEVICE_INFO tdi ON tdi.ID = tdf.DEVICE_ID " +
+            "LEFT JOIN TBL_DEVICE_CATEGORY tdc ON tdc.ID = tdi.DEVICE_CATEGORY " +
             "LEFT JOIN  SYS_USER handleUser ON handleUser.USER_ID = tdf.HANDLE_USER_ID " +
             "LEFT JOIN  SYS_USER creatUser ON creatUser.USER_ID = tdf.CREATE_USER_ID " +
             "LEFT JOIN  SYS_USER updateUser ON updateUser.USER_ID = tdf.UPDATE_USER_ID  " +

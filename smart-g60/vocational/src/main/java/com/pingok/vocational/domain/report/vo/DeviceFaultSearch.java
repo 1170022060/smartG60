@@ -30,5 +30,6 @@ public class DeviceFaultSearch {
     private String deviceNum;
     private String deviceName;
     private String deviceId;
-    private Long deviceCategory;
+    private String deviceCategory;
+    private String pileNo;
 }
