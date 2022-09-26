@@ -6,6 +6,7 @@ import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,5 +59,17 @@ public class ParkingLotController extends BaseController {
     @GetMapping("/passenger")
     public AjaxResult passenger(@RequestParam(name = "date") Date date) throws ParseException {
         return AjaxResult.success(iParkingLotService.passengerFlow(date));
+    }
+
+    @Log(title = "车位统计", businessType = BusinessType.OTHER)
+    @GetMapping("/park")
+    public AjaxResult park(@RequestParam(name = "fieldNum") String fieldNum,@RequestParam(name = "regionName") String regionName){
+        return AjaxResult.success(iParkingLotService.parkMonitor(fieldNum,regionName));
+    }
+
+    @Log(title = "超时车辆", businessType = BusinessType.OTHER)
+    @GetMapping("/overtime")
+    public AjaxResult overtime(@RequestParam(name = "fieldNum") String fieldNum,@RequestParam(name = "regionName") String regionName){
+        return AjaxResult.success(iParkingLotService.overtimeInfo(fieldNum,regionName));
     }
 }

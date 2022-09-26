@@ -27,7 +27,7 @@ public interface TblEventPassengerFlowMapper extends CommonRepository<TblEventPa
     List<Map> field(@Param("time") Long time);
 
     @Select("select tfi.ID as \"deviceId\"," +
-            "tfi.DEVICE_NAME as \"deviceName\" from TBL_EVENT_PASSENGER_FLOW tep " +
+            "tdi.DEVICE_NAME as \"deviceName\" from TBL_EVENT_PASSENGER_FLOW tep " +
             "left join TBL_DEVICE_INFO tdi on tdi.ID=tep.UBI_SOURCE_ID " +
             "left join TBL_FIELD_INFO tfi on tfi.ID=tdi.FIELD_BELONG " +
             "where FIELD_ID = #{fieldId} and tep.UBI_START_TIME &gt;= #{time}")

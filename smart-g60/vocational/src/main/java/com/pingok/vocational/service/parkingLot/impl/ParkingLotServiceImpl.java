@@ -129,4 +129,25 @@ public class ParkingLotServiceImpl implements IParkingLotService {
         }
         return passengerFlow;
     }
+
+    @Override
+    public List<Map> parkMonitor(String fieldNum, String regionName) {
+        List<Map> findByFieldRegion=tblParkingLotMapper.findByFieldRegion(fieldNum,regionName);
+        for(Map map :findByFieldRegion)
+        {
+            Integer count=tblParkingLotMapper.count(Long.parseLong(map.get("id").toString()));
+            map.put("count",count);
+        }
+        return findByFieldRegion;
+    }
+
+    @Override
+    public List<Map> overtimeInfo(String fieldNum, String regionName) {
+        return tblParkingVehicleInfoMapper.overtimeInfo(fieldNum,regionName);
+    }
+
+    @Override
+    public List<Map> selectRegionName(String fieldNum) {
+        return tblParkingLotMapper.selectRegionName(fieldNum);
+    }
 }

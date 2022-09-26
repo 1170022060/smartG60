@@ -60,4 +60,33 @@ public interface TblParkingVehicleInfoMapper extends CommonRepository<TblParking
             "pvi.EX_TIME IS NULL  " +
             "AND tpl.FIELD_ID = #{fieldId})")
     Map humanFlow(@Param("fieldId") Long fieldId);
+
+
+    @Select({"<script>" +
+            "SELECT " +
+            "pvi.ID AS \"id\", " +
+            "pvi.VEH_PLATE AS \"vehPlate\", " +
+            "sdd.DICT_LABEL AS \"vehClass\", " +
+            "sdd1.DICT_LABEL AS \"vehColor\", " +
+            "tfi.FIELD_NAME || ':' || tpl.REGION_NAME AS \"place\", " +
+            "to_char(pvi.EN_TIME,'yyyy-mm-dd hh24:mi:ss') AS \"enTime\"  " +
+            "FROM " +
+            "TBL_PARKING_VEHICLE_INFO pvi " +
+            "JOIN  SYS_DICT_DATA sdd ON sdd.DICT_VALUE = pvi.VEH_CLASS  " +
+            "AND sdd.DICT_TYPE = 'park_veh_class' " +
+            "JOIN  SYS_DICT_DATA sdd1 ON sdd1.DICT_VALUE = pvi.VEH_CLASS  " +
+            "AND sdd1.DICT_TYPE = 'park_veh_color'  " +
+            "JOIN TBL_PARKING_LOT tpl ON tpl.ID = pvi.PARKING_ID " +
+            "JOIN TBL_FIELD_INFO tfi ON tfi.ID = tpl.FIELD_ID " +
+            "WHERE " +
+            "pvi.EX_TIME IS NULL  " +
+            "AND CEIL( ( SYSDATE - pvi.EN_TIME ) * 24 ) > (SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.timeout') " +
+            "<when test='date != fieldNum'> " +
+            "and tfi.FIELD_NUM = #{fieldNum}" +
+            "</when>"+
+            "<when test='date != regionName'> " +
+            "and tpl.REGION_NAME = #{regionName}" +
+            "</when>" +
+            "</script>"})
+    List<Map> overtimeInfo(@Param("fieldNum") String fieldNum,@Param("regionName") String regionName);
 }
