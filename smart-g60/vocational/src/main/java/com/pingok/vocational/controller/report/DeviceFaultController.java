@@ -81,8 +81,6 @@ public class DeviceFaultController extends BaseController {
      *
      * @return
      */
-    @RequiresPermissions("vocational:deviceFault:search")
-    @Log(title = "设备故障管理", businessType = BusinessType.OTHER)
     @GetMapping("/search")
     public TableDataInfo search(String faultType, Long deviceId, String faultId, String faultDescription, Integer status) {
         startPage();
