@@ -66,29 +66,30 @@ public class DeviceServiceImpl implements IDeviceService {
             tblDeviceFault.setCreateTime(DateUtils.getNowDate());
             tblDeviceFault.setStatus(0);
             tblDeviceFaultMapper.insert(tblDeviceFault);
+
+            TblDeviceInfo deviceInfo = tblDeviceInfoMapper.selectByPrimaryKey(tblDeviceFault.getDeviceId());
+
+            JSONObject fault = new JSONObject();
+            fault.put("id", tblDeviceFault.getId());
+            fault.put("deviceId", tblDeviceFault.getDeviceId());
+            fault.put("deviceName", deviceInfo.getDeviceName());
+            fault.put("locationInterval", deviceInfo.getGps());
+            fault.put("faultId", tblDeviceFault.getFaultId());
+            fault.put("faultDescription", tblDeviceFault.getFaultDescription());
+            fault.put("time", tblDeviceFault.getFaultTime());
+
+            JSONObject data = new JSONObject();
+            data.put("type", "deviceFault");
+            data.put("data", fault.toJSONString());
+            KafkaEnum kafkaEnum = new KafkaEnum();
+            kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+            kafkaEnum.setData(data.toJSONString());
+            remoteKafkaService.send(kafkaEnum);
         } else {
             BeanUtils.copyNotNullProperties(deviceFault, tblDeviceFault);
-            tblDeviceFault.setCreateTime(DateUtils.getNowDate());
+            tblDeviceFault.setUpdateTime(DateUtils.getNowDate());
             tblDeviceFaultMapper.updateByPrimaryKey(tblDeviceFault);
         }
-        TblDeviceInfo deviceInfo = tblDeviceInfoMapper.selectByPrimaryKey(tblDeviceFault.getDeviceId());
-
-        JSONObject fault = new JSONObject();
-        fault.put("id", tblDeviceFault.getId());
-        fault.put("deviceId", tblDeviceFault.getDeviceId());
-        fault.put("deviceName", deviceInfo.getDeviceName());
-        fault.put("faultId", tblDeviceFault.getFaultId());
-        fault.put("faultDescription", tblDeviceFault.getFaultDescription());
-        fault.put("time", tblDeviceFault.getFaultTime());
-
-        JSONObject data = new JSONObject();
-        data.put("type", "deviceFault");
-        data.put("data", fault.toJSONString());
-        KafkaEnum kafkaEnum = new KafkaEnum();
-        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-        kafkaEnum.setData(data.toJSONString());
-        remoteKafkaService.send(kafkaEnum);
-
     }
 
     @Override

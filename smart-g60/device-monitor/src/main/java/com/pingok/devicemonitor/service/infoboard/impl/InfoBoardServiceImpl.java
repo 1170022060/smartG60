@@ -3,12 +3,14 @@ package com.pingok.devicemonitor.service.infoboard.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.devicemonitor.domain.device.TblDeviceFault;
 import com.pingok.devicemonitor.domain.device.TblDeviceInfo;
 import com.pingok.devicemonitor.domain.device.TblDeviceStatus;
 import com.pingok.devicemonitor.domain.infoBoard.TblReleaseRecord;
 import com.pingok.devicemonitor.mapper.device.TblDeviceInfoMapper;
 import com.pingok.devicemonitor.mapper.device.TblDeviceStatusMapper;
 import com.pingok.devicemonitor.mapper.infoBoard.TblReleaseRecordMapper;
+import com.pingok.devicemonitor.service.device.IDeviceService;
 import com.pingok.devicemonitor.service.infoboard.IInfoBoardService;
 import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.common.core.utils.DateUtils;
@@ -41,6 +43,9 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
     private TblDeviceInfoMapper tblDeviceInfoMapper;
     @Autowired
     private TblDeviceStatusMapper tblDeviceStatusMapper;
+
+    @Autowired
+    private IDeviceService iDeviceService;
 
     @Override
     public int publish(JSONObject pubInfo) {
@@ -98,7 +103,7 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
         for (int i = 0; i < result.size(); ++i) {
             JSONObject jo = result.getJSONObject(i);
             Long devId = jo.getLong("devId");
-            log.info(jo.getLong("devId") + "----" + jo.getBoolean("ping"));
+//            log.info(jo.getLong("devId") + "----" + jo.getBoolean("ping"));
             Integer ping = jo.getBoolean("ping") ? 1 : 0;
             boolean bExist = true;
             TblDeviceStatus devStatus = tblDeviceStatusMapper.findByDeviceId(devId);
@@ -123,6 +128,17 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
             data.put("type", "vms");
             kafkaEnum.setData(data.toJSONString());
             remoteKafkaService.send(kafkaEnum);
+
+            if (devStatus.getStatus() == 0) {
+                TblDeviceFault deviceFault = new TblDeviceFault();
+                deviceFault.setDeviceId(devStatus.getDeviceId());
+                deviceFault.setFaultId("hardware");
+                deviceFault.setFaultDescription(devStatus.getStatusDesc());
+                deviceFault.setFaultTime(DateUtils.getNowDate());
+                deviceFault.setRegisterType(2);
+                deviceFault.setFaultType("remind");
+                iDeviceService.deviceFault(deviceFault);
+            }
         }
 
         return ret;
