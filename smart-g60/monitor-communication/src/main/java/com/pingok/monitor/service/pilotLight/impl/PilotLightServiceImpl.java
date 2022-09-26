@@ -5,8 +5,7 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonBooleanFormatVisitor;
-import com.pingok.monitor.config.AliYunConfig;
+import com.pingok.monitor.config.HostConfig;
 import com.pingok.monitor.service.pilotLight.IPilotLightService;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.redis.service.RedisService;
@@ -14,7 +13,6 @@ import com.ruoyi.common.security.utils.DictUtils;
 import com.ruoyi.system.api.domain.SysDictData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,7 +54,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             params.put("username", "上海匝道系统");
             params.put("password", "shanghai123");
             params.put("system", 1);
-            String resp = HttpUtil.post(AliYunConfig.LIGHTHOST + "/user/login", params);
+            String resp = HttpUtil.post(HostConfig.LIGHTHOST + "/user/login", params);
             if(!resp.isEmpty()) {
                 JSONObject ret = JSON.parseObject(resp);
                 token = ret.getJSONObject("data").getString("token");
@@ -73,7 +71,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
         body.put("username", "admin");
         body.put("password", "admin");
         body.put("system", system);
-        String resp = HttpUtil.post(AliYunConfig.LIGHTHOST + "/pilotLight/user/login", JSON.toJSONString(body));
+        String resp = HttpUtil.post(HostConfig.LIGHTHOST + "/pilotLight/user/login", JSON.toJSONString(body));
         if(!StringUtils.isEmpty(resp)) {
             JSONObject ret = JSON.parseObject(resp);
             return ret;
@@ -84,7 +82,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
     private JSONObject logout(Object token) {
         JSONObject body = new JSONObject();
         body.put("token", token);
-        String resp = HttpUtil.post(AliYunConfig.LIGHTHOST + "/pilotLight/user/logout", JSON.toJSONString(body));
+        String resp = HttpUtil.post(HostConfig.LIGHTHOST + "/pilotLight/user/logout", JSON.toJSONString(body));
         if(!StringUtils.isEmpty(resp)) {
             JSONObject ret = JSON.parseObject(resp);
             return ret;
@@ -99,7 +97,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
         if(200 == login.getInteger("status")) {
             Object token = login.get("token");
             body.put("token", token);
-            String resp = HttpUtil.post(AliYunConfig.LIGHTHOST + "/pilotLight/user/password", JSON.toJSONString(body));
+            String resp = HttpUtil.post(HostConfig.LIGHTHOST + "/pilotLight/user/password", JSON.toJSONString(body));
             logout(token);
             if(!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -118,7 +116,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
         if(200 == login.getInteger("status")) {
             Object token = login.get("token");
             body.put("token", token);
-            String resp = HttpUtil.post(AliYunConfig.LIGHTHOST + "/pilotLight/sys/user/update/password", JSON.toJSONString(body));
+            String resp = HttpUtil.post(HostConfig.LIGHTHOST + "/pilotLight/sys/user/update/password", JSON.toJSONString(body));
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -138,7 +136,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             Object token = login.get("token");
             Map<String,Object> params = new HashMap<String,Object>();
             params.put("token", token);
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/user", params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/user", params);
             logout(token);
             if(!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -157,7 +155,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
         if(200 == login.getInteger("status")) {
             Object token = login.get("token");
             body.put("token", token);
-            String resp = HttpUtil.post(AliYunConfig.LIGHTHOST + "/pilotLight/user", JSON.toJSONString(body));
+            String resp = HttpUtil.post(HostConfig.LIGHTHOST + "/pilotLight/user", JSON.toJSONString(body));
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -176,7 +174,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
         if(200 == login.getInteger("status")) {
             Object token = login.get("token");
             body.put("token", token);
-            String resp = HttpUtil.post(AliYunConfig.LIGHTHOST + "/pilotLight/sys/user/update", JSON.toJSONString(body));
+            String resp = HttpUtil.post(HostConfig.LIGHTHOST + "/pilotLight/sys/user/update", JSON.toJSONString(body));
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -198,7 +196,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             params.put("token", token);
             params.put("page", body.get("page"));
             params.put("pageSize", body.get("pageSize"));
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/road", params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/road", params);
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -220,7 +218,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             params.put("token", token);
             params.put("page", body.get("page"));
             params.put("pageSize", body.get("pageSize"));
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/road/v2", params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/road/v2", params);
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -240,7 +238,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             Object token = login.get("token");
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("token", token);
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/road/" + body.get("roadId"), params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/road/" + body.get("roadId"), params);
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -263,7 +261,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             params.put("token", token);
             params.put("page", body.get("page"));
             params.put("pageSize", body.get("pageSize"));
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/roadList/deviceList", params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/roadList/deviceList", params);
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -285,7 +283,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             params.put("token", token);
             params.put("page", body.get("page"));
             params.put("pageSize", body.get("pageSize"));
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/sys/roadList/deviceList", params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/sys/roadList/deviceList", params);
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -307,7 +305,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             params.put("token", token);
             params.put("page", body.get("page"));
             params.put("pageSize", body.get("pageSize"));
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/road/" + body.get("roadId") + "/device", params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/road/" + body.get("roadId") + "/device", params);
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -328,7 +326,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("token", token);
             params.put("roadId", body.get("roadId"));
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/road/device/show/list", params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/road/device/show/list", params);
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -350,7 +348,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             params.put("token", token);
             params.put("page", body.get("page"));
             params.put("pageSize", body.get("pageSize"));
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/device/list", params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/device/list", params);
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -377,7 +375,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
                 send.put("token", token);
                 send.put("cmd", "SetAGSParam");
                 send.put("param", getParamV1(find.getDictValue()));
-                String resp = HttpUtil.post(AliYunConfig.LIGHTHOST + "/pilotLight/device/command/" + body.get("deviceId"), JSON.toJSONString(send));
+                String resp = HttpUtil.post(HostConfig.LIGHTHOST + "/pilotLight/device/command/" + body.get("deviceId"), JSON.toJSONString(send));
                 logout(token);
                 if (!StringUtils.isEmpty(resp)) {
                     JSONObject jo = JSON.parseObject(resp);
@@ -406,7 +404,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
                 paramMap.put("token", token);
                 paramMap.put("command",getParamV2(find.getDictValue(), deviceId).toJSONString());
 //                send.put("detail", null);
-                String resp = HttpUtil.post(AliYunConfig.LIGHTHOST + "/command/device/send", paramMap);
+                String resp = HttpUtil.post(HostConfig.LIGHTHOST + "/command/device/send", paramMap);
                 if (!StringUtils.isEmpty(resp)) {
                     JSONObject jo = JSON.parseObject(resp);
                     if (200 == jo.getInteger("status")) {
@@ -430,7 +428,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             params.put("token", token);
             params.put("deviceId", deviceId);
             params.put("localId", localId);
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/deice/data/dynamic/" + deviceId + "/" + localId, params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/deice/data/dynamic/" + deviceId + "/" + localId, params);
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -451,7 +449,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("token", token);
             params.put("roadId", body.get("roadId"));
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/fogArea/sys/get", params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/fogArea/sys/get", params);
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -478,7 +476,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             params.put("pageSize", body.get("pageSize"));
             params.put("startTime", body.get("startTime"));
             params.put("endTime", body.get("endTime"));
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/fogArea/sys/get", params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/fogArea/sys/get", params);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
                 if(200 == jo.getInteger("status")) {
@@ -499,7 +497,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             params.put("token", token);
             params.put("deviceId", body.get("deviceId"));
             params.put("day", body.get("day"));
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/edgeClusterStateDat", params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/edgeClusterStateDat", params);
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -521,7 +519,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             params.put("token", token);
             params.put("deviceId", body.get("deviceId"));
             params.put("visibility", body.get("visibility"));
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/system/ext/vis", params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/system/ext/vis", params);
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -541,7 +539,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             Object token = login.get("token");
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("token", token);
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/firmware", params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/firmware", params);
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -562,7 +560,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("token", token);
             params.put("id", body.get("id"));
-            String resp = HttpRequest.delete(AliYunConfig.LIGHTHOST + "/pilotLight/firmware").form(params).execute().body();
+            String resp = HttpRequest.delete(HostConfig.LIGHTHOST + "/pilotLight/firmware").form(params).execute().body();
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -582,7 +580,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             Object token = login.get("token");
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("token", token);
-            String resp = HttpRequest.delete(AliYunConfig.LIGHTHOST + "/pilotLight/state/verificationCode").form(params).execute().body();
+            String resp = HttpRequest.delete(HostConfig.LIGHTHOST + "/pilotLight/state/verificationCode").form(params).execute().body();
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -601,7 +599,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
         if(200 == login.getInteger("status")) {
             Object token = login.get("token");
             body.put("token", token);
-            String resp = HttpRequest.put(AliYunConfig.LIGHTHOST + "/pilotLight/firmware")
+            String resp = HttpRequest.put(HostConfig.LIGHTHOST + "/pilotLight/firmware")
                     .body(JSON.toJSONString(body)).execute().body();
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
@@ -625,7 +623,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
                 JSONObject jo = new JSONObject();
                 jo.put("token", token);
                 jo.put("uploadFile", file);
-                String resp = HttpUtil.post(AliYunConfig.LIGHTHOST + "/pilotLight/uploadFile", JSON.toJSONString(jo));
+                String resp = HttpUtil.post(HostConfig.LIGHTHOST + "/pilotLight/uploadFile", JSON.toJSONString(jo));
                 logout(token);
                 if (!StringUtils.isEmpty(resp)) {
                     JSONObject joRet = JSON.parseObject(resp);
@@ -647,7 +645,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("token", token);
             params.put("deviceId", body.get("deviceId"));
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/firmware/upgrade/device", params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/firmware/upgrade/device", params);
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -666,7 +664,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
         if(200 == login.getInteger("status")) {
             Object token = login.get("token");
             body.put("token", token);
-            String resp = HttpUtil.post(AliYunConfig.LIGHTHOST + "/pilotLight/firmware/upgrade", JSON.toJSONString(body));
+            String resp = HttpUtil.post(HostConfig.LIGHTHOST + "/pilotLight/firmware/upgrade", JSON.toJSONString(body));
             logout(token);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
@@ -689,7 +687,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             params.put("provice", body.get("provice"));
             params.put("city", body.get("city"));
             params.put("county", body.get("county"));
-            String resp = HttpUtil.get(AliYunConfig.LIGHTHOST + "/pilotLight/firmware/area", params);
+            String resp = HttpUtil.get(HostConfig.LIGHTHOST + "/pilotLight/firmware/area", params);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject jo = JSON.parseObject(resp);
                 if(200 == jo.getInteger("status")) {

@@ -1,7 +1,7 @@
 package com.pingok.monitor.service.videoEvent.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.pingok.monitor.config.AliYunConfig;
+import com.pingok.monitor.config.HostConfig;
 import com.pingok.monitor.service.videoEvent.IVideoService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.api.RemoteFileService;
@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,7 +39,7 @@ public class VideoServiceImpl implements IVideoService {
                 .add("szUser", szUser)
                 .build();
         final Request request = new Request.Builder()
-                .url(AliYunConfig.VIDEOHOST + "/api/event/update/" + ubiLogicId)
+                .url(HostConfig.VIDEOHOST + "/api/event/update/" + ubiLogicId)
                 .post(formBody)
                 .build();
         Call call = client.newCall(request);
@@ -70,7 +69,7 @@ public class VideoServiceImpl implements IVideoService {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .get()
-                .url(AliYunConfig.VIDEOHOST + "/fileInfo/get-img-by-id/" + imgId)
+                .url(HostConfig.VIDEOHOST + "/fileInfo/get-img-by-id/" + imgId)
                 .build();
         Call call = client.newCall(request);
         try {
@@ -100,7 +99,7 @@ public class VideoServiceImpl implements IVideoService {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .get()
-                .url(AliYunConfig.VIDEOHOST + "/api/get-event-video-by-id/" + ubiLogicId + "?uiEventType=" + uiEventType + "&uiVideoType=" + uiVideoType)
+                .url(HostConfig.VIDEOHOST + "/api/get-event-video-by-id/" + ubiLogicId + "?uiEventType=" + uiEventType + "&uiVideoType=" + uiVideoType)
                 .build();
         Call call = client.newCall(request);
         try {

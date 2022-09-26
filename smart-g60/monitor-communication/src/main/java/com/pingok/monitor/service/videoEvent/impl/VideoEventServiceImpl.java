@@ -2,7 +2,7 @@ package com.pingok.monitor.service.videoEvent.impl;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
-import com.pingok.monitor.config.AliYunConfig;
+import com.pingok.monitor.config.HostConfig;
 import com.pingok.monitor.domain.event.*;
 import com.pingok.monitor.mapper.event.*;
 import com.pingok.monitor.service.videoEvent.IVideoEventService;
@@ -11,7 +11,6 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -77,7 +76,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         paramMap.put("ubiLogicId",ubiLogicId);
         paramMap.put("url",url);
         try {
-            String post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/updateEventVideo",paramMap);
+            String post = HttpUtil.post(HostConfig.DASSHOST + "/eventControl/updateEventVideo",paramMap);
             if (!StringUtils.isEmpty(post)) {
                 if (post.startsWith("{")) {
                     R ret = JSON.parseObject(post, R.class);
@@ -100,7 +99,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         int time = 1;
         while (true) {
             try {
-                String post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/flux", JSON.toJSONString(tblEventFlux));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/eventControl/flux", JSON.toJSONString(tblEventFlux));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -131,7 +130,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         int time = 1;
         while (true) {
             try {
-                String post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/plateInfo", JSON.toJSONString(tblEventPlateInfo));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/eventControl/plateInfo", JSON.toJSONString(tblEventPlateInfo));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -163,7 +162,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         String post;
         while (true) {
             try {
-                post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/vehicleEvent", JSON.toJSONString(tblEventVehicleEvent));
+                post = HttpUtil.post(HostConfig.DASSHOST + "/eventControl/vehicleEvent", JSON.toJSONString(tblEventVehicleEvent));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -196,7 +195,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         int time = 1;
         while (true) {
             try {
-                String post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/passengerFlow", JSON.toJSONString(tblEventPassengerFlow));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/eventControl/passengerFlow", JSON.toJSONString(tblEventPassengerFlow));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -227,7 +226,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         int time = 1;
         while (true) {
             try {
-                String post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/parkingEvent", JSON.toJSONString(tblEventParkingEvent));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/eventControl/parkingEvent", JSON.toJSONString(tblEventParkingEvent));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
