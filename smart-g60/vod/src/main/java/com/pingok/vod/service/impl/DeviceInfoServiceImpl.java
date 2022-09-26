@@ -36,7 +36,7 @@ public class DeviceInfoServiceImpl implements IDeviceInfoService {
     public List<TblDeviceInfo> findAllByType() {
         Example example = new Example(TblDeviceInfo.class);
         example.orderBy("deviceId").asc();
-        example.createCriteria().andEqualTo("deviceType", 8);
+        example.createCriteria().andEqualTo("deviceType", 10);
         return tblDeviceInfoMapper.selectByExample(example);
     }
 

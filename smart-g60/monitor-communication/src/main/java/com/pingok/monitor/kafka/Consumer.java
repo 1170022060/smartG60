@@ -61,7 +61,7 @@ public class Consumer {
             JSONObject object = JSONObject.parseObject(String.valueOf(msg));
             try {
                 boolean tOf = iVideoService.eventUpdate(object.getLong("ubiLogicId"), object.getInteger("uiState"), object.getString("szRemark"), object.getString("szUser"));
-                if(tOf){
+                if (tOf) {
                     ack.acknowledge();
                 }
             } catch (Exception e) {
@@ -204,101 +204,22 @@ public class Consumer {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
             Object msg = message.get();
-            log.info("pilotLightHandle 消费了： Topic:" + topic + ",Message:" + msg);
             JSONObject jo = JSONObject.parseObject(String.valueOf(msg));
             String type = (String) jo.get("kafkaType");
-            boolean ret = false;
             try {
                 switch (type) {
-                    case "passwordV1":
-                        ret = iPilotLightService.passwordV1(jo);
+                    case "commandSend":
+                        iPilotLightService.commandSend(jo);
                         break;
-                    case "passwordV2":
-                        ret = iPilotLightService.passwordV2(jo);
-                        break;
-                    case "user":
-                        ret = iPilotLightService.getUserInfo();
-                        break;
-                    case "updateUserV1":
-                        ret = iPilotLightService.updateUserInfoV1(jo);
-                        break;
-                    case "updateUserV2":
-                        ret = iPilotLightService.updateUserInfoV2(jo);
-                        break;
-                    case "roadV1":
-                        ret = iPilotLightService.getRoadInfoV1(jo);
-                        break;
-                    case "roadV2":
-                        ret = iPilotLightService.getRoadInfoV2(jo);
-                        break;
-                    case "roadById":
-                        ret = iPilotLightService.getRoadInfoById(jo);
-                        break;
-                    case "deviceListV1":
-                        ret = iPilotLightService.getRoadDeviceInfoV1(jo);
-                        break;
-                    case "deviceListV2":
-                        ret = iPilotLightService.getRoadDeviceInfoV2(jo);
-                        break;
-                    case "oneDeviceListV1":
-                        ret = iPilotLightService.getOneRoadDeviceInfoV1(jo);
-                        break;
-                    case "oneDeviceListV2":
-                        ret = iPilotLightService.getOneRoadDeviceInfoV2(jo);
-                        break;
-                    case "userDeviceList":
-                        ret = iPilotLightService.getDeviceInfo(jo);
-                        break;
-                    case "commandSendV1":
-                        ret = iPilotLightService.sendCmdToDeviceV1(jo);
-                        break;
-                    case "commandSendV2":
-                        ret = iPilotLightService.sendCmdToDeviceV2(jo);
-                        break;
-                    case "runStatusV1":
-                        ret = iPilotLightService.getRtStatusV1(jo);
-                        break;
-                    case "runStatusV2":
-                        ret = iPilotLightService.getRtStatusV2(jo);
-                        break;
-                    case "recStatusV1":
-                        ret = iPilotLightService.getRecStatusV1(jo);
-                        break;
-                    case "recStatusV2":
-                        ret = iPilotLightService.getRecStatusV2(jo);
-                        break;
-                    case "visibility":
-                        ret = iPilotLightService.setVisibility(jo);
-                        break;
-                    case "getFirmware":
-                        ret = iPilotLightService.getFirmware();
-                        break;
-                    case "delFirmware":
-                        ret = iPilotLightService.delFirmware(jo);
-                        break;
-                    case "getCode":
-                        ret = iPilotLightService.getCode();
-                        break;
-                    case "updateFirmware":
-                        ret = iPilotLightService.updateFirmware(jo);
-                        break;
-                    case "uploadFile":
-                        ret = iPilotLightService.uploadFile(jo);
-                        break;
-                    case "firmwareDevice":
-                        ret = iPilotLightService.getFirmwareDevice(jo);
-                        break;
-                    case "firmwareUpgrade":
-                        ret = iPilotLightService.firmwareUpgrade(jo);
-                        break;
-                    case "firmwareArea":
-                        ret = iPilotLightService.firmwareVerByArea(jo);
+                    case "updateStatus":
+                        iPilotLightService.updateStatus();
                         break;
                 }
+                ack.acknowledge();
+                log.info("pilotLightHandle 消费了： Topic:" + topic + ",Message:" + msg);
             } catch (Exception e) {
                 log.error("pilotLightHandle消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
             }
-            ack.acknowledge();
         }
     }
 
