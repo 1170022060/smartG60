@@ -1,5 +1,6 @@
 package com.pingok.vocational.service.release.Impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.pingok.vocational.domain.release.TblReleaseRecord;
 import com.pingok.vocational.mapper.release.TblReleaseRecordMapper;
 import com.pingok.vocational.service.release.IReleaseRecordService;
@@ -35,7 +36,11 @@ public class ReleaseRecordServiceImpl implements IReleaseRecordService {
     }
 
     @Override
-    public List<Map> selectReleaseRecord(Integer infoType, String deviceId, String deviceName, String pileNo, Date startTime, Date endTime) {
-        return tblReleaseRecordMapper.selectReleaseRecord(infoType, deviceId, deviceName, pileNo, startTime, endTime);
+    public List<Map> selectReleaseRecord(String deviceId, String deviceName, String pileNo, Date startTime, Date endTime) {
+        List<Map> list = tblReleaseRecordMapper.selectReleaseRecord(deviceId, deviceName, pileNo, startTime, endTime);
+        for (Map m : list) {
+            m.put("publishContentJson", m.get("publishContent") != null ? JSONObject.parse(String.valueOf(m.get("publishContent"))) : null);
+        }
+        return list;
     }
 }
