@@ -24,8 +24,8 @@ public class SmartToiletController extends BaseController {
     @Autowired
     private ISmartToiletService iSmartToiletService;
 
-    @RequiresPermissions("monitor:smartToilet:findByFieldNum")
-    @Log(title = "智慧厕所监控服务", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("monitor:smartToilet:findByFieldNum")
+//    @Log(title = "智慧厕所监控服务", businessType = BusinessType.OTHER)
     @GetMapping
     public AjaxResult findByFieldNum(@RequestParam String fieldNum) {
         return AjaxResult.success(iSmartToiletService.findByFieldNum(fieldNum));

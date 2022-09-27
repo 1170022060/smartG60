@@ -7,11 +7,11 @@ import com.pingok.devicemonitor.domain.device.TblDeviceInfo;
 import java.util.List;
 
 public interface IInfoBoardService {
-    int publish(JSONObject pubInfo);
+    void publish(JSONObject pubInfo);
 
-    int notifyResult(JSONObject result);
+    void notifyResult(JSONObject result);
 
-    int collect();
+    void collect();
 
-    int notifyPing(JSONArray result);
+    void notifyPing(JSONArray result);
 }

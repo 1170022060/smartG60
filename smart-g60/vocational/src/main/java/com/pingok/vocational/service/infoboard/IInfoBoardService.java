@@ -17,5 +17,5 @@ public interface IInfoBoardService {
     List<VmsPresetList> getPreset();
 
     // 情报板发布
-    boolean publish(JSONObject content);
+    void publish(JSONObject content);
 }

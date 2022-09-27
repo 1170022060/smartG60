@@ -1,5 +1,6 @@
 package com.pingok.vocational.service.infoboard.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.vocational.domain.infoboard.VmsInfoByType;
 import com.pingok.vocational.domain.infoboard.VmsInfoByTypeList;
@@ -8,7 +9,10 @@ import com.pingok.vocational.domain.release.TblReleasePreset;
 import com.pingok.vocational.mapper.device.TblDeviceInfoMapper;
 import com.pingok.vocational.mapper.release.TblReleasePresetMapper;
 import com.pingok.vocational.service.infoboard.IInfoBoardService;
+import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.system.api.RemoteKafkaService;
+import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +32,10 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
 
     @Autowired
     private TblReleasePresetMapper tblReleasePresetMapper;
+
+
+    @Autowired
+    private RemoteKafkaService remoteKafkaService;
 
     @Override
     public List<VmsInfoByTypeList> getListByType(String type, String protocol) {
@@ -111,7 +119,10 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
     }
 
     @Override
-    public boolean publish(JSONObject content) {
-        return false;
+    public void publish(JSONObject content) {
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PUBLISH);
+        kafkaEnum.setData(JSON.toJSONString(content));
+        remoteKafkaService.send(kafkaEnum);
     }
 }

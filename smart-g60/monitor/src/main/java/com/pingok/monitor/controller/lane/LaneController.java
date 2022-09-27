@@ -24,8 +24,8 @@ public class LaneController extends BaseController {
     @Autowired
     private ILaneService iLaneService;
 
-    @RequiresPermissions("monitor:lane:findByStationId")
-    @Log(title = "车道监控服务", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("monitor:lane:findByStationId")
+//    @Log(title = "车道监控服务", businessType = BusinessType.OTHER)
     @GetMapping
     public AjaxResult findByStationId(@RequestParam String stationId) {
         return AjaxResult.success(iLaneService.findByStationId(stationId));

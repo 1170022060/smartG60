@@ -27,13 +27,13 @@ public class BasicInfoController extends BaseController {
     @Autowired
     private IDeviceInfoService iDeviceInfoService;
 
-    @Log(title = "收费站监控服务", businessType = BusinessType.OTHER)
+//    @Log(title = "收费站监控服务", businessType = BusinessType.OTHER)
     @GetMapping(value = "/findByUser")
     public AjaxResult findByUser() {
         return AjaxResult.success(iBaseStationInfoService.findByUser());
     }
 
-    @Log(title = "监控大屏服务", businessType = BusinessType.OTHER)
+//    @Log(title = "监控大屏服务", businessType = BusinessType.OTHER)
     @GetMapping
     public AjaxResult getInfo() {
         BasicInfo basicInfo = new BasicInfo();

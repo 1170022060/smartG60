@@ -24,8 +24,8 @@ public class BridgeController extends BaseController {
     @Autowired
     private IBridgeStatusService iBridgeStatusService;
 
-    @RequiresPermissions("monitor:bridge:search")
-    @Log(title = "桥梁监控服务", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("monitor:bridge:search")
+//    @Log(title = "桥梁监控服务", businessType = BusinessType.OTHER)
     @GetMapping("/search")
     public TableDataInfo search(String name) {
         startPage();
@@ -33,8 +33,8 @@ public class BridgeController extends BaseController {
         return getDataTable(list);
     }
 
-    @RequiresPermissions("monitor:bridge:deviceStatus")
-    @Log(title = "桥梁监控服务", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("monitor:bridge:deviceStatus")
+//    @Log(title = "桥梁监控服务", businessType = BusinessType.OTHER)
     @GetMapping
     public AjaxResult deviceStatus(@RequestParam Long id) {
         return AjaxResult.success(iBridgeStatusService.deviceStatus(id));
