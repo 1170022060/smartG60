@@ -2,6 +2,7 @@ package com.pingok.monitor.domain.event;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,12 +15,13 @@ import java.io.Serializable;
  * @time 2022/5/6 19:56
  */
 @Data
-@Table(name = "t_event_vehicle_event")
+@Table(name = "tbl_event_vehicle_event")
 public class TblEventVehicleEvent implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
+    @KeySql(useGeneratedKeys = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long ubiLogicId; // long 唯一编号
@@ -36,8 +38,8 @@ public class TblEventVehicleEvent implements Serializable {
     private Integer uiMonth; // int 记录时间的月份
     private Integer uiDay; // int 记录时间的天数
     private Integer uiHour; // int 记录时间的小时
-    private String uiMin; // string 记录时间的分钟
-    private String uiWidth; // string 图片宽度
+    private Integer uiMin; // Integer 记录时间的分钟
+    private Integer uiWidth; // Integer 图片宽度
     private Integer uiHeight; // int 图片高度
     private Integer uiVehiclePlateColor; // int 车牌颜色
     private Integer uiVehicleColor1; // int 车身颜色1（见附录）

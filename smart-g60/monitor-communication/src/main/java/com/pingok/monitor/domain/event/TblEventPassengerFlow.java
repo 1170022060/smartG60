@@ -2,6 +2,7 @@ package com.pingok.monitor.domain.event;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,12 +14,13 @@ import java.io.Serializable;
  * @time 2022/5/6 19:58
  */
 @Data
-@Table(name = "t_event_passenger_flow")
+@Table(name = "tbl_event_passenger_flow")
 public class TblEventPassengerFlow implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
+    @KeySql(useGeneratedKeys = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer uiType; // int 客流类型
