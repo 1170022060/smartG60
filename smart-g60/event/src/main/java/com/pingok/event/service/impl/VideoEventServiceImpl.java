@@ -65,19 +65,8 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
     @Override
     public void plateInfo(TblEventPlateInfo tblEventPlateInfo) {
-        Example example = new Example(TblEventPlateInfo.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("ubiLogicId", tblEventPlateInfo.getUbiLogicId());
-        TblEventPlateInfo eventPlateInfo = tblEventPlateInfoMapper.selectOneByExample(example);
-        if (eventPlateInfo == null) {
-            eventPlateInfo = new TblEventPlateInfo();
-            BeanUtils.copyNotNullProperties(tblEventPlateInfo, eventPlateInfo);
-            eventPlateInfo.setId(remoteIdProducerService.nextId());
-            tblEventPlateInfoMapper.insert(eventPlateInfo);
-        } else {
-            BeanUtils.copyNotNullProperties(tblEventPlateInfo, eventPlateInfo);
-            tblEventPlateInfoMapper.updateByPrimaryKey(eventPlateInfo);
-        }
+        tblEventPlateInfo.setId(remoteIdProducerService.nextId());
+        tblEventPlateInfoMapper.insert(tblEventPlateInfo);
     }
 
     @Override
@@ -118,19 +107,8 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
     @Override
     public void passengerFlow(TblEventPassengerFlow tblEventPassengerFlow) {
-        Example example = new Example(TblEventPassengerFlow.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("uiType", tblEventPassengerFlow.getUiType());
-        TblEventPassengerFlow eventPassengerFlow = tblEventPassengerFlowMapper.selectOneByExample(example);
-        if (eventPassengerFlow == null) {
-            eventPassengerFlow = new TblEventPassengerFlow();
-            BeanUtils.copyNotNullProperties(tblEventPassengerFlow, eventPassengerFlow);
-            eventPassengerFlow.setId(remoteIdProducerService.nextId());
-            tblEventPassengerFlowMapper.insert(eventPassengerFlow);
-        } else {
-            BeanUtils.copyNotNullProperties(tblEventPassengerFlow, eventPassengerFlow);
-            tblEventPassengerFlowMapper.updateByPrimaryKey(eventPassengerFlow);
-        }
+        tblEventPassengerFlow.setId(remoteIdProducerService.nextId());
+        tblEventPassengerFlowMapper.insert(tblEventPassengerFlow);
     }
 
     @Override
@@ -152,42 +130,33 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
     @Override
     public void parkVehInfo(TblEventPlateInfo tblEventPlateInfo) {
-        List<Long> in= Arrays.asList(1L, 2L, 3L,4L);
-        List<Long> out= Arrays.asList(5L, 6L, 7L,8L);
-        if(in.contains(tblEventPlateInfo.getUbiSourceId()))
-        {
-            TblParkingVehicleInfo tblParkingVehicleInfo=new TblParkingVehicleInfo();
+        List<Long> in = Arrays.asList(1L, 2L, 3L, 4L);
+        List<Long> out = Arrays.asList(5L, 6L, 7L, 8L);
+        if (in.contains(tblEventPlateInfo.getUbiSourceId())) {
+            TblParkingVehicleInfo tblParkingVehicleInfo = new TblParkingVehicleInfo();
             tblParkingVehicleInfo.setId(remoteIdProducerService.nextId());
             tblParkingVehicleInfo.setEnTime(new Date(tblEventPlateInfo.getUbiTime()));
             tblParkingVehicleInfo.setVehPlate(tblEventPlateInfo.getSzText());
             tblParkingVehicleInfo.setVehClass(tblEventPlateInfo.getUiStatType());
             tblParkingVehicleInfo.setVehClassSub(tblEventPlateInfo.getUiSubType());
             tblParkingVehicleInfo.setVehColor(tblEventPlateInfo.getUiColor());
-            if (tblEventPlateInfo.getUbiSourceId() == 1L)
-            {
+            if (tblEventPlateInfo.getUbiSourceId() == 1L) {
                 tblParkingVehicleInfo.setParkingId(1L);
-            }
-            else if (tblEventPlateInfo.getUbiSourceId() == 2L)
-            {
+            } else if (tblEventPlateInfo.getUbiSourceId() == 2L) {
                 tblParkingVehicleInfo.setParkingId(2L);
-            }
-            else if (tblEventPlateInfo.getUbiSourceId() == 3L)
-            {
+            } else if (tblEventPlateInfo.getUbiSourceId() == 3L) {
                 tblParkingVehicleInfo.setParkingId(3L);
-            }
-            else if (tblEventPlateInfo.getUbiSourceId() == 4L)
-            {
+            } else if (tblEventPlateInfo.getUbiSourceId() == 4L) {
                 tblParkingVehicleInfo.setParkingId(4L);
             }
             tblParkingVehicleInfoMapper.insert(tblParkingVehicleInfo);
         }
-        if(out.contains(tblEventPlateInfo.getUbiSourceId()))
-        {
+        if (out.contains(tblEventPlateInfo.getUbiSourceId())) {
             Example example = new Example(TblParkingVehicleInfo.class);
             Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("vehPlate", tblEventPlateInfo.getSzText());
             criteria.andEqualTo("exTime", null);
-            TblParkingVehicleInfo tblParkingVehicleInfo=tblParkingVehicleInfoMapper.selectOneByExample(example);
+            TblParkingVehicleInfo tblParkingVehicleInfo = tblParkingVehicleInfoMapper.selectOneByExample(example);
             tblParkingVehicleInfo.setExTime(new Date(tblEventPlateInfo.getUbiTime()));
             tblParkingVehicleInfoMapper.insert(tblParkingVehicleInfo);
         }

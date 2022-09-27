@@ -5,9 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.pingok.vod.domain.TblDeviceInfo;
 import com.pingok.vod.service.IDeviceHeartbeatService;
 import com.pingok.vod.service.IDeviceInfoService;
+import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.system.api.RemoteDeviceMonitorService;
+import com.ruoyi.system.api.RemoteKafkaService;
 import com.ruoyi.system.api.domain.device.TblDeviceStatus;
+import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,8 @@ public class DeviceHeartbeatServiceImpl implements IDeviceHeartbeatService {
     private IDeviceInfoService iDeviceInfoService;
     @Autowired
     private RemoteDeviceMonitorService remoteDeviceMonitorService;
+    @Autowired
+    private RemoteKafkaService remoteKafkaService;
 
     @Override
     public void heartbeat(JSONArray heartbeat) {
@@ -46,6 +51,15 @@ public class DeviceHeartbeatServiceImpl implements IDeviceHeartbeatService {
             }
             tblDeviceStatus.setTime(DateUtils.getNowDate());
             remoteDeviceMonitorService.updateHeartbeat(tblDeviceStatus);
+
+            KafkaEnum kafkaEnum = new KafkaEnum();
+            kafkaEnum.setTopIc(KafkaTopIc.GIS_UPDATE_STATUS);
+            JSONObject data = new JSONObject();
+            data.put("code", tblDeviceInfo.getDeviceId());
+            data.put("status", tblDeviceStatus.getStatus() == 0 ? 1 : 0);
+            data.put("type", "camera");
+            kafkaEnum.setData(data.toJSONString());
+            remoteKafkaService.send(kafkaEnum);
         }
     }
 }

@@ -21,15 +21,15 @@ public class GantryController extends BaseController {
     @Autowired
     private IGantryService iGantryService;
 
-    @RequiresPermissions("monitor:gantry:findById")
-    @Log(title = "门架监控服务", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("monitor:gantry:findById")
+//    @Log(title = "门架监控服务", businessType = BusinessType.OTHER)
     @GetMapping("/findById")
     public AjaxResult findById(@RequestParam Long id) {
         return AjaxResult.success(iGantryService.findById(id));
     }
 
-    @RequiresPermissions("monitor:gantry:gantryStatus")
-    @Log(title = "门架监控服务", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("monitor:gantry:gantryStatus")
+//    @Log(title = "门架监控服务", businessType = BusinessType.OTHER)
     @GetMapping("/gantryStatus")
     public AjaxResult gantryStatus() {
         return AjaxResult.success(iGantryService.gantryStatus());

@@ -1,9 +1,11 @@
 package com.pingok.gis.service.impl;
 
 import com.pingok.gis.domain.Camera;
+import com.pingok.gis.domain.Light;
 import com.pingok.gis.domain.Vd;
 import com.pingok.gis.domain.Vms;
 import com.pingok.gis.mapper.CameraMapper;
+import com.pingok.gis.mapper.LightMapper;
 import com.pingok.gis.mapper.VdMapper;
 import com.pingok.gis.mapper.VmsMapper;
 import com.pingok.gis.service.IGisService;
@@ -28,6 +30,9 @@ public class GisServiceImpl implements IGisService {
 
     @Autowired
     private VdMapper vdMapper;
+
+    @Autowired
+    private LightMapper lightMapper;
 
     @Override
     public void updateStatus(String code, Integer status, String type) {
@@ -58,6 +63,15 @@ public class GisServiceImpl implements IGisService {
                 if (StringUtils.isNotNull(vd)) {
                     vd.setStatus(status);
                     vdMapper.updateByPrimaryKey(vd);
+                }
+                break;
+            case "light":
+                example = new Example(Light.class);
+                example.createCriteria().andEqualTo("code", code);
+                Light light = lightMapper.selectOneByExample(example);
+                if (StringUtils.isNotNull(light)) {
+                    light.setStatus(status);
+                    lightMapper.updateByPrimaryKey(light);
                 }
                 break;
         }

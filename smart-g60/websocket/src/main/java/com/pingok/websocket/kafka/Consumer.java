@@ -53,7 +53,7 @@ public class Consumer {
             Object msg = message.get();
             JSONObject jsonObject = JSONObject.parseObject(String.valueOf(msg));
             massageLinkApplicationService.cleanCacle();
-            massageLinkApplicationService.sendMassage(JSONObject.toJSONString(jsonObject.getJSONObject("data"), SerializerFeature.MapSortField));
+            massageLinkApplicationService.sendMassage(JSONObject.toJSONString(jsonObject, SerializerFeature.MapSortField));
             ack.acknowledge();
             log.info("broadcast 消费了： Topic:" + topic + ",Message:" + msg);
         }

@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface RemotePilotLightService {
 
     @PostMapping("/pilotLight/send")
-    R sendCmdToDeviceV2(@RequestBody JSONObject body);
+    R send(@RequestBody JSONObject body);
 
-    @GetMapping("/pilotLight/rtStatus")
-    R getRtStatus();
+    @GetMapping("/pilotLight/updateStatus")
+    R updateStatus();
 }

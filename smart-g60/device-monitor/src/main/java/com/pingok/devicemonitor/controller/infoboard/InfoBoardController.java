@@ -28,18 +28,19 @@ public class InfoBoardController {
 
     @PostMapping("/publish")
     public AjaxResult publish(@RequestBody JSONObject pubInfo) {
-//        return AjaxResult.error();
-        int ret = iInfoBoardService.publish(pubInfo);
-        return ret == 200 ? AjaxResult.success() : AjaxResult.error();
+        iInfoBoardService.publish(pubInfo);
+        return AjaxResult.success();
     }
 
     @PostMapping("/notifyResult")
     public AjaxResult notifyResult(@RequestBody JSONObject result) {
-        return AjaxResult.success(iInfoBoardService.notifyResult(result));
+        iInfoBoardService.notifyResult(result);
+        return AjaxResult.success();
     }
 
     @PostMapping("/notifyPing")
     public AjaxResult notifyPing(@RequestBody JSONArray result) {
-        return AjaxResult.success(iInfoBoardService.notifyPing(result));
+        iInfoBoardService.notifyPing(result);
+        return AjaxResult.success();
     }
 }

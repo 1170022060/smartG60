@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,12 +70,12 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
     @Override
     public void updateEventVideo(Long ubiLogicId) {
-        String url = iVideoService.getEventVideoById(ubiLogicId,2,2);
+        String url = iVideoService.getEventVideoById(ubiLogicId, 2, 2);
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("ubiLogicId",ubiLogicId);
-        paramMap.put("url",url);
+        paramMap.put("ubiLogicId", ubiLogicId);
+        paramMap.put("url", url);
         try {
-            String post = HttpUtil.post(HostConfig.DASSHOST + "/eventControl/updateEventVideo",paramMap);
+            String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/updateEventVideo", paramMap);
             if (!StringUtils.isEmpty(post)) {
                 if (post.startsWith("{")) {
                     R ret = JSON.parseObject(post, R.class);
@@ -99,7 +98,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         int time = 1;
         while (true) {
             try {
-                String post = HttpUtil.post(HostConfig.DASSHOST + "/eventControl/flux", JSON.toJSONString(tblEventFlux));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/flux", JSON.toJSONString(tblEventFlux));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -118,10 +117,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             }
             time += 2;
         }
-        Example example = new Example(TblEventFlux.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("ubiLogicId", tblEventFlux.getUbiLogicId());
-        tblEventFluxMapper.deleteByExample(example);
+        tblEventFluxMapper.delete(tblEventFlux);
     }
 
     @Async
@@ -130,7 +126,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         int time = 1;
         while (true) {
             try {
-                String post = HttpUtil.post(HostConfig.DASSHOST + "/eventControl/plateInfo", JSON.toJSONString(tblEventPlateInfo));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/plateInfo", JSON.toJSONString(tblEventPlateInfo));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -149,10 +145,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             }
             time += 2;
         }
-        Example example = new Example(TblEventPlateInfo.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("ubiLogicId", tblEventPlateInfo.getUbiLogicId());
-        tblEventPlateInfoMapper.deleteByExample(example);
+        tblEventPlateInfoMapper.delete(tblEventPlateInfo);
     }
 
     @Async
@@ -162,7 +155,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         String post;
         while (true) {
             try {
-                post = HttpUtil.post(HostConfig.DASSHOST + "/eventControl/vehicleEvent", JSON.toJSONString(tblEventVehicleEvent));
+                post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/vehicleEvent", JSON.toJSONString(tblEventVehicleEvent));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -181,10 +174,8 @@ public class VideoEventServiceImpl implements IVideoEventService {
             }
             time += 2;
         }
-        Example example = new Example(TblEventVehicleEvent.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("ubiLogicId", tblEventVehicleEvent.getUbiLogicId());
-        tblEventVehicleEventMapper.deleteByExample(example);
+
+        tblEventVehicleEventMapper.delete(tblEventVehicleEvent);
 
         updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
     }
@@ -195,7 +186,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         int time = 1;
         while (true) {
             try {
-                String post = HttpUtil.post(HostConfig.DASSHOST + "/eventControl/passengerFlow", JSON.toJSONString(tblEventPassengerFlow));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/passengerFlow", JSON.toJSONString(tblEventPassengerFlow));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -214,10 +205,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             }
             time += 2;
         }
-        Example example = new Example(TblEventPassengerFlow.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("uiType", tblEventPassengerFlow.getUiType());
-        tblEventPassengerFlowMapper.deleteByExample(example);
+        tblEventPassengerFlowMapper.delete(tblEventPassengerFlow);
     }
 
     @Async
@@ -226,7 +214,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         int time = 1;
         while (true) {
             try {
-                String post = HttpUtil.post(HostConfig.DASSHOST + "/eventControl/parkingEvent", JSON.toJSONString(tblEventParkingEvent));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/parkingEvent", JSON.toJSONString(tblEventParkingEvent));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -245,10 +233,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             }
             time += 2;
         }
-        Example example = new Example(TblEventParkingEvent.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("ubiLogicId", tblEventParkingEvent.getUbiLogicId());
-        tblEventParkingEventMapper.deleteByExample(example);
+        tblEventParkingEventMapper.delete(tblEventParkingEvent);
     }
 
 }

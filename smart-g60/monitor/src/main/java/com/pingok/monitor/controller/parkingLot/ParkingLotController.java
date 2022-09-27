@@ -24,8 +24,8 @@ public class ParkingLotController extends BaseController {
     @Autowired
     private IParkingLotService iParkingLotService;
 
-    @RequiresPermissions("monitor:parkingLot:findByFieldNum")
-    @Log(title = "停车场监控服务", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("monitor:parkingLot:findByFieldNum")
+//    @Log(title = "停车场监控服务", businessType = BusinessType.OTHER)
     @GetMapping
     public AjaxResult findByFieldNum(@RequestParam String fieldNum) {
         return AjaxResult.success(iParkingLotService.findByFieldNum(fieldNum));

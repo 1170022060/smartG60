@@ -48,27 +48,38 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
     private IDeviceService iDeviceService;
 
     @Override
-    public int publish(JSONObject pubInfo) {
+    public void publish(JSONObject pubInfo) {
+        TblReleaseRecord record;
+        for(int i=0;i<pubInfo.getJSONArray("devInfo").size();i++){
+            record = new TblReleaseRecord();
+            record.setDeviceId(pubInfo.getJSONArray("devInfo").getJSONObject(i).getString("devId"));
+            record.setPublishContent(pubInfo.getString("data"));
+            record.setStatus(0);
+            record.setPresetTime(DateUtils.getNowDate());
+            record.setId(remoteIdProducerService.nextId());
+            record.setPresetUserId(SecurityUtils.getUserId());
+            tblReleaseRecordMapper.insert(record);
+            pubInfo.getJSONArray("devInfo").getJSONObject(i).put("recordId",record.getId());
+        }
         //转发
         KafkaEnum kafkaEnum = new KafkaEnum();
         kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PUBLISH);
         kafkaEnum.setData(JSON.toJSONString(pubInfo));
         remoteKafkaService.send(kafkaEnum);
-        return 200;
     }
 
     @Override
-    public int notifyResult(JSONObject result) {
+    public void notifyResult(JSONObject result) {
 
         //更新发布记录状态
         String pubContent = result.getString("pubContent");
         JSONArray devList = result.getJSONArray("devList");
+        JSONObject dev;
         for (int i = 0; i < devList.size(); ++i) {
-            JSONObject dev = devList.getJSONObject(i);
-            TblReleaseRecord record = tblReleaseRecordMapper.findByDeviceId(dev.getString("devId"));
-            record.setStatus(0);
+            dev = devList.getJSONObject(i);
+            TblReleaseRecord record = tblReleaseRecordMapper.selectByPrimaryKey(dev.getInteger("recordId"));
+            record.setStatus(1);
             record.setPublishContent(pubContent);
-            record.setPresetUserId(SecurityUtils.getUserId());
             tblReleaseRecordMapper.updateByPrimaryKey(record);
         }
         //通知前端（websocket）
@@ -76,11 +87,10 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
         kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_SEND);
         kafkaEnum.setData(JSON.toJSONString(result));
         remoteKafkaService.send(kafkaEnum);
-        return 200;
     }
 
     @Override
-    public int collect() {
+    public void collect() {
         int ret = 200;
         try {
             List<TblDeviceInfo> allDevList = tblDeviceInfoMapper.selectVmsInfo();
@@ -92,11 +102,10 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
             log.error("情报板采集异常：" + e.getMessage());
             ret = -1;
         }
-        return ret;
     }
 
     @Override
-    public int notifyPing(JSONArray result) {
+    public void notifyPing(JSONArray result) {
         //更新状态表
         int ret = 200;
 
@@ -140,7 +149,5 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
                 iDeviceService.deviceFault(deviceFault);
             }
         }
-
-        return ret;
     }
 }

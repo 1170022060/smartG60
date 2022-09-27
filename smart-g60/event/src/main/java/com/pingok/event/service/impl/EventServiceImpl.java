@@ -261,7 +261,7 @@ public class EventServiceImpl implements IEventService {
                             body.put("cmdId", 11);
                             body.put("deviceId", deviceInfo.getDeviceId());
                             body.put("param", plan.getJSONArray("pattern"));
-                            r = remotePilotLightService.sendCmdToDeviceV2(body);
+                            r = remotePilotLightService.send(body);
                             if (r != null) {
                                 if (r != null && r.getCode() == R.SUCCESS) {
                                     content += deviceInfo.getDeviceName() + "：推送成功；";

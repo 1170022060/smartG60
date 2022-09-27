@@ -117,13 +117,20 @@ public class DeviceServiceImpl implements IDeviceService {
 
         KafkaEnum kafkaEnum;
         TblDeviceInfo info = tblDeviceInfoMapper.selectByPrimaryKey(deviceStatus.getDeviceId());
-        if(StringUtils.isNotNull(info) && info.getDeviceType() == 11){
+        if(StringUtils.isNotNull(info) && (info.getDeviceType() == 11 || info.getDeviceType() == 12)){
             kafkaEnum = new KafkaEnum();
             kafkaEnum.setTopIc(KafkaTopIc.GIS_UPDATE_STATUS);
             JSONObject data = new JSONObject();
             data.put("code", info.getDeviceId());
             data.put("status", ds.getStatus() == 0 ? 1 : 0);
-            data.put("type", "vd");
+            switch (info.getDeviceType() ){
+                case 11:
+                    data.put("type", "vd");
+                    break;
+                case 12:
+                    data.put("type", "light");
+                    break;
+            }
             kafkaEnum.setData(data.toJSONString());
             remoteKafkaService.send(kafkaEnum);
         }

@@ -6,6 +6,7 @@ import com.pingok.monitor.domain.event.*;
 import com.pingok.monitor.service.videoEvent.IVideoEventService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.Base64;
  * @time 2022/5/6 15:52
  */
 @RestController
+@Slf4j
 @RequestMapping("/videoEvent")
 public class VideoEventController extends BaseController {
     @Autowired
@@ -24,6 +26,7 @@ public class VideoEventController extends BaseController {
     @PostMapping
     public AjaxResult videoEvent(@RequestParam String type, @RequestBody JSONObject object) {
         String data = new String(Base64.getDecoder().decode(object.getString("data")));
+        log.info("type----" + type);
         switch (type) {
             case "FLUX":
                 TblEventFlux tblEventFlux = JSON.parseObject(data, TblEventFlux.class);

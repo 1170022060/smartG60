@@ -49,7 +49,7 @@ public class TblEventVehicleEvent implements Serializable {
     private Integer uiVehiclePlateConfidence; // int 置信度
     private Integer uiVehicleSpeed; // int 车速
     private Integer uiVehicleLane; // int 所在车道号
-    private Integer szVehiclePlateRegion; // String 车牌区域所在的矩形（x,y,w,h）
+    private String szVehiclePlateRegion; // String 车牌区域所在的矩形（x,y,w,h）
     private Long ubiSourceId; // long 视频源id
     private String szSceneId; // String 场景id
     private Long ubiSectionId; // long 断面id
