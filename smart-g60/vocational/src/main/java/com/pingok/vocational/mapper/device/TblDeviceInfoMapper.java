@@ -150,7 +150,10 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "c.PUBLISH_CONTENT as \"publishContent\" " +
             " from TBL_DEVICE_INFO a " +
             " LEFT JOIN TBL_DEVICE_STATUS b on a.ID = b.DEVICE_ID " +
-            " LEFT JOIN TBL_RELEASE_RECORD c on a.DEVICE_ID = c.DEVICE_ID " +
+            " LEFT JOIN TBL_RELEASE_RECORD c on a.DEVICE_ID = c.DEVICE_ID and c.ID in (select ID " +
+            "  from (select t.*, row_number() over(partition by t.DEVICE_ID order by t.PRESET_TIME desc) rn " +
+                "from TBL_RELEASE_RECORD t) c " +
+                " where rn = 1) " +
             "where DEVICE_TYPE = 9 " +
             "<when test='type != null'> " +
             "and DEVICE_MODEL = #{type}" +
