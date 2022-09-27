@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,53 +69,64 @@ public class PilotLightServiceImpl implements IPilotLightService {
 
     @Override
     public void updateStatus() {
-        List<Integer> deviceIds = getDeviceIds();
+        JSONArray roads = getDeviceIds();
+        JSONObject road;
+        JSONArray deviceIds;
         Map<String, Object> params;
         String resp;
         JSONObject obj;
         TblDeviceStatus deviceStatus;
         JSONObject statusDetails;
+        Long deviceId = null;
         R ret;
-        for (Integer deviceId : deviceIds) {
+        for (int i = 0; i < roads.size(); i++) {
+            road = roads.getJSONObject(i);
             params = new HashMap<>();
             params.put("token", getToken());
-            params.put("deviceId", deviceId);
-            params.put("day", 100);
-            resp = HttpUtil.get(LightConfig.HOST + "/edgeClusterStateDat", params);
+            params.put("roadId", road.getString("roadId"));
+            resp = HttpUtil.get(LightConfig.HOST + "/fogArea/sys/get", params);
             if (!StringUtils.isEmpty(resp)) {
                 obj = JSONObject.parseObject(resp);
-                deviceStatus = new TblDeviceStatus();
-                deviceStatus.setDeviceId(deviceId.longValue());
-                deviceStatus.setTime(DateUtils.getNowDate());
-                if (obj.getInteger("status") == 200 && StringUtils.isNotNull(obj.getJSONArray("data")) && obj.getJSONArray("data").size() > 0) {
-                    obj = obj.getJSONArray("data").getJSONObject(0);
-                    statusDetails = new JSONObject();
-                    statusDetails.put("model", obj.getString("model"));
-                    statusDetails.put("currentVisibility", obj.getString("currentVisibility"));
-                    deviceStatus.setStatus(1);
-                    deviceStatus.setStatusDesc("正常");
-                    deviceStatus.setStatusDetails(statusDetails.toJSONString());
-                } else {
-                    deviceStatus.setStatus(0);
-                    deviceStatus.setStatusDesc("无法获取设备状态");
-                }
-                resp = HttpUtil.post(HostConfig.DASSHOST + "/device-monitor/deviceMonitor", JSON.toJSONString(deviceStatus));
-                if (!StringUtils.isEmpty(resp)) {
-                    ret = JSON.parseObject(resp, R.class);
-                    if (R.FAIL == ret.getCode()) {
-                        log.error(deviceId + "设备状态上报失败：" + ret.getMsg());
+                if (obj.getInteger("status") == 200) {
+                    deviceIds = road.getJSONArray("deviceIds");
+                    for (int j = 0; j < deviceIds.size(); j++) {
+                        deviceId = deviceIds.getLong(j);
+                        deviceStatus = new TblDeviceStatus();
+                        deviceStatus.setDeviceId(deviceId);
+                        deviceStatus.setTime(DateUtils.getNowDate());
+                        statusDetails = new JSONObject();
+                        statusDetails.put("model", obj.getJSONObject("data").getString("model"));
+                        statusDetails.put("currentVisibility", obj.getJSONObject("data").getString("currentVisibility"));
+                        deviceStatus.setStatus(1);
+                        deviceStatus.setStatusDesc("正常");
+                        deviceStatus.setStatusDetails(statusDetails.toJSONString());
+                        resp = HttpUtil.post(HostConfig.DASSHOST + "/device-monitor/deviceMonitor", JSON.toJSONString(deviceStatus));
+                        if (!StringUtils.isEmpty(resp)) {
+                            ret = JSON.parseObject(resp, R.class);
+                            if (R.FAIL == ret.getCode()) {
+                                log.error(deviceId + "设备状态上报失败：" + ret.getMsg());
+                            }
+                        } else {
+                            log.error(deviceId + "设备状态上报状态未知");
+                        }
                     }
-                } else {
-                    log.error(deviceId + "设备状态上报状态未知");
                 }
+                else {
+                    log.error("获取超视距诱导系统状态失败："+obj.getInteger("msg"));
+                }
+            }
+            else {
+                log.error("获取超视距诱导系统状态失败：对方服务无响应");
             }
         }
 
 
     }
 
-    private List<Integer> getDeviceIds() {
-        List<Integer> list = new ArrayList<>();
+    private JSONArray getDeviceIds() {
+        JSONObject roadId;
+        JSONArray roadIds = new JSONArray();
+        JSONArray deviceIds;
         Map<String, Object> params = new HashMap<>();
         params.put("token", getToken());
         String resp = HttpUtil.get(LightConfig.HOST + "/sys/roadList/deviceList", params);
@@ -126,14 +136,20 @@ public class PilotLightServiceImpl implements IPilotLightService {
                 JSONArray rows = obj.getJSONArray("rows");
                 JSONArray devs;
                 for (int i = 0; i < rows.size(); i++) {
+                    roadId = new JSONObject();
+                    roadId.put("roadId", rows.getJSONObject(i).getString("roadId"));
+
                     devs = rows.getJSONObject(i).getJSONArray("deviceList");
+                    deviceIds = new JSONArray();
                     for (int j = 0; j < devs.size(); j++) {
-                        list.add(devs.getJSONObject(j).getInteger("deviceId"));
+                        deviceIds.add(devs.getJSONObject(j).getInteger("deviceId"));
                     }
+                    roadId.put("deviceIds", deviceIds);
+                    roadIds.add(roadId);
                 }
             }
         }
-        return list;
+        return roadIds;
     }
 
 
