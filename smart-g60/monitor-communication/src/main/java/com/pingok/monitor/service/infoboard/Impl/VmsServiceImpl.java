@@ -4,20 +4,17 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.monitor.config.HostConfig;
 import com.pingok.monitor.domain.common.MbsAttribute;
 import com.pingok.monitor.domain.device.TblDeviceInfo;
-import com.pingok.monitor.domain.device.TblDeviceStatus;
 import com.pingok.monitor.domain.infoboard.DevInfo;
 import com.pingok.monitor.domain.infoboard.VmsPubInfo;
-import com.pingok.monitor.mapper.device.TblDeviceInfoMapper;
-import com.pingok.monitor.mapper.device.TblDeviceStatusMapper;
 import com.pingok.monitor.service.common.IModbusService;
 import com.pingok.monitor.service.common.ISocketService;
 import com.pingok.monitor.service.infoboard.IVmsService;
 import com.pingok.monitor.utils.ByteUtils;
 import com.pingok.monitor.utils.config.InfoBoardConfig;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.ip.IpUtils;
 import com.serotonin.modbus4j.code.DataType;
@@ -56,7 +53,7 @@ public class VmsServiceImpl implements IVmsService {
         List<DevInfo> devInfoList = JSON.parseArray(JSONObject.toJSONString(jo.get("devInfo")), DevInfo.class);
         JSONArray dataList = jo.getJSONArray("data");
         List<List<VmsPubInfo>> pubList = new ArrayList<>();
-        for(int i = 0; i < dataList.size(); ++i) {
+        for (int i = 0; i < dataList.size(); ++i) {
             List<VmsPubInfo> vmsInfoList = JSON.parseArray(JSONObject.toJSONString(dataList.get(i)), VmsPubInfo.class);
             pubList.add(vmsInfoList);
         }
@@ -67,15 +64,24 @@ public class VmsServiceImpl implements IVmsService {
         result.put("pubContent", JSON.toJSONString(dataList));
         JSONArray jaResult = new JSONArray();
         String playlst = genPlaylst(devInfoList, pubList);
-        for(int i = 0 ; i < devInfoList.size(); ++i) {
+        for (int i = 0; i < devInfoList.size(); ++i) {
             DevInfo dev = devInfoList.get(i);
-            switch (dev.getProtocol())
-            {
-                case InfoBoardConfig.SWARCO: ret = publishSwarcoCMSV1d5(dev, pubList.get(0)); break;
-                case InfoBoardConfig.SANSI_XS: ret = publishSansiXS(dev, pubList.get(0)); break;
-                case InfoBoardConfig.DONGHAI_F: ret = publishDonghaiF(dev, pubList.get(0)); break;
-                case InfoBoardConfig.SANSI_PLIST_MULTI: ret = publishSansiPlistMulti(dev, playlst); break;
-                default: retCode = 500; break;
+            switch (dev.getProtocol()) {
+                case InfoBoardConfig.SWARCO:
+                    ret = publishSwarcoCMSV1d5(dev, pubList.get(0));
+                    break;
+                case InfoBoardConfig.SANSI_XS:
+                    ret = publishSansiXS(dev, pubList.get(0));
+                    break;
+                case InfoBoardConfig.DONGHAI_F:
+                    ret = publishDonghaiF(dev, pubList.get(0));
+                    break;
+                case InfoBoardConfig.SANSI_PLIST_MULTI:
+                    ret = publishSansiPlistMulti(dev, playlst);
+                    break;
+                default:
+                    retCode = 500;
+                    break;
             }
             JSONObject joRet = new JSONObject();
             joRet.put("devId", dev.getDevId());
@@ -96,7 +102,7 @@ public class VmsServiceImpl implements IVmsService {
         boolean ping = true;
         JSONArray ret = new JSONArray();
         try {
-            for(int i = 0; i < devList.size(); ++i) {
+            for (int i = 0; i < devList.size(); ++i) {
                 TblDeviceInfo dev = devList.get(i);
                 ping = IpUtils.ping(dev.getDeviceIp());
                 JSONObject jo = new JSONObject();
@@ -133,8 +139,8 @@ public class VmsServiceImpl implements IVmsService {
         sb.append(" 01 01 FF FF FF FF FF FF ");
         for (VmsPubInfo info : vmsInfoList) {
             //图片、图片类型（默认64点阵 全屏）
-            if(!StringUtils.isEmpty(info.getPicId())) {
-                sb.append( " 1b 36 "+ picCvt(protocol, info.getPicId()) + " 32 ");
+            if (!StringUtils.isEmpty(info.getPicId())) {
+                sb.append(" 1b 36 " + picCvt(protocol, info.getPicId()) + " 32 ");
             } else {
                 //出字方式、间隔（默认：立即显示 + 5s）
                 sb.append(" 1b 37 31 ");
@@ -162,7 +168,7 @@ public class VmsServiceImpl implements IVmsService {
                     }
                     line = text.substring(sPos);
                     sb.append(StringUtils.bytesToHexStr(line.getBytes("gb2312")));
-                }catch (UnsupportedEncodingException e) {
+                } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
             }
@@ -170,7 +176,7 @@ public class VmsServiceImpl implements IVmsService {
             sb.append("1B0D");
         }
         //去掉最后的 1B0D
-        sb.delete(sb.length()-4, sb.length());
+        sb.delete(sb.length() - 4, sb.length());
         sb.append(" 0000000000000000000000000000000000000000000000000000000000000000000000 ");
 
         //发送（modbus tcp）
@@ -179,11 +185,11 @@ public class VmsServiceImpl implements IVmsService {
         try {
             byte[] bytes = StringUtils.hexStrToBytes(sb.toString());
             short[] shorts = StringUtils.bytesToShorts(bytes);
-            if(dev.getDevId().equals("F1")) {
-                retCode = iModbusService.writeMultiRegister("COM22",1,0x1500, shorts);
-            }else if(dev.getDevId().equals("F2")) {
-                retCode = iModbusService.writeMultiRegister("COM23",1,0x1500, shorts);
-            }else {
+            if (dev.getDevId().equals("F1")) {
+                retCode = iModbusService.writeMultiRegister("COM22", 1, 0x1500, shorts);
+            } else if (dev.getDevId().equals("F2")) {
+                retCode = iModbusService.writeMultiRegister("COM23", 1, 0x1500, shorts);
+            } else {
                 retCode = iModbusService.writeMultiRegister(mbsAttribute, shorts);
             }
         } catch (Exception e) {
@@ -196,7 +202,7 @@ public class VmsServiceImpl implements IVmsService {
 
 
     /* 三思限速板（串口）
-    * */
+     * */
 //    private int publishSansiXS_S1(DevInfo dev, List<VmsPubInfo> vmsInfoList) {
 //        int retCode = 200;
 //        String protocol = InfoBoardConfig.SANSI_XS;
@@ -219,16 +225,16 @@ public class VmsServiceImpl implements IVmsService {
         int retCode = 200;
         String protocol = InfoBoardConfig.SANSI_XS;
 
-        for(VmsPubInfo info : vmsInfoList) {
+        for (VmsPubInfo info : vmsInfoList) {
             String fmsValue = fmsCvt(protocol, info.getPicId());
             //发送（modbus tcp）
             MbsAttribute mbsAttribute = new MbsAttribute(dev.getIp(), dev.getPort(), dev.getSlave(),
                     3, Integer.valueOf("1801", 16), 0, DataType.TWO_BYTE_INT_SIGNED);
             try {
-                if(dev.getDevId().equals("S1")) {
+                if (dev.getDevId().equals("S1")) {
                     retCode = iModbusService.writeRegister("COM12", dev.getSlave(),
                             0x1801, Short.parseShort(fmsValue, 16));
-                }else {
+                } else {
                     retCode = iModbusService.writeRegister(mbsAttribute, Short.parseShort(fmsValue, 16));
                 }
             } catch (Exception e) {
@@ -250,21 +256,21 @@ public class VmsServiceImpl implements IVmsService {
 
         //组织报文
         StringBuilder sb = new StringBuilder();
-        String sid = String.format("%02d",dev.getSlave());
+        String sid = String.format("%02d", dev.getSlave());
         //DonghaiCheckNum返回 114，还需要转成16进制
         sb.append("F2")
-            .append(sid)
-            .append("F5020105")
-            .append(DonghaiCheckNum(sid + "F5020105"))
-            .append("F0");
+                .append(sid)
+                .append("F5020105")
+                .append(DonghaiCheckNum(sid + "F5020105"))
+                .append("F0");
         retCode = iSocketService.writeAndResult(StringUtils.hexStrTobytes(sb.toString()), socket);
-        if(retCode == 200) {
+        if (retCode == 200) {
             for (VmsPubInfo info : vmsInfoList) {
                 sb.setLength(0);
                 sb.append("F2")
-                    .append(sid)
-                    .append("F5")
-                    .append(fontSizeCvt(protocol, info.getTypeface()));
+                        .append(sid)
+                        .append("F5")
+                        .append(fontSizeCvt(protocol, info.getTypeface()));
                 //解析<br>换行，替换为 0a（换行）（0d回车？）
                 int sPos = 0, ePos = 0;
                 float len = 0.0f, lenAfter = 0.0f;
@@ -277,14 +283,14 @@ public class VmsServiceImpl implements IVmsService {
                         sb2.setLength(0);
                         line = text.substring(sPos, ePos);
                         len = StringUtils.getStrLength(line) / 2.0f;
-                        lenAfter = (int)(len + 0.5f);
-                        if(len != lenAfter) {
+                        lenAfter = (int) (len + 0.5f);
+                        if (len != lenAfter) {
                             //需要补空格
                             text += " ";
                         }
                         gb2312 = StringUtils.bytesToHexStr(text.getBytes("gb2312"));
                         //拆开加前缀0（比如文字为“谨慎驾驶”的hex是 uvwx，则需要转成 0u0v0w0x
-                        for(int i = 0; i < gb2312.length(); ++i) {
+                        for (int i = 0; i < gb2312.length(); ++i) {
                             sb2.append("0").append(gb2312.charAt(i));
                         }
                         //文字两端补空格（为了对齐）
@@ -297,11 +303,11 @@ public class VmsServiceImpl implements IVmsService {
                     line = text.substring(sPos, ePos);
                     sb2.setLength(0);
                     gb2312 = StringUtils.bytesToHexStr(line.getBytes("gb2312"));
-                    for(int i = 0; i < gb2312.length(); ++i) {
+                    for (int i = 0; i < gb2312.length(); ++i) {
                         sb2.append("0").append(gb2312.charAt(i));
                     }
                     sb.append(sb2.toString());
-                }catch (UnsupportedEncodingException e) {
+                } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
 
@@ -314,10 +320,10 @@ public class VmsServiceImpl implements IVmsService {
             }
             sb.setLength(0);
             sb.append("F2")
-                .append(sid)
-                .append("F5020405")
-                .append(DonghaiCheckNum(sid + "F5020405"))
-                .append("F0");
+                    .append(sid)
+                    .append("F5020405")
+                    .append(DonghaiCheckNum(sid + "F5020405"))
+                    .append("F0");
             iSocketService.writeAndResult(StringUtils.hexStrTobytes(sb.toString()), socket);
         }
 
@@ -334,26 +340,23 @@ public class VmsServiceImpl implements IVmsService {
         int sendTimes = btFile.length / 2048 + 1;
         int sendLen = 0;
         int pos = fn.length();
-        for (int i = 0; i < sendTimes; ++i)
-        {
+        for (int i = 0; i < sendTimes; ++i) {
             sendLen = (sendTimes - i - 1 > 0) ? 2048 : btFile.length % 2048;
             byte[] data = new byte[fn.length() + 1 + 4 + sendLen];
             System.arraycopy(ByteUtils.ASCIIToBytes(fn), 0, data, 0, fn.length());
             data[pos] = 0x2b;
             //小端返回，转大端
 //            byte[] btOffset = BitConverter.GetBytes(System.Net.IPAddress.HostToNetworkOrder(2048 * i));
-            byte[] btOffset = ByteBuffer.allocate(4).putInt(2048*i).array();
+            byte[] btOffset = ByteBuffer.allocate(4).putInt(2048 * i).array();
             System.arraycopy(btOffset, 0, data, pos + 1, 4);
             System.arraycopy(btFile, i * 2048, data, pos + 5, sendLen);
 
             try {
-                if(-1 == ULOneFile10(dev.getSlave(), dev.getIp(), dev.getPort(), data))
-                {
+                if (-1 == ULOneFile10(dev.getSlave(), dev.getIp(), dev.getPort(), data)) {
                     return -1;
                 }
 
-                if (i + 1 < sendTimes)
-                {
+                if (i + 1 < sendTimes) {
                     Thread.sleep(200);
                 }
             } catch (Exception ex) {
@@ -367,36 +370,32 @@ public class VmsServiceImpl implements IVmsService {
     // 生成playlst
     private String genPlaylst(List<DevInfo> devInfoList, List<List<VmsPubInfo>> pubList) {
         String playlst = "";
-        if(devInfoList.size() > 0) {
+        if (devInfoList.size() > 0) {
             DevInfo dev = devInfoList.get(0);
             String newline = System.getProperty("line.separator");
-            if(dev.getProtocol().equals(InfoBoardConfig.SANSI_PLIST_MULTI)) {
+            if (dev.getProtocol().equals(InfoBoardConfig.SANSI_PLIST_MULTI)) {
                 StringBuilder playlst1 = new StringBuilder();
                 playlst1.append("[playlist]" + newline);
                 playlst1.append("nwindows=" + pubList.size());
                 StringBuilder playlst2 = new StringBuilder();
 
-                for (int i = 0; i < pubList.size(); ++i)
-                {
+                for (int i = 0; i < pubList.size(); ++i) {
                     String pref = "";
-                    if(i > 0) pref = "window" + i + "_";
+                    if (i > 0) pref = "window" + i + "_";
                     List<VmsPubInfo> editList = pubList.get(i);
                     playlst1.append("windows" + i + "_x=" + i * dev.getWidth() + newline);
                     playlst1.append("windows" + i + "_y=0" + newline);
-                    playlst1.append("windows" + i + "_w="  + dev.getWidth() + newline);
-                    playlst1.append("windows" + i + "_y="  + dev.getHeight() + newline);
+                    playlst1.append("windows" + i + "_w=" + dev.getWidth() + newline);
+                    playlst1.append("windows" + i + "_y=" + dev.getHeight() + newline);
                     playlst1.append(pref + "item_no=" + editList.size() + newline);
-                    for(int j = 0; j < editList.size(); ++j) {
+                    for (int j = 0; j < editList.size(); ++j) {
                         playlst2.setLength(0); //清空
                         int itemNo = 0;
                         VmsPubInfo edit = editList.get(i);
-                        if (!StringUtils.isEmpty(edit.getPicId()))
-                        {
+                        if (!StringUtils.isEmpty(edit.getPicId())) {
                             playlst2.append("item" + itemNo + "=500,1,0,");
                             playlst2.append("\\B" + edit.getPicId() + newline);
-                        }
-                        else
-                        {
+                        } else {
                             //text <br>替换为\n
                             String text = edit.getContent();
                             String xy = "000000";
@@ -422,18 +421,14 @@ public class VmsServiceImpl implements IVmsService {
     }
 
     // playlst上传文件
-    private int ULOneFile10(Integer slaveID, String ip, Integer port, byte[] data)
-    {
+    private int ULOneFile10(Integer slaveID, String ip, Integer port, byte[] data) {
         byte[] sendPkg = PacketPlaylst(slaveID, "10", data);
 //        byte[] recvPkg = null;
         int recv = 1;
-        try
-        {
+        try {
             Socket skt = iSocketService.clientSocket(ip, port);
             recv = iSocketService.writeAndResult(sendPkg, skt);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             log.error("情报板发布：上传文件异常！" + ex.getMessage());
             recv = -1;
         }
@@ -441,20 +436,18 @@ public class VmsServiceImpl implements IVmsService {
     }
 
     // playlst 组包
-    private byte[] PacketPlaylst(Integer slaveID, String pkgType, byte[] data)
-    {
+    private byte[] PacketPlaylst(Integer slaveID, String pkgType, byte[] data) {
         int len = data == null ? 0 : data.length;
         int pos = 0;
         byte[] ret = new byte[len + 8];
         ret[pos++] = 0x02;
         String sid = String.format("%2d", slaveID);
-        ret[pos++] = (byte)(sid.charAt(0));
-        ret[pos++] = (byte)(sid.charAt(1));
-        ret[pos++] = (byte)(pkgType.charAt(0));
-        ret[pos++] = (byte)(pkgType.charAt(1));
+        ret[pos++] = (byte) (sid.charAt(0));
+        ret[pos++] = (byte) (sid.charAt(1));
+        ret[pos++] = (byte) (pkgType.charAt(0));
+        ret[pos++] = (byte) (pkgType.charAt(1));
 
-        if (len > 0)
-        {
+        if (len > 0) {
             System.arraycopy(data, 0, ret, 5, len);
         }
         pos += len;
@@ -477,12 +470,20 @@ public class VmsServiceImpl implements IVmsService {
     // 字体转换，[in]=字体名，[return]=字体编码
     private String fontCvt(String protocol, String font) {
         String fontCode = "30";
-        if(protocol == InfoBoardConfig.SWARCO) {
+        if (protocol == InfoBoardConfig.SWARCO) {
             switch (font) { //+0x30
-                case "黑体": fontCode = "30"; break;
-                case "楷体": fontCode = "31"; break;
-                case "宋体": fontCode = "32"; break;
-                case "仿宋体": fontCode = "33"; break;
+                case "黑体":
+                    fontCode = "30";
+                    break;
+                case "楷体":
+                    fontCode = "31";
+                    break;
+                case "宋体":
+                    fontCode = "32";
+                    break;
+                case "仿宋体":
+                    fontCode = "33";
+                    break;
             }
         }
         return fontCode;
@@ -491,21 +492,32 @@ public class VmsServiceImpl implements IVmsService {
     // 字体大小转换，[in]=字体大小，[return]=字体大小编码
     private String fontSizeCvt(String protocol, String fontSize) {
         String fontSizeCode = "33";
-        if(protocol == InfoBoardConfig.SWARCO) {
+        if (protocol == InfoBoardConfig.SWARCO) {
             switch (fontSize) { //+0x30
-                case "16": fontSizeCode = "31"; break;
-                case "24": fontSizeCode = "32"; break;
-                case "32": fontSizeCode = "33"; break;
-                case "48": fontSizeCode = "34"; break;
+                case "16":
+                    fontSizeCode = "31";
+                    break;
+                case "24":
+                    fontSizeCode = "32";
+                    break;
+                case "32":
+                    fontSizeCode = "33";
+                    break;
+                case "48":
+                    fontSizeCode = "34";
+                    break;
             }
-        }
-        else if(protocol == InfoBoardConfig.DONGHAI_F) {
+        } else if (protocol == InfoBoardConfig.DONGHAI_F) {
             switch (fontSize) {
                 case "16":
-                case "24": fontSizeCode = "7C"; break;
+                case "24":
+                    fontSizeCode = "7C";
+                    break;
                 case "32":
                 case "36":
-                case "48": fontSizeCode = "78"; break;
+                case "48":
+                    fontSizeCode = "78";
+                    break;
             }
         }
         return fontSizeCode;
@@ -514,11 +526,17 @@ public class VmsServiceImpl implements IVmsService {
     // 字体颜色转换，[in]=字体颜色，[return]=字体颜色编码
     private String fontColorCvt(String protocol, String fontColor) {
         String fontColorCode = "21";
-        if(protocol == InfoBoardConfig.SWARCO) {
+        if (protocol == InfoBoardConfig.SWARCO) {
             switch (fontColor) {
-                case "红": fontColorCode = "20"; break;
-                case "绿": fontColorCode = "21"; break;
-                case "黄": fontColorCode = "22"; break;
+                case "红":
+                    fontColorCode = "20";
+                    break;
+                case "绿":
+                    fontColorCode = "21";
+                    break;
+                case "黄":
+                    fontColorCode = "22";
+                    break;
             }
         }
         return fontColorCode;
@@ -527,26 +545,60 @@ public class VmsServiceImpl implements IVmsService {
     // 图片转换，[in]=图片名，[return]=图片编码
     private String picCvt(String protocol, String picId) {
         String picCode = ""; //无图片
-        if(protocol == InfoBoardConfig.SWARCO) {
-            if(StringUtils.isEmpty(picId)) return "30";
+        if (protocol == InfoBoardConfig.SWARCO) {
+            if (StringUtils.isEmpty(picId)) return "30";
             switch (picId) { //+0x30
-                case "0": picCode = "30"; break; //无图片
-                case "20": picCode = "67"; break; //20
-                case "25": picCode = "68"; break;
-                case "30": picCode = "69"; break;
-                case "35": picCode = "51"; break;
-                case "40": picCode = "52"; break;
-                case "45": picCode = "6A"; break;
-                case "50": picCode = "6B"; break;
-                case "55": picCode = "6C"; break;
-                case "60": picCode = "53"; break;
-                case "65": picCode = "6D"; break;
-                case "70": picCode = "6E"; break;
-                case "80": picCode = "54"; break;
-                case "90": picCode = "6F"; break;
-                case "100": picCode = "55"; break;
-                case "110": picCode = "70"; break;
-                case "120": picCode = "56"; break;
+                case "0":
+                    picCode = "30";
+                    break; //无图片
+                case "20":
+                    picCode = "67";
+                    break; //20
+                case "25":
+                    picCode = "68";
+                    break;
+                case "30":
+                    picCode = "69";
+                    break;
+                case "35":
+                    picCode = "51";
+                    break;
+                case "40":
+                    picCode = "52";
+                    break;
+                case "45":
+                    picCode = "6A";
+                    break;
+                case "50":
+                    picCode = "6B";
+                    break;
+                case "55":
+                    picCode = "6C";
+                    break;
+                case "60":
+                    picCode = "53";
+                    break;
+                case "65":
+                    picCode = "6D";
+                    break;
+                case "70":
+                    picCode = "6E";
+                    break;
+                case "80":
+                    picCode = "54";
+                    break;
+                case "90":
+                    picCode = "6F";
+                    break;
+                case "100":
+                    picCode = "55";
+                    break;
+                case "110":
+                    picCode = "70";
+                    break;
+                case "120":
+                    picCode = "56";
+                    break;
             }
         }
         return picCode;
@@ -555,17 +607,35 @@ public class VmsServiceImpl implements IVmsService {
     // 限速转换，[in]=限速值，[return]=限速编码
     private String fmsCvt(String protocol, String fmsValue) {
         String fmsCode = "16"; //限速80
-        if(protocol == InfoBoardConfig.SANSI_XS) {
+        if (protocol == InfoBoardConfig.SANSI_XS) {
             switch (fmsValue) {
-                case "40": fmsCode = "12"; break;
-                case "50": fmsCode = "13"; break;
-                case "60": fmsCode = "14"; break;
-                case "70": fmsCode = "15"; break;
-                case "80": fmsCode = "16"; break;
-                case "90": fmsCode = "17"; break;
-                case "100": fmsCode = "18"; break;
-                case "110": fmsCode = "19"; break;
-                case "120": fmsCode = "1a"; break;
+                case "40":
+                    fmsCode = "12";
+                    break;
+                case "50":
+                    fmsCode = "13";
+                    break;
+                case "60":
+                    fmsCode = "14";
+                    break;
+                case "70":
+                    fmsCode = "15";
+                    break;
+                case "80":
+                    fmsCode = "16";
+                    break;
+                case "90":
+                    fmsCode = "17";
+                    break;
+                case "100":
+                    fmsCode = "18";
+                    break;
+                case "110":
+                    fmsCode = "19";
+                    break;
+                case "120":
+                    fmsCode = "1a";
+                    break;
             }
         }
         return fmsCode;
@@ -575,11 +645,10 @@ public class VmsServiceImpl implements IVmsService {
     private byte DonghaiCheckNum(String value) {
         byte[] bytes = StringUtils.hexStrTobytes(value);
         byte VerifyByte = bytes[0];
-        for (int i = 1; i < bytes.length; i++)
-        {
-            VerifyByte = (byte)(VerifyByte ^ bytes[i]);
+        for (int i = 1; i < bytes.length; i++) {
+            VerifyByte = (byte) (VerifyByte ^ bytes[i]);
         }
-        VerifyByte = (byte)(VerifyByte & 0x7F);
+        VerifyByte = (byte) (VerifyByte & 0x7F);
         return VerifyByte;
     }
 
@@ -590,7 +659,7 @@ public class VmsServiceImpl implements IVmsService {
         int time = 1;
         while (true) {
             try {
-                post = HttpUtil.post("127.0.0.1:9308" + "/infoBoard/notifyResult", JSON.toJSONString(result));
+                post = HttpUtil.post(HostConfig.DASSHOST + "/device-monitor/infoBoard/notifyResult", JSON.toJSONString(result));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         ret = JSON.parseObject(post, R.class);
@@ -617,7 +686,7 @@ public class VmsServiceImpl implements IVmsService {
         int time = 1;
         while (true) {
             try {
-                post = HttpUtil.post("127.0.0.1:9308" + "/infoBoard/notifyPing", JSON.toJSONString(result));
+                post = HttpUtil.post(HostConfig.DASSHOST + "/device-monitor/infoBoard/notifyPing", JSON.toJSONString(result));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         ret = JSON.parseObject(post, R.class);

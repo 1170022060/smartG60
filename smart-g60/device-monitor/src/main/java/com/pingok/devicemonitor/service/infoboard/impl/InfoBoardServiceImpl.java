@@ -75,18 +75,24 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
         String pubContent = result.getString("pubContent");
         JSONArray devList = result.getJSONArray("devList");
         JSONObject dev;
+        TblReleaseRecord record = null;
         for (int i = 0; i < devList.size(); ++i) {
             dev = devList.getJSONObject(i);
-            TblReleaseRecord record = tblReleaseRecordMapper.selectByPrimaryKey(dev.getInteger("recordId"));
+            record = tblReleaseRecordMapper.selectByPrimaryKey(dev.getInteger("recordId"));
             record.setStatus(1);
             record.setPublishContent(pubContent);
             tblReleaseRecordMapper.updateByPrimaryKey(record);
         }
-        //通知前端（websocket）
-        KafkaEnum kafkaEnum = new KafkaEnum();
-        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_SEND);
-        kafkaEnum.setData(JSON.toJSONString(result));
-        remoteKafkaService.send(kafkaEnum);
+        if(record!=null){
+            //通知前端（websocket）
+            KafkaEnum kafkaEnum = new KafkaEnum();
+            kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_SEND);
+            JSONObject msg = new JSONObject();
+            msg.put("model",record.getPresetUserId());
+            msg.put("data",JSON.toJSONString(result));
+            kafkaEnum.setData(msg.toJSONString());
+            remoteKafkaService.send(kafkaEnum);
+        }
     }
 
     @Override
