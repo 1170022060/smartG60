@@ -177,7 +177,9 @@ public class Consumer {
         if (message.isPresent()) {
             log.info("infoBoardPublish 消费了： Topic:" + topic + ",Message:" + message.get());
             try {
-                iVmsService.publish(message.get().toString());
+                JSONObject result = iVmsService.publish(message.get().toString());
+                //通知
+                iVmsService.notifyResult(result);
             } catch (Exception e) {
                 log.error("infoBoardPublish消费者，Topic" + topic + ",Message:" + message.get() + "处理失败。错误信息：" + e.getMessage());
             }

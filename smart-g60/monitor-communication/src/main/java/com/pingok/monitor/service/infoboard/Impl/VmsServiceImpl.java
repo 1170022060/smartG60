@@ -20,6 +20,7 @@ import com.ruoyi.common.core.utils.ip.IpUtils;
 import com.serotonin.modbus4j.code.DataType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -44,7 +45,7 @@ public class VmsServiceImpl implements IVmsService {
     private ISocketService iSocketService;
 
     @Override
-    public int publish(String pubInfo) {
+    public JSONObject publish(String pubInfo) {
 
         int retCode = 200;
 
@@ -85,15 +86,13 @@ public class VmsServiceImpl implements IVmsService {
             }
             JSONObject joRet = new JSONObject();
             joRet.put("devId", dev.getDevId());
+            joRet.put("recordId", dev.getRecordId());
             joRet.put("ret", ret);
             jaResult.add(joRet);
         }
         result.put("devList", jaResult);
 
-        //通知
-        notifyResult(result);
-
-        return retCode;
+        return result;
     }
 
     @Override
@@ -653,7 +652,9 @@ public class VmsServiceImpl implements IVmsService {
     }
 
     //通知
-    private void notifyResult(JSONObject result) {
+    @Async
+    @Override
+    public void notifyResult(JSONObject result) {
         String post;
         R ret;
         int time = 1;
