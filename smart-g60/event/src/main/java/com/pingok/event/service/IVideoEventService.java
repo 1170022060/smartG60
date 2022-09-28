@@ -15,5 +15,6 @@ public interface IVideoEventService {
 
     void parkingEvent(TblEventParkingEvent tblEventParkingEvent);
 
-    public void parkVehInfo(TblEventPlateInfo tblEventPlateInfo);
+    void parkVehInfo(TblEventPlateInfo tblEventPlateInfo);
+    void parkingStatistics(TblEventPlateInfo tblEventPlateInfo);
 }

@@ -30,4 +30,5 @@ public class TblEventPassengerFlow implements Serializable {
     private Integer uiGetOutPeos; // int 出人数(20秒内出去的人数)
     private Integer uiInPeos; // int 在内人数(当前人数)
     private Long ubiImgId; // long 图片ID
+    private String szSourceCode;//相机ID
 }

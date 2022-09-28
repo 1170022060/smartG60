@@ -30,8 +30,9 @@ public class TblEventVehicleEvent implements Serializable {
     private Long ubiVehicleId; // long 车序号
     private Integer uiVehicleTypeDetail; // int 车型细分（见附录）
     private Long ubiImgId; // long 事件图片ID
-    private String szImg; // String 事件图片（Base64字符串)
+//    private String szImg; // String 事件图片（Base64字符串)
     private Long ubiSmallImgId; // long 车牌图ID
+    //    private String szPlateImg; // String 车牌小图，Base64字符串
     private Long ubiCarImgId; // long 目标图ID
     private Integer uiYear; // int 记录时间的年份
     private Long ubiTime; // long 记录时间 (ms)
@@ -56,6 +57,7 @@ public class TblEventVehicleEvent implements Serializable {
     private Long ubiSourceId; // long 视频源id
     private String szSceneId; // String 场景id
     private Long ubiSectionId; // long 断面id
+    private String szSourceCode;//相机ID
 
     @Transient
     private String video;

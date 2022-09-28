@@ -53,6 +53,7 @@ public class TblEventVehicleEvent implements Serializable {
     private Long ubiSourceId; // long 视频源id
     private String szSceneId; // String 场景id
     private Long ubiSectionId; // long 断面id
+    private String szSourceCode;//相机ID
 
     @Transient
     private String video;

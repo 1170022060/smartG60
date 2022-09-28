@@ -6,6 +6,7 @@ import com.pingok.event.mapper.videoEvent.*;
 import com.pingok.event.service.IEventService;
 import com.pingok.event.service.IVideoEventService;
 import com.ruoyi.common.core.utils.DateUtils;
+import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
 import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.system.api.RemoteIdProducerService;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +45,9 @@ public class VideoEventServiceImpl implements IVideoEventService {
     @Autowired
     private RedisService redisService;
 
+    @Autowired
+    private TblParkingStatisticsMapper tblParkingStatisticsMapper;
+
 
     @Override
     public void fluxData(TblEventFlux tblEventFlux) {
@@ -65,11 +68,8 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
     @Override
     public void plateInfo(TblEventPlateInfo tblEventPlateInfo) {
-        List<Long> in = Arrays.asList(1L, 2L, 3L, 4L);
-        if (in.contains(tblEventPlateInfo.getUbiSourceId())) {
-            tblEventPlateInfo.setId(remoteIdProducerService.nextId());
-            tblEventPlateInfoMapper.insert(tblEventPlateInfo);
-        }
+        tblEventPlateInfo.setId(remoteIdProducerService.nextId());
+        tblEventPlateInfoMapper.insert(tblEventPlateInfo);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             if (eventVehicleEvent.getUbiSourceId() != null) {
                 Object o = tblEventVehicleEventMapper.findByDeviceId(eventVehicleEvent.getUbiSourceId().toString());
                 if (o != null) {
-                    eventRecord.setLocationInterval(redisService.geoGet("sxj", o));
+                    eventRecord.setLocationInterval(String.valueOf(o));
                 }
             }
             iEventService.insert(eventRecord);
@@ -133,35 +133,154 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
     @Override
     public void parkVehInfo(TblEventPlateInfo tblEventPlateInfo) {
-        List<Long> in = Arrays.asList(1L, 2L, 3L, 4L);
-        List<Long> out = Arrays.asList(5L, 6L, 7L, 8L);
-        if (in.contains(tblEventPlateInfo.getUbiSourceId())) {
-            TblParkingVehicleInfo tblParkingVehicleInfo = new TblParkingVehicleInfo();
-            tblParkingVehicleInfo.setId(remoteIdProducerService.nextId());
-            tblParkingVehicleInfo.setEnTime(new Date(tblEventPlateInfo.getUbiTime()));
-            tblParkingVehicleInfo.setVehPlate(tblEventPlateInfo.getSzText());
-            tblParkingVehicleInfo.setVehClass(tblEventPlateInfo.getUiStatType());
-            tblParkingVehicleInfo.setVehClassSub(tblEventPlateInfo.getUiSubType());
-            tblParkingVehicleInfo.setVehColor(tblEventPlateInfo.getUiColor());
-            if (tblEventPlateInfo.getUbiSourceId() == 1L) {
-                tblParkingVehicleInfo.setParkingId(1L);
-            } else if (tblEventPlateInfo.getUbiSourceId() == 2L) {
-                tblParkingVehicleInfo.setParkingId(2L);
-            } else if (tblEventPlateInfo.getUbiSourceId() == 3L) {
-                tblParkingVehicleInfo.setParkingId(3L);
-            } else if (tblEventPlateInfo.getUbiSourceId() == 4L) {
-                tblParkingVehicleInfo.setParkingId(4L);
-            }
-            tblParkingVehicleInfoMapper.insert(tblParkingVehicleInfo);
+        TblParkingVehicleInfo info;
+        List<TblParkingVehicleInfo> infoList;
+        Example example;
+        String dateTime = tblEventPlateInfo.getUiYear() + "-" + tblEventPlateInfo.getUiMonth() + "-" + tblEventPlateInfo.getUiDay() + " " + tblEventPlateInfo.getUiHour() + ":" + tblEventPlateInfo.getUiMin() + ":" + "00";
+        switch (tblEventPlateInfo.getSzSourceCode()) {
+            //北区入总
+            case "197":
+            case "198":
+                info = new TblParkingVehicleInfo();
+                info.setId(remoteIdProducerService.nextId());
+                info.setEnTime(DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS, dateTime));
+                info.setVehPlate(tblEventPlateInfo.getSzText());
+                info.setVehClass(tblEventPlateInfo.getUiStatType());
+                info.setVehColor(tblEventPlateInfo.getUiColor());
+                info.setParkingId(1L);
+                info.setVehClassSub(tblEventPlateInfo.getUiSubType());
+                info.setCreateTime(DateUtils.getNowDate());
+                tblParkingVehicleInfoMapper.insert(info);
+                break;
+            //南区入总
+            case "200":
+                info = new TblParkingVehicleInfo();
+                info.setId(remoteIdProducerService.nextId());
+                info.setEnTime(DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS, dateTime));
+                info.setVehPlate(tblEventPlateInfo.getSzText());
+                info.setVehClass(tblEventPlateInfo.getUiStatType());
+                info.setVehColor(tblEventPlateInfo.getUiColor());
+                info.setParkingId(3L);
+                info.setVehClassSub(tblEventPlateInfo.getUiSubType());
+                info.setCreateTime(DateUtils.getNowDate());
+                tblParkingVehicleInfoMapper.insert(info);
+                break;
+            //出
+            case "201":
+            case "199":
+                example = new Example(TblParkingVehicleInfo.class);
+                example.createCriteria().andEqualTo("vehPlate", tblEventPlateInfo.getSzText())
+                        .andIsNull("exTime");
+                infoList = tblParkingVehicleInfoMapper.selectByExample(example);
+                for (TblParkingVehicleInfo v : infoList) {
+                    v.setExTime(DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS, dateTime));
+                    v.setUpdateTime(DateUtils.getNowDate());
+                    tblParkingVehicleInfoMapper.updateByPrimaryKey(v);
+                }
+                break;
         }
-        if (out.contains(tblEventPlateInfo.getUbiSourceId())) {
-            Example example = new Example(TblParkingVehicleInfo.class);
-            Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("vehPlate", tblEventPlateInfo.getSzText());
-            criteria.andEqualTo("exTime", null);
-            TblParkingVehicleInfo tblParkingVehicleInfo = tblParkingVehicleInfoMapper.selectOneByExample(example);
-            tblParkingVehicleInfo.setExTime(new Date(tblEventPlateInfo.getUbiTime()));
-            tblParkingVehicleInfoMapper.insert(tblParkingVehicleInfo);
+    }
+
+    @Override
+    public void parkingStatistics(TblEventPlateInfo tblEventPlateInfo) {
+        Long fieldId = 0l;
+        Integer enter = 0;
+        Integer out = 0;
+        Integer vehType = 0;
+        Integer currentNum = 0;
+        Integer hour = tblEventPlateInfo.getUiHour();
+        Date day = DateUtils.dateTime(DateUtils.YYYY_MM_DD, (tblEventPlateInfo.getUiYear() + "-" + tblEventPlateInfo.getUiMonth() + "-" + tblEventPlateInfo.getUiDay()));
+        switch (tblEventPlateInfo.getSzSourceCode()) {
+            //北区入总
+            case "197":
+            case "198":
+                fieldId = 3941l;
+                enter = 1;
+                currentNum = 1;
+                break;
+            //南区入总
+            case "200":
+                fieldId = 3940l;
+                enter = 1;
+                currentNum = 1;
+                break;
+            //南出
+            case "201":
+                fieldId = 3940l;
+                out = 1;
+                currentNum = -1;
+                break;
+            //北出
+            case "199":
+                fieldId = 3941l;
+                out = 1;
+                currentNum = -1;
+                break;
+        }
+        switch (tblEventPlateInfo.getUiSubType()) {
+            //客车
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 25:
+            case 29:
+            case 30:
+            case 37:
+            case 38:
+                vehType = 1;
+                break;
+            //货车
+            case 0:
+            case 1:
+            case 2:
+            case 15:
+            case 16:
+            case 17:
+            case 18:
+            case 19:
+            case 20:
+            case 21:
+            case 22:
+            case 23:
+            case 24:
+            case 31:
+            case 33:
+            case 34:
+            case 39:
+            case 40:
+                vehType = 2;
+                break;
+        }
+        TblParkingStatistics statistics;
+        Example example = new Example(TblParkingStatistics.class);
+        example.createCriteria().andEqualTo("fieldId", fieldId)
+                .andEqualTo("vehType", vehType)
+                .andEqualTo("day", day)
+                .andEqualTo("hour", hour);
+        statistics = tblParkingStatisticsMapper.selectOneByExample(example);
+        if (StringUtils.isNull(statistics)) {
+            statistics = new TblParkingStatistics();
+            statistics.setId(remoteIdProducerService.nextId());
+            statistics.setDay(day);
+            statistics.setCurrentNum(currentNum);
+            statistics.setEnter(enter);
+            statistics.setHour(hour);
+            statistics.setFieldId(fieldId);
+            statistics.setOut(out);
+            statistics.setVehType(vehType);
+            tblParkingStatisticsMapper.insert(statistics);
+        } else {
+            statistics.setEnter(statistics.getEnter() + enter);
+            statistics.setOut(statistics.getOut() + out);
+            statistics.setCurrentNum(statistics.getCurrentNum() + currentNum);
+            tblParkingStatisticsMapper.updateByPrimaryKey(statistics);
         }
     }
 }

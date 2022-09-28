@@ -30,9 +30,9 @@ public class TblEventPlateInfo implements Serializable {
     private Integer uiCarColor3; // int 车身颜色3(见附录)
     private Integer uiSpeed; // int 车速
     private Long ubiImgId; // long 大图
-    private String szImg; // String 过车图片，Base64字符串
+//    private String szImg; // String 过车图片，Base64字符串
     private Long ubiSmallImgId; // long 车牌图
-    private String szPlateImg; // String 车牌小图，Base64字符串
+//    private String szPlateImg; // String 车牌小图，Base64字符串
     private Long ubiCarImgId; // long 目标图
     private Integer uiCarConfidence; // int 车牌号置信度
     private Integer uiSubType; // int 车型细分(见附录)
@@ -52,4 +52,5 @@ public class TblEventPlateInfo implements Serializable {
     private Long ubiVehicleRatio; // long 车道占有率
     private Long ubiSectionId; // long 断面
     private String szCarPosition; // String 车辆位置(w,y,w,h)
+    private String szSourceCode;//相机ID
 }
