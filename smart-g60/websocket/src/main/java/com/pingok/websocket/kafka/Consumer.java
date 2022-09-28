@@ -42,6 +42,7 @@ public class Consumer {
                 ack.acknowledge();
             } else {
                 log.error("websocket消息推送失败--目标：" + jsonObject.getString("model") + "--内容：" + jsonObject.getJSONObject("data"));
+                ack.acknowledge();
             }
         }
     }
