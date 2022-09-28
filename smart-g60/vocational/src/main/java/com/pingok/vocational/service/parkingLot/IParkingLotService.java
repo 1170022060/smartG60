@@ -28,4 +28,7 @@ public interface IParkingLotService {
     List<Map> trafficChange(Date date);
     List<Map> parkingPlace();
     List<Map> passengerFlow(Date date) throws ParseException;
+    List<Map> parkMonitor(String fieldNum,String regionName);
+    List<Map> overtimeInfo(String fieldNum,String regionName);
+    List<Map> selectRegionName(String fieldNum);
 }

@@ -93,4 +93,9 @@ public class TblFieldInfoServiceImpl implements TblFieldInfoService {
         return lists;
     }
 
+    @Override
+    public List<Map> selectServiceName() {
+        return tblFieldInfoMapper.selectFieldName(4);
+    }
+
 }

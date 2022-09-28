@@ -2,6 +2,7 @@ package com.pingok.vocational.service.field;
 
 import com.pingok.vocational.domain.field.TblFieldInfo;
 import com.pingok.vocational.domain.field.vo.FieldVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -73,5 +74,7 @@ public interface TblFieldInfoService {
      * @return 场地信息
      */
     public List<FieldVo> selectFieldTypeName();
+
+    List<Map> selectServiceName();
 
 }

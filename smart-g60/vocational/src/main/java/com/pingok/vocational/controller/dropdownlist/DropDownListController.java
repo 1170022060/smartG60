@@ -11,6 +11,7 @@ import com.pingok.vocational.service.device.TblDeviceInfoService;
 import com.pingok.vocational.service.emergency.TblEmergencyGroupService;
 import com.pingok.vocational.service.emergency.TblEmergencySuppliesService;
 import com.pingok.vocational.service.field.TblFieldInfoService;
+import com.pingok.vocational.service.parkingLot.IParkingLotService;
 import com.pingok.vocational.service.project.IProjectInfoService;
 import com.pingok.vocational.service.release.IReleasePresetService;
 import com.ruoyi.common.core.web.controller.BaseController;
@@ -56,7 +57,8 @@ public class DropDownListController extends BaseController {
     private IGantryInfoService gantryInfoService;
     @Autowired
     private TblDeviceCategoryService tblDeviceCategoryService;
-
+    @Autowired
+    private IParkingLotService iParkingLotService;
 
     @GetMapping(value="/field")
     public AjaxResult field()
@@ -146,6 +148,20 @@ public class DropDownListController extends BaseController {
     public AjaxResult preset()
     {
         List<Map> info = tblDeviceCategoryService.selectPost();
+        return AjaxResult.success(info);
+    }
+
+    @GetMapping(value="/serviceName")
+    public AjaxResult serviceName()
+    {
+        List<Map> info = tblFieldInfoService.selectServiceName();
+        return AjaxResult.success(info);
+    }
+
+    @GetMapping(value="/regionName")
+    public AjaxResult regionName(@RequestParam(name = "fieldNum",required = false) String fieldNum)
+    {
+        List<Map> info = iParkingLotService.selectRegionName(fieldNum);
         return AjaxResult.success(info);
     }
 }
