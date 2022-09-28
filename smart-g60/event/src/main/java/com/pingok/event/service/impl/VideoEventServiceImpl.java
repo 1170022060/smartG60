@@ -65,8 +65,11 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
     @Override
     public void plateInfo(TblEventPlateInfo tblEventPlateInfo) {
-        tblEventPlateInfo.setId(remoteIdProducerService.nextId());
-        tblEventPlateInfoMapper.insert(tblEventPlateInfo);
+        List<Long> in = Arrays.asList(1L, 2L, 3L, 4L);
+        if (in.contains(tblEventPlateInfo.getUbiSourceId())) {
+            tblEventPlateInfo.setId(remoteIdProducerService.nextId());
+            tblEventPlateInfoMapper.insert(tblEventPlateInfo);
+        }
     }
 
     @Override

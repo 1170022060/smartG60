@@ -18,24 +18,24 @@ public interface TblReleaseRecordMapper extends CommonRepository<TblReleaseRecor
 
     @Select({"<script>" +
             "SELECT " +
-            "trr.ID AS id, " +
-            "trr.DEVICE_ID AS deviceId, " +
-            "tdi.DEVICE_NAME AS deviceName, " +
-            "tdi.PILE_NO AS pileNo, " +
-            "TO_CHAR(trr.PRESET_TIME,'yyyy-mm-dd hh24:mi:ss') AS presetTime, " +
-            "usr.NICK_NAME as presetUserName, " +
-            "trr.STATUS AS status, " +
-            "trr.PUBLISH_CONTENT as publishContent " +
+            "trr.ID AS \"id\", " +
+            "trr.DEVICE_ID AS \"deviceId\", " +
+            "tdi.DEVICE_NAME AS \"deviceName\", " +
+            "tdi.PILE_NO AS \"pileNo\", " +
+            "TO_CHAR(trr.PRESET_TIME,'yyyy-mm-dd hh24:mi:ss') AS \"presetTime\", " +
+            "usr.NICK_NAME as \"presetUserName\", " +
+            "trr.STATUS AS \"status\", " +
+            "trr.PUBLISH_CONTENT as \"publishContent\" " +
             "FROM " +
             "TBL_RELEASE_RECORD trr " +
             "JOIN TBL_DEVICE_INFO tdi ON tdi.DEVICE_ID = trr.DEVICE_ID " +
             "LEFT JOIN SYS_USER usr ON usr.USER_ID = trr.PRESET_USER_ID " +
             "where 1=1 " +
             "<when test='startTime != null'> " +
-            " and trr.PRESET_TIME <![CDATA[>=]]> to_date(#{startTime},'yyyy-mm-dd') " +
+            " and trr.PRESET_TIME <![CDATA[>=]]> to_date(#{startTime},'yyyy-mm-dd hh24:mi:ss') " +
             "</when>"+
             "<when test='endTime != null'> " +
-            " and trr.PRESET_TIME <![CDATA[>=]]> to_date(#{endTime},'yyyy-mm-dd') " +
+            " and trr.PRESET_TIME <![CDATA[<=]]> to_date(#{endTime},'yyyy-mm-dd hh24:mi:ss') " +
             "</when>"+
             "<when test='deviceId != null'> " +
             "and trr.DEVICE_ID like CONCAT(CONCAT('%',#{deviceId}),'%')" +
@@ -48,5 +48,5 @@ public interface TblReleaseRecordMapper extends CommonRepository<TblReleaseRecor
             "</when>"+
             "order by trr.PRESET_TIME desc " +
             "</script>"})
-    List<Map> selectReleaseRecord(@Param("deviceId") String deviceId,@Param("deviceName") String deviceName,@Param("pileNo") String pileNo, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    List<Map> selectReleaseRecord(@Param("deviceId") String deviceId,@Param("deviceName") String deviceName,@Param("pileNo") String pileNo, @Param("startTime") String startTime, @Param("endTime") String endTime);
 }

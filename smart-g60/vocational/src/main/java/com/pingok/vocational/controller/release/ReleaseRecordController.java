@@ -31,7 +31,7 @@ public class ReleaseRecordController extends BaseController {
 
 
     @GetMapping("/info")
-    public TableDataInfo info(@RequestParam(name = "deviceId", required = false) String deviceId, @RequestParam(name = "deviceName", required = false) String deviceName, @RequestParam(name = "pileNo", required = false) String pileNo, @RequestParam(name = "startTime", required = false) Date startTime, @RequestParam(name = "endTime", required = false) Date endTime) {
+    public TableDataInfo info(@RequestParam(name = "deviceId", required = false) String deviceId, @RequestParam(name = "deviceName", required = false) String deviceName, @RequestParam(name = "pileNo", required = false) String pileNo, @RequestParam(name = "startTime", required = false) String startTime, @RequestParam(name = "endTime", required = false) String endTime) {
         startPage();
         List<Map> info = releaseRecordService.selectReleaseRecord(deviceId, deviceName, pileNo, startTime, endTime);
         return getDataTable(info);

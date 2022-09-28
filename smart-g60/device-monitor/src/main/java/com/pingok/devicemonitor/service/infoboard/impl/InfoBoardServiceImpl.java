@@ -53,7 +53,7 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
         for (int i = 0; i < pubInfo.getJSONArray("devInfo").size(); i++) {
             record = new TblReleaseRecord();
             record.setDeviceId(pubInfo.getJSONArray("devInfo").getJSONObject(i).getString("devId"));
-            record.setPublishContent(pubInfo.getString("data"));
+            record.setPublishContent(pubInfo.getJSONArray("data").toJSONString());
             record.setStatus(0);
             record.setPresetTime(DateUtils.getNowDate());
             record.setId(remoteIdProducerService.nextId());
@@ -76,6 +76,7 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
         JSONArray devList = result.getJSONArray("devList");
         JSONObject dev;
         TblReleaseRecord record = null;
+        KafkaEnum kafkaEnum;
         int status = 0;
         for (int i = 0; i < devList.size(); ++i) {
             dev = devList.getJSONObject(i);
@@ -87,22 +88,22 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
                     record.setPublishContent(pubContent);
                     tblReleaseRecordMapper.updateByPrimaryKey(record);
                 }
+                //通知前端（websocket）
+                kafkaEnum = new KafkaEnum();
+                kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_SEND);
+                JSONObject msg = new JSONObject();
+                msg.put("model", record.getPresetUserId());
+                JSONObject data = new JSONObject();
+                data.put("type", "infoBoard");
+                data.put("status", status);
+                data.put("devId", dev.getString("devId"));
+                data.put("data", result.getJSONArray("pubContent").toJSONString());
+                msg.put("data", data.toJSONString());
+                kafkaEnum.setData(msg.toJSONString());
+                remoteKafkaService.send(kafkaEnum);
             }
         }
-        if (record != null) {
-            //通知前端（websocket）
-            KafkaEnum kafkaEnum = new KafkaEnum();
-            kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_SEND);
-            JSONObject msg = new JSONObject();
-            msg.put("model", record.getPresetUserId());
-            JSONObject data = new JSONObject();
-            data.put("type", "infoBoard");
-            data.put("status", status);
-            data.put("data", result.getJSONArray("pubContent").toJSONString());
-            msg.put("data", data.toJSONString());
-            kafkaEnum.setData(msg.toJSONString());
-            remoteKafkaService.send(kafkaEnum);
-        }
+
     }
 
     @Override

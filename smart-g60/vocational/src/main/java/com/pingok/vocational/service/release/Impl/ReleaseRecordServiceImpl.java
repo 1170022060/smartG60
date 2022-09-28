@@ -36,7 +36,7 @@ public class ReleaseRecordServiceImpl implements IReleaseRecordService {
     }
 
     @Override
-    public List<Map> selectReleaseRecord(String deviceId, String deviceName, String pileNo, Date startTime, Date endTime) {
+    public List<Map> selectReleaseRecord(String deviceId, String deviceName, String pileNo, String startTime, String endTime) {
         List<Map> list = tblReleaseRecordMapper.selectReleaseRecord(deviceId, deviceName, pileNo, startTime, endTime);
         for (Map m : list) {
             m.put("publishContentJson", m.get("publishContent") != null ? JSONObject.parse(String.valueOf(m.get("publishContent"))) : null);
