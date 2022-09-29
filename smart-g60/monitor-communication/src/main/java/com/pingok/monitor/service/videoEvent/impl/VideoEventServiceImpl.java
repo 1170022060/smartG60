@@ -177,7 +177,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
         tblEventVehicleEventMapper.delete(tblEventVehicleEvent);
 
-        updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
+//        updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
     }
 
     @Async

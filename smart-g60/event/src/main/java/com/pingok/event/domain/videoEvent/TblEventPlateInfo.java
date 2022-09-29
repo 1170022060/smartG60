@@ -53,4 +53,5 @@ public class TblEventPlateInfo implements Serializable {
     private Long ubiSectionId; // long 断面
     private String szCarPosition; // String 车辆位置(w,y,w,h)
     private String szSourceCode;//相机ID
+    private String uiTrackId;
 }

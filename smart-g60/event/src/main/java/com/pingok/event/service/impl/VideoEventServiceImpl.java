@@ -46,6 +46,9 @@ public class VideoEventServiceImpl implements IVideoEventService {
     private RedisService redisService;
 
     @Autowired
+    private TblParkingLotMapper tblParkingLotMapper;
+
+    @Autowired
     private TblParkingStatisticsMapper tblParkingStatisticsMapper;
 
 
@@ -88,7 +91,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             eventRecord.setEventType(eventVehicleEvent.getUiEventType().toString());
             eventRecord.setVehClass(eventVehicleEvent.getUiVehicleTypeDetail());
             eventRecord.setVehColor(eventVehicleEvent.getUiVehiclePlateColor());
-            eventRecord.setEventPhoto(eventVehicleEvent.getSzImg());
+//            eventRecord.setEventPhoto(eventVehicleEvent.getSzImg());
             eventRecord.setEventTime(new Date(eventVehicleEvent.getUbiTime()));
             eventRecord.setSpeed(eventVehicleEvent.getUiVehicleSpeed());
             eventRecord.setLane(eventVehicleEvent.getUiVehicleLane());
@@ -96,7 +99,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             eventRecord.setCreateTime(DateUtils.getNowDate());
             eventRecord.setStatus(0);
             if (eventVehicleEvent.getUbiSourceId() != null) {
-                Object o = tblEventVehicleEventMapper.findByDeviceId(eventVehicleEvent.getUbiSourceId().toString());
+                Object o = tblEventVehicleEventMapper.findByDeviceId(eventVehicleEvent.getSzSourceCode());
                 if (o != null) {
                     eventRecord.setLocationInterval(String.valueOf(o));
                 }
@@ -106,6 +109,8 @@ public class VideoEventServiceImpl implements IVideoEventService {
             BeanUtils.copyNotNullProperties(tblEventVehicleEvent, eventVehicleEvent);
             tblEventVehicleEventMapper.updateByPrimaryKey(eventVehicleEvent);
         }
+
+
     }
 
     @Override
@@ -137,6 +142,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         List<TblParkingVehicleInfo> infoList;
         Example example;
         String dateTime = tblEventPlateInfo.getUiYear() + "-" + tblEventPlateInfo.getUiMonth() + "-" + tblEventPlateInfo.getUiDay() + " " + tblEventPlateInfo.getUiHour() + ":" + tblEventPlateInfo.getUiMin() + ":" + "00";
+        TblParkingLot tblParkingLot;
         switch (tblEventPlateInfo.getSzSourceCode()) {
             //北区入总
             case "197":
@@ -151,6 +157,13 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 info.setVehClassSub(tblEventPlateInfo.getUiSubType());
                 info.setCreateTime(DateUtils.getNowDate());
                 tblParkingVehicleInfoMapper.insert(info);
+
+                example = new Example(TblParkingLot.class);
+                example.createCriteria().andEqualTo("fieldId",3941)
+                        .andEqualTo("regionNum","K-A");
+                tblParkingLot = tblParkingLotMapper.selectOneByExample(example);
+                tblParkingLot.setSurplus(tblParkingLot.getSurplus()-1);
+                tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
                 break;
             //南区入总
             case "200":
@@ -164,9 +177,34 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 info.setVehClassSub(tblEventPlateInfo.getUiSubType());
                 info.setCreateTime(DateUtils.getNowDate());
                 tblParkingVehicleInfoMapper.insert(info);
+
+                example = new Example(TblParkingLot.class);
+                example.createCriteria().andEqualTo("fieldId",3940)
+                        .andEqualTo("regionNum","K-A");
+                tblParkingLot = tblParkingLotMapper.selectOneByExample(example);
+                tblParkingLot.setSurplus(tblParkingLot.getSurplus()-1);
+                tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
                 break;
-            //出
+            //南出
             case "201":
+                example = new Example(TblParkingVehicleInfo.class);
+                example.createCriteria().andEqualTo("vehPlate", tblEventPlateInfo.getSzText())
+                        .andIsNull("exTime");
+                infoList = tblParkingVehicleInfoMapper.selectByExample(example);
+                for (TblParkingVehicleInfo v : infoList) {
+                    v.setExTime(DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS, dateTime));
+                    v.setUpdateTime(DateUtils.getNowDate());
+                    tblParkingVehicleInfoMapper.updateByPrimaryKey(v);
+                }
+
+                example = new Example(TblParkingLot.class);
+                example.createCriteria().andEqualTo("fieldId",3940)
+                        .andEqualTo("regionNum","K-A");
+                tblParkingLot = tblParkingLotMapper.selectOneByExample(example);
+                tblParkingLot.setSurplus(tblParkingLot.getSurplus()+1);
+                tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
+                break;
+            //北出
             case "199":
                 example = new Example(TblParkingVehicleInfo.class);
                 example.createCriteria().andEqualTo("vehPlate", tblEventPlateInfo.getSzText())
@@ -177,6 +215,12 @@ public class VideoEventServiceImpl implements IVideoEventService {
                     v.setUpdateTime(DateUtils.getNowDate());
                     tblParkingVehicleInfoMapper.updateByPrimaryKey(v);
                 }
+                example = new Example(TblParkingLot.class);
+                example.createCriteria().andEqualTo("fieldId",3941)
+                        .andEqualTo("regionNum","K-A");
+                tblParkingLot = tblParkingLotMapper.selectOneByExample(example);
+                tblParkingLot.setSurplus(tblParkingLot.getSurplus()+1);
+                tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
                 break;
         }
     }

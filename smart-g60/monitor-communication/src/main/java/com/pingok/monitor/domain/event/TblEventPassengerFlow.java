@@ -34,4 +34,5 @@ public class TblEventPassengerFlow implements Serializable {
     private Integer uiInPeos; // int 在内人数(当前人数)
     private Long ubiImgId; // long 图片ID
     private String szSourceCode;//相机ID
+    private String uiTrackId;
 }
