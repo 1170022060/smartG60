@@ -24,16 +24,17 @@ public interface TblParkingLotMapper extends CommonRepository<TblParkingLot> {
 
     @Select({"<script>" +
             "SELECT tpl.ID as \"id\"," +
+            "tfi.FIELD_NAME as \"fieldName\"," +
             "tpl.REGION_NAME as \"regionName\"," +
             "tpl.REGION_NUM as \"regionNum\"," +
             "tpl.TOTAL as \"total\"," +
             "tpl.SURPLUS as \"surplus\"  FROM TBL_PARKING_LOT tpl " +
             "JOIN TBL_FIELD_INFO tfi ON tfi.ID = tpl.FIELD_ID " +
             "WHERE 1=1 " +
-            "<when test='date != fieldNum'> " +
+            "<when test='fieldNum != null'> " +
             "and tfi.FIELD_NUM = #{fieldNum}" +
             "</when>"+
-            "<when test='date != regionName'> " +
+            "<when test='regionName != null'> " +
             "and tpl.REGION_NAME = #{regionName}" +
             "</when>"+
             "</script>"})
@@ -53,7 +54,7 @@ public interface TblParkingLotMapper extends CommonRepository<TblParkingLot> {
             "SELECT distinct tpl.REGION_NAME as \"regionName\"  FROM TBL_PARKING_LOT tpl " +
             "JOIN TBL_FIELD_INFO tfi ON tfi.ID = tpl.FIELD_ID " +
             "WHERE 1=1 " +
-            "<when test='date != fieldNum'> " +
+            "<when test='fieldNum != null'> " +
             "and tfi.FIELD_NUM = #{fieldNum}" +
             "</when>"+
             "</script>"})

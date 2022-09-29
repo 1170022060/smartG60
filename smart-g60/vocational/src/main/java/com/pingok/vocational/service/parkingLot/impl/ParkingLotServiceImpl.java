@@ -147,7 +147,7 @@ public class ParkingLotServiceImpl implements IParkingLotService {
         for(Map map :findByFieldRegion)
         {
             Integer count=tblParkingLotMapper.count(Long.parseLong(map.get("id").toString()));
-            map.put("count",count);
+            map.put("overtime",count);
         }
         return findByFieldRegion;
     }

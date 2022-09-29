@@ -74,19 +74,19 @@ public interface TblParkingVehicleInfoMapper extends CommonRepository<TblParking
             "TBL_PARKING_VEHICLE_INFO pvi " +
             "JOIN  SYS_DICT_DATA sdd ON sdd.DICT_VALUE = pvi.VEH_CLASS  " +
             "AND sdd.DICT_TYPE = 'park_veh_class' " +
-            "JOIN  SYS_DICT_DATA sdd1 ON sdd1.DICT_VALUE = pvi.VEH_CLASS  " +
+            "JOIN  SYS_DICT_DATA sdd1 ON sdd1.DICT_VALUE = pvi.VEH_COLOR  " +
             "AND sdd1.DICT_TYPE = 'park_veh_color'  " +
             "JOIN TBL_PARKING_LOT tpl ON tpl.ID = pvi.PARKING_ID " +
             "JOIN TBL_FIELD_INFO tfi ON tfi.ID = tpl.FIELD_ID " +
             "WHERE " +
             "pvi.EX_TIME IS NULL  " +
             "AND CEIL( ( SYSDATE - pvi.EN_TIME ) * 24 ) > (SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.timeout') " +
-            "<when test='date != fieldNum'> " +
+            "<when test='fieldNum != null'> " +
             "and tfi.FIELD_NUM = #{fieldNum}" +
             "</when>"+
-            "<when test='date != regionName'> " +
+            "<when test='regionName != null'> " +
             "and tpl.REGION_NAME = #{regionName}" +
-            "</when>" +
+            "</when>"+
             "</script>"})
     List<Map> overtimeInfo(@Param("fieldNum") String fieldNum,@Param("regionName") String regionName);
 }
