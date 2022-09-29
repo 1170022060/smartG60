@@ -5590,7 +5590,7 @@ public class NET_DVR_PIC_PARAM extends Structure {
         public byte byRes1;
         public short wLocalControllerID; //只读，就地控制器序号，1-64,0代表未注册
         public short wLocalControllerDoorNumber; //只读，就地控制器的门编号，1-4,0代表未注册
-        public short wLocalControllerStatus; //只读，就地控制器在线状态：0-离线，1-网络在线，2-环路1上的RS485串口1，3-环路1上的RS485串口2，4-环路2上的RS485串口1，5-环路2上的RS485串口2，6-环路3上的RS485串口1，7-环路3上的RS485串口2，8-环路4上的RS485串口1，9-环路4上的RS485串口2（只读）
+        public short wLocalControllerStatus; //只读，就地控制器在线状态：0-网络异常，1-网络在线，2-环路1上的RS485串口1，3-环路1上的RS485串口2，4-环路2上的RS485串口1，5-环路2上的RS485串口2，6-环路3上的RS485串口1，7-环路3上的RS485串口2，8-环路4上的RS485串口1，9-环路4上的RS485串口2（只读）
         public byte byLockInputCheck; //是否启用门锁输入检测(1字节，0不启用，1启用，默认不启用)
         public byte byLockInputType; //门锁输入类型(1字节，0常闭，1常开，默认常闭)
         public byte byDoorTerminalMode; //门相关端子工作模式(1字节，0防剪防短，1普通，默认防剪防短)

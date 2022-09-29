@@ -49,9 +49,9 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "SELECT " +
             "tfi.FIELD_NAME as \"fieldName\", " +
             "sdd.DICT_LABEL as \"deviceType\", " +
-            "100*round(sum(case tds.STATUS_DESC when '离线' then 0 else 1 end)/count(1),4) || '%' as \"online\", " +
-            "100*round(sum(case tds.STATUS_DESC when '离线' then 1 when '正常' then 1 else 0 end)/count(1),4) || '%' as \"intact\", " +
-            "100*round(sum(case tds.STATUS_DESC when '离线' then 0 when '正常' then 0 else 1 end)/count(1),4) || '%' as \"fault\" " +
+            "100*round(sum(case tds.STATUS_DESC when '网络异常' then 0 else 1 end)/count(1),4) || '%' as \"online\", " +
+            "100*round(sum(case tds.STATUS_DESC when '网络异常' then 1 when '正常' then 1 else 0 end)/count(1),4) || '%' as \"intact\", " +
+            "100*round(sum(case tds.STATUS_DESC when '网络异常' then 0 when '正常' then 0 else 1 end)/count(1),4) || '%' as \"fault\" " +
             "FROM " +
             "TBL_DEVICE_INFO tdi " +
             "LEFT JOIN TBL_FIELD_INFO tfi on tfi.ID = tdi.FIELD_BELONG " +

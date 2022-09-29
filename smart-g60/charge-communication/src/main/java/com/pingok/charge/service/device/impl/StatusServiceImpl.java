@@ -93,7 +93,7 @@ public class StatusServiceImpl implements IStatusService {
                 deviceStatus.setStatusDetails(jsonObject.toJSONString());
             } else {
                 deviceStatus.setStatus(0);
-                deviceStatus.setStatusDesc("离线");
+                deviceStatus.setStatusDesc("网络异常");
             }
             post = HttpUtil.post(host + "/device-monitor/deviceMonitor", JSON.toJSONString(deviceStatus));
             if (!StringUtils.isEmpty(post)) {
@@ -127,7 +127,7 @@ public class StatusServiceImpl implements IStatusService {
             online = iHeartbeatService.ping(deviceInfo.getDeviceIp());
             if (!online) {
                 deviceStatus.setStatus(0);
-                deviceStatus.setStatusDesc("离线");
+                deviceStatus.setStatusDesc("网络异常");
             }
             post = HttpUtil.post(host + "/device-monitor/deviceMonitor", deviceStatus.toString());
             if (!StringUtils.isEmpty(post)) {

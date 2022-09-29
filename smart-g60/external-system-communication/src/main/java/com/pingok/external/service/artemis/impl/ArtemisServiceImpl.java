@@ -91,7 +91,7 @@ public class ArtemisServiceImpl implements IArtemisService {
                                             switch (deviceStatus.getInteger("online")){
                                                 case 0:
                                                     tblDeviceStatus.setStatus(0);
-                                                    tblDeviceStatus.setStatusDesc("离线");
+                                                    tblDeviceStatus.setStatusDesc("网络异常");
                                                     break;
                                                 case 1:
                                                     tblDeviceStatus.setStatus(1);
