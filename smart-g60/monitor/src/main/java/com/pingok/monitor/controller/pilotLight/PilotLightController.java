@@ -23,8 +23,15 @@ public class PilotLightController extends BaseController {
     @Autowired
     private RemoteKafkaService remoteKafkaService;
 
+    @GetMapping("/pilotLightStatus")
+    public AjaxResult pilotLightStatus() {
+        return AjaxResult.success(iPilotLightService.pilotLightStatus());
+    }
+
+
     /**
      * 引导灯控制
+     *
      * @param params：cmdType-预设模式； deviceId-设备ID；
      * @return
      */

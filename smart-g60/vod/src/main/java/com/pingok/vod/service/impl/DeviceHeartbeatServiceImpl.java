@@ -46,7 +46,7 @@ public class DeviceHeartbeatServiceImpl implements IDeviceHeartbeatService {
                     break;
                 case "OFFLINE":
                     tblDeviceStatus.setStatus(0);
-                    tblDeviceStatus.setStatusDesc("离线");
+                    tblDeviceStatus.setStatusDesc("网络异常");
                     break;
             }
             tblDeviceStatus.setTime(DateUtils.getNowDate());

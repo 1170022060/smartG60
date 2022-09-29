@@ -34,7 +34,7 @@ public class TblEventPassengerStatistics implements Serializable {
      * 日期  yyyy-mm-dd
      */
     @ApiModelProperty(value = "日期  yyyy-mm-dd")
-    private Date workDate;
+    private String workDate;
 
     /**
      * 小时

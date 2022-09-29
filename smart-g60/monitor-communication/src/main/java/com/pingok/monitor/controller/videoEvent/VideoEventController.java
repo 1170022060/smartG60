@@ -49,7 +49,7 @@ public class VideoEventController extends BaseController {
                 break;
             case "VEHICLE_EVENT":
                 TblEventVehicleEvent tblEventVehicleEvent = JSON.parseObject(data, TblEventVehicleEvent.class);
-                List<Integer> list = Arrays.asList(5,6,14,22,25,27,10016,15);
+                List<Integer> list = Arrays.asList(5,6,14,22,25,27,15,10016,31,32,34,35,36,37,40,41);
                 if(!list.contains(tblEventVehicleEvent.getUiEventType()) && StringUtils.isNotNull(tblEventVehicleEvent.getSzSourceCode()) && !tblEventVehicleEvent.getSzSourceCode().equals("0")){
                     iVideoEventService.vehicleEvent(tblEventVehicleEvent);
                     iVideoEventService.updateVehicleEvent(tblEventVehicleEvent);

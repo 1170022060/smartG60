@@ -147,13 +147,13 @@ public class DeviceMonitorController extends BaseController {
                         iDeviceService.updateStatus(deviceStatus);
                     } else {
                         deviceStatus.setStatus(0);
-                        deviceStatus.setStatusDesc("离线");
+                        deviceStatus.setStatusDesc("网络异常");
                         iDeviceService.updateStatus(deviceStatus);
 
                         deviceFault = new TblDeviceFault();
                         deviceFault.setDeviceId(d.getId());
                         deviceFault.setFaultId("offline");
-                        deviceFault.setFaultDescription("离线");
+                        deviceFault.setFaultDescription("网络异常");
                         deviceFault.setFaultTime(DateUtils.getNowDate());
                         deviceFault.setRegisterType(2);
                         deviceFault.setFaultType("warning");
@@ -313,13 +313,13 @@ public class DeviceMonitorController extends BaseController {
                         }
                     } else {
                         deviceStatus.setStatus(0);
-                        deviceStatus.setStatusDesc("离线");
+                        deviceStatus.setStatusDesc("网络异常");
                         iDeviceService.updateStatus(deviceStatus);
 
                         deviceFault = new TblDeviceFault();
                         deviceFault.setDeviceId(d.getId());
                         deviceFault.setFaultId("offline");
-                        deviceFault.setFaultDescription("离线");
+                        deviceFault.setFaultDescription("网络异常");
                         deviceFault.setFaultTime(DateUtils.getNowDate());
                         deviceFault.setRegisterType(2);
                         deviceFault.setFaultType("warning");

@@ -60,7 +60,7 @@ public class TblBridgeAcquisition implements Serializable {
     private Integer lowSensorSamplingFrequency;
 
     /**
-     * 设备状况 0-在线 1-离线
+     * 设备状况 0-在线 1-网络异常
      */
     private Integer status;
 
