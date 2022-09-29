@@ -32,4 +32,5 @@ public class TblEventParkingEvent implements Serializable {
     private Long ubiVideoId2; // Long 视频下载ID
     private Long ubiVideoId3; // Long 视频下载ID
     private Long ubiVideoId4; // Long 视频下载ID
+    private String szSourceCode;//相机ID
 }

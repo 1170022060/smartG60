@@ -211,6 +211,7 @@ public class EventController extends BaseController {
     public AjaxResult plateInfo(@RequestBody TblEventPlateInfo tblEventPlateInfo) {
         iVideoEventService.plateInfo(tblEventPlateInfo);
         iVideoEventService.parkVehInfo(tblEventPlateInfo);
+        iVideoEventService.parkingStatistics(tblEventPlateInfo);
         return AjaxResult.success();
     }
 

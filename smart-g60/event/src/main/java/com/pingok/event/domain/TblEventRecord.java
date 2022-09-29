@@ -127,6 +127,8 @@ public class TblEventRecord implements Serializable {
     private String remark;
     /** 上行、下行、双向 */
     private String direction;
+    /** 相机ID */
+    private String szSourceCode;
 
     @Transient
     private List<TblEventHandle> eventHandles;

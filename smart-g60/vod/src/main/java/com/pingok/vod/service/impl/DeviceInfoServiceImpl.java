@@ -80,7 +80,7 @@ public class DeviceInfoServiceImpl implements IDeviceInfoService {
                 tblDeviceInfo.setDeviceId(camera.getString("id"));
                 tblDeviceInfo.setDeviceName(camera.getString("name"));
                 tblDeviceInfo.setIsControl(camera.getInteger("ptz_able"));
-                tblDeviceInfo.setDeviceType(8);
+                tblDeviceInfo.setDeviceType(10);
                 tblDeviceInfoMapper.insert(tblDeviceInfo);
             } else {
                 tblDeviceInfo.setUpdateTime(DateUtils.getNowDate());

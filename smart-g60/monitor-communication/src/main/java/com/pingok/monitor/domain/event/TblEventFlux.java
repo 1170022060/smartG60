@@ -55,4 +55,5 @@ public class TblEventFlux implements Serializable {
     private Long ubiStartTime; // long 开始时间(s)
     private Long ubiEndTime; // long 结束时间(s)
     private Long ubiSectionId; // long 断面id
+    private String szSourceCode;//相机ID
 }

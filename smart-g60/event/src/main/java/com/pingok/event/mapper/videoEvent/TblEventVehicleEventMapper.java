@@ -9,6 +9,6 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface TblEventVehicleEventMapper extends CommonRepository<TblEventVehicleEvent> {
 
-    @Select("select Id from TBL_DEVICE_INFO where DEVICE_ID = #{deviceId}")
+    @Select("select GPS from TBL_DEVICE_INFO where DEVICE_ID = #{deviceId}")
     Object findByDeviceId(@Param("deviceId")String deviceId);
 }

@@ -95,7 +95,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
     @Async
     @Override
     public void updateFluxData(TblEventFlux tblEventFlux) {
-        int time = 1;
+        int time = 3;
         while (true) {
             try {
                 String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/flux", JSON.toJSONString(tblEventFlux));
@@ -115,7 +115,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } catch (Exception e) {
                 log.error(tblEventFlux.getUbiLogicId() + " 流量统计上报失败：" + e.getMessage());
             }
-            time += 2;
+            time += 3;
         }
         tblEventFluxMapper.delete(tblEventFlux);
     }
@@ -123,7 +123,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
     @Async
     @Override
     public void updatePlateInfo(TblEventPlateInfo tblEventPlateInfo) {
-        int time = 1;
+        int time = 3;
         while (true) {
             try {
                 String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/plateInfo", JSON.toJSONString(tblEventPlateInfo));
@@ -143,7 +143,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } catch (Exception e) {
                 log.error(tblEventPlateInfo.getUbiLogicId() + " 过车数据上报失败：" + e.getMessage());
             }
-            time += 2;
+            time += 3;
         }
         tblEventPlateInfoMapper.delete(tblEventPlateInfo);
     }
@@ -151,7 +151,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
     @Async
     @Override
     public void updateVehicleEvent(TblEventVehicleEvent tblEventVehicleEvent) {
-        int time = 1;
+        int time = 3;
         String post;
         while (true) {
             try {
@@ -172,18 +172,18 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } catch (Exception e) {
                 log.error(tblEventVehicleEvent.getUbiLogicId() + " 交通事件上报失败：" + e.getMessage());
             }
-            time += 2;
+            time += 3;
         }
 
         tblEventVehicleEventMapper.delete(tblEventVehicleEvent);
 
-        updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
+//        updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
     }
 
     @Async
     @Override
     public void updatePassengerFlow(TblEventPassengerFlow tblEventPassengerFlow) {
-        int time = 1;
+        int time = 3;
         while (true) {
             try {
                 String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/passengerFlow", JSON.toJSONString(tblEventPassengerFlow));
@@ -203,7 +203,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } catch (Exception e) {
                 log.error(tblEventPassengerFlow.getUiType() + " 客流量上报失败：" + e.getMessage());
             }
-            time += 2;
+            time += 3;
         }
         tblEventPassengerFlowMapper.delete(tblEventPassengerFlow);
     }
@@ -211,7 +211,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
     @Async
     @Override
     public void updateParkingEvent(TblEventParkingEvent tblEventParkingEvent) {
-        int time = 1;
+        int time = 3;
         while (true) {
             try {
                 String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/parkingEvent", JSON.toJSONString(tblEventParkingEvent));
@@ -231,7 +231,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } catch (Exception e) {
                 log.error(tblEventParkingEvent.getUbiLogicId() + " 货车检查事件上报失败：" + e.getMessage());
             }
-            time += 2;
+            time += 3;
         }
         tblEventParkingEventMapper.delete(tblEventParkingEvent);
     }
