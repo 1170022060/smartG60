@@ -16,43 +16,35 @@ import java.util.Map;
  */
 public interface TblEventPassengerFlowMapper extends CommonRepository<TblEventPassengerFlow> {
 
-    @Select({"<script>" +
-            "select tfi.ID as \"fieldId\"," +
-            "tfi.FIELD_NAME as \"fieldName\" from TBL_EVENT_PASSENGER_FLOW tep " +
-            "left join TBL_DEVICE_INFO tdi on tdi.ID=tep.UBI_SOURCE_ID " +
-            "left join TBL_FIELD_INFO tfi on tfi.ID=tdi.FIELD_BELONG " +
-            "where tep.UBI_START_TIME &gt;= #{time} " +
-            "group by tfi.ID,tfi.FIELD_NAME" +
-            "</script>"})
-    List<Map> field(@Param("time") Long time);
+    @Select("select ID as \"fieldId\"," +
+            "FIELD_NAME as \"fieldName\" from TBL_FIELD_INFO " +
+            "where TYPE=4 ")
+    List<Map> field();
 
-    @Select("select tfi.ID as \"deviceId\"," +
-            "tdi.DEVICE_NAME as \"deviceName\" from TBL_EVENT_PASSENGER_FLOW tep " +
-            "left join TBL_DEVICE_INFO tdi on tdi.ID=tep.UBI_SOURCE_ID " +
-            "left join TBL_FIELD_INFO tfi on tfi.ID=tdi.FIELD_BELONG " +
-            "where FIELD_ID = #{fieldId} and tep.UBI_START_TIME &gt;= #{time}")
-    List<Map> device(@Param("time") Long time, @Param("fieldId") Long fieldId);
+    @Select("select sum(ENTRY) as \"dailyTotal\" from TBL_EVENT_PASSENGER_STATISTICS " +
+            "where AREA_ID = #{areaId} and WORK_DATE = #{time} ")
+    Integer dailyTotal(@Param("time") String time,@Param("areaId") Integer areaId);
 
-    @Select("select sum(UI_GET_IN_PEOS) as \"dailyTotal\" from TBL_EVENT_PASSENGER_FLOW " +
-            "where UBI_SOURCE_ID = #{deviceId} and UBI_START_TIME &gt;= #{time} ")
-    Integer dailyTotal(@Param("time") Long time, @Param("deviceId") Long deviceId);
+    @Select("select IN_AMOUNT as \"actualFlow\" from TBL_EVENT_PASSENGER_STATISTICS " +
+            "where AREA_ID = #{areaId} and WORK_DATE = #{time} and rownum=1 " +
+            "order by HOUR desc ")
+    Integer actualFlow(@Param("time") String time,@Param("areaId") Integer areaId);
 
-    @Select("select UI_IN_PEOS as \"actualFlow\" from TBL_EVENT_PASSENGER_FLOW " +
-            "where UBI_SOURCE_ID = #{deviceId} and UBI_START_TIME &gt;= #{time} and rownum=1 " +
-            "order by UBI_START_TIME desc ")
-    Integer actualFlow(@Param("time") Long time, @Param("deviceId") Long deviceId);
+    @Select("select max(IN_AMOUNT) as \"peakFlow\" from TBL_EVENT_PASSENGER_STATISTICS " +
+            "where AREA_ID = #{areaId} and WORK_DATE = #{time} ")
+    Integer peakFlow(@Param("time") String time, @Param("areaId") Integer areaId);
 
-    @Select("select max(UI_IN_PEOS) as \"peakFlow\" from TBL_EVENT_PASSENGER_FLOW " +
-            "where UBI_SOURCE_ID = #{deviceId} and UBI_START_TIME &gt;= #{time} ")
-    Integer peakFlow(@Param("time") Long time, @Param("deviceId") Long deviceId);
+    @Select("select AVG(IN_AMOUNT) as \"peakFlow\" from TBL_EVENT_PASSENGER_STATISTICS " +
+            "where AREA_ID = #{areaId} and rownum<=4 " +
+            " and to_date(WORK_DATE ||' '||HOUR ||':00:00','yyyy-mm-dd hh24:mi:ss')<to_date(#{time} ||' ' ||#{hour} ||':00:00','yyyy-mm-dd hh24:mi:ss') " +
+            " order by to_date(WORK_DATE ||' '||HOUR ||':00:00','yyyy-mm-dd hh24:mi:ss') desc ")
+    Integer avgFlow(@Param("areaId") Integer areaId,@Param("time") String time, @Param("hour") Integer hour);
 
-    @Select("select AVG(UI_IN_PEOS) as \"peakFlow\" from TBL_EVENT_PASSENGER_FLOW " +
-            "where UBI_SOURCE_ID = #{deviceId} and UBI_START_TIME &gt;= (#{time}-240000) and UBI_START_TIME &lt;= #{time} ")
-    Integer avgFlow(@Param("time") Long time, @Param("deviceId") Long deviceId);
-
-    @Select("select sum(UI_GET_IN_PEOS) as \"peakFlow\" from TBL_EVENT_PASSENGER_FLOW " +
-            "where UBI_SOURCE_ID = #{deviceId} and UBI_START_TIME &gt;= (#{time}-60000) and UBI_START_TIME &lt;= #{time} ")
-    Integer hourFlow(@Param("time") Long time, @Param("deviceId") Long deviceId);
+    @Select("select IN_AMOUNT as \"peakFlow\" from TBL_EVENT_PASSENGER_STATISTICS " +
+            "where AREA_ID = #{areaId} and rownum=1 " +
+            " and to_date(WORK_DATE ||' '||HOUR ||':00:00','yyyy-mm-dd hh24:mi:ss')<to_date(#{time} ||' ' ||#{hour} ||':00:00','yyyy-mm-dd hh24:mi:ss') " +
+            " order by to_date(WORK_DATE ||' '||HOUR ||':00:00','yyyy-mm-dd hh24:mi:ss') desc ")
+    Integer hourFlow(@Param("areaId") Integer areaId,@Param("time") String time, @Param("hour") Integer hour);
 
 
 }
