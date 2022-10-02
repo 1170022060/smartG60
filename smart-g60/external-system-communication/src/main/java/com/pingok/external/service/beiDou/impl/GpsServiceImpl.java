@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -35,6 +36,11 @@ public class GpsServiceImpl implements IGpsService {
     private RemoteIdProducerService remoteIdProducerService;
     @Autowired
     private TblMaintainCarGpsLogMapper tblMaintainCarGpsLogMapper;
+
+    @Override
+    public List<TblMaintainCarGps> carGps() {
+        return tblMaintainCarGpsMapper.selectAll();
+    }
 
     @Override
     public void getCarsGps() {

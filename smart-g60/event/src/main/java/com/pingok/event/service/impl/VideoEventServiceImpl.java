@@ -100,6 +100,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             eventRecord.setLane(eventVehicleEvent.getUiVehicleLane());
             eventRecord.setEventId(eventVehicleEvent.getUbiLogicId());
             eventRecord.setCreateTime(DateUtils.getNowDate());
+            eventRecord.setSzSourceCode(eventVehicleEvent.getSzSourceCode());
             eventRecord.setStatus(0);
             if (eventVehicleEvent.getUbiSourceId() != null) {
                 Object o = tblEventVehicleEventMapper.findByDeviceId(eventVehicleEvent.getSzSourceCode());

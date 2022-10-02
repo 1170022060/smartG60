@@ -17,6 +17,16 @@ import java.util.Map;
  * @author xia
  */
 public interface TblSimulatedSortingMapper extends CommonRepository<TblSimulatedSorting> {
+
+
+    @Select({"SELECT  " +
+            "sum(FLOW) as \"flow\", " +
+            "sum(FEE)/100 as \"fee\" " +
+            "FROM " +
+            "TBL_SIMULATED_SORTING " +
+            "where SORTING_DATE = #{date}"})
+    Map statistics(@Param("date") String date);
+
     @Select({"SELECT " +
             "TO_CHAR( tgt.TRANS_TIME, 'yyyy-mm-dd' ) AS \"sortingDate\", " +
             "TO_CHAR( tgt.TRANS_TIME, 'hh24' ) AS \"sortingHour\", " +

@@ -61,6 +61,11 @@ public class EventServiceImpl implements IEventService {
     private RemoteEmergencySuppliesService remoteEmergencySuppliesService;
 
     @Override
+    public List<Map> searchEvent() {
+        return tblEventRecordMapper.searchEvent();
+    }
+
+    @Override
     public void updateEventVideo(Long ubiLogicId, String url) {
         Example example = new Example(TblEventRecord.class);
         Example.Criteria criteria = example.createCriteria();
@@ -429,6 +434,7 @@ public class EventServiceImpl implements IEventService {
         event.put("eventType", tblEventRecordMapper.translateEventType(tblEventRecord.getEventType()));
         event.put("eventTime", tblEventRecord.getEventTime());
         event.put("locationInterval", tblEventRecord.getLocationInterval());
+        event.put("deviceId", tblEventRecord.getSzSourceCode());
         event.put("img", tblEventRecord.getEventPhoto());
         event.put("video", tblEventRecord.getVideo());
 
