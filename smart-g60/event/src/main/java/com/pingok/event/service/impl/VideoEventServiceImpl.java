@@ -202,8 +202,28 @@ public class VideoEventServiceImpl implements IVideoEventService {
             statistics.setFieldId(fieldId);
             statistics.setEntry(entry);
             statistics.setOut(out);
-            statistics.setInAmount(entry - out);
-            tblEventPassengerStatisticsMapper.insert(statistics);
+
+
+            TblEventPassengerStatistics info = tblEventPassengerStatisticsMapper.selectOneByExample(example);
+            if (info == null) {
+                example = new Example(TblEventPassengerStatistics.class);
+                example.createCriteria().andEqualTo("workDate", workDate)
+                        .andEqualTo("hour", Integer.parseInt(DateUtils.dateTime(DateUtils.getPreTime(DateUtils.getNowDate(), -60), DateUtils.HH)))
+                        .andEqualTo("areaId", areaId)
+                        .andEqualTo("fieldId", fieldId);
+                info = tblEventPassengerStatisticsMapper.selectOneByExample(example);
+                if (info == null) {
+                    statistics.setInAmount(entry - out);
+                } else {
+                    statistics.setInAmount(info.getInAmount() + entry - out);
+                }
+                tblEventPassengerStatisticsMapper.insert(statistics);
+            } else {
+                info.setEntry(info.getEntry() + entry);
+                info.setOut(info.getOut() + out);
+                info.setInAmount(info.getInAmount() + entry - out);
+                tblEventPassengerStatisticsMapper.updateByPrimaryKey(info);
+            }
         } else {
             statistics.setEntry(statistics.getEntry() + entry);
             statistics.setOut(statistics.getOut() + out);
@@ -294,7 +314,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 example.createCriteria().andEqualTo("fieldId", 3940)
                         .andEqualTo("regionNum", "K-A");
                 tblParkingLot = tblParkingLotMapper.selectOneByExample(example);
-                tblParkingLot.setSurplus(tblParkingLot.getSurplus() + 1);
+                tblParkingLot.setSurplus((tblParkingLot.getSurplus() + 1) <= tblParkingLot.getTotal() ? (tblParkingLot.getSurplus() + 1) : tblParkingLot.getTotal());
                 tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
                 break;
             //北出
@@ -312,7 +332,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 example.createCriteria().andEqualTo("fieldId", 3941)
                         .andEqualTo("regionNum", "K-A");
                 tblParkingLot = tblParkingLotMapper.selectOneByExample(example);
-                tblParkingLot.setSurplus(tblParkingLot.getSurplus() + 1);
+                tblParkingLot.setSurplus((tblParkingLot.getSurplus() + 1) <= tblParkingLot.getTotal() ? (tblParkingLot.getSurplus() + 1) : tblParkingLot.getTotal());
                 tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
                 break;
         }
@@ -412,7 +432,16 @@ public class VideoEventServiceImpl implements IVideoEventService {
             statistics.setFieldId(fieldId);
             statistics.setOut(out);
             statistics.setVehType(vehType);
-            tblParkingStatisticsMapper.insert(statistics);
+
+            TblParkingStatistics info = tblParkingStatisticsMapper.selectOneByExample(example);
+            if (info == null) {
+                tblParkingStatisticsMapper.insert(statistics);
+            } else {
+                info.setEnter(info.getEnter() + enter);
+                info.setOut(info.getOut() + out);
+                info.setCurrentNum(info.getCurrentNum() + currentNum);
+                tblParkingStatisticsMapper.updateByPrimaryKey(info);
+            }
         } else {
             statistics.setEnter(statistics.getEnter() + enter);
             statistics.setOut(statistics.getOut() + out);

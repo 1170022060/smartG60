@@ -60,7 +60,7 @@ public class PilotLightServiceImpl implements IPilotLightService {
             String resp = HttpUtil.post(LightConfig.HOST + "/command/device/send", paramMap);
             if (!StringUtils.isEmpty(resp)) {
                 JSONObject obj = JSON.parseObject(resp);
-                if (obj.getInteger("code") != 200) {
+                if (obj.getInteger("status") != 200) {
                     log.error("超视距诱导等：发送指令失败，消息体内容——————————" + body.toJSONString());
                 }
             }
