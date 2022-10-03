@@ -79,6 +79,7 @@ public class VmsServiceImpl implements IVmsService {
                     break;
                 case InfoBoardConfig.SANSI_PLIST_MULTI:
                     ret = publishSansiPlistMulti(dev, playlst);
+//                    ret = 200;
                     break;
                 default:
                     retCode = 500;
@@ -375,44 +376,71 @@ public class VmsServiceImpl implements IVmsService {
             if (dev.getProtocol().equals(InfoBoardConfig.SANSI_PLIST_MULTI)) {
                 StringBuilder playlst1 = new StringBuilder();
                 playlst1.append("[playlist]" + newline);
-                playlst1.append("nwindows=" + pubList.size());
+                playlst1.append("nwindows=" + pubList.size() + newline);
                 StringBuilder playlst2 = new StringBuilder();
+                int regionNum = pubList.size(); //分几个区域
+                Integer w = dev.getWidth();
+                Integer h = dev.getHeight();
+                //计算区域的 宽，高
+                int regionWidth = w / regionNum - (regionNum - 1) * 8;
+                int regionHeight = h;
 
-                for (int i = 0; i < pubList.size(); ++i) {
-                    String pref = "";
+                for (int i = 0; i < regionNum; ++i) {
+                    String pref = ""; //前缀
                     if (i > 0) pref = "window" + i + "_";
+                    //计算区域的x，y
+                    int regionX = regionWidth * i;
+                    int regionY = 0;
                     List<VmsPubInfo> editList = pubList.get(i);
-                    playlst1.append("windows" + i + "_x=" + i * dev.getWidth() + newline);
-                    playlst1.append("windows" + i + "_y=0" + newline);
-                    playlst1.append("windows" + i + "_w=" + dev.getWidth() + newline);
-                    playlst1.append("windows" + i + "_y=" + dev.getHeight() + newline);
+                    playlst1.append("windows" + i + "_x=" + regionX + newline);
+                    playlst1.append("windows" + i + "_y=" + regionY + newline);
+                    playlst1.append("windows" + i + "_w=" + regionWidth + newline);
+                    playlst1.append("windows" + i + "_y=" + regionHeight + newline);
                     playlst1.append(pref + "item_no=" + editList.size() + newline);
                     for (int j = 0; j < editList.size(); ++j) {
                         playlst2.setLength(0); //清空
-                        int itemNo = 0;
-                        VmsPubInfo edit = editList.get(i);
+                        playlst2.append("item" + j + "=500,1,0,");
+                        VmsPubInfo edit = editList.get(j);
                         if (!StringUtils.isEmpty(edit.getPicId())) {
-                            playlst2.append("item" + itemNo + "=500,1,0,");
                             playlst2.append("\\B" + edit.getPicId() + newline);
-                        } else {
-                            //text <br>替换为\n
-                            String text = edit.getContent();
-                            String xy = "000000";
-                            //int fontSize = Tools.ToolFunc.GetFontSizeAndXY(text, ref xy);
-                            text = edit.getContent().replace("<br>", "\\n");
-                            playlst2.append("item" + itemNo + "=500,1,0,");
-                            playlst2.append("\\fs" + edit.getTypeface() + edit.getTypeface());
-                            playlst2.append("\\C" + xy + "\\c" + edit.getTextColor() + text);
                         }
-                        itemNo++;
+                        if(!StringUtils.isEmpty(edit.getContent())) {
+                            //text <br>替换为\n
+                            //计算文字的xy坐标，x按最长文字算，y按行数
+                            String[] splitText = edit.getContent().split("<br>");
+                            int xPos = 0, yPos = 0;
+                            int fontSize = Integer.parseInt(edit.getTextSize());
+                            if(splitText.length > 0) {
+                                String splitTemp = splitText[0];
+                                for(int idx = 1; idx < splitText.length; ++idx) {
+                                    if(splitTemp.length() > splitText[idx].length()) splitTemp = splitText[idx];
+                                }
+                                int textXLen = splitTemp.length() * fontSize;
+                                int textYLen = splitText.length * fontSize;
+                                if(textXLen > regionWidth) {
+                                    xPos = 0;
+                                } else {
+                                    xPos = (regionWidth - textXLen) / 2;
+                                }
+                                if(textYLen > regionHeight) {
+                                    yPos = 0;
+                                } else {
+                                    yPos = (regionHeight - textYLen) / 2;
+                                }
+                            }
+                            String xy = String.format("%03d%03d", xPos,yPos);
+                            String text = edit.getContent().replace("<br>", "\\n");
+                            playlst2.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, edit.getTypeface()) + fontSize + fontSize);
+                            playlst2.append("\\C" + xy + "\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, edit.getTextColor()) + text);
+                        }
+                        playlst1.append(playlst2 + newline);
                     }
 
-                    playlst1.append(newline);
+                    playlst1.append(newline + newline);
                 }
 
                 if (playlst2.toString() == "") return "";
 
-                playlst1.append(playlst2);
                 playlst = playlst1.toString();
             }
         }
@@ -484,6 +512,21 @@ public class VmsServiceImpl implements IVmsService {
                     fontCode = "33";
                     break;
             }
+        } else if(protocol == InfoBoardConfig.SANSI_PLIST_MULTI) {
+            switch (font) {
+                case "黑体":
+                    fontCode = "h";
+                    break;
+                case "楷体":
+                    fontCode = "k";
+                    break;
+                case "宋体":
+                    fontCode = "s";
+                    break;
+                case "仿宋体":
+                    fontCode = "f";
+                    break;
+            }
         }
         return fontCode;
     }
@@ -535,6 +578,18 @@ public class VmsServiceImpl implements IVmsService {
                     break;
                 case "黄":
                     fontColorCode = "22";
+                    break;
+            }
+        } else if(protocol == InfoBoardConfig.SANSI_PLIST_MULTI) {
+            switch (fontColor) {
+                case "红":
+                    fontColorCode = "255000000000";
+                    break;
+                case "绿":
+                    fontColorCode = "000255000000";
+                    break;
+                case "黄":
+                    fontColorCode = "255255000000";
                     break;
             }
         }

@@ -47,15 +47,15 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
         VmsInfoByTypeList F = new VmsInfoByTypeList();
         VmsInfoByTypeList S = new VmsInfoByTypeList();
         VmsInfoByTypeList X = new VmsInfoByTypeList();
-
+        String model = "";
         for (VmsInfoByType v : list) {
-            if(StringUtils.isEmpty(v.getDeviceModel())) continue;
-            switch (v.getDeviceModel()) {
-                case "A板": A.getVmsList().add(v); break;
-                case "F板": F.getVmsList().add(v); break;
-                case "小板": S.getVmsList().add(v); break;
-                case "限速板": X.getVmsList().add(v); break;
-            }
+            model = v.getDeviceModel();
+            if(StringUtils.isEmpty(model)) continue;
+            if(model.contains("A板")) A.getVmsList().add(v);
+            else if(model.contains("F板")) F.getVmsList().add(v);
+            else if(model.contains("小板")) S.getVmsList().add(v);
+            else if(model.contains("限速板")) X.getVmsList().add(v);
+            else {}
         }
 
         A.setDeviceName("A板");
