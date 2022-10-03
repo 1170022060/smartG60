@@ -16,6 +16,11 @@ import java.util.Map;
  */
 public interface IEventService {
 
+    /**
+     * 查询正在进行的事件
+     * @return
+     */
+    List<Map> searchEvent();
 
     /**
      * 保存事件视频

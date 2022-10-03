@@ -18,6 +18,11 @@ public class GpsController extends BaseController {
     @Autowired
     private IGpsService iGpsService;
 
+    @GetMapping("/carGps")
+    public AjaxResult carGps() {
+        return AjaxResult.success(iGpsService.carGps());
+    }
+
     @GetMapping()
     public AjaxResult getCarsGps() {
         iGpsService.getCarsGps();

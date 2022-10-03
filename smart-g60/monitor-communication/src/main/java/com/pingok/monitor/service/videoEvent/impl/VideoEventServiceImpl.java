@@ -70,7 +70,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
     @Override
     public void updateEventVideo(Long ubiLogicId) {
-        String url = iVideoService.getEventVideoById(ubiLogicId, 2, 2);
+        String url = iVideoService.getEventVideoById(ubiLogicId, 2, 1);
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("ubiLogicId", ubiLogicId);
         paramMap.put("url", url);
@@ -177,7 +177,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
         tblEventVehicleEventMapper.delete(tblEventVehicleEvent);
 
-//        updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
+        updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
     }
 
     @Async

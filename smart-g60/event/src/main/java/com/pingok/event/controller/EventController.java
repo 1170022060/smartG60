@@ -44,6 +44,12 @@ public class EventController extends BaseController {
     @Autowired
     private RemoteKafkaService remoteKafkaService;
 
+
+    @GetMapping("/searchEvent")
+    public AjaxResult searchEvent() {
+        return AjaxResult.success(iEventService.searchEvent());
+    }
+
     /**
      * 事件误报
      */
@@ -152,6 +158,7 @@ public class EventController extends BaseController {
         List<Map> list = iEventService.search(status);
         return getDataTable(list);
     }
+
 
     /**
      * 获取未确认、已确认事件列表

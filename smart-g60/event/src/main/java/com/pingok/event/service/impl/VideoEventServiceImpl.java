@@ -5,14 +5,18 @@ import com.pingok.event.domain.videoEvent.*;
 import com.pingok.event.mapper.videoEvent.*;
 import com.pingok.event.service.IEventService;
 import com.pingok.event.service.IVideoEventService;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
-import com.ruoyi.common.redis.service.RedisService;
+import com.ruoyi.common.core.utils.file.ImageUtils;
+import com.ruoyi.system.api.RemoteFileService;
 import com.ruoyi.system.api.RemoteIdProducerService;
+import com.ruoyi.system.api.domain.SysFile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
@@ -42,8 +46,9 @@ public class VideoEventServiceImpl implements IVideoEventService {
     private TblParkingVehicleInfoMapper tblParkingVehicleInfoMapper;
     @Autowired
     private IEventService iEventService;
+
     @Autowired
-    private RedisService redisService;
+    private RemoteFileService remoteFileService;
 
     @Autowired
     private TblParkingLotMapper tblParkingLotMapper;
@@ -80,6 +85,17 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
     @Override
     public void vehicleEvent(TblEventVehicleEvent tblEventVehicleEvent) {
+
+        String imageUrl = null;
+        if (StringUtils.isNotNull(tblEventVehicleEvent.getSzImg())) {
+            MultipartFile multipartFile = ImageUtils.base64ToMultipartFile(tblEventVehicleEvent.getSzImg());
+            R<SysFile> r = remoteFileService.upload(multipartFile);
+            if (r.getCode() == R.SUCCESS) {
+                imageUrl = r.getData().getUrl();
+            } else {
+                log.error("上传事件图片失败：" + r.getMsg());
+            }
+        }
         Example example = new Example(TblEventVehicleEvent.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("ubiLogicId", tblEventVehicleEvent.getUbiLogicId());
@@ -88,18 +104,19 @@ public class VideoEventServiceImpl implements IVideoEventService {
             eventVehicleEvent = new TblEventVehicleEvent();
             BeanUtils.copyNotNullProperties(tblEventVehicleEvent, eventVehicleEvent);
             eventVehicleEvent.setId(remoteIdProducerService.nextId());
+            eventVehicleEvent.setSzImg(imageUrl);
             tblEventVehicleEventMapper.insert(eventVehicleEvent);
 
             TblEventRecord eventRecord = new TblEventRecord();
             eventRecord.setEventType(eventVehicleEvent.getUiEventType().toString());
             eventRecord.setVehClass(eventVehicleEvent.getUiVehicleTypeDetail());
             eventRecord.setVehColor(eventVehicleEvent.getUiVehiclePlateColor());
-//            eventRecord.setEventPhoto(eventVehicleEvent.getSzImg());
             eventRecord.setEventTime(new Date(eventVehicleEvent.getUbiTime()));
             eventRecord.setSpeed(eventVehicleEvent.getUiVehicleSpeed());
             eventRecord.setLane(eventVehicleEvent.getUiVehicleLane());
             eventRecord.setEventId(eventVehicleEvent.getUbiLogicId());
             eventRecord.setCreateTime(DateUtils.getNowDate());
+            eventRecord.setSzSourceCode(eventVehicleEvent.getSzSourceCode());
             eventRecord.setStatus(0);
             if (eventVehicleEvent.getUbiSourceId() != null) {
                 Object o = tblEventVehicleEventMapper.findByDeviceId(eventVehicleEvent.getSzSourceCode());
@@ -107,6 +124,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                     eventRecord.setLocationInterval(String.valueOf(o));
                 }
             }
+            eventRecord.setEventPhoto(imageUrl);
             iEventService.insert(eventRecord);
         } else {
             BeanUtils.copyNotNullProperties(tblEventVehicleEvent, eventVehicleEvent);
@@ -201,8 +219,28 @@ public class VideoEventServiceImpl implements IVideoEventService {
             statistics.setFieldId(fieldId);
             statistics.setEntry(entry);
             statistics.setOut(out);
-            statistics.setInAmount(entry - out);
-            tblEventPassengerStatisticsMapper.insert(statistics);
+
+
+            TblEventPassengerStatistics info = tblEventPassengerStatisticsMapper.selectOneByExample(example);
+            if (info == null) {
+                example = new Example(TblEventPassengerStatistics.class);
+                example.createCriteria().andEqualTo("workDate", workDate)
+                        .andEqualTo("hour", Integer.parseInt(DateUtils.dateTime(DateUtils.getPreTime(DateUtils.getNowDate(), -60), DateUtils.HH)))
+                        .andEqualTo("areaId", areaId)
+                        .andEqualTo("fieldId", fieldId);
+                info = tblEventPassengerStatisticsMapper.selectOneByExample(example);
+                if (info == null) {
+                    statistics.setInAmount(entry - out);
+                } else {
+                    statistics.setInAmount(info.getInAmount() + entry - out);
+                }
+                tblEventPassengerStatisticsMapper.insert(statistics);
+            } else {
+                info.setEntry(info.getEntry() + entry);
+                info.setOut(info.getOut() + out);
+                info.setInAmount(info.getInAmount() + entry - out);
+                tblEventPassengerStatisticsMapper.updateByPrimaryKey(info);
+            }
         } else {
             statistics.setEntry(statistics.getEntry() + entry);
             statistics.setOut(statistics.getOut() + out);
@@ -293,7 +331,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 example.createCriteria().andEqualTo("fieldId", 3940)
                         .andEqualTo("regionNum", "K-A");
                 tblParkingLot = tblParkingLotMapper.selectOneByExample(example);
-                tblParkingLot.setSurplus(tblParkingLot.getSurplus() + 1);
+                tblParkingLot.setSurplus((tblParkingLot.getSurplus() + 1) <= tblParkingLot.getTotal() ? (tblParkingLot.getSurplus() + 1) : tblParkingLot.getTotal());
                 tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
                 break;
             //北出
@@ -311,7 +349,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 example.createCriteria().andEqualTo("fieldId", 3941)
                         .andEqualTo("regionNum", "K-A");
                 tblParkingLot = tblParkingLotMapper.selectOneByExample(example);
-                tblParkingLot.setSurplus(tblParkingLot.getSurplus() + 1);
+                tblParkingLot.setSurplus((tblParkingLot.getSurplus() + 1) <= tblParkingLot.getTotal() ? (tblParkingLot.getSurplus() + 1) : tblParkingLot.getTotal());
                 tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
                 break;
         }
@@ -411,7 +449,16 @@ public class VideoEventServiceImpl implements IVideoEventService {
             statistics.setFieldId(fieldId);
             statistics.setOut(out);
             statistics.setVehType(vehType);
-            tblParkingStatisticsMapper.insert(statistics);
+
+            TblParkingStatistics info = tblParkingStatisticsMapper.selectOneByExample(example);
+            if (info == null) {
+                tblParkingStatisticsMapper.insert(statistics);
+            } else {
+                info.setEnter(info.getEnter() + enter);
+                info.setOut(info.getOut() + out);
+                info.setCurrentNum(info.getCurrentNum() + currentNum);
+                tblParkingStatisticsMapper.updateByPrimaryKey(info);
+            }
         } else {
             statistics.setEnter(statistics.getEnter() + enter);
             statistics.setOut(statistics.getOut() + out);
