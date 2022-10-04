@@ -9,6 +9,12 @@ import java.util.Map;
  * @author qiumin
  */
 public interface IParkingLotService {
+
+    /**
+     * 流量统计
+     * @return
+     */
+    List<Map>  flowStatistics();
     /**
      * 根据场地id查询停车场信息
      * @param fieldNum 场地编号

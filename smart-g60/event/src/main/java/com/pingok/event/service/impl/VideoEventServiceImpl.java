@@ -96,6 +96,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 log.error("上传事件图片失败：" + r.getMsg());
             }
         }
+        tblEventVehicleEvent.setSzImg(imageUrl);
         Example example = new Example(TblEventVehicleEvent.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("ubiLogicId", tblEventVehicleEvent.getUbiLogicId());
@@ -104,7 +105,6 @@ public class VideoEventServiceImpl implements IVideoEventService {
             eventVehicleEvent = new TblEventVehicleEvent();
             BeanUtils.copyNotNullProperties(tblEventVehicleEvent, eventVehicleEvent);
             eventVehicleEvent.setId(remoteIdProducerService.nextId());
-            eventVehicleEvent.setSzImg(imageUrl);
             tblEventVehicleEventMapper.insert(eventVehicleEvent);
 
             TblEventRecord eventRecord = new TblEventRecord();
@@ -172,34 +172,34 @@ public class VideoEventServiceImpl implements IVideoEventService {
             case "187":
             case "188":
                 fieldId = 3940l;
-                areaId = 5;
+                areaId = 1;
                 break;
             //南服务区艺海棠
             case "189":
                 fieldId = 3940l;
-                areaId = 6;
+                areaId = 5;
                 break;
             //南服务区超市
             case "190":
             case "191":
                 fieldId = 3940l;
-                areaId = 7;
+                areaId = 2;
                 break;
             //南服务区男厕
             case "192":
                 fieldId = 3940l;
-                areaId = 8;
+                areaId = 3;
                 break;
             //南服务区女厕
             case "193":
             case "194":
                 fieldId = 3940l;
-                areaId = 9;
+                areaId = 4;
                 break;
             //南服务区司机之家
             case "195":
                 fieldId = 3940l;
-                areaId = 10;
+                areaId = 6;
                 break;
             default:
                 return;
@@ -230,21 +230,21 @@ public class VideoEventServiceImpl implements IVideoEventService {
                         .andEqualTo("fieldId", fieldId);
                 info = tblEventPassengerStatisticsMapper.selectOneByExample(example);
                 if (info == null) {
-                    statistics.setInAmount(entry - out);
+                    statistics.setInAmount((entry - out) >= 0 ? (entry - out) : 0);
                 } else {
-                    statistics.setInAmount(info.getInAmount() + entry - out);
+                    statistics.setInAmount((info.getInAmount() + entry - out) >= 0 ? (info.getInAmount() + entry - out) : 0);
                 }
                 tblEventPassengerStatisticsMapper.insert(statistics);
             } else {
                 info.setEntry(info.getEntry() + entry);
                 info.setOut(info.getOut() + out);
-                info.setInAmount(info.getInAmount() + entry - out);
+                info.setInAmount((info.getInAmount() + entry - out) >= 0 ? (info.getInAmount() + entry - out) : 0);
                 tblEventPassengerStatisticsMapper.updateByPrimaryKey(info);
             }
         } else {
             statistics.setEntry(statistics.getEntry() + entry);
             statistics.setOut(statistics.getOut() + out);
-            statistics.setInAmount(statistics.getInAmount() + entry - out);
+            statistics.setInAmount((statistics.getInAmount() + entry - out) >= 0 ? (statistics.getInAmount() + entry - out) : 0);
             tblEventPassengerStatisticsMapper.updateByPrimaryKey(statistics);
         }
     }

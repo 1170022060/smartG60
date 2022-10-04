@@ -32,6 +32,11 @@ public class DeviceFaultServiceImpl implements IDeviceFaultService {
     private RemoteIdProducerService remoteIdProducerService;
 
     @Override
+    public List<Map> faultStatistics() {
+        return tblDeviceFaultMapper.faultStatistics();
+    }
+
+    @Override
     public void add(TblDeviceFault tblDeviceFault) {
         tblDeviceFault.setId(remoteIdProducerService.nextId());
         tblDeviceFault.setStatus(1);

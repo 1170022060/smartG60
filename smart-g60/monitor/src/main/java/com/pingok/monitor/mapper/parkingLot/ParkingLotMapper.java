@@ -34,4 +34,64 @@ public interface ParkingLotMapper {
             "AND CEIL( ( SYSDATE - pvi.EN_TIME ) * 24 ) > (SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.timeout') " +
             "AND pvi.PARKING_ID = #{parkingId}")
     List<Map> findByParkingId(@Param("parkingId") Long parkingId);
+
+    @Select("SELECT " +
+            "count( tpvi.id ) AS \"carNum\", " +
+            "sum( " +
+            "CASE " +
+            "tpvi.VEH_CLASS  " +
+            "WHEN 0 THEN " +
+            "2  " +
+            "WHEN 1 THEN " +
+            "2  " +
+            "WHEN 2 THEN " +
+            "2  " +
+            "WHEN 3 THEN " +
+            "2  " +
+            "WHEN 4 THEN " +
+            "10  " +
+            "WHEN 5 THEN " +
+            "20  " +
+            "WHEN 6 THEN " +
+            "30  " +
+            "WHEN 7 THEN " +
+            "2  " +
+            "WHEN 8 THEN " +
+            "2  " +
+            "WHEN 9 THEN " +
+            "10 ELSE 2  " +
+            "END  " +
+            ") AS \"peopleNum\", " +
+            "teps.MAN AS \"man\", " +
+            "teps.WOMAN AS \"woman\", " +
+            "CASE " +
+            "tpl.FIELD_ID  " +
+            "WHEN 3940 THEN " +
+            "'南区'  " +
+            "WHEN 3941 THEN " +
+            "'北区'  " +
+            "END AS \"field\"  " +
+            "FROM " +
+            "TBL_PARKING_VEHICLE_INFO tpvi " +
+            "JOIN TBL_PARKING_LOT tpl ON tpvi.PARKING_ID = tpl.ID " +
+            "LEFT JOIN ( " +
+            "SELECT " +
+            "FIELD_ID, " +
+            "sum( decode( AREA_ID, 3, IN_AMOUNT, 0 ) ) AS MAN, " +
+            "sum( decode( AREA_ID, 4, IN_AMOUNT, 0 ) ) AS WOMAN  " +
+            "FROM " +
+            "TBL_EVENT_PASSENGER_STATISTICS  " +
+            "WHERE " +
+            "AREA_ID IN ( 3, 4 )  " +
+            "AND HOUR = TO_CHAR( SYSDATE, 'hh24' )  " +
+            "GROUP BY " +
+            "FIELD_ID  " +
+            ") teps ON teps.FIELD_ID = tpl.FIELD_ID  " +
+            "WHERE " +
+            "tpvi.EX_TIME IS NULL  " +
+            "GROUP BY " +
+            "tpl.FIELD_ID, " +
+            "teps.MAN, " +
+            "teps.WOMAN")
+    List<Map> flowStatistics();
 }

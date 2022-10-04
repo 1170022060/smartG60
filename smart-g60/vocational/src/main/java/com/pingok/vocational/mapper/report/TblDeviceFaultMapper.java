@@ -21,6 +21,23 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
 
     @Select({"<script>" +
             "SELECT " +
+            "sdd.DICT_LABEL AS \"deviceType\", " +
+            "count( tdf.ID ) AS \"num\"  " +
+            "FROM " +
+            "TBL_DEVICE_FAULT tdf " +
+            "JOIN TBL_DEVICE_INFO tdi ON tdf.DEVICE_ID = tdi.ID " +
+            "JOIN SYS_DICT_DATA sdd ON sdd.DICT_VALUE = tdi.DEVICE_TYPE  " +
+            "WHERE " +
+            "tdf.STATUS IN ( 0, 1 )  " +
+            "AND sdd.DICT_TYPE = 'device_type'  " +
+            "GROUP BY " +
+            "sdd.DICT_LABEL" +
+            "</script>"})
+    List<Map> faultStatistics();
+
+
+    @Select({"<script>" +
+            "SELECT " +
             "f.*  " +
             "FROM " +
             "( " +
