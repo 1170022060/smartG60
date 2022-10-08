@@ -28,6 +28,10 @@ public class EventPalnController extends BaseController {
     @Autowired
     private IEventPalnService iEventPalnService;
 
+    @GetMapping("/deviceList")
+    public AjaxResult deviceList(Long eventId, Long planId, Integer type) {
+        return AjaxResult.success(iEventPalnService.deviceList(eventId, planId, type));
+    }
 
     /**
      * 获取应急预案列表

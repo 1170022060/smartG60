@@ -183,5 +183,8 @@ public class TblDeviceInfo {
     @Excel(name = "备注")
     private String remark;
 
-
+    /**
+     * 设备类型
+     */
+    private Integer deviceType;
 }

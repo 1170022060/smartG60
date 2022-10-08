@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * @author
  * @time 2022/4/13 17:00
@@ -21,6 +23,11 @@ public class RemoteDeviceMonitorFallbackFactory implements FallbackFactory<Remot
     public RemoteDeviceMonitorService create(Throwable throwable) {
         log.error("设备监控服务调用失败:{}", throwable.getMessage());
         return new RemoteDeviceMonitorService() {
+
+            @Override
+            public R<List<TblDeviceInfo>> selectBydeviceType(Integer deviceType) {
+                return null;
+            }
 
             @Override
             public R pingHeartbeat() {

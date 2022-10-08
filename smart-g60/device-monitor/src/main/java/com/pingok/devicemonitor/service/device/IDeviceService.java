@@ -9,6 +9,12 @@ import java.util.List;
 public interface IDeviceService {
 
     /**
+     *
+     * @param deviceType
+     * @return
+     */
+    List<TblDeviceInfo> selectBydeviceType(Integer deviceType);
+    /**
      * 更具id查询
      * @param id
      * @return

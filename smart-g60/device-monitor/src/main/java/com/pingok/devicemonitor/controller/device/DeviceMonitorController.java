@@ -48,6 +48,11 @@ public class DeviceMonitorController extends BaseController {
     @Autowired
     private RemoteEventService remoteEventService;
 
+    @GetMapping("/selectBydeviceType")
+    public AjaxResult selectBydeviceType(@RequestParam(value = "deviceType") Integer deviceType) {
+        return AjaxResult.success(iDeviceService.selectBydeviceType(deviceType));
+    }
+
     @GetMapping("/selectByDeviceId")
     public AjaxResult selectByDeviceId(String deviceId) {
         return AjaxResult.success(iDeviceService.selectByDeviceId(deviceId));

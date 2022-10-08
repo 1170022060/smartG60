@@ -38,6 +38,13 @@ public class TblDeviceInfoServiceImpl implements TblDeviceInfoService {
     private TblDeviceCategoryService tblDeviceCategoryService;
 
     @Override
+    public List<TblDeviceInfo> selectByDeviceType(Integer deviceType) {
+        Example example = new Example(TblDeviceInfo.class);
+        example.createCriteria().andEqualTo("deviceType",deviceType);
+        return tblDeviceInfoMapper.selectByExample(example);
+    }
+
+    @Override
     public List<Map> findBydeviceCategory(Long deviceCategory) {
         return tblDeviceInfoMapper.findBydeviceCategory(deviceCategory);
     }

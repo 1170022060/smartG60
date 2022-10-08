@@ -18,7 +18,6 @@ import com.ruoyi.system.api.RemoteKafkaService;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +44,16 @@ public class EventController extends BaseController {
     private RemoteKafkaService remoteKafkaService;
 
 
+    /**
+     * 配置事件告警类型
+     */
+    @PostMapping("/eventAlarmAdd")
+    public AjaxResult eventAlarmAdd(@RequestBody List<Integer> eventTypes) {
+        iEventService.eventAlarmAdd(eventTypes);
+        return AjaxResult.success();
+    }
+
+
     @GetMapping("/searchEvent")
     public AjaxResult searchEvent() {
         return AjaxResult.success(iEventService.searchEvent());
@@ -53,7 +62,7 @@ public class EventController extends BaseController {
     /**
      * 事件误报
      */
-    @RequiresPermissions("event:eventControl:fault")
+//    @RequiresPermissions("event:eventControl:fault")
     @Log(title = "事件管理", businessType = BusinessType.UPDATE)
     @PutMapping("/fault")
     public AjaxResult fault(@RequestParam Long id, @RequestParam String remark) {
@@ -104,7 +113,7 @@ public class EventController extends BaseController {
     /**
      * 事件解除
      */
-    @RequiresPermissions("event:eventControl:relieve")
+//    @RequiresPermissions("event:eventControl:relieve")
     @Log(title = "事件管理", businessType = BusinessType.UPDATE)
     @PutMapping("/relieve")
     public AjaxResult relieve(@RequestParam Long id) {
@@ -115,7 +124,7 @@ public class EventController extends BaseController {
     /**
      * 填报处置内容
      */
-    @RequiresPermissions("event:eventControl:handleContent")
+//    @RequiresPermissions("event:eventControl:handleContent")
     @Log(title = "事件管理", businessType = BusinessType.UPDATE)
     @PutMapping("/handleContent")
     public AjaxResult handleContent(@RequestBody List<TblEventHandle> tblEventHandles) {
@@ -126,7 +135,7 @@ public class EventController extends BaseController {
     /**
      * 应急处置
      */
-    @RequiresPermissions("event:eventControl:handle")
+//    @RequiresPermissions("event:eventControl:handle")
     @Log(title = "事件管理", businessType = BusinessType.UPDATE)
     @PutMapping("/handle")
     public AjaxResult handle(@RequestParam Long id, @RequestBody JSONArray eventPlan) {
@@ -137,11 +146,11 @@ public class EventController extends BaseController {
     /**
      * 事件确认
      */
-    @RequiresPermissions("event:eventControl:confirm")
+//    @RequiresPermissions("event:eventControl:confirm")
     @Log(title = "事件管理", businessType = BusinessType.UPDATE)
     @PutMapping("/confirm")
-    public AjaxResult confirm(@RequestParam Long id,@RequestParam String eventType,@RequestParam String remark,@RequestParam String direction) {
-        iEventService.confirm(id,eventType,remark,direction);
+    public AjaxResult confirm(@RequestParam Long id, @RequestParam String eventType, @RequestParam String remark, @RequestParam String direction) {
+        iEventService.confirm(id, eventType, remark, direction);
         return AjaxResult.success();
     }
 

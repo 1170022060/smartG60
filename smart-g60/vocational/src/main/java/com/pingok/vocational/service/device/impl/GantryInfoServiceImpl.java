@@ -37,6 +37,12 @@ public class GantryInfoServiceImpl implements IGantryInfoService {
     @Autowired
     private TblDeviceCategoryService tblDeviceCategoryService;
 
+
+    @Override
+    public List<TblGantryInfo> selectAll() {
+        return tblGantryInfoMapper.selectAll();
+    }
+
     @Override
     public TblGantryInfo selectDeviceInfoGantryById(Long Id) {
         return tblGantryInfoMapper.selectByPrimaryKey(Id);
