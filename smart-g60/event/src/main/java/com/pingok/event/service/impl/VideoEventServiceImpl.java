@@ -239,7 +239,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                     .andEqualTo("areaId", areaId)
                     .andEqualTo("fieldId", fieldId);
             List<TblEventPassengerStatistics> infos = tblEventPassengerStatisticsMapper.selectByExample(example);
-            if (infos == null) {
+            if (infos == null || infos.size() <= 0) {
                 statistics.setInAmount((entry - out) >= 0 ? (entry - out) : 0);
             } else {
                 statistics.setInAmount((infos.get(0).getInAmount() + entry - out) >= 0 ? (infos.get(0).getInAmount() + entry - out) : 0);

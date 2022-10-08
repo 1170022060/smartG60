@@ -1,12 +1,19 @@
 package com.pingok.vocational.service.emergency.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.pingok.vocational.domain.device.TblDeviceInfo;
+import com.pingok.vocational.domain.device.TblGantryInfo;
 import com.pingok.vocational.domain.emergency.TblEventPaln;
 import com.pingok.vocational.domain.event.TblEventRecord;
 import com.pingok.vocational.mapper.emergency.TblEventPalnMapper;
 import com.pingok.vocational.mapper.event.TblEventRecordMapper;
+import com.pingok.vocational.service.device.IGantryInfoService;
+import com.pingok.vocational.service.device.TblDeviceInfoService;
 import com.pingok.vocational.service.emergency.IEventPalnService;
 import com.ruoyi.common.core.constant.UserConstants;
+import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.redis.service.RedisService;
@@ -21,6 +28,7 @@ import tk.mybatis.mapper.entity.Example;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * 应急预案 服务层处理
@@ -39,6 +47,147 @@ public class EventPalnServiceImpl implements IEventPalnService {
     @Autowired
     private RedisService redisService;
 
+    @Autowired
+    private TblDeviceInfoService tblDeviceInfoService;
+
+    @Autowired
+    private IGantryInfoService iGantryInfoService;
+
+
+    @Override
+    public JSONArray deviceList(Long eventId, Long planId, Integer type) {
+        JSONArray list = new JSONArray();
+        TblEventRecord eventRecord = tblEventRecordMapper.selectByPrimaryKey(eventId);
+        if (eventRecord == null) {
+            throw new ServiceException("事件ID错误");
+        }
+        String eventPileNo = eventRecord.getPileNo();
+        TblEventPaln eventPaln = tblEventPalnMapper.selectByPrimaryKey(planId);
+        if (eventPaln == null) {
+            throw new ServiceException("预案ID错误");
+        }
+        if (StringUtils.isNull(eventPaln.getPlanFunction())) {
+            return null;
+        }
+        JSONArray planFunction = JSON.parseArray(eventPaln.getPlanFunction());
+        Integer range = 0;
+        for (int i = 0; i < planFunction.size(); i++) {
+            if (type == planFunction.getJSONObject(i).getInteger("type")) {
+                range = planFunction.getJSONObject(i).getInteger("range");
+            }
+        }
+        Integer deviceType = null;
+        List<TblGantryInfo> gantryInfos = new ArrayList<>();
+        List<TblDeviceInfo> deviceInfos = new ArrayList<>();
+        switch (type) {
+            case 4:
+            case 5:
+                deviceType = 9;
+                deviceInfos = tblDeviceInfoService.selectByDeviceType(deviceType);
+                break;
+            case 6:
+                gantryInfos = iGantryInfoService.selectAll();
+                break;
+            case 7:
+                deviceType = 12;
+                deviceInfos = tblDeviceInfoService.selectByDeviceType(deviceType);
+                break;
+        }
+        JSONObject info;
+        if (StringUtils.isNull(eventPileNo)) {
+            for (TblDeviceInfo i : deviceInfos) {
+                info = new JSONObject();
+                info.put("deviceId", i.getDeviceId());
+                info.put("deviceName", i.getDeviceName());
+                info.put("pileNo", i.getPileNo());
+                info.put("direction", i.getDirection() == 1 ? "上行" : "下行");
+                list.add(info);
+            }
+            for (TblGantryInfo i : gantryInfos) {
+                info = new JSONObject();
+                info.put("deviceId", i.getDeviceId());
+                info.put("deviceName", i.getDeviceName());
+                info.put("pileNo", i.getPileNo());
+                info.put("direction", i.getDirection() == 1 ? "上行" : "下行");
+                list.add(info);
+            }
+        } else {
+            Integer position = Integer.parseInt(Pattern.compile("[^0-9]").matcher(eventPileNo).replaceAll("").trim());
+            Integer pileNo = 0;
+            for (TblDeviceInfo i : deviceInfos) {
+                pileNo = Integer.parseInt(Pattern.compile("[^0-9]").matcher(i.getPileNo()).replaceAll("").trim());
+                switch (eventRecord.getDirection()) {
+                    case "上行":
+                        if ((position - pileNo) >= 0 && (position - pileNo) <= range) {
+                            info = new JSONObject();
+                            info.put("deviceId", i.getDeviceId());
+                            info.put("deviceName", i.getDeviceName());
+                            info.put("pileNo", i.getPileNo());
+                            info.put("direction", i.getDirection() == 1 ? "上行" : "下行");
+                            list.add(info);
+                        }
+                        break;
+                    case "下行":
+                        if ((position - pileNo) <= 0 && (position - pileNo) <= -range) {
+                            info = new JSONObject();
+                            info.put("deviceId", i.getDeviceId());
+                            info.put("deviceName", i.getDeviceName());
+                            info.put("pileNo", i.getPileNo());
+                            info.put("direction", i.getDirection() == 1 ? "上行" : "下行");
+                            list.add(info);
+                        }
+                        break;
+                    case "双向":
+                        if (Math.abs(position - pileNo) <= range) {
+                            info = new JSONObject();
+                            info.put("deviceId", i.getDeviceId());
+                            info.put("deviceName", i.getDeviceName());
+                            info.put("pileNo", i.getPileNo());
+                            info.put("direction", i.getDirection() == 1 ? "上行" : "下行");
+                            list.add(info);
+                        }
+                        break;
+                }
+            }
+            for (TblGantryInfo i : gantryInfos) {
+                pileNo = Integer.parseInt(Pattern.compile("[^0-9]").matcher(i.getPileNo()).replaceAll("").trim());
+                switch (eventRecord.getDirection()) {
+                    case "上行":
+                        if ((position - pileNo) <= range) {
+                            info = new JSONObject();
+                            info.put("deviceId", i.getDeviceId());
+                            info.put("deviceName", i.getDeviceName());
+                            info.put("pileNo", i.getPileNo());
+                            info.put("direction", i.getDirection() == 1 ? "上行" : "下行");
+                            list.add(info);
+                        }
+                        break;
+                    case "下行":
+                        if ((position - pileNo) <= -range) {
+                            info = new JSONObject();
+                            info.put("deviceId", i.getDeviceId());
+                            info.put("deviceName", i.getDeviceName());
+                            info.put("pileNo", i.getPileNo());
+                            info.put("direction", i.getDirection() == 1 ? "上行" : "下行");
+                            list.add(info);
+                        }
+                        break;
+                    case "双向":
+                        if (Math.abs(position - pileNo) <= range) {
+                            info = new JSONObject();
+                            info.put("deviceId", i.getDeviceId());
+                            info.put("deviceName", i.getDeviceName());
+                            info.put("pileNo", i.getPileNo());
+                            info.put("direction", i.getDirection() == 1 ? "上行" : "下行");
+                            list.add(info);
+                        }
+                        break;
+                }
+
+            }
+        }
+        return list;
+    }
 
     @Override
     public List<TblEventPaln> findByEventType(Long id) {
@@ -46,7 +195,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
         TblEventRecord eventRecord = tblEventRecordMapper.selectByPrimaryKey(id);
         String[] gps = null;
         if (eventRecord.getLocationInterval() != null) {
-            gps = eventRecord.getLocationInterval().replace("[","").replace("]","").split(",");
+            gps = eventRecord.getLocationInterval().replace("[", "").replace("]", "").split(",");
         }
         String eventType = eventRecord.getEventType();
         if (eventType != null) {

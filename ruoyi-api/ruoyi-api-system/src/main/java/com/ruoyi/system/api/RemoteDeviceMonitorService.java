@@ -10,10 +10,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.w3c.dom.stylesheets.LinkStyle;
+
+import java.util.List;
 
 @FeignClient(contextId = "remoteDeviceMonitorService", value = ServiceNameConstants.DEVICE_MONITOR_SERVICE, fallbackFactory = RemoteDeviceMonitorFallbackFactory.class)
 public interface RemoteDeviceMonitorService {
 
+    @GetMapping("/deviceMonitor/selectBydeviceType")
+    R<List<TblDeviceInfo>> selectBydeviceType(@RequestParam(value = "deviceType") Integer deviceType);
 
     @GetMapping("/deviceMonitor/pingHeartbeat")
     R pingHeartbeat();

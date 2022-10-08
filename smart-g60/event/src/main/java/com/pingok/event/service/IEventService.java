@@ -3,6 +3,8 @@ package com.pingok.event.service;
 import com.alibaba.fastjson.JSONArray;
 import com.pingok.event.domain.TblEventHandle;
 import com.pingok.event.domain.TblEventRecord;
+import com.ruoyi.system.api.domain.device.TblDeviceInfo;
+import io.swagger.models.auth.In;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -15,6 +17,13 @@ import java.util.Map;
  * @author ruoyi
  */
 public interface IEventService {
+
+
+    /**
+     * 配置告警事件类型
+     * @param eventTypes
+     */
+    void eventAlarmAdd(List<Integer> eventTypes);
 
     /**
      * 查询正在进行的事件

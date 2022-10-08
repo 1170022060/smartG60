@@ -45,6 +45,13 @@ public class DeviceServiceImpl implements IDeviceService {
     private RemoteKafkaService remoteKafkaService;
 
     @Override
+    public List<TblDeviceInfo> selectBydeviceType(Integer deviceType) {
+        Example example = new Example(TblDeviceInfo.class);
+        example.createCriteria().andEqualTo("deviceType", deviceType);
+        return tblDeviceInfoMapper.selectByExample(example);
+    }
+
+    @Override
     public TblDeviceInfo info(Long id) {
         return tblDeviceInfoMapper.selectByPrimaryKey(id);
     }

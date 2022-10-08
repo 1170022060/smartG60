@@ -2,8 +2,10 @@ package com.pingok.event.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.event.domain.TblEventAlarm;
 import com.pingok.event.domain.TblEventHandle;
 import com.pingok.event.domain.TblEventRecord;
+import com.pingok.event.mapper.TblEventAlarmMapper;
 import com.pingok.event.mapper.TblEventHandleMapper;
 import com.pingok.event.mapper.TblEventRecordMapper;
 import com.pingok.event.service.IEventService;
@@ -15,10 +17,7 @@ import com.ruoyi.common.security.utils.DictUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.*;
 import com.ruoyi.system.api.domain.SysDictData;
-import com.ruoyi.system.api.domain.amap.TblAutoNaviMapRecord;
-import com.ruoyi.system.api.domain.baidu.TblBaiDuMapRecord;
 import com.ruoyi.system.api.domain.device.TblDeviceInfo;
-import com.ruoyi.system.api.domain.emergency.TblEmergencySupplies;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import com.ruoyi.system.api.domain.release.TblReleasePreset;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +58,27 @@ public class EventServiceImpl implements IEventService {
     private RemotePilotLightService remotePilotLightService;
     @Autowired
     private RemoteEmergencySuppliesService remoteEmergencySuppliesService;
+
+    @Autowired
+    private TblEventAlarmMapper tblEventAlarmMapper;
+
+
+    @Override
+    public void eventAlarmAdd(List<Integer> eventTypes) {
+        List<TblEventAlarm> list = tblEventAlarmMapper.selectAll();
+        for (TblEventAlarm t : list) {
+            tblEventAlarmMapper.delete(t);
+        }
+        TblEventAlarm eventAlarm;
+        if (eventTypes != null && eventTypes.size() > 0) {
+            for (Integer i : eventTypes) {
+                eventAlarm = new TblEventAlarm();
+                eventAlarm.setId(remoteIdProducerService.nextId());
+                eventAlarm.setEventType(i);
+                tblEventAlarmMapper.insert(eventAlarm);
+            }
+        }
+    }
 
     @Override
     public List<Map> searchEvent() {
@@ -172,85 +192,85 @@ public class EventServiceImpl implements IEventService {
             tblEventHandle.setType(plan.getInteger("type"));
             switch (plan.getInteger("type")) {
                 case 4://可变信息标志推送
-                    content = "情报板信息发布：";
-                    rReleasePreset = remoteReleaseService.idInfo(plan.getLong("presetId"));
-                    if (rReleasePreset == null) {
-                        if (rReleasePreset.getCode() == R.SUCCESS) {
-                            devicdIds = plan.getJSONArray("deviceIds");
-                            size = devicdIds.size();
-                            infos = new JSONArray();
-                            info = new JSONObject();
-                            tblReleasePreset = rReleasePreset.getData();
-                            info.put("text", tblReleasePreset.getPresetInfo());
-                            info.put("font", tblReleasePreset.getTypeface());
-                            info.put("fontColor", tblReleasePreset.getColor());
-                            info.put("fontSize", tblReleasePreset.getTypefaceSize());
-                            info.put("picId", tblReleasePreset.getPictureType());
-                            infos.add(info);
-                            vmsPublishInfo = new JSONObject();
-                            vmsPublishInfo.put("info", infos);
-                            for (int j = 0; j < size; j++) {
-                                rDevice = remoteDeviceInfoService.idInfo(devicdIds.getLong(j));
-                                if (rDevice != null && rDevice.getCode() == R.SUCCESS) {
-                                    deviceInfo = rDevice.getData();
-                                    vmsPublishInfo.put("deviceId", deviceInfo.getDeviceId());
-                                    r = remoteInfoBoardService.publish(vmsPublishInfo);
-                                    if (r != null) {
-                                        if (r != null && r.getCode() == R.SUCCESS) {
-                                            content += deviceInfo.getDeviceName() + "：信息发布成功；";
-
-                                        } else {
-                                            content += deviceInfo.getDeviceName() + "：信息发布失败，失败原因" + r.getMsg() + "；";
-                                        }
-                                    } else {
-                                        content += deviceInfo.getDeviceName() + "：信息发布失败，原因：服务无响应；";
-                                    }
-                                } else {
-                                    content += "ID为：" + devicdIds.getLong(j) + "的情报板设备信息不存在，推送失败；";
-                                }
-                            }
-                        } else {
-                            content += "ID为：" + plan.getLong("presetId") + "：预设信息查询失败，失败原因" + rReleasePreset.getMsg() + "；";
-                        }
-                    } else {
-                        content += "ID为：" + plan.getLong("presetId") + "的情报板预设信息不存在，推送失败；";
-                    }
+//                    content = "情报板信息发布：";
+//                    rReleasePreset = remoteReleaseService.idInfo(plan.getLong("presetId"));
+//                    if (rReleasePreset == null) {
+//                        if (rReleasePreset.getCode() == R.SUCCESS) {
+//                            devicdIds = plan.getJSONArray("deviceIds");
+//                            size = devicdIds.size();
+//                            infos = new JSONArray();
+//                            info = new JSONObject();
+//                            tblReleasePreset = rReleasePreset.getData();
+//                            info.put("text", tblReleasePreset.getPresetInfo());
+//                            info.put("font", tblReleasePreset.getTypeface());
+//                            info.put("fontColor", tblReleasePreset.getColor());
+//                            info.put("fontSize", tblReleasePreset.getTypefaceSize());
+//                            info.put("picId", tblReleasePreset.getPictureType());
+//                            infos.add(info);
+//                            vmsPublishInfo = new JSONObject();
+//                            vmsPublishInfo.put("info", infos);
+//                            for (int j = 0; j < size; j++) {
+//                                rDevice = remoteDeviceInfoService.idInfo(devicdIds.getLong(j));
+//                                if (rDevice != null && rDevice.getCode() == R.SUCCESS) {
+//                                    deviceInfo = rDevice.getData();
+//                                    vmsPublishInfo.put("deviceId", deviceInfo.getDeviceId());
+//                                    r = remoteInfoBoardService.publish(vmsPublishInfo);
+//                                    if (r != null) {
+//                                        if (r != null && r.getCode() == R.SUCCESS) {
+//                                            content += deviceInfo.getDeviceName() + "：信息发布成功；";
+//
+//                                        } else {
+//                                            content += deviceInfo.getDeviceName() + "：信息发布失败，失败原因" + r.getMsg() + "；";
+//                                        }
+//                                    } else {
+//                                        content += deviceInfo.getDeviceName() + "：信息发布失败，原因：服务无响应；";
+//                                    }
+//                                } else {
+//                                    content += "ID为：" + devicdIds.getLong(j) + "的情报板设备信息不存在，推送失败；";
+//                                }
+//                            }
+//                        } else {
+//                            content += "ID为：" + plan.getLong("presetId") + "：预设信息查询失败，失败原因" + rReleasePreset.getMsg() + "；";
+//                        }
+//                    } else {
+//                        content += "ID为：" + plan.getLong("presetId") + "的情报板预设信息不存在，推送失败；";
+//                    }
                     break;
                 case 5://可变限速标志推送
-                    content = "限速板信息发布：";
-                    rReleasePreset = remoteReleaseService.idInfo(plan.getLong("presetId"));
-                    if (rReleasePreset == null) {
-                        if (rReleasePreset.getCode() == R.SUCCESS) {
-                            devicdIds = plan.getJSONArray("deviceIds");
-                            size = devicdIds.size();
-                            tblReleasePreset = rReleasePreset.getData();
-                            vmsPublishInfo = new JSONObject();
-                            vmsPublishInfo.put("fmsValue", tblReleasePreset.getPresetInfo());
-                            for (int j = 0; j < size; j++) {
-                                rDevice = remoteDeviceInfoService.idInfo(devicdIds.getLong(j));
-                                if (rDevice != null && rDevice.getCode() == R.SUCCESS) {
-                                    deviceInfo = rDevice.getData();
-                                    vmsPublishInfo.put("deviceId", deviceInfo.getDeviceId());
-                                    r = remoteInfoBoardService.publish(vmsPublishInfo);
-                                    if (r != null) {
-                                        if (r != null && r.getCode() == R.SUCCESS) {
-                                            content += deviceInfo.getDeviceName() + "：信息发布成功；";
-                                        } else {
-                                            content += deviceInfo.getDeviceName() + "：信息发布失败，失败原因" + r.getMsg() + "；";
-                                        }
-                                    } else {
-                                        content += deviceInfo.getDeviceName() + "：信息发布失败，原因：服务无响应；";
-                                    }
-                                } else {
-                                    content += "ID为：" + devicdIds.getLong(j) + "的限速板设备信息不存在，推送失败；";
-                                }
-                            }
-                        } else {
-                            content += "ID为：" + plan.getLong("presetId") + "：预设信息查询失败，失败原因" + rReleasePreset.getMsg() + "；";
-                        }
-                    } else {
-                        content += "ID为：" + plan.getLong("presetId") + "的情报板预设信息不存在，推送失败；";
-                    }
+//                    content = "限速板信息发布：";
+//                    rReleasePreset = remoteReleaseService.idInfo(plan.getLong("presetId"));
+//                    if (rReleasePreset == null) {
+//                        if (rReleasePreset.getCode() == R.SUCCESS) {
+//                            devicdIds = plan.getJSONArray("deviceIds");
+//                            size = devicdIds.size();
+//                            tblReleasePreset = rReleasePreset.getData();
+//                            vmsPublishInfo = new JSONObject();
+//                            vmsPublishInfo.put("fmsValue", tblReleasePreset.getPresetInfo());
+//                            for (int j = 0; j < size; j++) {
+//                                rDevice = remoteDeviceInfoService.idInfo(devicdIds.getLong(j));
+//                                if (rDevice != null && rDevice.getCode() == R.SUCCESS) {
+//                                    deviceInfo = rDevice.getData();
+//                                    vmsPublishInfo.put("deviceId", deviceInfo.getDeviceId());
+//                                    r = remoteInfoBoardService.publish(vmsPublishInfo);
+//                                    if (r != null) {
+//                                        if (r != null && r.getCode() == R.SUCCESS) {
+//                                            content += deviceInfo.getDeviceName() + "：信息发布成功；";
+//                                        } else {
+//                                            content += deviceInfo.getDeviceName() + "：信息发布失败，失败原因" + r.getMsg() + "；";
+//                                        }
+//                                    } else {
+//                                        content += deviceInfo.getDeviceName() + "：信息发布失败，原因：服务无响应；";
+//                                    }
+//                                } else {
+//                                    content += "ID为：" + devicdIds.getLong(j) + "的限速板设备信息不存在，推送失败；";
+//                                }
+//                            }
+//                        } else {
+//                            content += "ID为：" + plan.getLong("presetId") + "：预设信息查询失败，失败原因" + rReleasePreset.getMsg() + "；";
+//                        }
+//                    } else {
+//                        content += "ID为：" + plan.getLong("presetId") + "的情报板预设信息不存在，推送失败；";
+//                    }
                     break;
                 case 6://ETC门架车路协同推送
                     break;
@@ -280,86 +300,85 @@ public class EventServiceImpl implements IEventService {
                             content += "ID为：" + devicdIds.getLong(j) + "的超视距诱导设备信息不存在，推送失败；";
                         }
                     }
-
                     break;
                 case 8://高德地图推送
-                    content = "高德地图事件推送：";
-                    TblAutoNaviMapRecord autoNaviMapRecord = new TblAutoNaviMapRecord();
-                    autoNaviMapRecord.setId(id);
-                    autoNaviMapRecord.setType(plan.getInteger("amapType"));
-                    autoNaviMapRecord.setLocs("[" + tblEventRecord.getLocationInterval() + "]");
-                    autoNaviMapRecord.setStartDate(tblEventRecord.getEventTime());
-                    autoNaviMapRecord.setDesc(tblEventRecord.getRemark());
-                    autoNaviMapRecord.setDirection(tblEventRecord.getDirection());
-                    r = remoteAmapService.eventPublish(autoNaviMapRecord);
-                    if (r != null) {
-                        if (r.getCode() == R.SUCCESS) {
-                            content += "推送成功";
-                        } else {
-                            content += "推送失败，原因：" + r.getMsg();
-                        }
-                    } else {
-                        content += "推送失败，原因：服务无响应；";
-                    }
+//                    content = "高德地图事件推送：";
+//                    TblAutoNaviMapRecord autoNaviMapRecord = new TblAutoNaviMapRecord();
+//                    autoNaviMapRecord.setId(id);
+//                    autoNaviMapRecord.setType(plan.getInteger("amapType"));
+//                    autoNaviMapRecord.setLocs("[" + tblEventRecord.getLocationInterval() + "]");
+//                    autoNaviMapRecord.setStartDate(tblEventRecord.getEventTime());
+//                    autoNaviMapRecord.setDesc(tblEventRecord.getRemark());
+//                    autoNaviMapRecord.setDirection(tblEventRecord.getDirection());
+//                    r = remoteAmapService.eventPublish(autoNaviMapRecord);
+//                    if (r != null) {
+//                        if (r.getCode() == R.SUCCESS) {
+//                            content += "推送成功";
+//                        } else {
+//                            content += "推送失败，原因：" + r.getMsg();
+//                        }
+//                    } else {
+//                        content += "推送失败，原因：服务无响应；";
+//                    }
                     break;
                 case 10://百度地图推送
-                    content = "百度地图事件推送：";
-                    TblBaiDuMapRecord baiDuMapRecord = new TblBaiDuMapRecord();
-                    baiDuMapRecord.setEventType(plan.getInteger("amapType"));
-                    baiDuMapRecord.setLevel(1);
-                    baiDuMapRecord.setTraffic(2);
-                    baiDuMapRecord.setDirection(tblEventRecord.getDirection());
-                    baiDuMapRecord.setStartTime(DateUtils.getDateShortTimestamp(tblEventRecord.getEventTime()).intValue());
-                    baiDuMapRecord.setEndTime(DateUtils.getDateShortTimestamp(DateUtils.getPreTime(tblEventRecord.getEventTime(), 600)).intValue());
-                    baiDuMapRecord.setContent(tblEventRecord.getRemark());
-                    baiDuMapRecord.setLocation(tblEventRecord.getLocationInterval());
-                    baiDuMapRecord.setLocationType(1);
-                    baiDuMapRecord.setDataType("test");
-                    r = remoteBaiDuService.eventPublish(baiDuMapRecord);
-                    if (r != null) {
-                        if (r.getCode() == R.SUCCESS) {
-                            content += "推送成功";
-                        } else {
-                            content += "推送失败，原因：" + r.getMsg();
-                        }
-                    } else {
-                        content += "推送失败，原因：服务无响应；";
-                    }
+//                    content = "百度地图事件推送：";
+//                    TblBaiDuMapRecord baiDuMapRecord = new TblBaiDuMapRecord();
+//                    baiDuMapRecord.setEventType(plan.getInteger("amapType"));
+//                    baiDuMapRecord.setLevel(1);
+//                    baiDuMapRecord.setTraffic(2);
+//                    baiDuMapRecord.setDirection(tblEventRecord.getDirection());
+//                    baiDuMapRecord.setStartTime(DateUtils.getDateShortTimestamp(tblEventRecord.getEventTime()).intValue());
+//                    baiDuMapRecord.setEndTime(DateUtils.getDateShortTimestamp(DateUtils.getPreTime(tblEventRecord.getEventTime(), 600)).intValue());
+//                    baiDuMapRecord.setContent(tblEventRecord.getRemark());
+//                    baiDuMapRecord.setLocation(tblEventRecord.getLocationInterval());
+//                    baiDuMapRecord.setLocationType(1);
+//                    baiDuMapRecord.setDataType("test");
+//                    r = remoteBaiDuService.eventPublish(baiDuMapRecord);
+//                    if (r != null) {
+//                        if (r.getCode() == R.SUCCESS) {
+//                            content += "推送成功";
+//                        } else {
+//                            content += "推送失败，原因：" + r.getMsg();
+//                        }
+//                    } else {
+//                        content += "推送失败，原因：服务无响应；";
+//                    }
                     break;
                 case 9://应急资源
-                    content = "应急资源：";
-                    JSONArray materials = plan.getJSONArray("materials");
-                    JSONObject object;
-                    if (materials != null && materials.size() > 0) {
-                        size = materials.size();
-                        TblEmergencySupplies emergencySupplies;
-                        R<TblEmergencySupplies> emergencySuppliesR;
-                        for (int j = 0; j < size; j++) {
-                            object = materials.getJSONObject(j);
-                            emergencySuppliesR = remoteEmergencySuppliesService.idInfo(object.getLong("materialId"));
-                            if (emergencySuppliesR == null) {
-                                if (emergencySuppliesR.getCode() == R.SUCCESS) {
-                                    emergencySupplies = emergencySuppliesR.getData();
-                                    switch (emergencySupplies.getSuppliesType()) {
-                                        case 1: //物资
-                                            content += "应急物资：" + emergencySupplies.getSuppliesName() + "，数量：" + emergencySupplies.getSuppliesCount() + "；";
-                                            break;
-                                        case 2: //专家
-                                            content += "应急专家：" + emergencySupplies.getExpertName() + "，联系电话：" + emergencySupplies.getExpertPhone() + "；";
-                                            break;
-                                        case 3: //车辆
-                                            content += "应急车辆：" + emergencySupplies.getVehPlate() + "，车牌颜色：" + emergencySupplies.getVehColor() + "，车型：" + emergencySupplies.getVehClass() + "；";
-                                            break;
-                                    }
-                                } else {
-                                    content += "ID为：" + object.getLong("materialId") + "的应急资源信息查询失败，原因：" + emergencySuppliesR.getMsg() + "；";
-                                }
-                            } else {
-                                content += "ID为：" + object.getLong("materialId") + "的应急资源信息查询失败，原因：应急资源查询服务无响应；";
-                            }
-
-                        }
-                    }
+//                    content = "应急资源：";
+//                    JSONArray materials = plan.getJSONArray("materials");
+//                    JSONObject object;
+//                    if (materials != null && materials.size() > 0) {
+//                        size = materials.size();
+//                        TblEmergencySupplies emergencySupplies;
+//                        R<TblEmergencySupplies> emergencySuppliesR;
+//                        for (int j = 0; j < size; j++) {
+//                            object = materials.getJSONObject(j);
+//                            emergencySuppliesR = remoteEmergencySuppliesService.idInfo(object.getLong("materialId"));
+//                            if (emergencySuppliesR == null) {
+//                                if (emergencySuppliesR.getCode() == R.SUCCESS) {
+//                                    emergencySupplies = emergencySuppliesR.getData();
+//                                    switch (emergencySupplies.getSuppliesType()) {
+//                                        case 1: //物资
+//                                            content += "应急物资：" + emergencySupplies.getSuppliesName() + "，数量：" + emergencySupplies.getSuppliesCount() + "；";
+//                                            break;
+//                                        case 2: //专家
+//                                            content += "应急专家：" + emergencySupplies.getExpertName() + "，联系电话：" + emergencySupplies.getExpertPhone() + "；";
+//                                            break;
+//                                        case 3: //车辆
+//                                            content += "应急车辆：" + emergencySupplies.getVehPlate() + "，车牌颜色：" + emergencySupplies.getVehColor() + "，车型：" + emergencySupplies.getVehClass() + "；";
+//                                            break;
+//                                    }
+//                                } else {
+//                                    content += "ID为：" + object.getLong("materialId") + "的应急资源信息查询失败，原因：" + emergencySuppliesR.getMsg() + "；";
+//                                }
+//                            } else {
+//                                content += "ID为：" + object.getLong("materialId") + "的应急资源信息查询失败，原因：应急资源查询服务无响应；";
+//                            }
+//
+//                        }
+//                    }
                     break;
             }
             tblEventHandle.setHandleContent(content);
@@ -399,7 +418,7 @@ public class EventServiceImpl implements IEventService {
         tblEventHandle.setHandleContent("事件确认，确认人：" + SecurityUtils.getUsername());
         tblEventHandleMapper.insert(tblEventHandle);
 
-        eventUpdate(tblEventRecord.getEventId(), 2, null, SecurityUtils.getUsername());
+//        eventUpdate(tblEventRecord.getEventId(), 2, null, SecurityUtils.getUsername());
     }
 
     @Override
@@ -429,23 +448,49 @@ public class EventServiceImpl implements IEventService {
         tblEventHandle.setHandleContent("事件发生");
         tblEventHandleMapper.insert(tblEventHandle);
 
-        JSONObject event = new JSONObject();
-        event.put("id", tblEventRecord.getId());
-        event.put("eventType", tblEventRecordMapper.translateEventType(tblEventRecord.getEventType()));
-        event.put("eventTime", tblEventRecord.getEventTime());
-        event.put("locationInterval", tblEventRecord.getLocationInterval());
-        event.put("deviceId", tblEventRecord.getSzSourceCode());
-        event.put("img", tblEventRecord.getEventPhoto());
-        event.put("video", tblEventRecord.getVideo());
+        List<TblEventAlarm> list = tblEventAlarmMapper.selectAll();
 
-        JSONObject data = new JSONObject();
-        data.put("type", "eventOccur");
-        data.put("data", event.toJSONString());
-        KafkaEnum kafkaEnum = new KafkaEnum();
-        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-        kafkaEnum.setData(data.toJSONString());
-        remoteKafkaService.send(kafkaEnum);
+        if (list == null || list.size() <= 0) {
+            JSONObject event = new JSONObject();
+            event.put("id", tblEventRecord.getId());
+            event.put("eventType", tblEventRecordMapper.translateEventType(tblEventRecord.getEventType()));
+            event.put("eventTime", tblEventRecord.getEventTime());
+            event.put("locationInterval", tblEventRecord.getLocationInterval());
+            event.put("deviceId", tblEventRecord.getSzSourceCode());
+            event.put("img", tblEventRecord.getEventPhoto());
+            event.put("video", tblEventRecord.getVideo());
 
+            JSONObject data = new JSONObject();
+            data.put("type", "eventOccur");
+            data.put("data", event.toJSONString());
+            KafkaEnum kafkaEnum = new KafkaEnum();
+            kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+            kafkaEnum.setData(data.toJSONString());
+            remoteKafkaService.send(kafkaEnum);
+        } else {
+            JSONObject event;
+            JSONObject data;
+            for (TblEventAlarm i : list) {
+                if(tblEventRecord.getEventType().equals(i.getEventType().toString())){
+                    event = new JSONObject();
+                    event.put("id", tblEventRecord.getId());
+                    event.put("eventType", tblEventRecordMapper.translateEventType(tblEventRecord.getEventType()));
+                    event.put("eventTime", tblEventRecord.getEventTime());
+                    event.put("locationInterval", tblEventRecord.getLocationInterval());
+                    event.put("deviceId", tblEventRecord.getSzSourceCode());
+                    event.put("img", tblEventRecord.getEventPhoto());
+                    event.put("video", tblEventRecord.getVideo());
+
+                    data = new JSONObject();
+                    data.put("type", "eventOccur");
+                    data.put("data", event.toJSONString());
+                    KafkaEnum kafkaEnum = new KafkaEnum();
+                    kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+                    kafkaEnum.setData(data.toJSONString());
+                    remoteKafkaService.send(kafkaEnum);
+                }
+            }
+        }
         return r;
     }
 
