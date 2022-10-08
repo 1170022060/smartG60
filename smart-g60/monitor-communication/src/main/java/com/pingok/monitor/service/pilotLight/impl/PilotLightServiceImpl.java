@@ -95,7 +95,17 @@ public class PilotLightServiceImpl implements IPilotLightService {
                         deviceStatus.setDeviceId(deviceId);
                         deviceStatus.setTime(DateUtils.getNowDate());
                         statusDetails = new JSONObject();
-                        statusDetails.put("model", obj.getJSONObject("data").getString("model"));
+                        switch (obj.getJSONObject("data").getString("model")){
+                            case "诱导模式":
+                                statusDetails.put("model", "行车诱导模式");
+                                break;
+                            case "预警模式":
+                                statusDetails.put("model", "防追尾预警模式");
+                                break;
+                            default:
+                                statusDetails.put("model", obj.getJSONObject("data").getString("model"));
+                                break;
+                        }
                         statusDetails.put("currentVisibility", obj.getJSONObject("data").getString("currentVisibility"));
                         deviceStatus.setStatus(1);
                         deviceStatus.setStatusDesc("正常");

@@ -9,6 +9,12 @@ import java.util.List;
 public interface IDeviceService {
 
     /**
+     * 更具id查询
+     * @param id
+     * @return
+     */
+    TblDeviceInfo info(Long id);
+    /**
      * 根据设备编号查询设备信息
      * @param deviceId
      * @return

@@ -185,8 +185,8 @@ public class EventController extends BaseController {
     /**
      * 新增应
      */
-    @RequiresPermissions("event:eventControl:add")
-    @Log(title = "事件管理", businessType = BusinessType.INSERT)
+//    @RequiresPermissions("event:eventControl:add")
+//    @Log(title = "事件管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody TblEventRecord tblEventRecord) {
         return toAjax(iEventService.insert(tblEventRecord));

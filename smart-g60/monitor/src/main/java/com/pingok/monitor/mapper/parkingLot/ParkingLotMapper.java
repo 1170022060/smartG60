@@ -62,8 +62,8 @@ public interface ParkingLotMapper {
             "10 ELSE 2  " +
             "END  " +
             ") AS \"peopleNum\", " +
-            "teps.MAN AS \"man\", " +
-            "teps.WOMAN AS \"woman\", " +
+            "nvl(teps.MAN,0) AS \"man\", " +
+            "nvl(teps.WOMAN,0) AS \"woman\", " +
             "CASE " +
             "tpl.FIELD_ID  " +
             "WHEN 3940 THEN " +

@@ -121,5 +121,10 @@ public class TblEventRecord implements Serializable {
     private String remark;
     /** 上行、下行、双向 */
     private String direction;
+    /**
+     * 桩号
+     */
+    private String pileNo;
+
 
 }

@@ -64,11 +64,6 @@ public class TblDeviceInfoServiceImpl implements TblDeviceInfoService {
         tblDeviceInfo.setCreateTime(new Date());
         tblDeviceInfo.setCreateUserId(SecurityUtils.getUserId());
         int r = tblDeviceInfoMapper.insert(tblDeviceInfo);
-        if (StringUtils.isNotNull(tblDeviceInfo.getGps())) {
-            String[] gps = tblDeviceInfo.getGps().split(",");
-            TblDeviceCategory deviceCategory = tblDeviceCategoryService.selectCategoryById(tblDeviceInfo.getDeviceCategory());
-            redisService.geoAdd(deviceCategory.getCategoryNum(),Double.valueOf(gps[0]),Double.valueOf(gps[1]),tblDeviceInfo.getId());
-        }
         return r;
     }
 
@@ -81,11 +76,6 @@ public class TblDeviceInfoServiceImpl implements TblDeviceInfoService {
         tblDeviceInfo.setUpdateTime(new Date());
         tblDeviceInfo.setUpdateUserId(SecurityUtils.getUserId());
         int r = tblDeviceInfoMapper.updateByPrimaryKeySelective(tblDeviceInfo);
-        if (StringUtils.isNotNull(tblDeviceInfo.getGps())) {
-            String[] gps = tblDeviceInfo.getGps().split(",");
-            TblDeviceCategory deviceCategory = tblDeviceCategoryService.selectCategoryById(tblDeviceInfo.getDeviceCategory());
-            redisService.geoAdd(deviceCategory.getCategoryNum(),Double.valueOf(gps[0]),Double.valueOf(gps[1]),tblDeviceInfo.getId());
-        }
         return r;
     }
 
