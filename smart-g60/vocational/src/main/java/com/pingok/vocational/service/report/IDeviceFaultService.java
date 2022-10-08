@@ -20,6 +20,11 @@ public interface IDeviceFaultService {
 
 
     /**
+     * 设备故障统计
+     * @return
+     */
+    List<Map> faultStatistics();
+    /**
      * 新增
      * @param tblDeviceFault
      */

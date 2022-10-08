@@ -33,6 +33,14 @@ public class DeviceFaultController extends BaseController {
     private IDeviceFaultService deviceFaultService;
 
     /**
+     * 查询详情
+     */
+    @GetMapping("/faultStatistics")
+    public AjaxResult faultStatistics() {
+        return AjaxResult.success(deviceFaultService.faultStatistics());
+    }
+
+    /**
      * 新增
      */
     @RequiresPermissions("vocational:deviceFault:add")
@@ -46,8 +54,6 @@ public class DeviceFaultController extends BaseController {
     /**
      * 查询详情
      */
-    @RequiresPermissions("vocational:deviceFault:findById")
-    @Log(title = "设备故障管理", businessType = BusinessType.OTHER)
     @GetMapping("/findById")
     public AjaxResult findById(@RequestParam Long id) {
         return AjaxResult.success(deviceFaultService.findById(id));
@@ -88,8 +94,6 @@ public class DeviceFaultController extends BaseController {
         return getDataTable(list);
     }
 
-    @RequiresPermissions("vocational:deviceFault:type")
-    @Log(title = "故障统计(按故障类型)-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/type")
     public TableDataInfo type(@RequestParam(name = "faultType", required = false) String faultType, @RequestParam(name = "startTime") Date startTime, @RequestParam(name = "endTime") Date endTime) {
         startPage();
@@ -98,8 +102,6 @@ public class DeviceFaultController extends BaseController {
         return getDataTable(type);
     }
 
-    @RequiresPermissions("vocational:deviceFault:exportType")
-    @Log(title = "故障统计(按故障类型)", businessType = BusinessType.EXPORT)
     @PostMapping("/exportType")
     @ResponseBody
     public void exportType(HttpServletResponse response, @RequestBody ReportVo reportVo) {

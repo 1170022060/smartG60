@@ -130,6 +130,11 @@ public class TblEventRecord implements Serializable {
     /** 相机ID */
     private String szSourceCode;
 
+    /**
+     * 桩号
+     */
+    private String pileNo;
+
     @Transient
     private List<TblEventHandle> eventHandles;
 

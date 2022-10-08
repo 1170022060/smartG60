@@ -18,7 +18,8 @@ public interface PilotLightMapper {
             "tdi.DEVICE_ID as \"deviceId\", " +
             "tdi.DEVICE_NAME as \"deviceName\", " +
             "tds.STATUS as \"status\", " +
-            "tds.STATUS_DETAILS as \"statusDetails\" " +
+            "tds.STATUS_DETAILS as \"statusDetails\", " +
+            "tdi.CAMERA_ID as \"cameraId\" " +
             "FROM " +
             "TBL_DEVICE_INFO tdi  " +
             "LEFT JOIN TBL_DEVICE_STATUS tds ON tds.DEVICE_ID = tdi.DEVICE_ID " +

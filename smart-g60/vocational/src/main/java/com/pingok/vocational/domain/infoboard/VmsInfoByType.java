@@ -59,4 +59,6 @@ public class VmsInfoByType {
     private String recent5;
 
     private String publishContent;
+
+    private String cameraId;
 }

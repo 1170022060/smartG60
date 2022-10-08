@@ -10,9 +10,11 @@ import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
 import com.ruoyi.common.core.utils.file.ImageUtils;
+import com.ruoyi.system.api.RemoteDeviceMonitorService;
 import com.ruoyi.system.api.RemoteFileService;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import com.ruoyi.system.api.domain.SysFile;
+import com.ruoyi.system.api.domain.device.TblDeviceInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,6 +61,9 @@ public class VideoEventServiceImpl implements IVideoEventService {
     @Autowired
     private TblEventPassengerStatisticsMapper tblEventPassengerStatisticsMapper;
 
+    @Autowired
+    private RemoteDeviceMonitorService remoteDeviceMonitorService;
+
 
     @Override
     public void fluxData(TblEventFlux tblEventFlux) {
@@ -96,6 +101,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 log.error("上传事件图片失败：" + r.getMsg());
             }
         }
+        tblEventVehicleEvent.setSzImg(imageUrl);
         Example example = new Example(TblEventVehicleEvent.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("ubiLogicId", tblEventVehicleEvent.getUbiLogicId());
@@ -104,9 +110,13 @@ public class VideoEventServiceImpl implements IVideoEventService {
             eventVehicleEvent = new TblEventVehicleEvent();
             BeanUtils.copyNotNullProperties(tblEventVehicleEvent, eventVehicleEvent);
             eventVehicleEvent.setId(remoteIdProducerService.nextId());
-            eventVehicleEvent.setSzImg(imageUrl);
             tblEventVehicleEventMapper.insert(eventVehicleEvent);
 
+            TblDeviceInfo info = null;
+            R<TblDeviceInfo> r = remoteDeviceMonitorService.selectByDeviceId(eventVehicleEvent.getSzSourceCode());
+            if (r.getCode() == R.SUCCESS && r.getData() != null) {
+                info = r.getData();
+            }
             TblEventRecord eventRecord = new TblEventRecord();
             eventRecord.setEventType(eventVehicleEvent.getUiEventType().toString());
             eventRecord.setVehClass(eventVehicleEvent.getUiVehicleTypeDetail());
@@ -118,6 +128,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             eventRecord.setCreateTime(DateUtils.getNowDate());
             eventRecord.setSzSourceCode(eventVehicleEvent.getSzSourceCode());
             eventRecord.setStatus(0);
+            eventRecord.setPileNo(info != null ? info.getPileNo() : null);
             if (eventVehicleEvent.getUbiSourceId() != null) {
                 Object o = tblEventVehicleEventMapper.findByDeviceId(eventVehicleEvent.getSzSourceCode());
                 if (o != null) {
@@ -172,34 +183,34 @@ public class VideoEventServiceImpl implements IVideoEventService {
             case "187":
             case "188":
                 fieldId = 3940l;
-                areaId = 5;
+                areaId = 1;
                 break;
             //南服务区艺海棠
             case "189":
                 fieldId = 3940l;
-                areaId = 6;
+                areaId = 5;
                 break;
             //南服务区超市
             case "190":
             case "191":
                 fieldId = 3940l;
-                areaId = 7;
+                areaId = 2;
                 break;
             //南服务区男厕
             case "192":
                 fieldId = 3940l;
-                areaId = 8;
+                areaId = 3;
                 break;
             //南服务区女厕
             case "193":
             case "194":
                 fieldId = 3940l;
-                areaId = 9;
+                areaId = 4;
                 break;
             //南服务区司机之家
             case "195":
                 fieldId = 3940l;
-                areaId = 10;
+                areaId = 6;
                 break;
             default:
                 return;
@@ -209,8 +220,10 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 .andEqualTo("hour", hour)
                 .andEqualTo("areaId", areaId)
                 .andEqualTo("fieldId", fieldId);
-        TblEventPassengerStatistics statistics = tblEventPassengerStatisticsMapper.selectOneByExample(example);
-        if (statistics == null) {
+        List<TblEventPassengerStatistics> list;
+        TblEventPassengerStatistics statistics;
+        list = tblEventPassengerStatisticsMapper.selectByExample(example);
+        if (list == null || list.size() <= 0) {
             statistics = new TblEventPassengerStatistics();
             statistics.setId(remoteIdProducerService.nextId());
             statistics.setWorkDate(workDate);
@@ -220,31 +233,24 @@ public class VideoEventServiceImpl implements IVideoEventService {
             statistics.setEntry(entry);
             statistics.setOut(out);
 
-
-            TblEventPassengerStatistics info = tblEventPassengerStatisticsMapper.selectOneByExample(example);
-            if (info == null) {
-                example = new Example(TblEventPassengerStatistics.class);
-                example.createCriteria().andEqualTo("workDate", workDate)
-                        .andEqualTo("hour", Integer.parseInt(DateUtils.dateTime(DateUtils.getPreTime(DateUtils.getNowDate(), -60), DateUtils.HH)))
-                        .andEqualTo("areaId", areaId)
-                        .andEqualTo("fieldId", fieldId);
-                info = tblEventPassengerStatisticsMapper.selectOneByExample(example);
-                if (info == null) {
-                    statistics.setInAmount(entry - out);
-                } else {
-                    statistics.setInAmount(info.getInAmount() + entry - out);
-                }
-                tblEventPassengerStatisticsMapper.insert(statistics);
+            example = new Example(TblEventPassengerStatistics.class);
+            example.createCriteria().andEqualTo("workDate", workDate)
+                    .andEqualTo("hour", Integer.parseInt(DateUtils.dateTime(DateUtils.getPreTime(DateUtils.getNowDate(), -60), DateUtils.HH)))
+                    .andEqualTo("areaId", areaId)
+                    .andEqualTo("fieldId", fieldId);
+            List<TblEventPassengerStatistics> infos = tblEventPassengerStatisticsMapper.selectByExample(example);
+            if (infos == null) {
+                statistics.setInAmount((entry - out) >= 0 ? (entry - out) : 0);
             } else {
-                info.setEntry(info.getEntry() + entry);
-                info.setOut(info.getOut() + out);
-                info.setInAmount(info.getInAmount() + entry - out);
-                tblEventPassengerStatisticsMapper.updateByPrimaryKey(info);
+                statistics.setInAmount((infos.get(0).getInAmount() + entry - out) >= 0 ? (infos.get(0).getInAmount() + entry - out) : 0);
             }
+            tblEventPassengerStatisticsMapper.insert(statistics);
+
         } else {
+            statistics = list.get(0);
             statistics.setEntry(statistics.getEntry() + entry);
             statistics.setOut(statistics.getOut() + out);
-            statistics.setInAmount(statistics.getInAmount() + entry - out);
+            statistics.setInAmount((statistics.getInAmount() + entry - out) >= 0 ? (statistics.getInAmount() + entry - out) : 0);
             tblEventPassengerStatisticsMapper.updateByPrimaryKey(statistics);
         }
     }
@@ -432,38 +438,34 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 vehType = 2;
                 break;
         }
-        TblParkingStatistics statistics;
-        Example example = new Example(TblParkingStatistics.class);
-        example.createCriteria().andEqualTo("fieldId", fieldId)
-                .andEqualTo("vehType", vehType)
-                .andEqualTo("day", day)
-                .andEqualTo("hour", hour);
-        statistics = tblParkingStatisticsMapper.selectOneByExample(example);
-        if (StringUtils.isNull(statistics)) {
-            statistics = new TblParkingStatistics();
-            statistics.setId(remoteIdProducerService.nextId());
-            statistics.setDay(day);
-            statistics.setCurrentNum(currentNum);
-            statistics.setEnter(enter);
-            statistics.setHour(hour);
-            statistics.setFieldId(fieldId);
-            statistics.setOut(out);
-            statistics.setVehType(vehType);
-
-            TblParkingStatistics info = tblParkingStatisticsMapper.selectOneByExample(example);
-            if (info == null) {
+        if (vehType != 0) {
+            List<TblParkingStatistics> list;
+            TblParkingStatistics statistics;
+            Example example = new Example(TblParkingStatistics.class);
+            example.createCriteria().andEqualTo("fieldId", fieldId)
+                    .andEqualTo("vehType", vehType)
+                    .andEqualTo("day", day)
+                    .andEqualTo("hour", hour);
+            list = tblParkingStatisticsMapper.selectByExample(example);
+            if (list == null || list.size() <= 0) {
+                statistics = new TblParkingStatistics();
+                statistics.setId(remoteIdProducerService.nextId());
+                statistics.setDay(day);
+                statistics.setCurrentNum(currentNum >= 0 ? currentNum : 0);
+                statistics.setEnter(enter);
+                statistics.setHour(hour);
+                statistics.setFieldId(fieldId);
+                statistics.setOut(out);
+                statistics.setVehType(vehType);
                 tblParkingStatisticsMapper.insert(statistics);
+
             } else {
-                info.setEnter(info.getEnter() + enter);
-                info.setOut(info.getOut() + out);
-                info.setCurrentNum(info.getCurrentNum() + currentNum);
-                tblParkingStatisticsMapper.updateByPrimaryKey(info);
+                statistics = list.get(0);
+                statistics.setEnter(statistics.getEnter() + enter);
+                statistics.setOut(statistics.getOut() + out);
+                statistics.setCurrentNum((statistics.getCurrentNum() + currentNum) >= 0 ? (statistics.getCurrentNum() + currentNum) : 0);
+                tblParkingStatisticsMapper.updateByPrimaryKey(statistics);
             }
-        } else {
-            statistics.setEnter(statistics.getEnter() + enter);
-            statistics.setOut(statistics.getOut() + out);
-            statistics.setCurrentNum(statistics.getCurrentNum() + currentNum);
-            tblParkingStatisticsMapper.updateByPrimaryKey(statistics);
         }
     }
 }

@@ -20,6 +20,11 @@ public class ParkingLotServiceImpl implements IParkingLotService {
     private ParkingLotMapper parkingLotMapper;
 
     @Override
+    public List<Map> flowStatistics() {
+        return parkingLotMapper.flowStatistics();
+    }
+
+    @Override
     public List<Map> findByFieldNum(String fieldNum) {
         List<Map> list = parkingLotMapper.findByFieldNum(fieldNum);
         for (Map m : list) {
