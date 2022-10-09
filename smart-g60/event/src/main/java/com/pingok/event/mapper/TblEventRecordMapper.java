@@ -65,7 +65,7 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "ter.VEH_PLATE AS \"vehPlate\", " +
             "sdd2.DICT_LABEL AS \"vehColor\", " +
             "ter.EVENT_PHOTO AS \"eventPhoto\", " +
-            "ter.EVENT_TIME AS \"eventTime\", " +
+            "to_char(ter.EVENT_TIME, 'yyyy-mm-dd hh24:mi:ss') AS \"eventTime\", " +
             "ter.SPEED AS \"speed\", " +
             "ter.LANE AS \"lane\", " +
             "ter.VIDEO AS \"video\", " +
@@ -81,8 +81,8 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "WHEN -1 THEN " +
             "'误报'  " +
             "END AS \"statusDesc\", " +
-            "ter.CONFIRM_TIME AS \"confirmTime\", " +
-            "ter.RELIEVE_TIME AS \"relieveTime\", " +
+            "to_char(ter.CONFIRM_TIME, 'yyyy-mm-dd hh24:mi:ss') AS \"confirmTime\", " +
+            "to_char(ter.RELIEVE_TIME, 'yyyy-mm-dd hh24:mi:ss') AS \"relieveTime\", " +
             "usr.USER_NAME AS \"confirmUser\", " +
             "usr1.USER_NAME AS \"relieveUser\"  " +
             "FROM " +

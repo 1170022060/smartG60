@@ -141,7 +141,7 @@ public class EventServiceImpl implements IEventService {
         tblEventHandle.setHandleTime(DateUtils.getNowDate());
         tblEventHandle.setCreateTime(DateUtils.getNowDate());
         tblEventHandle.setUserId(SecurityUtils.getUserId());
-        tblEventHandle.setHandleContent("事件解除，确认人：" + SecurityUtils.getUsername());
+        tblEventHandle.setHandleContent("事件解除");
         tblEventHandleMapper.insert(tblEventHandle);
 //
 //        JSONObject event = new JSONObject();
@@ -182,7 +182,7 @@ public class EventServiceImpl implements IEventService {
         tblEventHandle.setHandleTime(DateUtils.getNowDate());
         tblEventHandle.setCreateTime(DateUtils.getNowDate());
         tblEventHandle.setUserId(SecurityUtils.getUserId());
-        tblEventHandle.setHandleContent("开始应急处置，确认人：" + SecurityUtils.getUsername());
+        tblEventHandle.setHandleContent("开始应急处置");
         tblEventHandleMapper.insert(tblEventHandle);
         JSONObject vmsPublishInfo;
         R<TblDeviceInfo> rDevice;
@@ -458,7 +458,7 @@ public class EventServiceImpl implements IEventService {
         tblEventHandle.setHandleTime(tblEventRecord.getEventTime());
         tblEventHandle.setCreateTime(DateUtils.getNowDate());
         tblEventHandle.setUserId(SecurityUtils.getUserId());
-        tblEventHandle.setHandleContent("事件确认，确认人：" + SecurityUtils.getUsername());
+        tblEventHandle.setHandleContent("事件确认");
         tblEventHandleMapper.insert(tblEventHandle);
 
 //        eventUpdate(tblEventRecord.getEventId(), 2, null, SecurityUtils.getUsername());
