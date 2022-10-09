@@ -1,6 +1,7 @@
 package com.pingok.monitor.service.common.Impl;
 
 import com.pingok.monitor.service.common.ISocketService;
+import com.pingok.monitor.utils.ByteUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.DataInputStream;
@@ -22,6 +23,7 @@ public class SocketServiceImpl implements ISocketService {
         SocketAddress endpoint = new InetSocketAddress(host, port);
         try {
             socket.connect(endpoint, 3000);
+            socket.setSoTimeout(3000);
         } catch (IOException e) {
             System.out.println("初始化socket失败，ip端口：" + host + ":" + port);
             return null;
@@ -59,6 +61,7 @@ public class SocketServiceImpl implements ISocketService {
         try {
             send(bytes, socket);
             byte[] receive = receive(socket);
+            System.out.println("返回报文：" + ByteUtils.bytes2hex(receive));
             if(receive == null || receive.length == 0){
                 retCode = -1;
             }

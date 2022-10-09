@@ -14,4 +14,15 @@ public class VmsPubInfo {
     private String textSize;
     private String textColor;
     private String picId;
+
+    public VmsPubInfo() {}
+    public VmsPubInfo(String text, String font, String size, String color) {
+        content = text;
+        typeface = font;
+        textSize = size;
+        color = textColor;
+    }
+    public VmsPubInfo(String pId) {
+        picId = pId;
+    }
 }
