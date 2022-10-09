@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,19 @@ public class EventServiceImpl implements IEventService {
     @Autowired
     private TblEventAlarmMapper tblEventAlarmMapper;
 
+    @Autowired
+    private RemoteDeviceMonitorService remoteDeviceMonitorService;
+
+
+    @Override
+    public List<String> eventAlarmAll() {
+        List<TblEventAlarm> list = tblEventAlarmMapper.selectAll();
+        List<String> types = new ArrayList<>();
+        for (TblEventAlarm i : list) {
+            types.add(i.getEventType().toString());
+        }
+        return types;
+    }
 
     @Override
     public void eventAlarmAdd(List<Integer> eventTypes) {
@@ -129,18 +143,18 @@ public class EventServiceImpl implements IEventService {
         tblEventHandle.setUserId(SecurityUtils.getUserId());
         tblEventHandle.setHandleContent("事件解除，确认人：" + SecurityUtils.getUsername());
         tblEventHandleMapper.insert(tblEventHandle);
-
-        JSONObject event = new JSONObject();
-        event.put("id", tblEventRecord.getId());
-        event.put("time", tblEventRecord.getEventTime());
-
-        JSONObject data = new JSONObject();
-        data.put("type", "eventRelease");
-        data.put("data", event.toJSONString());
-        KafkaEnum kafkaEnum = new KafkaEnum();
-        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-        kafkaEnum.setData(data.toJSONString());
-        remoteKafkaService.send(kafkaEnum);
+//
+//        JSONObject event = new JSONObject();
+//        event.put("id", tblEventRecord.getId());
+//        event.put("time", tblEventRecord.getEventTime());
+//
+//        JSONObject data = new JSONObject();
+//        data.put("type", "eventRelease");
+//        data.put("data", event.toJSONString());
+//        KafkaEnum kafkaEnum = new KafkaEnum();
+//        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+//        kafkaEnum.setData(data.toJSONString());
+//        remoteKafkaService.send(kafkaEnum);
     }
 
     @Override
@@ -149,6 +163,7 @@ public class EventServiceImpl implements IEventService {
             tblEventHandle.setId(remoteIdProducerService.nextId());
             tblEventHandle.setCreateTime(DateUtils.getNowDate());
             tblEventHandle.setUserId(SecurityUtils.getUserId());
+            tblEventHandle.setHandleTime(DateUtils.getNowDate());
             tblEventHandleMapper.insert(tblEventHandle);
         }
     }
@@ -178,6 +193,7 @@ public class EventServiceImpl implements IEventService {
         JSONArray devicdIds;
         JSONArray infos;
         JSONObject info;
+        JSONObject data;
         String content;
         int size;
         for (int i = 0; i < eventPlan.size(); i++) {
@@ -192,43 +208,52 @@ public class EventServiceImpl implements IEventService {
             tblEventHandle.setType(plan.getInteger("type"));
             switch (plan.getInteger("type")) {
                 case 4://可变信息标志推送
-//                    content = "情报板信息发布：";
+                    content = "情报板信息发布：";
 //                    rReleasePreset = remoteReleaseService.idInfo(plan.getLong("presetId"));
-//                    if (rReleasePreset == null) {
+//                    if (rReleasePreset != null) {
 //                        if (rReleasePreset.getCode() == R.SUCCESS) {
-//                            devicdIds = plan.getJSONArray("deviceIds");
-//                            size = devicdIds.size();
-//                            infos = new JSONArray();
-//                            info = new JSONObject();
-//                            tblReleasePreset = rReleasePreset.getData();
-//                            info.put("text", tblReleasePreset.getPresetInfo());
-//                            info.put("font", tblReleasePreset.getTypeface());
-//                            info.put("fontColor", tblReleasePreset.getColor());
-//                            info.put("fontSize", tblReleasePreset.getTypefaceSize());
-//                            info.put("picId", tblReleasePreset.getPictureType());
-//                            infos.add(info);
-//                            vmsPublishInfo = new JSONObject();
-//                            vmsPublishInfo.put("info", infos);
-//                            for (int j = 0; j < size; j++) {
-//                                rDevice = remoteDeviceInfoService.idInfo(devicdIds.getLong(j));
-//                                if (rDevice != null && rDevice.getCode() == R.SUCCESS) {
-//                                    deviceInfo = rDevice.getData();
-//                                    vmsPublishInfo.put("deviceId", deviceInfo.getDeviceId());
-//                                    r = remoteInfoBoardService.publish(vmsPublishInfo);
-//                                    if (r != null) {
-//                                        if (r != null && r.getCode() == R.SUCCESS) {
-//                                            content += deviceInfo.getDeviceName() + "：信息发布成功；";
-//
-//                                        } else {
-//                                            content += deviceInfo.getDeviceName() + "：信息发布失败，失败原因" + r.getMsg() + "；";
-//                                        }
-//                                    } else {
-//                                        content += deviceInfo.getDeviceName() + "：信息发布失败，原因：服务无响应；";
+//                            if (plan.containsKey("deviceIds")) {
+//                                vmsPublishInfo = new JSONObject();
+//                                devicdIds = plan.getJSONArray("deviceIds");
+//                                if (devicdIds != null && devicdIds.size() > 0) {
+//                                    size = devicdIds.size();
+//                                    infos = new JSONArray();
+//                                    for (int j = 0; j < size; j++) {
+//                                        rDevice = remoteDeviceMonitorService.selectByDeviceId(devicdIds.getString(j));
+//                                        deviceInfo = rDevice.getData();
+//                                        info = new JSONObject();
+//                                        info.put("devId", deviceInfo.getDeviceId());
+//                                        info.put("ip", deviceInfo.getDeviceIp());
+//                                        info.put("port", deviceInfo.getPort());
+//                                        info.put("slave", deviceInfo.getSlaveId());
+//                                        info.put("protocol", deviceInfo.getProtocol());
+//                                        info.put("width", deviceInfo.getWidth());
+//                                        info.put("height", deviceInfo.getHigh());
+//                                        infos.add(info);
 //                                    }
-//                                } else {
-//                                    content += "ID为：" + devicdIds.getLong(j) + "的情报板设备信息不存在，推送失败；";
+//                                    vmsPublishInfo.put("devInfo", infos);
+//
+//                                    tblReleasePreset = rReleasePreset.getData();
+//                                    info = new JSONObject();
+//                                    info.put("content", tblReleasePreset.getPresetInfo());
+//                                    info.put("typeface", tblReleasePreset.getTypeface());
+//                                    info.put("textColor", tblReleasePreset.getColor());
+//                                    info.put("textSize", tblReleasePreset.getTypefaceSize());
+//                                    info.put("picId", tblReleasePreset.getPictureType());
+//                                    infos = new JSONArray();
+//                                    infos.add(info);
+//                                    vmsPublishInfo.put("data", infos);
+//                                    r = remoteInfoBoardService.publish(vmsPublishInfo);
+//                                    if (r.getCode() == R.SUCCESS) {
+//                                        content += "发布成功";
+//                                    }
+//                                }else {
+//                                    content += "发布失败，无设备信息";
 //                                }
+//                            }else {
+//                                content += "发布失败，无设备信息";
 //                            }
+//
 //                        } else {
 //                            content += "ID为：" + plan.getLong("presetId") + "：预设信息查询失败，失败原因" + rReleasePreset.getMsg() + "；";
 //                        }
@@ -237,69 +262,87 @@ public class EventServiceImpl implements IEventService {
 //                    }
                     break;
                 case 5://可变限速标志推送
-//                    content = "限速板信息发布：";
-//                    rReleasePreset = remoteReleaseService.idInfo(plan.getLong("presetId"));
-//                    if (rReleasePreset == null) {
-//                        if (rReleasePreset.getCode() == R.SUCCESS) {
-//                            devicdIds = plan.getJSONArray("deviceIds");
+                    content = "限速板信息发布：";
+//                    if (plan.containsKey("deviceIds")) {
+//                        vmsPublishInfo = new JSONObject();
+//                        devicdIds = plan.getJSONArray("deviceIds");
+//                        if (devicdIds != null && devicdIds.size() > 0) {
 //                            size = devicdIds.size();
-//                            tblReleasePreset = rReleasePreset.getData();
-//                            vmsPublishInfo = new JSONObject();
-//                            vmsPublishInfo.put("fmsValue", tblReleasePreset.getPresetInfo());
+//                            infos = new JSONArray();
 //                            for (int j = 0; j < size; j++) {
-//                                rDevice = remoteDeviceInfoService.idInfo(devicdIds.getLong(j));
-//                                if (rDevice != null && rDevice.getCode() == R.SUCCESS) {
-//                                    deviceInfo = rDevice.getData();
-//                                    vmsPublishInfo.put("deviceId", deviceInfo.getDeviceId());
-//                                    r = remoteInfoBoardService.publish(vmsPublishInfo);
-//                                    if (r != null) {
-//                                        if (r != null && r.getCode() == R.SUCCESS) {
-//                                            content += deviceInfo.getDeviceName() + "：信息发布成功；";
-//                                        } else {
-//                                            content += deviceInfo.getDeviceName() + "：信息发布失败，失败原因" + r.getMsg() + "；";
-//                                        }
-//                                    } else {
-//                                        content += deviceInfo.getDeviceName() + "：信息发布失败，原因：服务无响应；";
-//                                    }
-//                                } else {
-//                                    content += "ID为：" + devicdIds.getLong(j) + "的限速板设备信息不存在，推送失败；";
-//                                }
+//                                rDevice = remoteDeviceMonitorService.selectByDeviceId(devicdIds.getString(j));
+//                                deviceInfo = rDevice.getData();
+//                                info = new JSONObject();
+//                                info.put("devId", deviceInfo.getDeviceId());
+//                                info.put("ip", deviceInfo.getDeviceIp());
+//                                info.put("port", deviceInfo.getPort());
+//                                info.put("slave", deviceInfo.getSlaveId());
+//                                info.put("protocol", deviceInfo.getProtocol());
+//                                info.put("width", deviceInfo.getWidth());
+//                                info.put("height", deviceInfo.getHigh());
+//                                infos.add(info);
 //                            }
-//                        } else {
-//                            content += "ID为：" + plan.getLong("presetId") + "：预设信息查询失败，失败原因" + rReleasePreset.getMsg() + "；";
+//                            if (plan.containsKey("presetId")) {
+//                                vmsPublishInfo.put("devInfo", infos);
+//                                info = new JSONObject();
+//                                info.put("picId", plan.getLong("presetId"));
+//                                infos = new JSONArray();
+//                                infos.add(info);
+//                                vmsPublishInfo.put("data", infos);
+//                                r = remoteInfoBoardService.publish(vmsPublishInfo);
+//                                if (r.getCode() == R.SUCCESS) {
+//                                    content += "发布成功";
+//                                }
+//                            } else {
+//                                content += "发布失败，发布内容为空";
+//                            }
+//                        }else {
+//                            content += "发布失败，无设备信息";
 //                        }
-//                    } else {
-//                        content += "ID为：" + plan.getLong("presetId") + "的情报板预设信息不存在，推送失败；";
+//                    }else {
+//                        content += "发布失败，无设备信息";
 //                    }
                     break;
                 case 6://ETC门架车路协同推送
                     break;
                 case 7://超视距诱导灯推送
                     content = "超视距诱导模式推送：";
-                    JSONObject body = new JSONObject();
-                    devicdIds = plan.getJSONArray("deviceIds");
-                    size = devicdIds.size();
-                    for (int j = 0; j < size; j++) {
-                        rDevice = remoteDeviceInfoService.idInfo(devicdIds.getLong(j));
-                        if (rDevice != null && rDevice.getCode() == R.SUCCESS) {
-                            deviceInfo = rDevice.getData();
-                            body.put("cmdId", 11);
-                            body.put("deviceId", deviceInfo.getDeviceId());
-                            body.put("param", plan.getJSONArray("pattern"));
-                            r = remotePilotLightService.send(body);
-                            if (r != null) {
-                                if (r != null && r.getCode() == R.SUCCESS) {
-                                    content += deviceInfo.getDeviceName() + "：推送成功；";
-                                } else {
-                                    content += deviceInfo.getDeviceName() + "：推送失败，失败原因" + r.getMsg() + "；";
-                                }
-                            } else {
-                                content += deviceInfo.getDeviceName() + "：推送失败，原因：服务无响应；";
-                            }
-                        } else {
-                            content += "ID为：" + devicdIds.getLong(j) + "的超视距诱导设备信息不存在，推送失败；";
-                        }
-                    }
+//                    if (plan.containsKey("deviceIds")) {
+//                        JSONObject body = new JSONObject();
+//                        devicdIds = plan.getJSONArray("deviceIds");
+//                        if (devicdIds != null && devicdIds.size() > 0) {
+//                            size = devicdIds.size();
+//                            if (plan.containsKey("cmdType")) {
+//                                for (int j = 0; j < size; j++) {
+//                                    rDevice = remoteDeviceMonitorService.selectByDeviceId(devicdIds.getString(j));
+//                                    if (rDevice != null && rDevice.getCode() == R.SUCCESS) {
+//                                        deviceInfo = rDevice.getData();
+//                                        body.put("deviceId", deviceInfo.getDeviceId());
+//                                        body.put("cmdType", plan.getJSONArray("cmdType"));
+//                                        r = remotePilotLightService.send(body);
+//                                        if (r != null) {
+//                                            if (r != null && r.getCode() == R.SUCCESS) {
+//                                                content += deviceInfo.getDeviceName() + "：推送成功；";
+//                                            } else {
+//                                                content += deviceInfo.getDeviceName() + "：推送失败，失败原因" + r.getMsg() + "；";
+//                                            }
+//                                        } else {
+//                                            content += deviceInfo.getDeviceName() + "：推送失败，原因：服务无响应；";
+//                                        }
+//                                    } else {
+//                                        content += "ID为：" + devicdIds.getLong(j) + "的超视距诱导设备信息不存在，推送失败；";
+//                                    }
+//                                }
+//                            }else {
+//                                content += "发布失败，模式信息为空";
+//                            }
+//                        }else {
+//                            content += "发布失败，无设备信息";
+//                        }
+//                    }else {
+//                        content += "发布失败，无设备信息";
+//                    }
+
                     break;
                 case 8://高德地图推送
 //                    content = "高德地图事件推送：";
@@ -346,7 +389,7 @@ public class EventServiceImpl implements IEventService {
 //                    }
                     break;
                 case 9://应急资源
-//                    content = "应急资源：";
+                    content = "应急资源：";
 //                    JSONArray materials = plan.getJSONArray("materials");
 //                    JSONObject object;
 //                    if (materials != null && materials.size() > 0) {
@@ -471,7 +514,7 @@ public class EventServiceImpl implements IEventService {
             JSONObject event;
             JSONObject data;
             for (TblEventAlarm i : list) {
-                if(tblEventRecord.getEventType().equals(i.getEventType().toString())){
+                if (tblEventRecord.getEventType().equals(i.getEventType().toString())) {
                     event = new JSONObject();
                     event.put("id", tblEventRecord.getId());
                     event.put("eventType", tblEventRecordMapper.translateEventType(tblEventRecord.getEventType()));

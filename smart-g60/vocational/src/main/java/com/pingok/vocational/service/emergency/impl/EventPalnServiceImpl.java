@@ -117,7 +117,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
             for (TblDeviceInfo i : deviceInfos) {
                 pileNo = Integer.parseInt(Pattern.compile("[^0-9]").matcher(i.getPileNo()).replaceAll("").trim());
                 switch (eventRecord.getDirection()) {
-                    case "上行":
+                    case "1":
                         if ((position - pileNo) >= 0 && (position - pileNo) <= range) {
                             info = new JSONObject();
                             info.put("deviceId", i.getDeviceId());
@@ -127,7 +127,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
                             list.add(info);
                         }
                         break;
-                    case "下行":
+                    case "2":
                         if ((position - pileNo) <= 0 && (position - pileNo) <= -range) {
                             info = new JSONObject();
                             info.put("deviceId", i.getDeviceId());
@@ -137,7 +137,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
                             list.add(info);
                         }
                         break;
-                    case "双向":
+                    case "3":
                         if (Math.abs(position - pileNo) <= range) {
                             info = new JSONObject();
                             info.put("deviceId", i.getDeviceId());
@@ -152,7 +152,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
             for (TblGantryInfo i : gantryInfos) {
                 pileNo = Integer.parseInt(Pattern.compile("[^0-9]").matcher(i.getPileNo()).replaceAll("").trim());
                 switch (eventRecord.getDirection()) {
-                    case "上行":
+                    case "1":
                         if ((position - pileNo) <= range) {
                             info = new JSONObject();
                             info.put("deviceId", i.getDeviceId());
@@ -162,7 +162,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
                             list.add(info);
                         }
                         break;
-                    case "下行":
+                    case "2":
                         if ((position - pileNo) <= -range) {
                             info = new JSONObject();
                             info.put("deviceId", i.getDeviceId());
@@ -172,7 +172,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
                             list.add(info);
                         }
                         break;
-                    case "双向":
+                    case "3":
                         if (Math.abs(position - pileNo) <= range) {
                             info = new JSONObject();
                             info.put("deviceId", i.getDeviceId());

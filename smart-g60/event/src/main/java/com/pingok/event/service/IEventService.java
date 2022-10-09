@@ -18,6 +18,11 @@ import java.util.Map;
  */
 public interface IEventService {
 
+    /**
+     * 查询所有已配置得告警事件
+     * @return
+     */
+    List<String> eventAlarmAll();
 
     /**
      * 配置告警事件类型
