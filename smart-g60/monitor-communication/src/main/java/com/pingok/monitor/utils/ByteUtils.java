@@ -11,8 +11,8 @@ import java.util.*;
  */
 public class ByteUtils {
 
-    static Integer[] crcTable = {
-        0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50A5, 0x60C6, 0x70E7,
+    static int[] crcTable = {
+                0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50A5, 0x60C6, 0x70E7,
                 0x8108, 0x9129, 0xA14A, 0xB16B, 0xC18C, 0xD1AD, 0xE1CE, 0xF1EF,
                 0x1231, 0x0210, 0x3273, 0x2252, 0x52B5, 0x4294, 0x72F7, 0x62D6,
                 0x9339, 0x8318, 0xB37B, 0xA35A, 0xD3BD, 0xC39C, 0xF3FF, 0xE3DE,
@@ -88,17 +88,23 @@ public class ByteUtils {
      */
     public static byte[] GetCrc(byte[] data, int len)
     {
-        if (data == null)
-            return null;
         if (len == 0) len = data.length;
-        Integer crc = 0;
+        short crc = 0;
         for (int i = 0; i < len; i++)
         {
-            crc = (Integer) (crcTable[((crc >> 8) ^ data[i]) & 0xff] ^ (crc << 8));
+            crc = (short) (crcTable[((crc >> 8) ^ data[i]) & 0xff] ^ (crc << 8));
         }
 
-//        return BitConverter.GetBytes(crc);
-        return ByteBuffer.allocate(4).putInt(crc).array();
+        return shortToByteArray(crc);
+    }
+
+    private static byte [] shortToByteArray(short  s) {
+        byte [] shortBuf = new byte [2];
+        for(int i=0;i<2;i++) {
+            int offset = (shortBuf.length - 1 -i)*8;
+            shortBuf[i] = (byte )((s>>>offset)&0xff);
+        }
+        return shortBuf;
     }
 
     /**
@@ -110,14 +116,18 @@ public class ByteUtils {
         // 0x02 -> 0x1b, 0xe7
         // 0x03 -> 0x1b, 0xe8
         // 0x1b -> 0x1b, 0x00
-        List<Byte> li = Bytes.asList(buf);
+        ArrayList<Byte> li = new ArrayList<>();
+        for(int i=0;i<buf.length;++i) {
+            li.add(buf[i]);
+        }
+//        List<Byte> li = Bytes.asList(buf);
 //        Collections.addAll(li, buf);
 
         //前5位是：1帧头 + 2地址 + 2类型，li.Count - 1是去掉帧尾
         byte r = 0x1b; //要转义成什么
         for (int i = 5; i < li.size() - 1; ++i)
         {
-            byte b = (li.get(i));
+            byte b = li.get(i);
             switch (b)
             {
                 case 0x02: r = (byte)0xe7; break;
@@ -132,6 +142,40 @@ public class ByteUtils {
                 r = 0x1b;
             }
         }
-        return Bytes.toArray(li);
+        byte[] ret = new byte[li.size()];
+        for(int i=0;i<li.size();++i) {
+            ret[i] = li.get(i);
+        }
+//        return Bytes.toArray(li);
+        return ret;
+    }
+
+    /**
+     * byte[] 转16进制字符串
+     */
+    public static String bytes2hex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        String tmp = null;
+        for (byte b : bytes) {
+            // 将每个字节与0xFF进行与运算，然后转化为10进制，然后借助于Integer再转化为16进制
+            tmp = Integer.toHexString(0xFF & b);
+            if (tmp.length() == 1) {
+                tmp = "0" + tmp;
+            }
+            sb.append(tmp);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 大端转小端
+     */
+    public static byte[] intToByte4B(int n) {
+        byte[] b = new byte[4];
+        b[0] = (byte)(n >> 24 & 0xff);
+        b[1] = (byte)(n >> 16 & 0xff);
+        b[2] = (byte)(n >> 8 & 0xff);
+        b[3] = (byte)(n & 0xff);
+        return b;
     }
 }

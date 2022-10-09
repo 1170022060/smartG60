@@ -8,6 +8,7 @@ import com.pingok.monitor.config.HostConfig;
 import com.pingok.monitor.domain.common.MbsAttribute;
 import com.pingok.monitor.domain.device.TblDeviceInfo;
 import com.pingok.monitor.domain.infoboard.DevInfo;
+import com.pingok.monitor.domain.infoboard.PlaylstWndInfo;
 import com.pingok.monitor.domain.infoboard.VmsPubInfo;
 import com.pingok.monitor.service.common.IModbusService;
 import com.pingok.monitor.service.common.ISocketService;
@@ -29,6 +30,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -64,7 +66,7 @@ public class VmsServiceImpl implements IVmsService {
         JSONObject result = new JSONObject();
         result.put("pubContent", JSON.toJSONString(dataList));
         JSONArray jaResult = new JSONArray();
-        String playlst = genPlaylst(devInfoList, pubList);
+        String playlst = genPlaylst2(devInfoList, pubList);
         for (int i = 0; i < devInfoList.size(); ++i) {
             DevInfo dev = devInfoList.get(i);
             switch (dev.getProtocol()) {
@@ -336,7 +338,15 @@ public class VmsServiceImpl implements IVmsService {
         int retCode = 1;
 
         String fn = "play.lst";
-        byte[] btFile = playlst.getBytes(StandardCharsets.UTF_8);
+        byte[] btFile = null;
+        try {
+            btFile = playlst.getBytes("GBK");
+        } catch (Exception ex) {
+            log.error("情报板获取GBK字符编码异常：" + ex.getMessage());
+            return -1;
+        }
+
+        System.out.println("长度：" + btFile.length + "，btFile[]：" + ByteUtils.bytes2hex(btFile));
         int sendTimes = btFile.length / 2048 + 1;
         int sendLen = 0;
         int pos = fn.length();
@@ -346,12 +356,14 @@ public class VmsServiceImpl implements IVmsService {
             System.arraycopy(ByteUtils.ASCIIToBytes(fn), 0, data, 0, fn.length());
             data[pos] = 0x2b;
             //小端返回，转大端
+            byte[] btOffset = ByteUtils.intToByte4B(2048 * i);
 //            byte[] btOffset = BitConverter.GetBytes(System.Net.IPAddress.HostToNetworkOrder(2048 * i));
-            byte[] btOffset = ByteBuffer.allocate(4).putInt(2048 * i).array();
+//            byte[] btOffset = ByteBuffer.allocate(4).putInt(2048 * i).array();
             System.arraycopy(btOffset, 0, data, pos + 1, 4);
             System.arraycopy(btFile, i * 2048, data, pos + 5, sendLen);
 
             try {
+                System.out.println("长度：" + data.length + "，data[]：" + ByteUtils.bytes2hex(data));
                 if (-1 == ULOneFile10(dev.getSlave(), dev.getIp(), dev.getPort(), data)) {
                     return -1;
                 }
@@ -374,41 +386,59 @@ public class VmsServiceImpl implements IVmsService {
             DevInfo dev = devInfoList.get(0);
             String newline = System.getProperty("line.separator");
             if (dev.getProtocol().equals(InfoBoardConfig.SANSI_PLIST_MULTI)) {
-                StringBuilder playlst1 = new StringBuilder();
-                playlst1.append("[playlist]" + newline);
-                playlst1.append("nwindows=" + pubList.size() + newline);
-                StringBuilder playlst2 = new StringBuilder();
+                StringBuilder playlstAll = new StringBuilder();
+                playlstAll.append("[playlist]" + newline);
+                int winNum = 0;   //窗口数
+                int picSize = 48; //图片尺寸
+
+                StringBuilder playlstItem = new StringBuilder();
+                StringBuilder playlstAllItem = new StringBuilder();
+
                 int regionNum = pubList.size(); //分几个区域
-                Integer w = dev.getWidth();
-                Integer h = dev.getHeight();
-                //计算区域的 宽，高
-                int regionWidth = w / regionNum - (regionNum - 1) * 8;
-                int regionHeight = h;
+                //计算区域的 宽，高 (regionNum - 1) * 8 是间隔
+                int regionWidth = dev.getWidth() / regionNum;
+                int regionHeight = dev.getHeight();
 
                 for (int i = 0; i < regionNum; ++i) {
                     String pref = ""; //前缀
-                    if (i > 0) pref = "window" + i + "_";
-                    //计算区域的x，y
-                    int regionX = regionWidth * i;
-                    int regionY = 0;
+                    int xPos = 0, yPos = 0;      //图片/文字的坐标
+                    int winX = 0, winY = 0;     //窗口坐标
+                    //计算窗口的x，y
+                    winX = regionWidth * i;
+                    winY = 0;
                     List<VmsPubInfo> editList = pubList.get(i);
-                    playlst1.append("windows" + i + "_x=" + regionX + newline);
-                    playlst1.append("windows" + i + "_y=" + regionY + newline);
-                    playlst1.append("windows" + i + "_w=" + regionWidth + newline);
-                    playlst1.append("windows" + i + "_y=" + regionHeight + newline);
-                    playlst1.append(pref + "item_no=" + editList.size() + newline);
                     for (int j = 0; j < editList.size(); ++j) {
-                        playlst2.setLength(0); //清空
-                        playlst2.append("item" + j + "=500,1,0,");
+                        playlstItem.setLength(0); //清空
                         VmsPubInfo edit = editList.get(j);
-                        if (!StringUtils.isEmpty(edit.getPicId())) {
-                            playlst2.append("\\B" + edit.getPicId() + newline);
+                        //一个区域里如果既有图片，又有文字，则 windows 要增加
+                        boolean bPic = !StringUtils.isEmpty(edit.getPicId()) && !edit.getPicId().equals("0");
+                        if (bPic) {
+                            playlstItem.append("windows" + winNum + "_x=" + winX + newline);
+                            playlstItem.append("windows" + winNum + "_y=" + winY + newline);
+                            playlstItem.append("windows" + winNum + "_w=" + regionWidth + newline);
+                            playlstItem.append("windows" + winNum + "_h=" + picSize + newline);
+                            playlstItem.append(pref + "item_no=" + editList.size() + newline);
+                            playlstItem.append(pref + "item" + j + "=500,1,0,");
+                            xPos = (regionWidth - picSize) / 2;
+                            String xyPic = String.format("%03d%03d", xPos, yPos);
+                            playlstItem.append("\\C" + xyPic);
+                            playlstItem.append("\\P" + edit.getPicId() + newline + newline);
+                            winNum++;
+                            regionHeight -= picSize;
+                            winY += picSize;
                         }
                         if(!StringUtils.isEmpty(edit.getContent())) {
+                            if(winNum > 0) pref = "windows" + winNum + "_";
+                            playlstItem.append("windows" + winNum + "_x=" + winX + newline);
+                            playlstItem.append("windows" + winNum + "_y=" + winY + newline);
+                            playlstItem.append("windows" + winNum + "_w=" + regionWidth + newline);
+                            playlstItem.append("windows" + winNum + "_h=" + regionHeight + newline);
+                            playlstItem.append(pref + "item_no=" + editList.size() + newline);
+                            playlstItem.append(pref + "item" + j + "=500,1,0,");
                             //text <br>替换为\n
                             //计算文字的xy坐标，x按最长文字算，y按行数
                             String[] splitText = edit.getContent().split("<br>");
-                            int xPos = 0, yPos = 0;
+                            xPos = yPos = 0;
                             int fontSize = Integer.parseInt(edit.getTextSize());
                             if(splitText.length > 0) {
                                 String splitTemp = splitText[0];
@@ -430,18 +460,151 @@ public class VmsServiceImpl implements IVmsService {
                             }
                             String xy = String.format("%03d%03d", xPos,yPos);
                             String text = edit.getContent().replace("<br>", "\\n");
-                            playlst2.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, edit.getTypeface()) + fontSize + fontSize);
-                            playlst2.append("\\C" + xy + "\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, edit.getTextColor()) + text);
+                            playlstItem.append("\\C" + xy);
+                            playlstItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, edit.getTypeface()) + fontSize + fontSize);
+                            playlstItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, edit.getTextColor()) + text);
+                            winNum++;
                         }
-                        playlst1.append(playlst2 + newline);
+                        playlstAllItem.append(playlstItem + newline);
                     }
 
-                    playlst1.append(newline + newline);
+                    playlstAllItem.append(newline + newline);
                 }
 
-                if (playlst2.toString() == "") return "";
+                playlstAllItem.delete(playlstAllItem.length() - newline.length() * 2, playlstAllItem.length());
+                playlstAll.append("nwindows=" + winNum + newline);
+                playlstAll.append(playlstAllItem);
 
-                playlst = playlst1.toString();
+                playlst = playlstAll.toString();
+            }
+        }
+        return playlst;
+    }
+
+    // 生成playlst 版本2
+    private String genPlaylst2(List<DevInfo> devInfoList, List<List<VmsPubInfo>> pubList) {
+
+        String playlst = "";
+        if(devInfoList.size() > 0) {
+            DevInfo dev = devInfoList.get(0);
+            String nl = System.getProperty("line.separator"); //换行
+            if (dev.getProtocol().equals(InfoBoardConfig.SANSI_PLIST_MULTI)) {
+                //窗口列表
+                int rgNum = pubList.size(); //区域数
+                List<PlaylstWndInfo> wndList = new ArrayList<>(rgNum * 2);
+                for(int cnt = 0; cnt < rgNum * 2; ++cnt) wndList.add(new PlaylstWndInfo());
+//                List<PlaylstWndInfo> wndList = Arrays.asList(new PlaylstWndInfo[rgNum * 2]);
+
+
+                //区域宽高 (regionNum - 1) * 8 是间隔
+                int rgW = dev.getWidth() / rgNum;
+                int picSize = 48;
+
+                for (int i = 0; i < rgNum; ++i) {
+                    int rgH = dev.getHeight();
+                    //窗口坐标、宽高
+                    int winX = rgW * i, winY = 0, winW = rgW, winH = 0;
+                    List<VmsPubInfo> editList = pubList.get(i);
+                    boolean bPic = false;
+                    boolean bText = false;
+                    for (int j = 0; j < editList.size(); ++j) {
+                        VmsPubInfo edit = editList.get(j);
+                        //一个区域里如果既有图片，又有文字，则 windows 要增加
+                        boolean hasPic = !StringUtils.isEmpty(edit.getPicId()) && !edit.getPicId().equals("0");
+                        boolean hasText = !StringUtils.isEmpty(edit.getContent());
+                        bPic = bPic || hasPic;
+                        bText = bText || hasText;
+
+                        if(hasPic) {
+                            PlaylstWndInfo wndPic = wndList.get(i*2);
+                            wndPic.setWinX(winX);
+                            wndPic.setWinY(winY);
+                            wndPic.setWinW(winW);
+                            wndPic.setWinH(picSize);
+                            wndPic.setType(0);
+                            wndPic.getItems().add(edit);
+                        }
+                        if(hasText) {
+                            PlaylstWndInfo wndText = wndList.get(i*2 + 1);
+                            wndText.setWinX(winX);
+                            wndText.setWinY(bPic ? winY + picSize : winY);
+                            wndText.setWinW(winW);
+                            wndText.setWinH(bPic ? rgH - picSize : rgH);
+                            wndText.setType(1);
+                            wndText.getItems().add(edit);
+                        }
+                    }
+                }
+                //清理wndList
+                Iterator<PlaylstWndInfo> iter = wndList.iterator();
+                while (iter.hasNext()) {
+                    PlaylstWndInfo wnd = iter.next();
+                    if(wnd.getItems().size() == 0) {
+                        iter.remove();
+                    }
+                }
+
+                //组装 playlst
+                StringBuilder playlstAll = new StringBuilder();
+                playlstAll.append("[playlist]" + nl);
+                playlstAll.append("nwindows=" + wndList.size() + nl);
+
+                String pref = "";
+                for(int n = 0; n < wndList.size(); ++n) {
+                    StringBuilder wndItem = new StringBuilder();
+                    PlaylstWndInfo wndInfo = wndList.get(n);
+                    if(n > 0) pref = "windows" + n + "_";
+                    wndItem.append("windows" + n + "_x=" + wndInfo.getWinX() + nl);
+                    wndItem.append("windows" + n + "_y=" + wndInfo.getWinY() + nl);
+                    wndItem.append("windows" + n + "_w=" + wndInfo.getWinW() + nl);
+                    wndItem.append("windows" + n + "_h=" + wndInfo.getWinH() + nl);
+                    wndItem.append(pref + "item_no=" + wndInfo.getItems().size() + nl);
+                    for(int m = 0; m < wndInfo.getItems().size(); ++m) {
+                        StringBuilder playlstItem = new StringBuilder();
+                        VmsPubInfo pubInfo = wndInfo.getItems().get(m);
+                        playlstItem.append(pref + "item" + m + "=500,1,0,");
+                        if(wndInfo.getType() == 0) { //图片
+                            String xyPic = String.format("%03d%03d", (wndInfo.getWinW() - picSize) / 2, 0);
+                            playlstItem.append("\\C" + xyPic);
+                            playlstItem.append("\\P" + picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, pubInfo.getPicId()));
+                        }
+                        else
+                        {
+                            //text <br>替换为\n
+                            String[] splitText = pubInfo.getContent().split("<br>");
+                            //计算文字的xy坐标，x按最长文字算，y按行数
+                            int xPos = 0, yPos = 0;
+                            int fontSize = Integer.parseInt(pubInfo.getTextSize());
+                            if(splitText.length > 0) {
+                                String splitTemp = splitText[0];
+                                for(int idx = 1; idx < splitText.length; ++idx) {
+                                    if(splitTemp.length() > splitText[idx].length()) splitTemp = splitText[idx];
+                                }
+                                int textXLen = splitTemp.length() * fontSize;
+                                int textYLen = splitText.length * fontSize;
+                                if(textXLen > wndInfo.getWinW()) {
+                                    xPos = 0;
+                                } else {
+                                    xPos = (wndInfo.getWinW() - textXLen) / 2;
+                                }
+                                if(textYLen > wndInfo.getWinH()) {
+                                    yPos = 0;
+                                } else {
+                                    yPos = (wndInfo.getWinH() - textYLen) / 2;
+                                }
+                            }
+                            String xy = String.format("%03d%03d", xPos,yPos);
+                            String text = pubInfo.getContent().replace("<br>", "\\n");
+                            playlstItem.append("\\C" + xy);
+                            playlstItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, pubInfo.getTypeface()) + fontSize + fontSize);
+                            playlstItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, pubInfo.getTextColor()) + text);
+                        }
+                        wndItem.append(playlstItem + nl);
+                    }
+                    playlstAll.append(wndItem + nl + nl);
+                }
+                playlstAll.delete(playlstAll.length() - nl.length() * 2, playlstAll.length());
+                playlst = playlstAll.toString();
             }
         }
         return playlst;
@@ -452,9 +615,11 @@ public class VmsServiceImpl implements IVmsService {
         byte[] sendPkg = PacketPlaylst(slaveID, "10", data);
 //        byte[] recvPkg = null;
         int recv = 1;
+        Socket skt = null;
         try {
-            Socket skt = iSocketService.clientSocket(ip, port);
+            skt = iSocketService.clientSocket(ip, port);
             recv = iSocketService.writeAndResult(sendPkg, skt);
+            skt.close();
         } catch (Exception ex) {
             log.error("情报板发布：上传文件异常！" + ex.getMessage());
             recv = -1;
@@ -468,7 +633,7 @@ public class VmsServiceImpl implements IVmsService {
         int pos = 0;
         byte[] ret = new byte[len + 8];
         ret[pos++] = 0x02;
-        String sid = String.format("%2d", slaveID);
+        String sid = String.format("%02d", slaveID);
         ret[pos++] = (byte) (sid.charAt(0));
         ret[pos++] = (byte) (sid.charAt(1));
         ret[pos++] = (byte) (pkgType.charAt(0));
@@ -477,19 +642,25 @@ public class VmsServiceImpl implements IVmsService {
         if (len > 0) {
             System.arraycopy(data, 0, ret, 5, len);
         }
+        System.out.println("长度：" + ret.length + "，发送报文：" + ByteUtils.bytes2hex(ret));
         pos += len;
 
         //校验
 //        byte[] crc2 = ByteUtils.GetCrc(ret.Skip(1).Take(pos - 1).ToArray());
-        byte[] crcCheck = Arrays.copyOfRange(ret, 1, ret.length - 1);
-        byte[] crc2 = ByteUtils.GetCrc(crcCheck, crcCheck.length);
-        ret[pos++] = crc2[1];
+//        byte[] crcCheck = Arrays.copyOfRange(ret, 1, ret.length - 1);
+//        byte[] crc2 = ByteUtils.GetCrc(crcCheck, crcCheck.length);
+        byte[] crcBytes = new byte[ret.length-4];
+        System.arraycopy(ret, 1, crcBytes, 0, crcBytes.length);
+        byte[] crc2 = ByteUtils.GetCrc(crcBytes, crcBytes.length);
+        System.out.println("长度：" + crc2.length + "，发送报文：" + ByteUtils.bytes2hex(crc2));
         ret[pos++] = crc2[0];
+        ret[pos++] = crc2[1];
 
         ret[pos] = 0x03;
 
         //转义
         byte[] sendPkg = ByteUtils.TransPkg(ret);
+        System.out.println("长度：" + sendPkg.length + "，发送报文：" + ByteUtils.bytes2hex(sendPkg));
 
         return sendPkg;
     }
@@ -653,6 +824,14 @@ public class VmsServiceImpl implements IVmsService {
                 case "120":
                     picCode = "56";
                     break;
+            }
+        } else if(protocol == InfoBoardConfig.SANSI_PLIST_MULTI) {
+            switch (picId) {
+                case "叉": picCode = "z00"; break;
+                case "上箭头": picCode = "z01"; break;
+                case "右上箭头": picCode = "z02"; break;
+                case "左上箭头": picCode = "z03"; break;
+                default: picCode = picId;
             }
         }
         return picCode;
