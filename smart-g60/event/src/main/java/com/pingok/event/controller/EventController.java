@@ -43,6 +43,13 @@ public class EventController extends BaseController {
     @Autowired
     private RemoteKafkaService remoteKafkaService;
 
+    /**
+     * 配置事件告警列表
+     */
+    @GetMapping("/eventAlarmAll")
+    public AjaxResult eventAlarmAll() {
+        return AjaxResult.success(iEventService.eventAlarmAll());
+    }
 
     /**
      * 配置事件告警类型

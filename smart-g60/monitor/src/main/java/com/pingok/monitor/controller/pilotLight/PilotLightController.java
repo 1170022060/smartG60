@@ -7,11 +7,15 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
+import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.system.api.RemoteKafkaService;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -22,6 +26,14 @@ public class PilotLightController extends BaseController {
     private IPilotLightService iPilotLightService;
     @Autowired
     private RemoteKafkaService remoteKafkaService;
+
+    @GetMapping("/list")
+    public TableDataInfo list() {
+        startPage();
+        List<Map> info = iPilotLightService.pilotLightStatus();
+        return getDataTable(info);
+    }
+
 
     @GetMapping("/pilotLightStatus")
     public AjaxResult pilotLightStatus() {

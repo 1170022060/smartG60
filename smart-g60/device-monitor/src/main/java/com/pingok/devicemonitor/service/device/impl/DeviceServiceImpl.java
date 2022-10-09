@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -69,7 +71,7 @@ public class DeviceServiceImpl implements IDeviceService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("deviceId", deviceFault.getDeviceId());
         criteria.andEqualTo("faultId", deviceFault.getFaultId());
-        criteria.andEqualTo("status", 0);
+        criteria.andIn("status", Arrays.asList(0,1));
         TblDeviceFault tblDeviceFault = tblDeviceFaultMapper.selectOneByExample(example);
         if (tblDeviceFault == null) {
             tblDeviceFault = new TblDeviceFault();
