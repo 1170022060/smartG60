@@ -25,24 +25,13 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
     public void sensorData(JSONObject sensorData) {
         String post;
         R ret = null;
-        int[] sleep = new int[]{3, 6, 9};
-        int i = 0;
-        while (i < sleep.length) {
-            try {
-                post = HttpUtil.post(HostConfig.DASSHOST + "device-monitor/smartToilet", JSON.toJSONString(sensorData));
-                if (!StringUtils.isEmpty(post)) {
-                    if (post.startsWith("{")) {
-                        ret = JSON.parseObject(post, R.class);
-                        if (R.FAIL == ret.getCode()) {
-                            log.error(JSON.toJSONString(sensorData) + "智慧厕所状态上报失败：" + ret.getMsg());
-                        } else {
-                            break;
-                        }
-                        Thread.sleep(sleep[i++] * 1000);
-                    }
+        post = HttpUtil.post(HostConfig.DASSHOST + "/device-monitor/smartToilet", JSON.toJSONString(sensorData));
+        if (!StringUtils.isEmpty(post)) {
+            if (post.startsWith("{")) {
+                ret = JSON.parseObject(post, R.class);
+                if (R.FAIL == ret.getCode()) {
+                    log.error(JSON.toJSONString(sensorData) + "智慧厕所状态上报失败：" + ret.getMsg());
                 }
-            } catch (Exception e) {
-                log.error(JSON.toJSONString(sensorData) + "智慧厕所状态上报失败：" + e.getMessage());
             }
         }
     }

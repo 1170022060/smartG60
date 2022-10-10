@@ -84,11 +84,11 @@ public class PilotLightServiceImpl implements IPilotLightService {
             params = new HashMap<>();
             params.put("token", getToken());
             params.put("roadId", road.getString("roadId"));
+            deviceIds = road.getJSONArray("deviceIds");
             resp = HttpUtil.get(LightConfig.HOST + "/fogArea/sys/get", params);
             if (!StringUtils.isEmpty(resp)) {
                 obj = JSONObject.parseObject(resp);
                 if (obj.getInteger("status") == 200) {
-                    deviceIds = road.getJSONArray("deviceIds");
                     for (int j = 0; j < deviceIds.size(); j++) {
                         deviceId = deviceIds.getLong(j);
                         deviceStatus = new TblDeviceStatus();
@@ -123,10 +123,46 @@ public class PilotLightServiceImpl implements IPilotLightService {
                 }
                 else {
                     log.error("获取超视距诱导系统状态失败："+obj.getInteger("msg"));
+                    for (int j = 0; j < deviceIds.size(); j++) {
+                        deviceId = deviceIds.getLong(j);
+                        deviceStatus = new TblDeviceStatus();
+                        deviceStatus.setDeviceId(deviceId);
+                        deviceStatus.setTime(DateUtils.getNowDate());
+                        deviceStatus.setStatus(0);
+                        deviceStatus.setStatusDesc(obj.getString("msg"));
+                        deviceStatus.setFaultType("offLine");
+                        resp = HttpUtil.post(HostConfig.DASSHOST + "/device-monitor/deviceMonitor", JSON.toJSONString(deviceStatus));
+                        if (!StringUtils.isEmpty(resp)) {
+                            ret = JSON.parseObject(resp, R.class);
+                            if (R.FAIL == ret.getCode()) {
+                                log.error(deviceId + "设备状态上报失败：" + ret.getMsg());
+                            }
+                        } else {
+                            log.error(deviceId + "设备状态上报状态未知");
+                        }
+                    }
                 }
             }
             else {
                 log.error("获取超视距诱导系统状态失败：对方服务无响应");
+                for (int j = 0; j < deviceIds.size(); j++) {
+                    deviceId = deviceIds.getLong(j);
+                    deviceStatus = new TblDeviceStatus();
+                    deviceStatus.setDeviceId(deviceId);
+                    deviceStatus.setTime(DateUtils.getNowDate());
+                    deviceStatus.setStatus(0);
+                    deviceStatus.setStatusDesc("服务无响应");
+                    deviceStatus.setFaultType("offLine");
+                    resp = HttpUtil.post(HostConfig.DASSHOST + "/device-monitor/deviceMonitor", JSON.toJSONString(deviceStatus));
+                    if (!StringUtils.isEmpty(resp)) {
+                        ret = JSON.parseObject(resp, R.class);
+                        if (R.FAIL == ret.getCode()) {
+                            log.error(deviceId + "设备状态上报失败：" + ret.getMsg());
+                        }
+                    } else {
+                        log.error(deviceId + "设备状态上报状态未知");
+                    }
+                }
             }
         }
 

@@ -27,6 +27,7 @@ public interface TblDeviceInfoMapper {
             "tdi.STATION_BELONG AS \"stationBelong\", " +
             "tdi.PILE_NO AS \"pileNo\", " +
             "tdi.GPS AS \"gps\", " +
+            "tdi.CAMERA_ID AS \"cameraId\", " +
             "TO_CHAR(tds.TIME, 'yyyy-mm-dd hh:mm:ss') AS \"time\", " +
             "NVL( tds.STATUS, 0 ) AS \"status\", " +
             "CASE " +

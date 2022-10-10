@@ -27,6 +27,17 @@ public interface IDeviceService {
      */
     TblDeviceInfo selectByDeviceId(String deviceId);
 
+
+    /**
+     * 更新设备故障
+     * @param deviceFault
+     */
+    void updateDeviceFault(TblDeviceFault deviceFault);
+
+    /**
+     * 新增设备故障
+     * @param deviceFault
+     */
     void deviceFault(TblDeviceFault deviceFault);
     /**
      * 设备心跳
