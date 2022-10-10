@@ -67,7 +67,7 @@ public class DeviceMonitorController extends BaseController {
         deviceFault.setFaultTime(DateUtils.getNowDate());
         deviceFault.setRegisterType(2);
         deviceFault.setFaultType(deviceStatus.getFaultType() != null ? deviceStatus.getFaultType() : "offLine");
-        if (deviceStatus.getStatus() == 0) {
+        if (deviceStatus.getStatus() == null || deviceStatus.getStatus() == 0) {
             iDeviceService.deviceFault(deviceFault);
         } else {
             iDeviceService.updateDeviceFault(deviceFault);
@@ -77,7 +77,7 @@ public class DeviceMonitorController extends BaseController {
             if (obj.containsKey("currentVisibility")) {
                 Integer currentVisibility = obj.getInteger("currentVisibility");
                 if (currentVisibility != -1) {
-                    List<SysDictData> sysDictDataList = DictUtils.getDictCache("event_type");
+                    List<SysDictData> sysDictDataList = DictUtils.getDictCache("visibility_warning");
                     Integer level = 0;
                     for (SysDictData s : sysDictDataList) {
                         if (currentVisibility.intValue() < Integer.parseInt(s.getDictValue())) {
