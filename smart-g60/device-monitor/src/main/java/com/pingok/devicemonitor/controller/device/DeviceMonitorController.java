@@ -61,15 +61,16 @@ public class DeviceMonitorController extends BaseController {
     @PostMapping
     public AjaxResult updateHeartbeat(@RequestBody TblDeviceStatus deviceStatus) {
         iDeviceService.updateStatus(deviceStatus);
+        TblDeviceFault deviceFault = new TblDeviceFault();
+        deviceFault.setDeviceId(deviceStatus.getDeviceId());
+        deviceFault.setFaultDescription(deviceStatus.getStatusDesc());
+        deviceFault.setFaultTime(DateUtils.getNowDate());
+        deviceFault.setRegisterType(2);
+        deviceFault.setFaultType(deviceStatus.getFaultType() != null ? deviceStatus.getFaultType() : "offLine");
         if (deviceStatus.getStatus() == 0) {
-            TblDeviceFault deviceFault = new TblDeviceFault();
-            deviceFault.setDeviceId(deviceStatus.getDeviceId());
-            deviceFault.setFaultId("hardware");
-            deviceFault.setFaultDescription(deviceStatus.getStatusDesc());
-            deviceFault.setFaultTime(DateUtils.getNowDate());
-            deviceFault.setRegisterType(2);
-            deviceFault.setFaultType("remind");
             iDeviceService.deviceFault(deviceFault);
+        } else {
+            iDeviceService.updateDeviceFault(deviceFault);
         }
         if (StringUtils.isNotNull(deviceStatus.getStatusDetails()) && deviceStatus.getStatusDetails().startsWith("{")) {
             JSONObject obj = JSON.parseObject(deviceStatus.getStatusDetails());

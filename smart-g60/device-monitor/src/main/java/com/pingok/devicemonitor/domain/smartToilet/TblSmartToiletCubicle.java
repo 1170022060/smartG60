@@ -26,7 +26,7 @@ public class TblSmartToiletCubicle implements Serializable {
     /**
      * 厕位编号
      */
-    private Integer index;
+    private Integer indexId;
 
     /**
      * 0 (未占用) 1(占用) 

@@ -66,11 +66,26 @@ public class DeviceServiceImpl implements IDeviceService {
     }
 
     @Override
+    public void updateDeviceFault(TblDeviceFault deviceFault) {
+        Example example = new Example(TblDeviceFault.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("deviceId", deviceFault.getDeviceId());
+        criteria.andEqualTo("faultType", deviceFault.getFaultType());
+        criteria.andIn("status", Arrays.asList(0,1));
+        TblDeviceFault tblDeviceFault = tblDeviceFaultMapper.selectOneByExample(example);
+        if (tblDeviceFault != null) {
+            tblDeviceFault.setStatus(2);
+            tblDeviceFault.setUpdateTime(DateUtils.getNowDate());
+            tblDeviceFaultMapper.updateByPrimaryKey(tblDeviceFault);
+        }
+    }
+
+    @Override
     public void deviceFault(TblDeviceFault deviceFault) {
         Example example = new Example(TblDeviceFault.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("deviceId", deviceFault.getDeviceId());
-        criteria.andEqualTo("faultId", deviceFault.getFaultId());
+        criteria.andEqualTo("faultType", deviceFault.getFaultType());
         criteria.andIn("status", Arrays.asList(0,1));
         TblDeviceFault tblDeviceFault = tblDeviceFaultMapper.selectOneByExample(example);
         if (tblDeviceFault == null) {

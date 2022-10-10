@@ -155,15 +155,16 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
             kafkaEnum.setData(data.toJSONString());
             remoteKafkaService.send(kafkaEnum);
 
+            TblDeviceFault deviceFault = new TblDeviceFault();
+            deviceFault.setDeviceId(devStatus.getDeviceId());
+            deviceFault.setFaultDescription(devStatus.getStatusDesc());
+            deviceFault.setFaultTime(DateUtils.getNowDate());
+            deviceFault.setRegisterType(2);
+            deviceFault.setFaultType("offLine");
             if (devStatus.getStatus() == 0) {
-                TblDeviceFault deviceFault = new TblDeviceFault();
-                deviceFault.setDeviceId(devStatus.getDeviceId());
-                deviceFault.setFaultId("hardware");
-                deviceFault.setFaultDescription(devStatus.getStatusDesc());
-                deviceFault.setFaultTime(DateUtils.getNowDate());
-                deviceFault.setRegisterType(2);
-                deviceFault.setFaultType("remind");
                 iDeviceService.deviceFault(deviceFault);
+            }else {
+                iDeviceService.updateDeviceFault(deviceFault);
             }
         }
     }
