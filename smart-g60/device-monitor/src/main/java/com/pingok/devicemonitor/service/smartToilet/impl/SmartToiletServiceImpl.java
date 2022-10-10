@@ -42,6 +42,7 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
      */
     @Override
     public void sensorData(JSONObject sensorData) {
+        log.info("智慧厕所系统上报数据-----" + sensorData.toJSONString());
         ToiletSensorInfo toiletData = JSON.parseObject(JSON.toJSONString(sensorData), ToiletSensorInfo.class);
         if (toiletData != null) {
             ToiletSensorData sensor = toiletData.getSensor();
@@ -51,7 +52,6 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
                 TblSmartToiletHealth healthInfo = getHealthInfoBySerid(toiletInfo.getId());
                 switch (sensor.getType()) {
                     case "idtk": {
-                        log.info("idtk-----" + JSON.toJSONString(sensor));
 //                        toiletInfo.setRateIn(sensor.getIdtk().getRate_in());
 //                        toiletInfo.setRateOut(sensor.getIdtk().getRate_out());
 //                        if (2 == sensor.getIdtk().getFocus()) {
@@ -107,7 +107,6 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
                         break;
                     }
                     case "alarm": {
-                        log.info("alarm-----" + JSON.toJSONString(sensor));
                         break;
                     }
                     case "smk_alarm": {
