@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -115,32 +114,47 @@ public class ParkingLotServiceImpl implements IParkingLotService {
         {
             Map humanFlow=tblParkingVehicleInfoMapper.humanFlow(Long.parseLong(map.get("fieldId").toString()));
             map.putAll(humanFlow);
-
             List<AreaVo> areaVos=new ArrayList<>();
-            areaVos.add(new AreaVo(1,"北服务区商铺"));
-            areaVos.add(new AreaVo(2,"北服务区小超市"));
-            areaVos.add(new AreaVo(3,"北服务区男厕"));
-            areaVos.add(new AreaVo(4,"北服务区女厕"));
-            areaVos.add(new AreaVo(5,"南服务区商铺"));
-            areaVos.add(new AreaVo(6,"南服务区艺海棠"));
-            areaVos.add(new AreaVo(7,"南服务区超市"));
-            areaVos.add(new AreaVo(8,"南服务区男厕"));
-            areaVos.add(new AreaVo(9,"南服务区女厕"));
-            areaVos.add(new AreaVo(10,"南服务区司机之家"));
-            for(AreaVo areaVo :areaVos)
+            if(map.get("fieldName").toString().contains("北"))
             {
-                areaVo.setDailyTotal(tblEventPassengerFlowMapper.dailyTotal(dailyTime,areaVo.getAreaId()));
-                areaVo.setActualFlow(tblEventPassengerFlowMapper.actualFlow(dailyTime,areaVo.getAreaId()));
-                areaVo.setPeakFlow(tblEventPassengerFlowMapper.peakFlow(dailyTime,areaVo.getAreaId()));
-                areaVo.setAvgFlow(tblEventPassengerFlowMapper.avgFlow(areaVo.getAreaId(),dailyTime,hour));
-                areaVo.setHourFlow(tblEventPassengerFlowMapper.hourFlow(areaVo.getAreaId(),dailyTime,hour));
-                areaVo.setNoMask(0);
+
+                areaVos.add(new AreaVo(1,"北服务区商铺"));
+                areaVos.add(new AreaVo(2,"北服务区小超市"));
+                areaVos.add(new AreaVo(3,"北服务区男厕"));
+                areaVos.add(new AreaVo(4,"北服务区女厕"));
+                for(AreaVo areaVo :areaVos)
+                {
+                    areaVo.setDailyTotal(tblEventPassengerFlowMapper.dailyTotal(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
+                    areaVo.setActualFlow(tblEventPassengerFlowMapper.actualFlow(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
+                    areaVo.setPeakFlow(tblEventPassengerFlowMapper.peakFlow(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
+                    areaVo.setAvgFlow(tblEventPassengerFlowMapper.avgFlow(areaVo.getAreaId(),dailyTime,hour,Long.parseLong(map.get("fieldId").toString())));
+                    areaVo.setHourFlow(tblEventPassengerFlowMapper.hourFlow(areaVo.getAreaId(),dailyTime,hour,Long.parseLong(map.get("fieldId").toString())));
+                    areaVo.setNoMask(0);
+                }
+                map.put("area",areaVos);
             }
-            map.put("area",areaVos);
+            if(map.get("fieldName").toString().contains("南"))
+            {
+                areaVos.add(new AreaVo(1,"南服务区商铺"));
+                areaVos.add(new AreaVo(2,"南服务区超市"));
+                areaVos.add(new AreaVo(3,"南服务区男厕"));
+                areaVos.add(new AreaVo(4,"南服务区女厕"));
+                areaVos.add(new AreaVo(5,"南服务区艺海棠"));
+                areaVos.add(new AreaVo(6,"南服务区司机之家"));
+                for(AreaVo areaVo :areaVos)
+                {
+                    areaVo.setDailyTotal(tblEventPassengerFlowMapper.dailyTotal(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
+                    areaVo.setActualFlow(tblEventPassengerFlowMapper.actualFlow(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
+                    areaVo.setPeakFlow(tblEventPassengerFlowMapper.peakFlow(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
+                    areaVo.setAvgFlow(tblEventPassengerFlowMapper.avgFlow(areaVo.getAreaId(),dailyTime,hour,Long.parseLong(map.get("fieldId").toString())));
+                    areaVo.setHourFlow(tblEventPassengerFlowMapper.hourFlow(areaVo.getAreaId(),dailyTime,hour,Long.parseLong(map.get("fieldId").toString())));
+                    areaVo.setNoMask(0);
+                }
+                map.put("area",areaVos);
+            }
         }
         return passengerFlow;
     }
-
     @Override
     public List<Map> parkMonitor(String fieldNum, String regionName) {
         List<Map> findByFieldRegion=tblParkingLotMapper.findByFieldRegion(fieldNum,regionName);
@@ -160,5 +174,15 @@ public class ParkingLotServiceImpl implements IParkingLotService {
     @Override
     public List<Map> selectRegionName(String fieldNum) {
         return tblParkingLotMapper.selectRegionName(fieldNum);
+    }
+
+    @Override
+    public List<Map> traffic(String fieldNum, Integer vehType, Date startDate, Date endDate,Integer statisticsType) {
+        return tblParkingStatisticsMapper.traffic(fieldNum,vehType,startDate,endDate,statisticsType);
+    }
+
+    @Override
+    public List<Map> humanFlow(String fieldNum, Integer areaId, Date startDate, Date endDate, Integer statisticsType) {
+        return tblEventPassengerFlowMapper.humanFlow(fieldNum,areaId,startDate,endDate,statisticsType);
     }
 }

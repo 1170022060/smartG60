@@ -31,4 +31,6 @@ public interface IParkingLotService {
     List<Map> parkMonitor(String fieldNum,String regionName);
     List<Map> overtimeInfo(String fieldNum,String regionName);
     List<Map> selectRegionName(String fieldNum);
+    List<Map> traffic(String fieldNum,Integer vehType,Date startDate,Date endDate,Integer statisticsType);
+    List<Map> humanFlow(String fieldNum,Integer areaId,Date startDate,Date endDate,Integer statisticsType);
 }
