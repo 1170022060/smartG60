@@ -59,7 +59,7 @@ public interface SmartToiletMapper {
 
     @Select("SELECT " +
             "stc.ID AS \"id\", " +
-            "stc.\"INDEX\" AS \"index\", " +
+            "stc.INDEX AS \"index\", " +
             "stc.STATUS AS \"status\", " +
             "stc.ALARM AS \"alarm\",  " +
             "stc.POSITION AS \"position\"  " +
