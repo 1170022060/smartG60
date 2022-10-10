@@ -3,6 +3,7 @@ package com.pingok.vocational.controller.parkingLot;
 import com.pingok.vocational.service.parkingLot.IParkingLotService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
+import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
@@ -69,7 +70,8 @@ public class ParkingLotController extends BaseController {
 
     @Log(title = "超时车辆", businessType = BusinessType.OTHER)
     @GetMapping("/overtime")
-    public AjaxResult overtime(@RequestParam(name = "fieldNum") String fieldNum,@RequestParam(name = "regionName") String regionName){
-        return AjaxResult.success(iParkingLotService.overtimeInfo(fieldNum,regionName));
+    public TableDataInfo overtime(@RequestParam(name = "fieldNum") String fieldNum, @RequestParam(name = "regionName") String regionName){
+        startPage();
+        return getDataTable(iParkingLotService.overtimeInfo(fieldNum,regionName));
     }
 }
