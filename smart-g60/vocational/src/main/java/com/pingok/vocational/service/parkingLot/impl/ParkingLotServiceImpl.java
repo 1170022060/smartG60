@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -160,5 +159,15 @@ public class ParkingLotServiceImpl implements IParkingLotService {
     @Override
     public List<Map> selectRegionName(String fieldNum) {
         return tblParkingLotMapper.selectRegionName(fieldNum);
+    }
+
+    @Override
+    public List<Map> traffic(String fieldNum, Integer vehType, Date startDate, Date endDate,Integer statisticsType) {
+        return tblParkingStatisticsMapper.traffic(fieldNum,vehType,startDate,endDate,statisticsType);
+    }
+
+    @Override
+    public List<Map> humanFlow(String fieldNum, Integer areaId, Date startDate, Date endDate, Integer statisticsType) {
+        return tblEventPassengerFlowMapper.humanFlow(fieldNum,areaId,startDate,endDate,statisticsType);
     }
 }
