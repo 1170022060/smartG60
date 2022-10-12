@@ -22,7 +22,7 @@ public interface PilotLightMapper {
             "tdi.CAMERA_ID as \"cameraId\" " +
             "FROM " +
             "TBL_DEVICE_INFO tdi  " +
-            "LEFT JOIN TBL_DEVICE_STATUS tds ON tds.DEVICE_ID = tdi.DEVICE_ID " +
+            "LEFT JOIN TBL_DEVICE_STATUS tds ON tds.DEVICE_ID = tdi.ID " +
             "WHERE " +
             "DEVICE_TYPE = #{deviceType}")
     List<Map> pilotLightStatus(@Param("deviceType") Integer deviceType);

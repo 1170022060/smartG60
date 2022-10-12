@@ -104,6 +104,7 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
                         for (ToiletSensorData_cubicle c : cubicles) {
                             updateCubicleInfo(toiletInfo.getId(), c);
                         }
+                        updateToiletInfoSurplus(toiletInfo.getId());
                         break;
                     }
                     case "alarm": {
@@ -140,6 +141,21 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
             }
         } else {
             throw new ServiceException("厕所传感器报文解析异常");
+        }
+    }
+
+
+    private void updateToiletInfoSurplus(Long id) {
+        Example example = new Example(TblSmartToiletCubicle.class);
+        example.createCriteria().andEqualTo("serId", id)
+                .andEqualTo("status", 0);
+        List<TblSmartToiletCubicle> list = tblSmartToiletCubicleMapper.selectByExample(example);
+        if (list != null) {
+            TblSmartToiletInfo info = tblSmartToiletInfoMapper.selectByPrimaryKey(id);
+            if (info != null) {
+                info.setSurplus(list.size());
+                tblSmartToiletInfoMapper.updateByPrimaryKey(info);
+            }
         }
     }
 
@@ -182,8 +198,10 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
         Example example = new Example(TblSmartToiletCubicle.class);
         example.createCriteria().andEqualTo("serId", serId).andEqualTo("indexId", cubicle.getIndex());
         TblSmartToiletCubicle tblSmartToiletCubicle = tblSmartToiletCubicleMapper.selectOneByExample(example);
-        tblSmartToiletCubicle.setStatus(cubicle.getStatus());
-        tblSmartToiletCubicleMapper.updateByPrimaryKeySelective(tblSmartToiletCubicle);
+        if (tblSmartToiletCubicle != null && tblSmartToiletCubicle.getStatus() != 3) {
+            tblSmartToiletCubicle.setStatus(cubicle.getStatus());
+            tblSmartToiletCubicleMapper.updateByPrimaryKeySelective(tblSmartToiletCubicle);
+        }
     }
 
     /**

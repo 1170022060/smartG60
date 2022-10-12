@@ -107,8 +107,8 @@ public class PilotLightServiceImpl implements IPilotLightService {
                                 break;
                         }
                         statusDetails.put("currentVisibility", obj.getJSONObject("data").getString("currentVisibility"));
-                        deviceStatus.setStatus(1);
-                        deviceStatus.setStatusDesc("正常");
+//                        deviceStatus.setStatus(1);
+//                        deviceStatus.setStatusDesc("正常");
                         deviceStatus.setStatusDetails(statusDetails.toJSONString());
                         resp = HttpUtil.post(HostConfig.DASSHOST + "/device-monitor/deviceMonitor", JSON.toJSONString(deviceStatus));
                         if (!StringUtils.isEmpty(resp)) {

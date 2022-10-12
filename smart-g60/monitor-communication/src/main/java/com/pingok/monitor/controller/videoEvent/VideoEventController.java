@@ -13,7 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 
 /**
  * @author
@@ -45,11 +47,11 @@ public class VideoEventController extends BaseController {
                 break;
             case "VEHICLE_EVENT":
                 TblEventVehicleEvent tblEventVehicleEvent = JSON.parseObject(data, TblEventVehicleEvent.class);
-//                List<Integer> list = Arrays.asList(5,6,14,22,25,27,15,10016,31,32,34,35,36,37,40,41,16);
-//                if(!list.contains(tblEventVehicleEvent.getUiEventType()) && StringUtils.isNotNull(tblEventVehicleEvent.getSzSourceCode()) && !tblEventVehicleEvent.getSzSourceCode().equals("0")){
+                List<Integer> list = Arrays.asList(5,6,14,15,10016,31,32,34,35,36,37,40,41,16);
+                if(!list.contains(tblEventVehicleEvent.getUiEventType())){
                 iVideoEventService.vehicleEvent(tblEventVehicleEvent);
                 iVideoEventService.updateVehicleEvent(tblEventVehicleEvent);
-//                }
+                }
                 break;
             case "PASSENGER_FLOW":
                 TblEventPassengerFlow tblEventPassengerFlow = JSON.parseObject(data, TblEventPassengerFlow.class);

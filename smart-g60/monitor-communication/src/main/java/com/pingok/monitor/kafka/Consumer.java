@@ -56,17 +56,18 @@ public class Consumer {
     public void updateEventInfo(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
-            Object msg = message.get();
-            log.info("updateEventInfo 消费了： Topic:" + topic + ",Message:" + msg);
-            JSONObject object = JSONObject.parseObject(String.valueOf(msg));
-            try {
-                boolean tOf = iVideoService.eventUpdate(object.getLong("ubiLogicId"), object.getInteger("uiState"), object.getString("szRemark"), object.getString("szUser"));
-                if (tOf) {
-                    ack.acknowledge();
-                }
-            } catch (Exception e) {
-                log.error("updateEventInfo消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
-            }
+            ack.acknowledge();
+//            Object msg = message.get();
+//            log.info("updateEventInfo 消费了： Topic:" + topic + ",Message:" + msg);
+//            JSONObject object = JSONObject.parseObject(String.valueOf(msg));
+//            try {
+//                boolean tOf = iVideoService.eventUpdate(object.getLong("ubiLogicId"), object.getInteger("uiState"), object.getString("szRemark"), object.getString("szUser"));
+//                if (tOf) {
+//                    ack.acknowledge();
+//                }
+//            } catch (Exception e) {
+//                log.error("updateEventInfo消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
+//            }
         }
     }
 
