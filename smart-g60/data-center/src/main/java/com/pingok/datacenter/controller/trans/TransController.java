@@ -178,7 +178,7 @@ public class TransController extends BaseController {
         updatePassIdVo.setPassId(passId);
         updatePassIdVo.setRecordId(exTransInfo.getInsertExTrans().getRecordId());
         updatePassIdVo.setTableName(exTransInfo.getInsertExTrans().getTableName());
-        tblEnTransMapper.updatePassId(updatePassIdVo);
+        tblExTransMapper.updatePassId(updatePassIdVo);
         return AjaxResult.success(exTransInfo);
     }
 
