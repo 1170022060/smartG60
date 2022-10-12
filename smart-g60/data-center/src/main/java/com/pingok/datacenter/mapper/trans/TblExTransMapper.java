@@ -1,8 +1,7 @@
 package com.pingok.datacenter.mapper.trans;
 
-import com.pingok.datacenter.domain.trans.TblEnTrans;
 import com.pingok.datacenter.domain.trans.TblExTrans;
-import com.ruoyi.common.core.mapper.CommonRepository;
+import com.pingok.datacenter.domain.trans.vo.UpdatePassIdVo;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -18,4 +17,10 @@ public interface TblExTransMapper{
      * @param tblExTrans 接收出口流水表信息
      */
     public int insertExTrans(TblExTrans tblExTrans);
+    /**
+     * 添加passId
+     *
+     * @return 结果
+     */
+    public int updatePassId(UpdatePassIdVo updatePassIdVo);
 }

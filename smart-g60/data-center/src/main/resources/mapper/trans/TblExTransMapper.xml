@@ -24,11 +24,11 @@
         <result property="printFlag"  column="print_flag"   />
         <result property="feeType"  column="fee_type"   />
         <result property="fitFee"  column="fit_fee"   />
-        <result property="fitFee95"  column="fit_fee_95"   />
+        <result property="fitFee95"  column="fit_fee95"   />
         <result property="tollFee"  column="toll_fee"   />
-        <result property="tollFee95"  column="toll_fee_95"   />
+        <result property="tollFee95"  column="toll_fee95"   />
         <result property="localFee"  column="local_fee"   />
-        <result property="localFee95"  column="local_fee_95"   />
+        <result property="localFee95"  column="local_fee95"   />
         <result property="payWay"  column="pay_way"   />
         <result property="passType"  column="pass_type"   />
         <result property="vehClass"  column="veh_class"   />
@@ -71,11 +71,11 @@
             <if test="printFlag != null ">print_flag,</if>
             <if test="feeType != null ">fee_type,</if>
             <if test="fitFee != null ">fit_fee,</if>
-            <if test="fitFee95 != null ">fit_fee_95,</if>
+            <if test="fitFee95 != null ">fit_fee95,</if>
             <if test="tollFee != null ">toll_fee,</if>
-            <if test="tollFee95 != null ">toll_fee_95,</if>
+            <if test="tollFee95 != null ">toll_fee95,</if>
             <if test="localFee != null ">local_fee,</if>
-            <if test="localFee95 != null ">local_fee_95,</if>
+            <if test="localFee95 != null ">local_fee95,</if>
             <if test="payWay != null ">pay_way,</if>
             <if test="passType != null ">pass_type,</if>
             <if test="vehClass != null ">veh_class,</if>
@@ -144,4 +144,11 @@
             #{recordId}
         )
     </insert>
+    <update id="updatePassId" parameterType="com.pingok.datacenter.domain.trans.vo.UpdatePassIdVo">
+        update ${tableName}
+        <set>
+            PASS_ID = #{passId}
+        </set>
+        where RECORD_ID = #{recordId}
+    </update>
 </mapper>
