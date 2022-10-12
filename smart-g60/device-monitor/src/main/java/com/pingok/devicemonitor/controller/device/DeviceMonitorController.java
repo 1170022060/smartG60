@@ -67,10 +67,12 @@ public class DeviceMonitorController extends BaseController {
         deviceFault.setFaultTime(DateUtils.getNowDate());
         deviceFault.setRegisterType(2);
         deviceFault.setFaultType(deviceStatus.getFaultType() != null ? deviceStatus.getFaultType() : "offLine");
-        if (deviceStatus.getStatus() == null || deviceStatus.getStatus() == 0) {
-            iDeviceService.deviceFault(deviceFault);
-        } else {
-            iDeviceService.updateDeviceFault(deviceFault);
+        if (deviceStatus.getStatus() != null) {
+            if (deviceStatus.getStatus() == 0) {
+                iDeviceService.deviceFault(deviceFault);
+            } else {
+                iDeviceService.updateDeviceFault(deviceFault);
+            }
         }
         if (StringUtils.isNotNull(deviceStatus.getStatusDetails()) && deviceStatus.getStatusDetails().startsWith("{")) {
             JSONObject obj = JSON.parseObject(deviceStatus.getStatusDetails());
