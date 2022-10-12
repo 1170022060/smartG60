@@ -1,6 +1,7 @@
 package com.pingok.devicemonitor.domain.smartToilet;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -29,7 +30,7 @@ public class TblSmartToiletCubicle implements Serializable {
     private Integer indexId;
 
     /**
-     * 0 (未占用) 1(占用) 
+     * 0 (未占用) 1(占用) 2 超时 3 故障
      */
     private Integer status;
 
@@ -44,4 +45,9 @@ public class TblSmartToiletCubicle implements Serializable {
     private Integer position;
 
     private static final long serialVersionUID = 1L;
+
+    private Date updateTime;
+
+    private String remark;
+
 }

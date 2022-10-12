@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author
@@ -96,7 +97,10 @@ public class VideoServiceImpl implements IVideoService {
     @Override
     public String getEventVideoById(Long ubiLogicId, Integer uiEventType, Integer uiVideoType) {
         String url = null;
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .writeTimeout(10,TimeUnit.MINUTES)
+                .readTimeout(10,TimeUnit.MINUTES)
+                .build();
         Request request = new Request.Builder()
                 .get()
                 .url(HostConfig.VIDEOHOST + "/api/get-event-video-by-id/" + ubiLogicId + "?uiEventType=" + uiEventType + "&uiVideoType=" + uiVideoType)

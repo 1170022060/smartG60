@@ -438,7 +438,7 @@ public class EventServiceImpl implements IEventService {
         tblEventRecord.setRemark(remark);
         tblEventRecordMapper.updateByPrimaryKey(tblEventRecord);
 
-        eventUpdate(tblEventRecord.getEventId(), 1, null, SecurityUtils.getUsername());
+//        eventUpdate(tblEventRecord.getEventId(), 1, null, SecurityUtils.getUsername());
     }
 
     @Override
