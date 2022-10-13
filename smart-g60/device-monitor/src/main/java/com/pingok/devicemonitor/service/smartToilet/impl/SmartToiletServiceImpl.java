@@ -198,7 +198,7 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
         Example example = new Example(TblSmartToiletCubicle.class);
         example.createCriteria().andEqualTo("serId", serId).andEqualTo("indexId", cubicle.getIndex());
         TblSmartToiletCubicle tblSmartToiletCubicle = tblSmartToiletCubicleMapper.selectOneByExample(example);
-        if(tblSmartToiletCubicle!=null && tblSmartToiletCubicle.getStatus()!=3){
+        if (tblSmartToiletCubicle != null && tblSmartToiletCubicle.getStatus() != 3) {
             tblSmartToiletCubicle.setStatus(cubicle.getStatus());
             tblSmartToiletCubicleMapper.updateByPrimaryKeySelective(tblSmartToiletCubicle);
         }
