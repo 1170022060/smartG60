@@ -48,6 +48,8 @@ public class TblSmartToiletCubicle implements Serializable {
 
     private Date updateTime;
 
+    private Long updateUserId;
+
     private String remark;
 
 }

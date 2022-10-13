@@ -28,12 +28,15 @@ public interface SmartToiletScheduleMapper extends CommonRepository<TblSmartToil
             "<when test='fieldId != null'>" +
             "and sts.FIELD_ID= #{fieldId}" +
             "</when>"+
+            "<when test='toiletId != null'>" +
+            "and sts.TOILET_ID= #{toiletId}" +
+            "</when>"+
             "<when test='workDate != null'>" +
             "and sts.WORK_DATE= #{workDate}" +
             "</when>"+
             "order by sts.WORK_DATE" +
             "</script>"})
-    List<Map> findToiletScheduleList(@Param("fieldId") Long fieldId, @Param("workDate") Date workDate);
+    List<Map> findToiletScheduleList(@Param("fieldId") Long fieldId,@Param("TOILET_ID")Long toiletId, @Param("workDate") Date workDate);
 
     @Select("SELECT sti.ID as \"id\",sti.SER_NAME as \"toiType\" from TBL_SMART_TOILET_INFO sti " +
             "ORDER BY sti.SER_NAME")

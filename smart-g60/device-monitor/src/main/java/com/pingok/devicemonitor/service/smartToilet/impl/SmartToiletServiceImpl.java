@@ -1,5 +1,6 @@
 package com.pingok.devicemonitor.service.smartToilet.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.devicemonitor.domain.smartToilet.TblSmartToiletCubicle;
@@ -13,6 +14,8 @@ import com.pingok.devicemonitor.mapper.smartToilet.TblSmartToiletHealthMapper;
 import com.pingok.devicemonitor.mapper.smartToilet.TblSmartToiletInfoMapper;
 import com.pingok.devicemonitor.service.smartToilet.ISmartToiletService;
 import com.ruoyi.common.core.exception.ServiceException;
+import com.ruoyi.common.core.utils.DateUtils;
+import com.ruoyi.common.security.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -212,5 +215,12 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
      */
     private void addStatusDesc(String desc, String addString) {
         if (!desc.contains(addString)) desc.concat(";").concat(addString);
+    }
+
+    @Override
+    public int updateToiletStatus(TblSmartToiletCubicle tblSmartToiletCubicle) {
+        tblSmartToiletCubicle.setUpdateTime(DateUtils.getNowDate());
+        tblSmartToiletCubicle.setUpdateUserId(SecurityUtils.getUserId());
+        return tblSmartToiletCubicleMapper.updateByPrimaryKey(tblSmartToiletCubicle);
     }
 }
