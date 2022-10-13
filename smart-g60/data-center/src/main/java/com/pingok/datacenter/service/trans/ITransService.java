@@ -1,6 +1,7 @@
 package com.pingok.datacenter.service.trans;
 
 import com.pingok.datacenter.domain.trans.*;
+import com.pingok.datacenter.domain.trans.vo.EnInfoVo;
 import com.pingok.datacenter.domain.trans.vo.EnTransEnum;
 import com.pingok.datacenter.domain.trans.vo.ExInfoVo;
 import com.pingok.datacenter.domain.trans.vo.ExTransEnum;
@@ -20,7 +21,7 @@ public interface ITransService {
      *
      * @param tblEnTrans 接收入口流水表信息
      */
-    public Long insertEnTrans(TblEnTrans tblEnTrans);
+    public EnInfoVo insertEnTrans(TblEnTrans tblEnTrans);
 
     /**
      * ETC入口通行信息表入库

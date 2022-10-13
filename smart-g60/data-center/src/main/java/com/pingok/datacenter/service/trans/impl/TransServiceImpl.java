@@ -57,13 +57,16 @@ public class TransServiceImpl implements ITransService {
     private RemoteIdProducerService remoteIdProducerService;
 
     @Override
-    public Long insertEnTrans(TblEnTrans tblEnTrans) {
+    public EnInfoVo insertEnTrans(TblEnTrans tblEnTrans) {
         tblEnTrans.setRecordId(remoteIdProducerService.nextId());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         String year = sdf.format(tblEnTrans.getTransTime());
         tblEnTrans.setTableName("TBL_EN_TRANS_"+ year);
         tblEnTransMapper.insertEnTrans(tblEnTrans);
-        return tblEnTrans.getRecordId();
+        EnInfoVo enInfoVo=new EnInfoVo();
+        enInfoVo.setRecordId(tblEnTrans.getRecordId());
+        enInfoVo.setTableName(tblEnTrans.getTableName());
+        return enInfoVo;
     }
 
     @Override
@@ -94,6 +97,7 @@ public class TransServiceImpl implements ITransService {
         ExInfoVo exInfoVo=new ExInfoVo();
         exInfoVo.setRecordId(tblExTrans.getRecordId());
         exInfoVo.setYear(year);
+        exInfoVo.setTableName(tblExTrans.getTableName());
         return exInfoVo;
     }
 

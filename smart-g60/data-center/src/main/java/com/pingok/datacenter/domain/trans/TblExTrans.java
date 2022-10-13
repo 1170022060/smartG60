@@ -154,7 +154,7 @@ public class TblExTrans implements Serializable {
 
     /** 备用字段 */
     private String reserve;
-
+    private String passId;
     /** 表名   */
     private String tableName;
 
@@ -524,5 +524,12 @@ public class TblExTrans implements Serializable {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+    public String getPassId() {
+        return passId;
+    }
+
+    public void setPassId(String passId) {
+        this.passId = passId;
     }
 }

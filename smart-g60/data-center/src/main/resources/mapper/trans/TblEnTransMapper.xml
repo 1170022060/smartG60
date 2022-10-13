@@ -78,4 +78,11 @@
             #{recordId}
         )
     </insert>
+    <update id="updatePassId" parameterType="com.pingok.datacenter.domain.trans.vo.UpdatePassIdVo">
+        update ${tableName}
+        <set>
+            PASS_ID = #{passId}
+        </set>
+        where RECORD_ID = #{recordId}
+    </update>
 </mapper>

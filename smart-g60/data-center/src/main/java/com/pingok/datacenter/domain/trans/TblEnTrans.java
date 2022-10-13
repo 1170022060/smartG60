@@ -87,7 +87,7 @@ public class TblEnTrans implements Serializable {
 
     /** 特情类型 89：无子表型流水 通常为0   */
     private String specialType;
-
+    private String passId;
     /** 表名   */
     private String tableName;
 
@@ -273,5 +273,13 @@ public class TblEnTrans implements Serializable {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    public String getPassId() {
+        return passId;
+    }
+
+    public void setPassId(String passId) {
+        this.passId = passId;
     }
 }
