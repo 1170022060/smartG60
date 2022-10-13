@@ -32,7 +32,7 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "LEFT JOIN TBL_FIELD_INFO tfi on tfi.ID = tdi.FIELD_BELONG " +
             "LEFT JOIN TBL_DEVICE_STATUS tds ON tds.DEVICE_ID = tdi.ID  " +
             "LEFT JOIN SYS_DICT_DATA sdd on sdd.DICT_VALUE=to_char(tdi.DEVICE_TYPE) and sdd.DICT_TYPE='device_type' " +
-            "where 1=1 " +
+            "where tdi.FIELD_BELONG in (3941,3940) " +
             "<when test='fieldNum != null'> " +
             "and tfi.FIELD_NUM = #{fieldNum} " +
             "</when>" +
@@ -107,7 +107,7 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "LEFT JOIN  SYS_USER creatUser ON creatUser.USER_ID = tdf.CREATE_USER_ID " +
             "LEFT JOIN  SYS_USER updateUser ON updateUser.USER_ID = tdf.UPDATE_USER_ID " +
             "LEFT JOIN SYS_DICT_DATA sdd on sdd.DICT_VALUE=to_char(tdi.DEVICE_TYPE) and sdd.DICT_TYPE='device_type' " +
-            "where 1=1 " +
+            "where tdi.FIELD_BELONG in (3941,3940) " +
             "<when test='fieldNum != null'> " +
             "and tfi.FIELD_NUM = #{fieldNum} " +
             "</when>" +

@@ -23,8 +23,8 @@ public class SmartToiletScheduleServiceImpl implements ISmartToiletScheduleServi
     private SmartToiletScheduleMapper smartToiletScheduleMapper;
 
     @Override
-    public List<Map> findToiletScheduleList(Long fieldId, Date workDate) {
-        return smartToiletScheduleMapper.findToiletScheduleList(fieldId,workDate);
+    public List<Map> findToiletScheduleList(Long fieldId,Long toiletId, Date workDate) {
+        return smartToiletScheduleMapper.findToiletScheduleList(fieldId,toiletId,workDate);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class SmartToiletScheduleServiceImpl implements ISmartToiletScheduleServi
     @Override
     public int update(TblSmartToiletSchedule tblSmartToiletSchedule) {
         tblSmartToiletSchedule.setUpdateTime(DateUtils.getNowDate());
-        tblSmartToiletSchedule.setCreateUserId(SecurityUtils.getUserId());
+        tblSmartToiletSchedule.setUpdateUserId(SecurityUtils.getUserId());
         return smartToiletScheduleMapper.updateByPrimaryKey(tblSmartToiletSchedule);
     }
 

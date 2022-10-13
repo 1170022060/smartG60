@@ -10,7 +10,7 @@ public interface ISmartToiletScheduleService {
     /**
      * 分页查询厕所排班记录
      */
-    List<Map> findToiletScheduleList(Long fieldId, Date workDate);
+    List<Map> findToiletScheduleList(Long fieldId,Long toiletId, Date workDate);
 
     /**
      * 新增厕所排班

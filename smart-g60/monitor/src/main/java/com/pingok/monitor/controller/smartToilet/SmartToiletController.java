@@ -36,8 +36,8 @@ public class SmartToiletController extends BaseController {
 //    @RequiresPermissions("monitor:smartToilet:findByFieldNum")
 //    @Log(title = "智慧厕所监控服务", businessType = BusinessType.OTHER)
     @GetMapping
-    public AjaxResult findByFieldNum(@RequestParam String fieldNum) {
-        return AjaxResult.success(iSmartToiletService.findByFieldNum(fieldNum));
+    public AjaxResult findByFieldNum(@RequestParam String fieldNum,Date workDate) {
+        return AjaxResult.success(iSmartToiletService.findByFieldNum(fieldNum,workDate));
     }
 
     /**
@@ -47,9 +47,9 @@ public class SmartToiletController extends BaseController {
      * @return
      */
     @GetMapping("/list")
-    public TableDataInfo list(Long fieldId, Date workDate){
+    public TableDataInfo list(Long fieldId,Long toiletId, Date workDate){
         startPage();
-        List<Map> info = iSmartToiletScheduleService.findToiletScheduleList(fieldId,workDate);
+        List<Map> info = iSmartToiletScheduleService.findToiletScheduleList(fieldId,toiletId,workDate);
         return getDataTable(info);
     }
 
@@ -58,7 +58,7 @@ public class SmartToiletController extends BaseController {
      * @param tblSmartToiletSchedule
      * @return
      */
-    @RequiresPermissions("monitor:smartToilet:add")
+//    @RequiresPermissions("monitor:smartToilet:add")
     @Log(title = "新增厕所排班",businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody TblSmartToiletSchedule tblSmartToiletSchedule) {
@@ -71,7 +71,7 @@ public class SmartToiletController extends BaseController {
      * @return
      */
     @RequiresPermissions("monitor:smartToilet:edit")
-    @Log(title = "编辑厕所排班",businessType = BusinessType.INSERT)
+    @Log(title = "编辑厕所排班",businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody TblSmartToiletSchedule tblSmartToiletSchedule){
         return toAjax(iSmartToiletScheduleService.update(tblSmartToiletSchedule));

@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -68,4 +69,18 @@ public interface SmartToiletMapper {
             "WHERE " +
             "stc.SER_ID =  #{serId}")
     List<Map> findToiletCubicleBySerId(@Param("serId") Long serId);
+
+    @Select("SELECT sts.ID as \"id\"," +
+            "fi.FIELD_NAME as \"fieldName\"," +
+            "sti.SER_NAME as \"serName\"," +
+            "to_char(sts.WORK_DATE, 'yyyy-mm-dd') as \"workDate\"," +
+            "sts.TOI_CHIEF as \"toiChief\"," +
+            "sts.WORK_CLEANER_AM as \"workCleanerAm\"," +
+            "sts.WORK_CLEANER_PM as \"workCleanerPm\"  " +
+            "from TBL_SMART_TOILET_SCHEDULE sts  " +
+            "JOIN TBL_FIELD_INFO fi on fi.ID = sts.FIELD_ID  " +
+            "JOIN TBL_SMART_TOILET_INFO sti on sti.id = sts.TOILET_ID  " +
+            "where " +
+            "sts.TOILET_ID= #{toiletId} and sts.WORK_DATE= #{workDate}  ")
+    List<Map> getTodaySchedule(@Param("toiletId") Long toiletId,@Param("workDate") Date workDate);
 }
