@@ -17,7 +17,7 @@ public interface SmartToiletScheduleMapper extends CommonRepository<TblSmartToil
             "SELECT sts.ID as \"id\"," +
             "fi.FIELD_NAME as \"fieldName\"," +
             "sti.SER_NAME as \"serName\"," +
-            "sts.WORK_DATE as \"workDate\"," +
+            "to_char(sts.WORK_DATE, 'yyyy-mm-dd') as \"workDate\"," +
             "sts.TOI_CHIEF as \"toiChief\"," +
             "sts.WORK_CLEANER_AM as \"workCleanerAm\"," +
             "sts.WORK_CLEANER_PM as \"workCleanerPm\"  " +
@@ -36,7 +36,7 @@ public interface SmartToiletScheduleMapper extends CommonRepository<TblSmartToil
             "</when>"+
             "order by sts.WORK_DATE" +
             "</script>"})
-    List<Map> findToiletScheduleList(@Param("fieldId") Long fieldId,@Param("TOILET_ID")Long toiletId, @Param("workDate") Date workDate);
+    List<Map> findToiletScheduleList(@Param("fieldId") Long fieldId,@Param("toiletId")Long toiletId, @Param("workDate") Date workDate);
 
     @Select("SELECT sti.ID as \"id\",sti.SER_NAME as \"toiType\" from TBL_SMART_TOILET_INFO sti " +
             "ORDER BY sti.SER_NAME")
