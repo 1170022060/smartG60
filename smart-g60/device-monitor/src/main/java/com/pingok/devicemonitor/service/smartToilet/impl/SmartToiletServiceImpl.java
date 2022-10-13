@@ -221,8 +221,11 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
 
     @Override
     public int updateToiletStatus(TblSmartToiletCubicle tblSmartToiletCubicle) {
-        tblSmartToiletCubicle.setUpdateTime(DateUtils.getNowDate());
-        tblSmartToiletCubicle.setUpdateUserId(SecurityUtils.getUserId());
-        return tblSmartToiletCubicleMapper.updateByPrimaryKey(tblSmartToiletCubicle);
+        TblSmartToiletCubicle tblSmartToiletCubicle1 = tblSmartToiletCubicleMapper.selectByPrimaryKey(tblSmartToiletCubicle.getId());
+        tblSmartToiletCubicle1.setUpdateTime(DateUtils.getNowDate());
+        tblSmartToiletCubicle1.setUpdateUserId(SecurityUtils.getUserId());
+        tblSmartToiletCubicle1.setStatus(tblSmartToiletCubicle.getStatus());
+        tblSmartToiletCubicle1.setRemark(tblSmartToiletCubicle.getRemark());
+        return tblSmartToiletCubicleMapper.updateByPrimaryKey(tblSmartToiletCubicle1);
     }
 }
