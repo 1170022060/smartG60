@@ -13,6 +13,7 @@ import com.pingok.devicemonitor.mapper.smartToilet.TblSmartToiletCubicleMapper;
 import com.pingok.devicemonitor.mapper.smartToilet.TblSmartToiletHealthMapper;
 import com.pingok.devicemonitor.mapper.smartToilet.TblSmartToiletInfoMapper;
 import com.pingok.devicemonitor.service.smartToilet.ISmartToiletService;
+import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
@@ -202,6 +203,7 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
         example.createCriteria().andEqualTo("serId", serId).andEqualTo("indexId", cubicle.getIndex());
         TblSmartToiletCubicle tblSmartToiletCubicle = tblSmartToiletCubicleMapper.selectOneByExample(example);
         if (tblSmartToiletCubicle != null && tblSmartToiletCubicle.getStatus() != 3) {
+            tblSmartToiletCubicle.setUpdateTime(DateUtils.getNowDate());
             tblSmartToiletCubicle.setStatus(cubicle.getStatus());
             tblSmartToiletCubicleMapper.updateByPrimaryKeySelective(tblSmartToiletCubicle);
         }
