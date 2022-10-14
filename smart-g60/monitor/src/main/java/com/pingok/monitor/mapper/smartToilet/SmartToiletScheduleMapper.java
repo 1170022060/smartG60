@@ -20,10 +20,16 @@ public interface SmartToiletScheduleMapper extends CommonRepository<TblSmartToil
             "to_char(sts.WORK_DATE, 'yyyy-mm-dd') as \"workDate\"," +
             "sts.TOI_CHIEF as \"toiChief\"," +
             "sts.WORK_CLEANER_AM as \"workCleanerAm\"," +
-            "sts.WORK_CLEANER_PM as \"workCleanerPm\"  " +
+            "sts.WORK_CLEANER_PM as \"workCleanerPm\"," +
+            "b.USER_NAME as \"createUser\"," +
+            "to_char(sts.CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\","+
+            "c.USER_NAME as \"updateUser\"," +
+            "to_char(sts.UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"  "+
             "from TBL_SMART_TOILET_SCHEDULE sts  " +
             "JOIN TBL_FIELD_INFO fi on fi.ID = sts.FIELD_ID  " +
             "JOIN TBL_SMART_TOILET_INFO sti on sti.id = sts.TOILET_ID  " +
+            "left join SYS_USER b on sts.CREATE_USER_ID=b.USER_ID " +
+            "left join SYS_USER c on sts.UPDATE_USER_ID=c.USER_ID " +
             "where 1=1 " +
             "<when test='fieldId != null'>" +
             "and sts.FIELD_ID= #{fieldId}" +

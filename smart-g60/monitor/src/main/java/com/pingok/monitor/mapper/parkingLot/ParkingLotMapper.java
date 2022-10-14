@@ -1,5 +1,7 @@
 package com.pingok.monitor.mapper.parkingLot;
 
+import com.pingok.monitor.domain.parkingLot.TblParkingVehicleInfo;
+import com.ruoyi.common.core.mapper.CommonRepository;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -13,7 +15,7 @@ import java.util.Map;
  * @author qiumin
  */
 @Mapper
-public interface ParkingLotMapper {
+public interface ParkingLotMapper extends CommonRepository<TblParkingVehicleInfo> {
     @Select("SELECT tpl.ID as \"id\",tpl.REGION_NAME as \"regionName\", tpl.REGION_NUM as \"regionNum\",tpl.TOTAL as \"total\",tpl.SURPLUS as \"surplus\"  FROM TBL_PARKING_LOT tpl JOIN TBL_FIELD_INFO tfi ON tfi.ID = tpl.FIELD_ID WHERE tfi.FIELD_NUM = #{fieldNum}")
     List<Map> findByFieldNum(@Param("fieldNum") String fieldNum);
 
