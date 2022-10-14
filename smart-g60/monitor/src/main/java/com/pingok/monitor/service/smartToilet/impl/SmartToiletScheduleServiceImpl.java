@@ -37,9 +37,14 @@ public class SmartToiletScheduleServiceImpl implements ISmartToiletScheduleServi
 
     @Override
     public int update(TblSmartToiletSchedule tblSmartToiletSchedule) {
-        tblSmartToiletSchedule.setUpdateTime(DateUtils.getNowDate());
-        tblSmartToiletSchedule.setUpdateUserId(SecurityUtils.getUserId());
-        return smartToiletScheduleMapper.updateByPrimaryKey(tblSmartToiletSchedule);
+        TblSmartToiletSchedule tblSmartToiletSchedule1 = smartToiletScheduleMapper.selectByPrimaryKey(tblSmartToiletSchedule.getId());
+        tblSmartToiletSchedule1.setUpdateTime(DateUtils.getNowDate());
+        tblSmartToiletSchedule1.setUpdateUserId(SecurityUtils.getUserId());
+        tblSmartToiletSchedule1.setToiChief(tblSmartToiletSchedule.getToiChief());
+        tblSmartToiletSchedule1.setWorkDate(tblSmartToiletSchedule.getWorkDate());
+        tblSmartToiletSchedule1.setWorkCleanerAm(tblSmartToiletSchedule.getWorkCleanerAm());
+        tblSmartToiletSchedule1.setWorkCleanerPm(tblSmartToiletSchedule.getWorkCleanerPm());
+        return smartToiletScheduleMapper.updateByPrimaryKey(tblSmartToiletSchedule1);
     }
 
     @Override
