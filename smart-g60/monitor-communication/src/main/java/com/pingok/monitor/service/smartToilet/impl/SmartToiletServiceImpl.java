@@ -4,12 +4,15 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.monitor.config.HostConfig;
+import com.pingok.monitor.mqtt.MqttGateway;
 import com.pingok.monitor.service.smartToilet.ISmartToiletService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * @author
@@ -19,6 +22,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class SmartToiletServiceImpl implements ISmartToiletService {
 
+
+    @Resource
+    private MqttGateway mqttGateway;
 
     @Async
     @Override
@@ -34,5 +40,10 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
                 }
             }
         }
+    }
+
+    @Override
+    public void send(JSONObject object) {
+        mqttGateway.sendToMqtt("$"+object.getString("ser_num")+"/command/pub",object.toJSONString());
     }
 }

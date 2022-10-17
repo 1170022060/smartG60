@@ -36,6 +36,28 @@ public class VideoServiceImpl implements IVideoService {
 
 
     @Override
+    public void linkage(Long ubiLogicId) {
+        OkHttpClient client = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder().build();
+        Request request = new Request.Builder()
+                .post(formBody)
+                .url(HostConfig.VIDEOHOST + "/api/event/linkage/" + ubiLogicId)
+                .build();
+        Call call = client.newCall(request);
+        try {
+            Response response = call.execute();
+            if (response.code() == 200) {
+                log.error(ubiLogicId + "---枪云联动成功---");
+            } else {
+                log.error(ubiLogicId + "---枪云联动失败---" + response.message());
+            }
+
+        } catch (IOException e) {
+            log.error(ubiLogicId + "---枪云联动失败---" + e.getMessage());
+        }
+    }
+
+    @Override
     public Boolean eventUpdate(Long ubiLogicId, Integer uiState, String szRemark, String szUser) {
         OkHttpClient client = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
@@ -102,8 +124,10 @@ public class VideoServiceImpl implements IVideoService {
     public String getEventVideoById(Long ubiLogicId, Integer uiEventType, Integer uiVideoType) {
         String url = null;
         OkHttpClient client = new OkHttpClient.Builder()
-                .writeTimeout(10, TimeUnit.MINUTES)
-                .readTimeout(10, TimeUnit.MINUTES)
+                .callTimeout(1, TimeUnit.MINUTES)
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .writeTimeout(5, TimeUnit.MINUTES)
+                .readTimeout(5, TimeUnit.MINUTES)
                 .build();
         Request request = new Request.Builder()
                 .get()
