@@ -135,7 +135,37 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "LEFT JOIN  SYS_DICT_DATA sdd2 ON sdd2.DICT_VALUE = ter.VEH_COLOR  " +
             "AND sdd2.DICT_TYPE = 'veh_color' " +
             "LEFT JOIN  TBL_DEVICE_INFO tdi ON tdi.DEVICE_ID = ter.SZ_SOURCE_CODE  " +
-            "where ter.STATUS = 1 " +
+            "where ter.STATUS = 1 and tdi.DIRECTION = 1" +
             "ORDER BY ter.EVENT_TIME DESC" )
-    List<Map> filterEvent();
+    List<Map> filterUpEvent();
+
+    @Select("SELECT " +
+            "ter.ID AS \"id\", " +
+            "sdd.DICT_LABEL AS \"eventType\", " +
+            "ter.LOCATION_INTERVAL AS \"locationInterval\", " +
+            "sdd1.DICT_LABEL AS \"vehClass\", " +
+            "ter.VEH_PLATE AS \"vehPlate\", " +
+            "sdd2.DICT_LABEL AS \"vehColor\", " +
+            "ter.EVENT_PHOTO AS \"eventPhoto\", " +
+            "to_char(ter.EVENT_TIME, 'yyyy-mm-dd hh24:mi:ss') AS \"eventTime\", " +
+            "ter.SPEED AS \"speed\", " +
+            "ter.LANE AS \"lane\", " +
+            "ter.VIDEO AS \"video\", " +
+            "ter.STATUS AS \"status\", " +
+            "tdi.PILE_NO AS \"pileNo\", " +
+            "tdi.DEVICE_ID AS \"deviceId\", " +
+            "tdi.DIRECTION as \"direction\"," +
+            "tdi.CAMERA_ID as \"caremaId\"  "+
+            "FROM " +
+            "TBL_EVENT_RECORD ter " +
+            "LEFT JOIN  SYS_DICT_DATA sdd ON sdd.DICT_VALUE = ter.EVENT_TYPE  " +
+            "AND sdd.DICT_TYPE = 'event_type' " +
+            "LEFT JOIN  SYS_DICT_DATA sdd1 ON sdd1.DICT_VALUE = ter.VEH_CLASS  " +
+            "AND sdd1.DICT_TYPE = 'veh_class' " +
+            "LEFT JOIN  SYS_DICT_DATA sdd2 ON sdd2.DICT_VALUE = ter.VEH_COLOR  " +
+            "AND sdd2.DICT_TYPE = 'veh_color' " +
+            "LEFT JOIN  TBL_DEVICE_INFO tdi ON tdi.DEVICE_ID = ter.SZ_SOURCE_CODE  " +
+            "where ter.STATUS = 1 and tdi.DIRECTION = 2" +
+            "ORDER BY ter.EVENT_TIME DESC" )
+    List<Map> filterDownEvent();
 }

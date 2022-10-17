@@ -112,8 +112,14 @@ public interface IEventService {
     List<TblEventRecord> event();
 
     /**
-     * 查询上下行交通事件
+     * 查询上行已确认交通事件
      * @return
      */
-    List<Map> filterEvent();
+    List<Map> filterUpEvent();
+
+    /**
+     * 查询下行已确认交通事件
+     * @return
+     */
+    List<Map> filterDownEvent();
 }
