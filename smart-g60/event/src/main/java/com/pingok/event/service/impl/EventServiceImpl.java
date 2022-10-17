@@ -575,8 +575,14 @@ public class EventServiceImpl implements IEventService {
         remoteKafkaService.send(kafkaEnum);
     }
 
+
     @Override
-    public List<Map> filterEvent() {
-        return tblEventRecordMapper.filterEvent();
+    public List<Map> filterUpEvent() {
+        return tblEventRecordMapper.filterUpEvent();
+    }
+
+    @Override
+    public List<Map> filterDownEvent() {
+        return tblEventRecordMapper.filterDownEvent();
     }
 }

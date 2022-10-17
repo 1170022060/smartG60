@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -270,5 +272,9 @@ public class EventController extends BaseController {
      * @return
      */
     @GetMapping("/GetfilterEvent")
-    public AjaxResult getTable(){return AjaxResult.success(iEventService.filterEvent());}
+    public AjaxResult getTable(){
+        Map map = new HashMap();
+        map.put("upstream",iEventService.filterUpEvent());
+        map.put("downstream",iEventService.filterDownEvent());
+        return AjaxResult.success(map);}
 }
