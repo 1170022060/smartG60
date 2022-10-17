@@ -2,6 +2,7 @@ package com.pingok.monitor.service.videoEvent.impl;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.pingok.monitor.config.HostConfig;
 import com.pingok.monitor.domain.event.*;
 import com.pingok.monitor.mapper.event.*;
@@ -71,25 +72,26 @@ public class VideoEventServiceImpl implements IVideoEventService {
     @Override
     public void updateEventVideo(Long ubiLogicId) {
         String url = iVideoService.getEventVideoById(ubiLogicId, 2, 1);
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("ubiLogicId", ubiLogicId);
-        paramMap.put("url", url);
-        try {
-            String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/updateEventVideo", paramMap);
-            if (!StringUtils.isEmpty(post)) {
-                if (post.startsWith("{")) {
-                    R ret = JSON.parseObject(post, R.class);
-                    if (R.FAIL == ret.getCode()) {
-                        log.error(ubiLogicId + " 事件视频上传失败：" + ret.getMsg());
+        if(url!=null){
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("ubiLogicId", ubiLogicId);
+            paramMap.put("url", url);
+            try {
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/updateEventVideo", paramMap);
+                if (!StringUtils.isEmpty(post)) {
+                    if (post.startsWith("{")) {
+                        JSONObject ret = JSONObject.parseObject(post);
+                        if (ret.containsKey("code") && ret.getInteger("code") != 200) {
+                            log.error(ubiLogicId + " 事件视频上传失败：" + ret.getString("msg"));
+                        }
+                    } else {
+                        log.error(ubiLogicId + " 事件视频上传状态未知");
                     }
-                } else {
-                    log.error(ubiLogicId + " 事件视频上传状态未知");
                 }
+            } catch (Exception e) {
+                log.error(ubiLogicId + " 事件视频上传失败：" + e.getMessage());
             }
-        } catch (Exception e) {
-            log.error(ubiLogicId + " 事件视频上传失败：" + e.getMessage());
         }
-
     }
 
     @Async
