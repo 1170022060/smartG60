@@ -2,6 +2,7 @@ package com.ruoyi.common.core.kafka;
 
 public class KafkaTopIc {
 
+    public final static String SMART_TOILET = "smartToilet";
     public final static String GIS_UPDATE_STATUS = "gisUpdateStatus";
     public final static String WEBSOCKET_SEND = "sendMassage";
 

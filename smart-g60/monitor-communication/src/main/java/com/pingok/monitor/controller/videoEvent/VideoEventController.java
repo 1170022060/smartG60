@@ -6,6 +6,7 @@ import com.pingok.monitor.domain.event.TblEventPassengerFlow;
 import com.pingok.monitor.domain.event.TblEventPlateInfo;
 import com.pingok.monitor.domain.event.TblEventVehicleEvent;
 import com.pingok.monitor.service.videoEvent.IVideoEventService;
+import com.pingok.monitor.service.videoEvent.IVideoService;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
@@ -27,6 +28,8 @@ import java.util.List;
 public class VideoEventController extends BaseController {
     @Autowired
     private IVideoEventService iVideoEventService;
+    @Autowired
+    private IVideoService iVideoService;
 
     @PostMapping
     public AjaxResult videoEvent(@RequestParam String type, @RequestBody JSONObject object) {
@@ -47,10 +50,11 @@ public class VideoEventController extends BaseController {
                 break;
             case "VEHICLE_EVENT":
                 TblEventVehicleEvent tblEventVehicleEvent = JSON.parseObject(data, TblEventVehicleEvent.class);
-                List<Integer> list = Arrays.asList(5,6,14,15,10016,31,32,34,35,36,37,40,41,16);
-                if(!list.contains(tblEventVehicleEvent.getUiEventType())){
-                iVideoEventService.vehicleEvent(tblEventVehicleEvent);
-                iVideoEventService.updateVehicleEvent(tblEventVehicleEvent);
+                List<Integer> list = Arrays.asList(5, 6, 14, 15, 10016, 37);
+                if (!list.contains(tblEventVehicleEvent.getUiEventType())) {
+                    iVideoEventService.vehicleEvent(tblEventVehicleEvent);
+                    iVideoEventService.updateVehicleEvent(tblEventVehicleEvent);
+                    iVideoService.linkage(tblEventVehicleEvent.getUbiLogicId());
                 }
                 break;
             case "PASSENGER_FLOW":

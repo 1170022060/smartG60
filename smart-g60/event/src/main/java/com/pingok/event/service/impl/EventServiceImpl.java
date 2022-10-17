@@ -68,6 +68,13 @@ public class EventServiceImpl implements IEventService {
 
 
     @Override
+    public TblEventRecord selectByEventId(Long eventId) {
+        Example example = new Example(TblEventRecord.class);
+        example.createCriteria().andEqualTo("eventId", eventId);
+        return tblEventRecordMapper.selectOneByExample(example);
+    }
+
+    @Override
     public List<String> eventAlarmAll() {
         List<TblEventAlarm> list = tblEventAlarmMapper.selectAll();
         List<String> types = new ArrayList<>();

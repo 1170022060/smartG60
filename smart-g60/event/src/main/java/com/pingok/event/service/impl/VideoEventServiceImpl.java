@@ -66,6 +66,24 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
 
     @Override
+    public void relieveEvent(TblEventVehicleEvent tblEventVehicleEvent) {
+        if (StringUtils.isNotNull(tblEventVehicleEvent.getUiTrackId())) {
+            Example example = new Example(TblEventVehicleEvent.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("uiTrackId", tblEventVehicleEvent.getUiTrackId());
+            TblEventVehicleEvent eventVehicleEvent = tblEventVehicleEventMapper.selectOneByExample(example);
+            if (eventVehicleEvent != null) {
+                TblEventRecord eventRecord = iEventService.selectByEventId(tblEventVehicleEvent.getUbiLogicId());
+                if (eventRecord != null && eventRecord.getStatus() == 0) {
+                    eventRecord.setStatus(2);
+                    eventRecord.setUpdateTime(DateUtils.getNowDate());
+                    iEventService.update(eventRecord);
+                }
+            }
+        }
+    }
+
+    @Override
     public void fluxData(TblEventFlux tblEventFlux) {
         Example example = new Example(TblEventFlux.class);
         Example.Criteria criteria = example.createCriteria();

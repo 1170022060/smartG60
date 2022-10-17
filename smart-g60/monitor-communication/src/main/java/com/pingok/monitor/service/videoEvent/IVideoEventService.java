@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.pingok.monitor.domain.event.*;
 
 public interface IVideoEventService {
-    /**
-     *
-     * @param tblEventFlux
-     */
+
     void fluxData(TblEventFlux tblEventFlux);
 
     void plateInfo(TblEventPlateInfo tblEventPlateInfo);
