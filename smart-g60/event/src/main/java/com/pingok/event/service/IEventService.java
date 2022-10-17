@@ -110,4 +110,10 @@ public interface IEventService {
     int update(TblEventRecord tblEventRecord);
 
     List<TblEventRecord> event();
+
+    /**
+     * 查询上下行交通事件
+     * @return
+     */
+    List<Map> filterEvent();
 }

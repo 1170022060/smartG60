@@ -264,4 +264,11 @@ public class EventController extends BaseController {
         iVideoEventService.parkingEvent(tblEventParkingEvent);
         return AjaxResult.success();
     }
+
+    /**
+     * 获取分上下行的已确认的交通事件
+     * @return
+     */
+    @GetMapping("/GetfilterEvent")
+    public AjaxResult getTable(){return AjaxResult.success(iEventService.filterEvent());}
 }
