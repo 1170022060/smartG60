@@ -27,7 +27,7 @@ public class SmartToiletCubicleController extends BaseController {
         map.put("nqBoy", iSmartToiletCubicleService.getToiletCubicleTotal().get(0));
         map.put("bqBoy", iSmartToiletCubicleService.getToiletCubicleTotal().get(1));
         map.put("bqGirl", iSmartToiletCubicleService.getToiletCubicleTotal().get(2));
-        map.put("nqBoy", iSmartToiletCubicleService.getToiletCubicleTotal().get(3));
+        map.put("nqGirl", iSmartToiletCubicleService.getToiletCubicleTotal().get(3));
         return AjaxResult.success(map);
     }
 }
