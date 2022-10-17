@@ -84,12 +84,12 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
             "count(1) as \"count\", " +
             "sum(case when NUCLEIC_ACID <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.nucleicAcid') then 1 else 0 end) as \"normalA\", " +
             "sum(case when NUCLEIC_ACID <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.nucleicAcid') then 0 else 1 end) as \"abnormalA\", " +
-            "round(100*sum(case when NUCLEIC_ACID <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.nucleicAcid') then 1 else 0 end)/count(1)) || '%' as \"normalRateA\", " +
-            "(100-round(100*sum(case when NUCLEIC_ACID <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.nucleicAcid') then 1 else 0 end)/count(1))) || '%' as \"abnormalRateA\", " +
+            "round(100*sum(case when NUCLEIC_ACID <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.nucleicAcid') then 1 else 0 end)/count(1))  as \"normalRateA\", " +
+            "(100-round(100*sum(case when NUCLEIC_ACID <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.nucleicAcid') then 1 else 0 end)/count(1)))  as \"abnormalRateA\", " +
             "sum(case when TEMPERATURE <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.temperature') then 1 else 0 end) as \"normalT\", " +
             "sum(case when TEMPERATURE <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.temperature') then 0 else 1 end) as \"abnormalT\", " +
-            "round(100*sum(case when TEMPERATURE <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.temperature') then 1 else 0 end)/count(1)) || '%' \"normalRateT\", " +
-            "(100-round(100*sum(case when TEMPERATURE <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.temperature') then 1 else 0 end)/count(1))) || '%' \"abnormalRateT\" " +
+            "round(100*sum(case when TEMPERATURE <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.temperature') then 1 else 0 end)/count(1)) \"normalRateT\", " +
+            "(100-round(100*sum(case when TEMPERATURE <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.temperature') then 1 else 0 end)/count(1))) \"abnormalRateT\" " +
             "from TBL_PERSONNEL_HEALTH " +
             "where TRANS_DATE= #{date} ")
     List<Map> selectHealthMonitor(@Param("date") Date date);
