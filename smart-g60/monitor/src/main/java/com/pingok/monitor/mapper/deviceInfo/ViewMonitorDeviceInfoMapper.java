@@ -32,7 +32,7 @@ public interface ViewMonitorDeviceInfoMapper extends CommonRepository<ViewMonito
             "JOIN TBL_DEVICE_INFO tdi ON tdi.ID = tds.DEVICE_ID " +
             "JOIN TBL_FIELD_INFO tfi ON tfi.id = tdi.FIELD_BELONG  " +
             "WHERE " +
-            "tfi.FIELD_NUM = #{fieldNum}")
+            "tdi.FIELD_BELONG in (3940,3941)" )
     List<Map> findByFieldNum(@Param("fieldNum") String fieldNum);
 
     @Select("SELECT " +
