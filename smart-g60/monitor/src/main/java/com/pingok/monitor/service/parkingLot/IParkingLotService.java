@@ -21,4 +21,11 @@ public interface IParkingLotService {
      * @return
      */
     List<Map> findByFieldNum(String fieldNum);
+
+    /**
+     * 获取分区域停车超时的车辆
+     * @param id
+     * @return
+     */
+    List<Map> getTimeOutVeh(Long id);
 }

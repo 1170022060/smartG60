@@ -27,9 +27,14 @@ public class ParkingLotServiceImpl implements IParkingLotService {
     @Override
     public List<Map> findByFieldNum(String fieldNum) {
         List<Map> list = parkingLotMapper.findByFieldNum(fieldNum);
-        for (Map m : list) {
-            m.put("parkingTimeout", parkingLotMapper.findByParkingId(Long.parseLong(String.valueOf(m.get("id")))));
-        }
+//        for (Map m : list) {
+//            m.put("parkingTimeout", parkingLotMapper.findByParkingId(Long.parseLong(String.valueOf(m.get("id")))));
+//        }
         return list;
+    }
+
+    @Override
+    public List<Map> getTimeOutVeh(Long id) {
+        return parkingLotMapper.findByParkingId(id);
     }
 }

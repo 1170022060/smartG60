@@ -58,7 +58,7 @@ public class SmartToiletController extends BaseController {
      * @param tblSmartToiletSchedule
      * @return
      */
-//    @RequiresPermissions("monitor:smartToilet:add")
+    @RequiresPermissions("monitor:smartToilet:add")
     @Log(title = "新增厕所排班",businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody TblSmartToiletSchedule tblSmartToiletSchedule) {

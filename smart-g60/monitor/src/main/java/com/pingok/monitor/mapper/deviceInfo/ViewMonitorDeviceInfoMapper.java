@@ -19,10 +19,12 @@ public interface ViewMonitorDeviceInfoMapper extends CommonRepository<ViewMonito
     @Select("SELECT " +
             "tdi.ID AS \"id\", " +
             "tdi.DEVICE_ID AS \"deviceId\", " +
+            "tdi.CAMERA_ID AS \"cameraId\", "+
             "tdi.DEVICE_NAME AS \"deviceName\", " +
             "tdi.GPS AS \"gps\", " +
             "tdi.DEVICE_IP AS \"deviceIp\", " +
             "tds.STATUS AS \"status\", " +
+            "to_char(tds.TIME,'yyyy-MM-dd HH24:mi:ss') AS \"statusTime\", " +
             "tds.STATUS_DESC AS \"statusDesc\", " +
             "tds.STATUS_DETAILS AS \"statusDetails\"  " +
             "FROM " +
