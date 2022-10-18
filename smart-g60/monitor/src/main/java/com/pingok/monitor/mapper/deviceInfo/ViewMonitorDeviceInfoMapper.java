@@ -26,6 +26,9 @@ public interface ViewMonitorDeviceInfoMapper extends CommonRepository<ViewMonito
             "tds.STATUS AS \"status\", " +
             "to_char(tds.TIME,'yyyy-MM-dd HH24:mi:ss') AS \"statusTime\", " +
             "tds.STATUS_DESC AS \"statusDesc\", " +
+            "(tdi.POS_X || '%') as \"posX\", "+
+            "(tdi.POS_Y || '%') as \"posY\", "+
+            "tdi.DEVICE_TYPE as \"deviceType\","+
             "tds.STATUS_DETAILS AS \"statusDetails\"  " +
             "FROM " +
             "TBL_DEVICE_STATUS tds " +
