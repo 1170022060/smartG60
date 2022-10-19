@@ -2,6 +2,7 @@ package com.pingok.monitor.service.smartToilet.impl;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.monitor.config.HostConfig;
 import com.pingok.monitor.mqtt.MqttGateway;
@@ -43,7 +44,14 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
     }
 
     @Override
-    public void send(JSONObject object) {
-        mqttGateway.sendToMqtt("$"+object.getString("ser_num")+"/command/pub",object.toJSONString());
+    public void send(JSONArray array) {
+        if(array!=null && array.size()>0){
+            int size = array.size();
+            JSONObject object;
+            for(int i=0;i<size;i++){
+                object = array.getJSONObject(i);
+                mqttGateway.sendToMqtt("$"+object.getString("ser_num")+"/command/pub",object.toJSONString());
+            }
+        }
     }
 }

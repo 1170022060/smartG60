@@ -5,6 +5,7 @@ import com.pingok.monitor.mapper.smartToilet.SmartToiletScheduleMapper;
 import com.pingok.monitor.service.smartToilet.ISmartToiletScheduleService;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
+import com.ruoyi.system.api.RemoteDeviceMonitorService;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class SmartToiletScheduleServiceImpl implements ISmartToiletScheduleServi
     @Autowired
     private SmartToiletScheduleMapper smartToiletScheduleMapper;
 
+    @Autowired
+    private RemoteDeviceMonitorService remoteDeviceMonitorService;
+
     @Override
     public List<Map> findToiletScheduleList(Long fieldId,Long toiletId, Date workDate) {
         return smartToiletScheduleMapper.findToiletScheduleList(fieldId,toiletId,workDate);
@@ -32,7 +36,9 @@ public class SmartToiletScheduleServiceImpl implements ISmartToiletScheduleServi
         tblSmartToiletSchedule.setId(remoteIdProducerService.nextId());
         tblSmartToiletSchedule.setCreateTime(DateUtils.getNowDate());
         tblSmartToiletSchedule.setCreateUserId(SecurityUtils.getUserId());
-        return smartToiletScheduleMapper.insert(tblSmartToiletSchedule);
+        int i = smartToiletScheduleMapper.insert(tblSmartToiletSchedule);
+        remoteDeviceMonitorService.marqueeText();
+        return i;
     }
 
     @Override
@@ -44,7 +50,9 @@ public class SmartToiletScheduleServiceImpl implements ISmartToiletScheduleServi
         tblSmartToiletSchedule1.setWorkDate(tblSmartToiletSchedule.getWorkDate());
         tblSmartToiletSchedule1.setWorkCleanerAm(tblSmartToiletSchedule.getWorkCleanerAm());
         tblSmartToiletSchedule1.setWorkCleanerPm(tblSmartToiletSchedule.getWorkCleanerPm());
-        return smartToiletScheduleMapper.updateByPrimaryKey(tblSmartToiletSchedule1);
+        int i = smartToiletScheduleMapper.updateByPrimaryKey(tblSmartToiletSchedule1);
+        remoteDeviceMonitorService.marqueeText();
+        return i;
     }
 
     @Override

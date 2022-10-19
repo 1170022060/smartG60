@@ -20,7 +20,7 @@ public class ToiletSensorData {
     private Float h2s; //硫化氢数值（ppm)
     private Float hum; //湿度值（%）
     private Float temp; //温度（℃）
-    private ToiletSensorData_co2 co2; //二氧化碳
+    private Float co2; //二氧化碳
     private Float pm25; //pm2.5数值（ug/m3）
     private Float voc; //tvoc数值（ppm）
     private List<ToiletSensorData_cubicle> cubicles; //坑位占用情况
