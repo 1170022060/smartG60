@@ -124,11 +124,29 @@ public class ParkingLotServiceImpl implements IParkingLotService {
                 areaVos.add(new AreaVo(4,"北服务区女厕"));
                 for(AreaVo areaVo :areaVos)
                 {
+                    if (areaVo.getAreaId() == 1){
+                        areaVo.getDeviceIds().add(181);
+                        areaVo.getDeviceIds().add(182);
+                    }else if (areaVo.getAreaId() == 2){
+                        areaVo.getDeviceIds().add(183);
+                    }else if (areaVo.getAreaId() == 3){
+                        areaVo.getDeviceIds().add(184);;
+                    }else{
+                        areaVo.getDeviceIds().add(185);
+                    }
                     areaVo.setDailyTotal(tblEventPassengerFlowMapper.dailyTotal(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
-                    areaVo.setActualFlow(tblEventPassengerFlowMapper.actualFlow(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
+                    if (tblEventPassengerFlowMapper.actualFlow(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())) == null){
+                        areaVo.setActualFlow(0);
+                    }else{
+                        areaVo.setActualFlow(tblEventPassengerFlowMapper.actualFlow(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
+                    }
                     areaVo.setPeakFlow(tblEventPassengerFlowMapper.peakFlow(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
                     areaVo.setAvgFlow(tblEventPassengerFlowMapper.avgFlow(areaVo.getAreaId(),dailyTime,hour,Long.parseLong(map.get("fieldId").toString())));
-                    areaVo.setHourFlow(tblEventPassengerFlowMapper.hourFlow(areaVo.getAreaId(),dailyTime,hour,Long.parseLong(map.get("fieldId").toString())));
+                    if (tblEventPassengerFlowMapper.hourFlow(areaVo.getAreaId(),dailyTime,hour,Long.parseLong(map.get("fieldId").toString())) == null){
+                        areaVo.setHourFlow(0);
+                    }else{
+                        areaVo.setHourFlow(tblEventPassengerFlowMapper.hourFlow(areaVo.getAreaId(),dailyTime,hour,Long.parseLong(map.get("fieldId").toString())));
+                    }
                     areaVo.setNoMask(0);
                 }
                 map.put("area",areaVos);
@@ -143,11 +161,36 @@ public class ParkingLotServiceImpl implements IParkingLotService {
                 areaVos.add(new AreaVo(6,"南服务区司机之家"));
                 for(AreaVo areaVo :areaVos)
                 {
+                    if (areaVo.getAreaId() == 1){
+                        areaVo.getDeviceIds().add(186);
+                        areaVo.getDeviceIds().add(187);
+                        areaVo.getDeviceIds().add(188);
+                    }else if (areaVo.getAreaId() == 2){
+                        areaVo.getDeviceIds().add(190);
+                        areaVo.getDeviceIds().add(191);
+                    }else if (areaVo.getAreaId() == 3){
+                        areaVo.getDeviceIds().add(192);
+                    }else if (areaVo.getAreaId() == 4){
+                        areaVo.getDeviceIds().add(193);
+                        areaVo.getDeviceIds().add(194);
+                    }else if (areaVo.getAreaId() == 5){
+                        areaVo.getDeviceIds().add(189);
+                    }else{
+                        areaVo.getDeviceIds().add(195);
+                    }
                     areaVo.setDailyTotal(tblEventPassengerFlowMapper.dailyTotal(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
-                    areaVo.setActualFlow(tblEventPassengerFlowMapper.actualFlow(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
+                    if (tblEventPassengerFlowMapper.actualFlow(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())) == null){
+                        areaVo.setActualFlow(0);
+                    }else{
+                        areaVo.setActualFlow(tblEventPassengerFlowMapper.actualFlow(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
+                    }
                     areaVo.setPeakFlow(tblEventPassengerFlowMapper.peakFlow(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
                     areaVo.setAvgFlow(tblEventPassengerFlowMapper.avgFlow(areaVo.getAreaId(),dailyTime,hour,Long.parseLong(map.get("fieldId").toString())));
-                    areaVo.setHourFlow(tblEventPassengerFlowMapper.hourFlow(areaVo.getAreaId(),dailyTime,hour,Long.parseLong(map.get("fieldId").toString())));
+                    if (tblEventPassengerFlowMapper.hourFlow(areaVo.getAreaId(),dailyTime,hour,Long.parseLong(map.get("fieldId").toString())) == null){
+                        areaVo.setHourFlow(0);
+                    }else{
+                        areaVo.setHourFlow(tblEventPassengerFlowMapper.hourFlow(areaVo.getAreaId(),dailyTime,hour,Long.parseLong(map.get("fieldId").toString())));
+                    }
                     areaVo.setNoMask(0);
                 }
                 map.put("area",areaVos);
