@@ -21,12 +21,6 @@ public class SmartToiletController extends BaseController {
     @Autowired
     private ISmartToiletService iSmartToiletService;
 
-    @PostMapping("/send")
-    public AjaxResult send(@RequestBody JSONObject obj) {
-        iSmartToiletService.send(obj);
-        return AjaxResult.success();
-    }
-
     @PostMapping("/api/v1/apis/toilet/post-sensor-data")
     public AjaxResult sensorData(@RequestBody JSONObject sensorData) {
         iSmartToiletService.sensorData(sensorData);

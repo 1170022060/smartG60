@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -72,7 +74,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
     @Override
     public void updateEventVideo(Long ubiLogicId) {
         String url = iVideoService.getEventVideoById(ubiLogicId, 2, 1);
-        if(url!=null){
+        if (url != null) {
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("ubiLogicId", ubiLogicId);
             paramMap.put("url", url);
@@ -179,7 +181,10 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
         tblEventVehicleEventMapper.delete(tblEventVehicleEvent);
 
-        updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
+        List<Integer> list = Arrays.asList(5, 6, 14, 15, 10016, 31, 32, 34, 35, 36, 40, 41, 37);
+        if (!list.contains(tblEventVehicleEvent.getUiEventType())) {
+            updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
+        }
     }
 
     @Async

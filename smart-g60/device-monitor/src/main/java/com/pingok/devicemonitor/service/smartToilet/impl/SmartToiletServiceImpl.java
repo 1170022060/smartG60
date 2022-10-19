@@ -1,7 +1,7 @@
 package com.pingok.devicemonitor.service.smartToilet.impl;
 
-import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.devicemonitor.domain.smartToilet.TblSmartToiletCubicle;
 import com.pingok.devicemonitor.domain.smartToilet.TblSmartToiletHealth;
@@ -12,17 +12,22 @@ import com.pingok.devicemonitor.domain.smartToilet.model.ToiletSensorInfo;
 import com.pingok.devicemonitor.mapper.smartToilet.TblSmartToiletCubicleMapper;
 import com.pingok.devicemonitor.mapper.smartToilet.TblSmartToiletHealthMapper;
 import com.pingok.devicemonitor.mapper.smartToilet.TblSmartToiletInfoMapper;
+import com.pingok.devicemonitor.mapper.smartToilet.WeatherMapper;
 import com.pingok.devicemonitor.service.smartToilet.ISmartToiletService;
-import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.exception.ServiceException;
+import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.common.core.utils.DateUtils;
+import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
+import com.ruoyi.system.api.RemoteKafkaService;
+import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author
@@ -38,6 +43,96 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
     private TblSmartToiletHealthMapper tblSmartToiletHealthMapper;
     @Autowired
     private TblSmartToiletCubicleMapper tblSmartToiletCubicleMapper;
+    @Autowired
+    private RemoteKafkaService remoteKafkaService;
+
+    @Autowired
+    private WeatherMapper weatherMapper;
+
+    @Override
+    public void marqueeText() {
+        List<TblSmartToiletInfo> list = tblSmartToiletInfoMapper.selectAll();
+        if (list != null && list.size() > 0) {
+            JSONArray array = new JSONArray();
+            JSONObject object;
+            JSONObject payload;
+            JSONArray texts;
+            JSONObject text;
+            Map schedule;
+            for (TblSmartToiletInfo i : list) {
+                object = new JSONObject();
+                object.put("ser_num", i.getSerNum());
+                object.put("command_id", "weather");
+
+                schedule = tblSmartToiletInfoMapper.schedule(i.getId());
+                texts = new JSONArray();
+                if(schedule!=null){
+                    text = new JSONObject();
+                    text.put("id",schedule.get("id"));
+                    text.put("content",schedule.get("content"));
+                    texts.add(text);
+                }
+
+                payload = new JSONObject();
+                payload.put("texts", texts);
+                object.put("payload", payload.toJSONString());
+                array.add(object);
+            }
+            KafkaEnum kafkaEnum = new KafkaEnum();
+            kafkaEnum.setTopIc(KafkaTopIc.SMART_TOILET);
+            kafkaEnum.setData(array.toJSONString());
+            remoteKafkaService.send(kafkaEnum);
+        }
+    }
+
+    @Override
+    public void weather() {
+        Object weather = weatherMapper.weather();
+        if (StringUtils.isNotNull(weather)) {
+            List<TblSmartToiletInfo> list = tblSmartToiletInfoMapper.selectAll();
+            if (list != null && list.size() > 0) {
+                JSONArray array = new JSONArray();
+                JSONObject object;
+                JSONObject payload;
+                for (TblSmartToiletInfo i : list) {
+                    object = new JSONObject();
+                    object.put("ser_num", i.getSerNum());
+                    object.put("command_id", "weather");
+                    payload = new JSONObject();
+                    payload.put("weather", weather);
+                    object.put("payload", payload.toJSONString());
+                    array.add(object);
+                }
+                KafkaEnum kafkaEnum = new KafkaEnum();
+                kafkaEnum.setTopIc(KafkaTopIc.SMART_TOILET);
+                kafkaEnum.setData(array.toJSONString());
+                remoteKafkaService.send(kafkaEnum);
+            }
+        }
+    }
+
+    @Override
+    public void timeCalibration() {
+        List<TblSmartToiletInfo> list = tblSmartToiletInfoMapper.selectAll();
+        if (list != null && list.size() > 0) {
+            JSONArray array = new JSONArray();
+            JSONObject object;
+            JSONObject payload;
+            for (TblSmartToiletInfo i : list) {
+                object = new JSONObject();
+                object.put("ser_num", i.getSerNum());
+                object.put("command_id", "time_calibration");
+                payload = new JSONObject();
+                payload.put("time_stamp", DateUtils.getNowShortTimestamp());
+                object.put("payload", payload.toJSONString());
+                array.add(object);
+            }
+            KafkaEnum kafkaEnum = new KafkaEnum();
+            kafkaEnum.setTopIc(KafkaTopIc.SMART_TOILET);
+            kafkaEnum.setData(array.toJSONString());
+            remoteKafkaService.send(kafkaEnum);
+        }
+    }
 
     /**
      * 处理厕所传感器数据
@@ -63,42 +158,42 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
 //                            addStatusDesc(toiletInfo.getStatusDesc(), "聚焦状态异常");
 //                        }
 //                        toiletInfo.setUpdateTime(DateTime.now());
-//                        tblSmartToiletInfoMapper.updateByPrimaryKeySelective(toiletInfo);
+//                        tblSmartToiletInfoMapper.updateByPrimaryKey(toiletInfo);
                         break;
                     }
                     case "nh3": {
                         healthInfo.setNh3(sensor.getNh3());
-                        tblSmartToiletHealthMapper.updateByPrimaryKeySelective(healthInfo);
+                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
                         break;
                     }
                     case "h2s": {
                         healthInfo.setH2s(sensor.getH2s());
-                        tblSmartToiletHealthMapper.updateByPrimaryKeySelective(healthInfo);
+                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
                         break;
                     }
                     case "hum": {
                         healthInfo.setHum(sensor.getHum());
-                        tblSmartToiletHealthMapper.updateByPrimaryKeySelective(healthInfo);
+                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
                         break;
                     }
                     case "temp": {
                         healthInfo.setTemp(sensor.getTemp());
-                        tblSmartToiletHealthMapper.updateByPrimaryKeySelective(healthInfo);
+                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
                         break;
                     }
                     case "co2": {
-                        healthInfo.setCo2(sensor.getCo2().getValue());
-                        tblSmartToiletHealthMapper.updateByPrimaryKeySelective(healthInfo);
+                        healthInfo.setCo2(sensor.getCo2());
+                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
                         break;
                     }
                     case "pm25": {
                         healthInfo.setPm25(sensor.getPm25());
-                        tblSmartToiletHealthMapper.updateByPrimaryKeySelective(healthInfo);
+                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
                         break;
                     }
                     case "voc": {
                         healthInfo.setVoc(sensor.getVoc());
-                        tblSmartToiletHealthMapper.updateByPrimaryKeySelective(healthInfo);
+                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
                         break;
                     }
                     case "cubicle": {
@@ -116,27 +211,27 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
                     }
                     case "smk_alarm": {
                         healthInfo.setSmkAlarm(sensor.getSmk_alarm().getStatus());
-                        tblSmartToiletHealthMapper.updateByPrimaryKeySelective(healthInfo);
+                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
                         break;
                     }
                     case "wm": {
                         healthInfo.setWm(sensor.getWm().getValue());
-                        tblSmartToiletHealthMapper.updateByPrimaryKeySelective(healthInfo);
+                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
                         break;
                     }
                     case "em": {
                         healthInfo.setEm(sensor.getEm().getValue());
-                        tblSmartToiletHealthMapper.updateByPrimaryKeySelective(healthInfo);
+                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
                         break;
                     }
                     case "pm": {
                         healthInfo.setPm(sensor.getPm().getValue());
-                        tblSmartToiletHealthMapper.updateByPrimaryKeySelective(healthInfo);
+                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
                         break;
                     }
                     case "evl": {
                         healthInfo.setEvl(JSON.toJSONString(sensor.getEvl()));
-                        tblSmartToiletHealthMapper.updateByPrimaryKeySelective(healthInfo);
+                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
                         break;
                     }
                 }
@@ -205,7 +300,7 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
         if (tblSmartToiletCubicle != null && tblSmartToiletCubicle.getStatus() != 3) {
             tblSmartToiletCubicle.setUpdateTime(DateUtils.getNowDate());
             tblSmartToiletCubicle.setStatus(cubicle.getStatus());
-            tblSmartToiletCubicleMapper.updateByPrimaryKeySelective(tblSmartToiletCubicle);
+            tblSmartToiletCubicleMapper.updateByPrimaryKey(tblSmartToiletCubicle);
         }
     }
 

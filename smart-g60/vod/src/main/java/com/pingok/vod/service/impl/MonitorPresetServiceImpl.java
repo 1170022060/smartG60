@@ -301,6 +301,7 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
                     liveUrl.put("id", cameraId);
                     liveUrl.put("url", reqBody.getString("live_flv_url"));
                     liveUrls.add(liveUrl);
+                    ptzControl(cameraId,"gotopreset","4");
                 } else {
                     log.error("设备编号为：" + cameraId + " 的相机开始实时视频失败，错误：" + req.getJSONObject("ret_header").getString("msg"));
                 }

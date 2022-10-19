@@ -15,6 +15,7 @@ import okhttp3.*;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +36,7 @@ public class VideoServiceImpl implements IVideoService {
     private RemoteFileService remoteFileService;
 
 
+    @Async
     @Override
     public void linkage(Long ubiLogicId) {
         OkHttpClient client = new OkHttpClient();

@@ -17,6 +17,16 @@ import java.util.List;
 @FeignClient(contextId = "remoteDeviceMonitorService", value = ServiceNameConstants.DEVICE_MONITOR_SERVICE, fallbackFactory = RemoteDeviceMonitorFallbackFactory.class)
 public interface RemoteDeviceMonitorService {
 
+
+    @PostMapping("/smartToilet/marqueeText")
+    R marqueeText();
+
+    @PostMapping("/smartToilet/weather")
+    R weather();
+
+    @PostMapping("/smartToilet/timeCalibration")
+    R timeCalibration();
+
     @GetMapping("/deviceMonitor/selectBydeviceType")
     R<List<TblDeviceInfo>> selectBydeviceType(@RequestParam(value = "deviceType") Integer deviceType);
 

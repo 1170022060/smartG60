@@ -244,6 +244,7 @@ public class EventController extends BaseController {
      */
     @PostMapping("/vehicleEvent")
     public AjaxResult vehicleEvent(@RequestBody TblEventVehicleEvent tblEventVehicleEvent) {
+        log.info("事件id：" + tblEventVehicleEvent.getUbiLogicId() + "----事件类型：" + tblEventVehicleEvent.getUiEventType() + "对应TrackId：" + tblEventVehicleEvent.getUiTrackId());
         switch (tblEventVehicleEvent.getUiEventType()) {
             //事件解除
             case 31:

@@ -185,10 +185,10 @@ public class Consumer {
                 JSONObject result = iVmsService.publish(message.get().toString());
                 //通知
                 iVmsService.notifyResult(result);
+                ack.acknowledge();
             } catch (Exception e) {
                 log.error("infoBoardPublish消费者，Topic" + topic + ",Message:" + message.get() + "处理失败。错误信息：" + e.getMessage());
             }
-            ack.acknowledge();
         }
     }
 
@@ -251,7 +251,7 @@ public class Consumer {
             log.info("smartToilet 消费了： Topic:" + topic + ",Message:" + message.get());
             try {
                 Object msg = message.get();
-                JSONObject jo = JSONObject.parseObject(String.valueOf(msg));
+                JSONArray jo = JSONArray.parseArray(String.valueOf(msg));
                 iSmartToiletService.send(jo);
                 ack.acknowledge();
             } catch (Exception e) {
