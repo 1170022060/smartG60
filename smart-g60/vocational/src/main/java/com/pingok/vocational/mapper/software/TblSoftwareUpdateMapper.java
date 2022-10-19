@@ -23,8 +23,8 @@ public interface TblSoftwareUpdateMapper extends CommonRepository<TblSoftwareUpd
             "e.DICT_LABEL as \"status\" ," +
             "to_char(a.CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\"," +
             "to_char(a.UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
-            "case when a.CREATE_USER_ID is null then null else a.CREATE_USER_ID || ':' || b.USER_NAME end as \"createUserName\"," +
-            "case when a.UPDATE_USER_ID is null then null else a.UPDATE_USER_ID || ':' || c.USER_NAME end as \"updateUserName\" from TBL_SOFTWARE_UPDATE a " +
+            "case when a.CREATE_USER_ID is null then null else b.NICK_NAME end as \"createUserName\"," +
+            "case when a.UPDATE_USER_ID is null then null else c.NICK_NAME end as \"updateUserName\" from TBL_SOFTWARE_UPDATE a " +
             "left join  SYS_USER b on a.CREATE_USER_ID=b.USER_ID " +
             "left join  SYS_USER c on a.UPDATE_USER_ID=c.USER_ID " +
             "left join  SYS_DICT_DATA d on d.DICT_VALUE=to_char(a.SOFTWARE_TYPE) and d.DICT_TYPE='software_type' " +

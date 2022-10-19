@@ -21,26 +21,26 @@ public interface TblEventPassengerFlowMapper extends CommonRepository<TblEventPa
             "where TYPE=4 ")
     List<Map> field();
 
-    @Select("select sum(ENTRY) as \"dailyTotal\" from TBL_EVENT_PASSENGER_STATISTICS " +
+    @Select("select NVL(sum(ENTRY),0) as \"dailyTotal\" from TBL_EVENT_PASSENGER_STATISTICS " +
             "where AREA_ID = #{areaId} and WORK_DATE = #{time} and FIELD_ID= #{fieldId} ")
     Integer dailyTotal(@Param("time") String time,@Param("areaId") Integer areaId,@Param("fieldId") Long fieldId);
 
-    @Select("select IN_AMOUNT as \"actualFlow\" from TBL_EVENT_PASSENGER_STATISTICS " +
+    @Select("select NVL(IN_AMOUNT,0) as \"actualFlow\" from TBL_EVENT_PASSENGER_STATISTICS " +
             "where AREA_ID = #{areaId} and WORK_DATE = #{time} and FIELD_ID= #{fieldId} and rownum=1 " +
             "order by HOUR desc ")
     Integer actualFlow(@Param("time") String time,@Param("areaId") Integer areaId,@Param("fieldId") Long fieldId);
 
-    @Select("select max(IN_AMOUNT) as \"peakFlow\" from TBL_EVENT_PASSENGER_STATISTICS " +
+    @Select("select NVL(max(IN_AMOUNT),0) as \"peakFlow\" from TBL_EVENT_PASSENGER_STATISTICS " +
             "where AREA_ID = #{areaId} and WORK_DATE = #{time} and FIELD_ID= #{fieldId} ")
     Integer peakFlow(@Param("time") String time, @Param("areaId") Integer areaId,@Param("fieldId") Long fieldId);
 
-    @Select("select AVG(IN_AMOUNT) as \"peakFlow\" from TBL_EVENT_PASSENGER_STATISTICS " +
+    @Select("select NVL(AVG(IN_AMOUNT),0) as \"peakFlow\" from TBL_EVENT_PASSENGER_STATISTICS " +
             "where AREA_ID = #{areaId} and rownum<=4 and FIELD_ID= #{fieldId} " +
             " and to_date(WORK_DATE ||' '||HOUR ||':00:00','yyyy-mm-dd hh24:mi:ss')<to_date(#{time} ||' ' ||#{hour} ||':00:00','yyyy-mm-dd hh24:mi:ss') " +
             " order by to_date(WORK_DATE ||' '||HOUR ||':00:00','yyyy-mm-dd hh24:mi:ss') desc ")
     Integer avgFlow(@Param("areaId") Integer areaId,@Param("time") String time, @Param("hour") Integer hour,@Param("fieldId") Long fieldId);
 
-    @Select("select IN_AMOUNT as \"peakFlow\" from TBL_EVENT_PASSENGER_STATISTICS " +
+    @Select("select NVL(IN_AMOUNT,0) as \"peakFlow\" from TBL_EVENT_PASSENGER_STATISTICS " +
             "where AREA_ID = #{areaId}  and FIELD_ID= #{fieldId} and rownum=1 " +
             " and to_date(WORK_DATE ||' '||HOUR ||':00:00','yyyy-mm-dd hh24:mi:ss')<to_date(#{time} ||' ' ||#{hour} ||':00:00','yyyy-mm-dd hh24:mi:ss') " +
             " order by to_date(WORK_DATE ||' '||HOUR ||':00:00','yyyy-mm-dd hh24:mi:ss') desc ")

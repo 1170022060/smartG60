@@ -37,8 +37,8 @@ public class OptInfoController extends BaseController {
         return AjaxResult.success(idInfo);
     }
 
-    @RequiresPermissions("vocational:optInfo:info")
-    @Log(title = "员工信息-分页查询", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("vocational:optInfo:info")
+//    @Log(title = "员工信息-分页查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/info")
     public TableDataInfo info(@RequestParam(name = "belongStation",required = false) String belongStation, @RequestParam(name = "belongCenter",required = false) String belongCenter, @RequestParam(name = "optName",required = false) String optName, @RequestParam(name = "optId",required = false) Integer optId, @RequestParam(name = "status",required = false) Integer status)
     {

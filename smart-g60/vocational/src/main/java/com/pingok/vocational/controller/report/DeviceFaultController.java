@@ -95,7 +95,7 @@ public class DeviceFaultController extends BaseController {
     }
 
     @GetMapping("/type")
-    public TableDataInfo type(@RequestParam(name = "faultType", required = false) String faultType, @RequestParam(name = "startTime") Date startTime, @RequestParam(name = "endTime") Date endTime) {
+    public TableDataInfo type(@RequestParam(name = "faultType", required = false) String faultType, @RequestParam(name = "startTime", required = false) Date startTime, @RequestParam(name = "endTime", required = false) Date endTime) {
         startPage();
         List<Map> type = deviceFaultService.selectDeviceFaultByType
                 (faultType, startTime, endTime);
