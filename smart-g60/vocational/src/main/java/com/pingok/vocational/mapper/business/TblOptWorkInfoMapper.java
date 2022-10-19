@@ -47,7 +47,7 @@ public interface TblOptWorkInfoMapper extends CommonRepository<TblOptWorkInfo> {
             "and a.STATION_ID= #{stationId} " +
             "</when>"+
             "<when test='optName != null'> " +
-            "and b.USER_NAME= #{optName} " +
+            "and b.NICK_NAME= #{optName} " +
             "</when>"+
             "<when test='shift != null'> " +
             "and a.SHIFT= #{shift} " +

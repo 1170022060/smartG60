@@ -37,8 +37,8 @@ public interface TblEmergencySuppliesMapper extends CommonRepository<TblEmergenc
             "a.STATUS  as \"status\"," +
             "to_char(a.CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\"," +
             "to_char(a.UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
-            "case when a.CREATE_USER_ID is null then null else a.CREATE_USER_ID || ':' || d.USER_NAME end as \"createUserName\"," +
-            "case when a.UPDATE_USER_ID is null then null else a.UPDATE_USER_ID || ':' || e.USER_NAME end as \"updateUserName\" from TBL_EMERGENCY_SUPPLIES a " +
+            "case when a.CREATE_USER_ID is null then null else d.NICK_NAME end as \"createUserName\"," +
+            "case when a.UPDATE_USER_ID is null then null else e.NICK_NAME end as \"updateUserName\" from TBL_EMERGENCY_SUPPLIES a " +
             "left join  SYS_DICT_DATA b on b.DICT_VALUE=a.MANUFACTURER and b.DICT_TYPE='manufacturer' " +
             "left join TBL_FIELD_INFO c on c.ID=a.FIELD_BELONG " +
             "left join  SYS_USER d on a.CREATE_USER_ID=d.USER_ID " +

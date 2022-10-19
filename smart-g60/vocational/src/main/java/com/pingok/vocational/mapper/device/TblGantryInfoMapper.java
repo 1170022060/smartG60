@@ -39,8 +39,8 @@ public interface TblGantryInfoMapper extends CommonRepository<TblGantryInfo> {
             "a.DEVICE_PHOTO as \"devicePhoto\" ," +
             "to_char(a.CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\"," +
             "to_char(a.UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
-            "case when a.CREATE_USER_ID is null then null else a.CREATE_USER_ID || ':' || c.USER_NAME end as \"createUserName\"," +
-            "case when a.UPDATE_USER_ID is null then null else a.UPDATE_USER_ID || ':' || d.USER_NAME end as \"updateUserName\" from TBL_GANTRY_INFO a " +
+            "case when a.CREATE_USER_ID is null then null else c.NICK_NAME end as \"createUserName\"," +
+            "case when a.UPDATE_USER_ID is null then null else d.NICK_NAME end as \"updateUserName\" from TBL_GANTRY_INFO a " +
             "left join TBL_DEVICE_CATEGORY b on a.DEVICE_CATEGORY=b.ID " +
             "left join  SYS_USER c on a.CREATE_USER_ID=c.USER_ID " +
             "left join  SYS_USER d on a.UPDATE_USER_ID=d.USER_ID " +

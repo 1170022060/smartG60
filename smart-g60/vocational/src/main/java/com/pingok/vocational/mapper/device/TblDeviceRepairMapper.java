@@ -20,7 +20,7 @@ public interface TblDeviceRepairMapper extends CommonRepository<TblDeviceRepair>
             "c.DICT_LABEL as \"repairType\" ," +
             "a.REASON as \"reason\" ," +
             "a.CONTENT as \"content\" ," +
-            "case when a.RESPONSIBLE_USER_ID is null then null else a.RESPONSIBLE_USER_ID || ':' || b.USER_NAME end as \"responsibleUserNum\" from TBL_DEVICE_REPAIR a " +
+            "case when a.RESPONSIBLE_USER_ID is null then null else b.NICK_NAME end as \"responsibleUserNum\" from TBL_DEVICE_REPAIR a " +
             "left join  SYS_USER b on a.RESPONSIBLE_USER_ID=b.USER_ID " +
             "left join  SYS_DICT_DATA c on c.DICT_VALUE=a.REPAIR_TYPE and c.DICT_TYPE='repair_type' " +
             "where 1=1 " +
