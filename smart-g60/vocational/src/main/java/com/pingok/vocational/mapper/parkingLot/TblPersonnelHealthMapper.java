@@ -17,7 +17,7 @@ import java.util.Map;
 public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelHealth> {
 
     @Select({"<script>" +
-            "select to_char(tph.TRANS_DATE, 'yyyy-mm-dd') as \"transDate\"," +
+            "select tph.ID as \"id\", to_char(tph.TRANS_DATE, 'yyyy-mm-dd') as \"transDate\"," +
             "tfi.FIELD_NAME as \"fieldName\", " +
             "tph.NAME as \"name\", " +
             "tph.NUCLEIC_ACID as \"nucleicAcid\"," +
