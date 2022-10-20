@@ -1,15 +1,15 @@
 package com.pingok.devicemonitor.service.gantry.impl;
 
-import com.pingok.devicemonitor.domain.gantry.TblGantryStatus;
-import com.pingok.devicemonitor.domain.gantry.TblGantryStatusDtl;
-import com.pingok.devicemonitor.domain.gantry.TblGantryStatusDtlLog;
-import com.pingok.devicemonitor.domain.gantry.TblGantryStatusLog;
-import com.pingok.devicemonitor.mapper.gantry.TblGantryStatusDtlLogMapper;
-import com.pingok.devicemonitor.mapper.gantry.TblGantryStatusDtlMapper;
-import com.pingok.devicemonitor.mapper.gantry.TblGantryStatusLogMapper;
-import com.pingok.devicemonitor.mapper.gantry.TblGantryStatusMapper;
+import cn.hutool.http.HttpUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.pingok.devicemonitor.config.GantryConfig;
+import com.pingok.devicemonitor.domain.gantry.*;
+import com.pingok.devicemonitor.mapper.gantry.*;
 import com.pingok.devicemonitor.service.gantry.IGantryService;
+import com.ruoyi.common.core.exception.ServiceException;
+import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
+import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +34,48 @@ public class GantryServiceImpl implements IGantryService {
     private TblGantryStatusLogMapper tblGantryStatusLogMapper;
     @Autowired
     private TblGantryStatusDtlLogMapper tblGantryStatusDtlLogMapper;
+
+    @Autowired
+    private TblGantryEventReleaseMapper tblGantryEventReleaseMapper;
+
+    @Override
+    public void eventProcessing(TblGantryEventRelease tblGantryEventRelease) {
+        if (tblGantryEventRelease.getGantryIds() != null && tblGantryEventRelease.getGantryIds().size() > 0) {
+            TblGantryEventRelease info;
+            JSONObject param;
+            List<String> gantryIds = tblGantryEventRelease.getGantryIds();
+            for (String gantryId : gantryIds) {
+                info = new TblGantryEventRelease();
+                BeanUtils.copyNotNullProperties(tblGantryEventRelease, info);
+                info.setGantryId(gantryId);
+                info.setId(remoteIdProducerService.nextId());
+                info.setCreateTime(DateUtils.getNowDate());
+                info.setCreateUserId(SecurityUtils.getUserId());
+                info.setStatus(0);
+                tblGantryEventReleaseMapper.insert(info);
+
+                param = new JSONObject();
+                param.put("GantryID", gantryId);
+                param.put("OBUDelay", tblGantryEventRelease.getObuDelay() != null ? tblGantryEventRelease.getObuDelay() : 0);
+                param.put("stakeNum", tblGantryEventRelease.getStakeNum());
+                param.put("direction", tblGantryEventRelease.getDirection());
+                param.put("broadcastRange", tblGantryEventRelease.getBroadcastRange() != null ? tblGantryEventRelease.getBroadcastRange() : 0);
+                param.put("eventType", tblGantryEventRelease.getEventType());
+                param.put("eventId", tblGantryEventRelease.getEventId());
+                param.put("eventPosition", tblGantryEventRelease.getEventPosition() != null ? tblGantryEventRelease.getBroadcastRange() : 0);
+                param.put("eventDiscount", tblGantryEventRelease.getEventDiscount() != null ? tblGantryEventRelease.getBroadcastRange() : 0);
+                param.put("eventInfo", tblGantryEventRelease.getEventInfo());
+                param.put("reportBeginTime", DateUtils.dateTime(tblGantryEventRelease.getReportBeginTime(), DateUtils.YYYY_MM_DDTHH_MM_SS));
+                param.put("reportEndTime", DateUtils.dateTime(tblGantryEventRelease.getReportEndTime(), DateUtils.YYYY_MM_DDTHH_MM_SS));
+                param.put("cryptoGraphicDigest", tblGantryEventRelease.getStakeNum());
+                HttpUtil.post(GantryConfig.HOST + "/preservice/eventprocessing/notify/event", param.toJSONString());
+                info.setStatus(1);
+                tblGantryEventReleaseMapper.updateByPrimaryKey(info);
+            }
+        } else {
+            throw new ServiceException("门架编号不能为空");
+        }
+    }
 
     @Override
     @Transactional
@@ -75,7 +117,7 @@ public class GantryServiceImpl implements IGantryService {
                     tblGantryStatusDtlMapper.insert(dtl);
                 }
             }
-        }else {
+        } else {
             BeanUtils.copyNotNullProperties(gantryStatus, gs);
             tblGantryStatusMapper.updateByPrimaryKey(gs);
 
