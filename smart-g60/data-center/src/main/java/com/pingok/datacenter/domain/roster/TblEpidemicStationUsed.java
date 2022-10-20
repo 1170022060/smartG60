@@ -1,7 +1,6 @@
 package com.pingok.datacenter.domain.roster;
 
 import io.swagger.annotations.ApiModelProperty;
-import jdk.jfr.DataAmount;
 import lombok.Data;
 
 import javax.persistence.Id;
@@ -36,7 +35,7 @@ public class TblEpidemicStationUsed implements java.io.Serializable {
      * 名单版本
      */
     @ApiModelProperty(value = "名单版本")
-    private String obuVersion;
+    private String version;
 
     /**
      * 使用时间

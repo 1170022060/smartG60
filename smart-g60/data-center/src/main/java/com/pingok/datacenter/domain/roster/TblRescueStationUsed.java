@@ -4,16 +4,17 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 中高风险地区车牌名单版本表(TBL_EPIDEMIC_PREFIX_STATION_USED)
+ * 抢险救灾名单版本表(TBL_RESCUE_STATION_USED)
  *
  * @author xia
  * @version 1.0.0 2022-07-20
  */
 @Data
-public class TblEpidemicPrefixStationUsed implements java.io.Serializable {
+public class TblRescueStationUsed implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -48,5 +49,4 @@ public class TblEpidemicPrefixStationUsed implements java.io.Serializable {
      */
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
-
 }
