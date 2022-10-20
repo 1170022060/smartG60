@@ -47,9 +47,9 @@ public class SmartServiceController extends BaseController {
 //    @RequiresPermissions("vocational:smartService:status")
     @Log(title = "设备监控-服务区设备状态", businessType = BusinessType.OTHER)
     @GetMapping("/status")
-    public TableDataInfo serviceStatus(@RequestParam(name = "fieldNum",required = false) String fieldNum,@RequestParam(name = "deviceType",required = false) Integer deviceType, @RequestParam(name = "status",required = false) Integer status) {
+    public TableDataInfo serviceStatus(@RequestParam(name = "fieldNum",required = false) String fieldNum,@RequestParam(name = "deviceType",required = false) Integer deviceType) {
         startPage();
-        List<Map> list = smartService.serviceDeviceStatus(fieldNum,deviceType,status);
+        List<Map> list = smartService.serviceDeviceStatus(fieldNum,deviceType);
         return getDataTable(list);
     }
 

@@ -30,7 +30,7 @@ public interface TblRecoveryListRecordMapper extends CommonRepository<TblRecover
             "left join  SYS_DICT_DATA d on d.DICT_VALUE=a.VEH_COLOR and d.DICT_TYPE='veh_color' " +
             "where 1=1 " +
             "<when test='vehPlate != null'> " +
-            " and VEH_PLATE = #{vehPlate} " +
+            " and VEH_PLATE like '%' || #{vehPlate} || '%' " +
             "</when>"+
             "order by ARREARS_DATE" +
             "</script>"})

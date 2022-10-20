@@ -21,9 +21,15 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
             "tfi.FIELD_NAME as \"fieldName\", " +
             "tph.NAME as \"name\", " +
             "tph.NUCLEIC_ACID as \"nucleicAcid\"," +
+            "to_char(tph.CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\"," +
+            "to_char(tph.UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
+            "case when tph.CREATE_USER_ID is null then null else b.NICK_NAME end as \"createUserName\"," +
+            "case when tph.UPDATE_USER_ID is null then null else c.NICK_NAME end as \"updateUserName\"," +
             "tph.TEMPERATURE as \"temperature\" " +
             "from TBL_PERSONNEL_HEALTH tph " +
             "left join TBL_FIELD_INFO tfi on tfi.ID=tph.FIELD_ID " +
+            "left join  SYS_USER b on tph.CREATE_USER_ID=b.USER_ID " +
+            "left join  SYS_USER c on tph.UPDATE_USER_ID=c.USER_ID " +
             "where 1=1 " +
             "<when test='name != null'> " +
             "and tph.NAME like CONCAT(CONCAT('%',#{name}),'%') " +

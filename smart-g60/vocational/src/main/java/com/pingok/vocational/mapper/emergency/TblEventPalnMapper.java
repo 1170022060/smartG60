@@ -44,8 +44,8 @@ public interface TblEventPalnMapper extends CommonRepository<TblEventPaln> {
             "ELSE " +
             "'停用' " +
             "END  as \"statusDesc\", " +
-            "cusr.USER_NAME as \"createUser\", " +
-            "uusr.USER_NAME as \"updateUser\" " +
+            "cusr.NICK_NAME as \"createUser\", " +
+            "uusr.NICK_NAME as \"updateUser\" " +
             "FROM " +
             "TBL_EVENT_PALN tep " +
             "LEFT JOIN  SYS_USER cusr ON cusr.USER_ID = tep.CREATE_USER_ID " +

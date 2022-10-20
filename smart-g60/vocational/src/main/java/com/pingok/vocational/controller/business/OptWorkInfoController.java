@@ -28,8 +28,8 @@ public class OptWorkInfoController extends BaseController {
     @Autowired
     private IOptWorkInfoService optWorkInfoService;
 
-    @RequiresPermissions("vocational:optWork:info")
-    @Log(title = "操作员工班信息-分页查询", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("vocational:optWork:info")
+//    @Log(title = "操作员工班信息-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
     public TableDataInfo info(@RequestParam(name = "startDate",required = false) Date startDate, @RequestParam(name = "endDate",required = false) Date endDate,@RequestParam(name = "stationId",required = false) String stationId,@RequestParam(name = "optName",required = false) String optName,@RequestParam(name = "shift",required = false) Integer shift,@RequestParam(name = "optId",required = false) Integer optId)
     {

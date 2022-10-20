@@ -30,7 +30,7 @@ public interface TblGreenListRecordMapper extends CommonRepository<TblGreenListR
             "left join  SYS_DICT_DATA e on e.DICT_VALUE=a.END_DISTRICT_ID and e.DICT_TYPE='province_id' " +
             "where 1=1" +
             "<when test='vehPlate != null'> " +
-            "and a.VEH_PLATE= #{vehPlate} " +
+            "and a.VEH_PLATE like '%' || #{vehPlate} || '%' " +
             "</when>"+
             "order by a.CREATE_TIME" +
             "</script>"})

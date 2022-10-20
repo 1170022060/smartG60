@@ -83,8 +83,8 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "END AS \"statusDesc\", " +
             "to_char(ter.CONFIRM_TIME, 'yyyy-mm-dd hh24:mi:ss') AS \"confirmTime\", " +
             "to_char(ter.RELIEVE_TIME, 'yyyy-mm-dd hh24:mi:ss') AS \"relieveTime\", " +
-            "usr.USER_NAME AS \"confirmUser\", " +
-            "usr1.USER_NAME AS \"relieveUser\"  " +
+            "usr.NICK_NAME AS \"confirmUser\", " +
+            "usr1.NICK_NAME AS \"relieveUser\"  " +
             "FROM " +
             "TBL_EVENT_RECORD ter " +
             "LEFT JOIN  SYS_DICT_DATA sdd ON sdd.DICT_VALUE = ter.EVENT_TYPE  " +
