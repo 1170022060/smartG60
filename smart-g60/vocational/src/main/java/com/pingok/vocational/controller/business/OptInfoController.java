@@ -28,8 +28,8 @@ public class OptInfoController extends BaseController {
     @Autowired
     private IOptInfoService optInfoService;
 
-    @RequiresPermissions("vocational:optInfo:idInfo")
-    @Log(title = "员工信息-根据ID查询", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("vocational:optInfo:idInfo")
+//    @Log(title = "员工信息-根据ID查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/idInfo")
     public AjaxResult idInfo(@RequestParam(name = "id") Long id)
     {
