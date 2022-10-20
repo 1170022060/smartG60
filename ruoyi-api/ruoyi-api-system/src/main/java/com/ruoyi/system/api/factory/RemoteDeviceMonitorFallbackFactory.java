@@ -25,6 +25,21 @@ public class RemoteDeviceMonitorFallbackFactory implements FallbackFactory<Remot
         return new RemoteDeviceMonitorService() {
 
             @Override
+            public R marqueeText() {
+                return null;
+            }
+
+            @Override
+            public R weather() {
+                return null;
+            }
+
+            @Override
+            public R timeCalibration() {
+                return null;
+            }
+
+            @Override
             public R<List<TblDeviceInfo>> selectBydeviceType(Integer deviceType) {
                 return null;
             }

@@ -29,8 +29,8 @@ public class GantryRecordController extends BaseController {
     @Autowired
     private IGantryRecordService tblGantryRecordService;
 
-    @RequiresPermissions("vocational:gantry:info")
-    @Log(title = "门架段面记录-分页查询", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("vocational:gantry:info")
+//    @Log(title = "门架段面记录-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
     public TableDataInfo info(@RequestParam(name = "gantryId",required = false) String gantryId, @RequestParam(name = "startDate",required = false) Date startDate, @RequestParam(name = "endDate",required = false) Date endDate)
     {

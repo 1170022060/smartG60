@@ -23,6 +23,25 @@ public class SmartToiletController extends BaseController {
     @Autowired
     private ISmartToiletService iSmartToiletService;
 
+
+    @PostMapping("/marqueeText")
+    public AjaxResult marqueeText() {
+        iSmartToiletService.marqueeText();
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/weather")
+    public AjaxResult weather() {
+        iSmartToiletService.weather();
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/timeCalibration")
+    public AjaxResult timeCalibration() {
+        iSmartToiletService.timeCalibration();
+        return AjaxResult.success();
+    }
+
     @PostMapping
     public AjaxResult sensorData(@RequestBody JSONObject sensorData) {
         iSmartToiletService.sensorData(sensorData);

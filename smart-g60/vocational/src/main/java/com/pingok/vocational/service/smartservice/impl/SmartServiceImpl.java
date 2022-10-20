@@ -64,8 +64,8 @@ public class SmartServiceImpl implements ISmartService {
     }
 
     @Override
-    public List<Map> serviceDeviceStatus(String fieldNum, Integer deviceType, Integer status) {
-        return tblDeviceStatusMapper.serviceDeviceStatus(fieldNum, deviceType, status);
+    public List<Map> serviceDeviceStatus(String fieldNum, Integer deviceType) {
+        return tblDeviceStatusMapper.serviceDeviceStatus(fieldNum, deviceType);
     }
 
     @Override

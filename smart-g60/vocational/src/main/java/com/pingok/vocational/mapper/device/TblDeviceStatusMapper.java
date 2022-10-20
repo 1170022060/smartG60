@@ -64,12 +64,9 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "<when test='deviceType != null'> " +
             "and tdi.DEVICE_TYPE = #{deviceType} " +
             "</when>" +
-            "<when test='status != null'> " +
-            "and tds.STATUS = #{status} " +
-            "</when>" +
             "group by tfi.FIELD_NAME,sdd.DICT_LABEL "+
             "</script>")
-    List<Map> serviceDeviceStatus(@Param("fieldNum") String fieldNum,@Param("deviceType") Integer deviceType,@Param("status") Integer status);
+    List<Map> serviceDeviceStatus(@Param("fieldNum") String fieldNum,@Param("deviceType") Integer deviceType);
 
     @Select({"<script>" +
             "SELECT " +

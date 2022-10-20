@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -245,7 +244,22 @@ public class EventController extends BaseController {
      */
     @PostMapping("/vehicleEvent")
     public AjaxResult vehicleEvent(@RequestBody TblEventVehicleEvent tblEventVehicleEvent) {
-        iVideoEventService.vehicleEvent(tblEventVehicleEvent);
+        log.info("事件id：" + tblEventVehicleEvent.getUbiLogicId() + "----事件类型：" + tblEventVehicleEvent.getUiEventType() + "对应TrackId：" + tblEventVehicleEvent.getUiTrackId());
+        switch (tblEventVehicleEvent.getUiEventType()) {
+            //事件解除
+            case 31:
+            case 32:
+            case 34:
+            case 35:
+            case 36:
+            case 40:
+            case 41:
+                iVideoEventService.relieveEvent(tblEventVehicleEvent);
+                break;
+            default:
+                iVideoEventService.vehicleEvent(tblEventVehicleEvent);
+                break;
+        }
         return AjaxResult.success();
     }
 
@@ -269,12 +283,14 @@ public class EventController extends BaseController {
 
     /**
      * 获取分上下行的已确认的交通事件
+     *
      * @return
      */
     @GetMapping("/GetfilterEvent")
-    public AjaxResult getTable(){
+    public AjaxResult getTable() {
         Map map = new HashMap();
-        map.put("upstream",iEventService.filterUpEvent());
-        map.put("downstream",iEventService.filterDownEvent());
-        return AjaxResult.success(map);}
+        map.put("upstream", iEventService.filterUpEvent());
+        map.put("downstream", iEventService.filterDownEvent());
+        return AjaxResult.success(map);
+    }
 }

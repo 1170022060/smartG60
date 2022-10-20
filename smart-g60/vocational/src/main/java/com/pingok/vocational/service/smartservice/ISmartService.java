@@ -14,7 +14,7 @@ public interface ISmartService {
 
     int insertServiceFault(TblDeviceFault tblDeviceFault);
 
-    List<Map> serviceDeviceStatus(String fieldNum,Integer deviceType,Integer status);
+    List<Map> serviceDeviceStatus(String fieldNum,Integer deviceType);
     List<Map> serviceDeviceFault(String fieldNum, Integer deviceType,String deviceId, String faultId, String faultDescription,Integer status);
     int insertServiceRepair(TblDeviceRepair tblDeviceRepair);
 

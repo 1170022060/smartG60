@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class EnTransInfo {
-    public Long insertEnTrans;
+    public EnInfoVo insertEnTrans;
     public int insertEnEtcPass;
     public int insertEnMtcPass;
     public int insertEnTransSummary;

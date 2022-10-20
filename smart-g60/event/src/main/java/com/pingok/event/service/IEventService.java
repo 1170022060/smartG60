@@ -18,6 +18,14 @@ import java.util.Map;
  */
 public interface IEventService {
 
+
+    /**
+     * 根据事件ID查询
+     * @param eventId
+     * @return
+     */
+    TblEventRecord selectByEventId(Long eventId);
+
     /**
      * 查询所有已配置得告警事件
      * @return

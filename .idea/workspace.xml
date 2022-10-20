@@ -28,25 +28,70 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="69b2e1bc-5263-41e7-8fee-369cd4f40512" name="Changes" comment="data-center">
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2022_4_8_11_40__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2022_4_8_11_40__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2022_4_8_12_06__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2022_4_8_12_06__Changes_.xml" afterDir="false" />
+    <list default="true" id="69b2e1bc-5263-41e7-8fee-369cd4f40512" name="Changes" comment="代码修改">
+      <change afterPath="$PROJECT_DIR$/ruoyi-modules/ruoyi-job/src/main/java/com/ruoyi/job/task/smartToilet/SmartToiletTask.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/domain/trans/vo/EnInfoVo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/domain/trans/vo/UpdatePassIdVo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/mqtt/MqttConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/mqtt/MqttGateway.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/mqtt/MqttInBoundConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/mqtt/MqttOutBoundConfiguration.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ruoyi-common/ruoyi-common-datasource/ruoyi-common-datasource.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-common/ruoyi-common-datasource/ruoyi-common-datasource.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ruoyi-modules/ruoyi-system/ruoyi-modules-system.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-modules/ruoyi-system/ruoyi-modules-system.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-g60/algorithm/algorithm.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-g60/charge-communication/charge-communication.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-g60/data-center/data-center.iml" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/data-center/data-center.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-g60/event/event.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-g60/external-system-communication/external-system-communication.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-g60/id-producer/id-producer.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-g60/kafka/kafka.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-g60/monitor-communication/monitor-communication.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteDeviceMonitorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/RemoteDeviceMonitorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/factory/RemoteDeviceMonitorFallbackFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-api/ruoyi-api-system/src/main/java/com/ruoyi/system/api/factory/RemoteDeviceMonitorFallbackFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ruoyi-common/ruoyi-common-core/src/main/java/com/ruoyi/common/core/kafka/KafkaTopIc.java" beforeDir="false" afterPath="$PROJECT_DIR$/ruoyi-common/ruoyi-common-core/src/main/java/com/ruoyi/common/core/kafka/KafkaTopIc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/controller/trans/TransController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/controller/trans/TransController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/domain/trans/TblEnTrans.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/domain/trans/TblEnTrans.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/domain/trans/TblExTrans.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/domain/trans/TblExTrans.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/domain/trans/vo/EnTransInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/domain/trans/vo/EnTransInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/domain/trans/vo/ExInfoVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/domain/trans/vo/ExInfoVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/mapper/trans/TblEnTransMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/mapper/trans/TblEnTransMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/mapper/trans/TblExTransMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/mapper/trans/TblExTransMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/service/trans/ITransService.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/service/trans/ITransService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/service/trans/impl/TransServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/java/com/pingok/datacenter/service/trans/impl/TransServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/data-center/src/main/resources/mapper/trans/TblEnTransMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/resources/mapper/trans/TblEnTransMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/data-center/src/main/resources/mapper/trans/TblExTransMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/data-center/src/main/resources/mapper/trans/TblExTransMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/device-monitor/device-monitor.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/controller/smartToilet/SmartToiletController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/controller/smartToilet/SmartToiletController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/domain/smartToilet/model/ToiletSensorData.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/domain/smartToilet/model/ToiletSensorData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/mapper/smartToilet/TblSmartToiletInfoMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/mapper/smartToilet/TblSmartToiletInfoMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/smartToilet/ISmartToiletService.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/smartToilet/ISmartToiletService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/smartToilet/impl/SmartToiletServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/device-monitor/src/main/java/com/pingok/devicemonitor/service/smartToilet/impl/SmartToiletServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/event/src/main/java/com/pingok/event/controller/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/event/src/main/java/com/pingok/event/controller/EventController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/event/src/main/java/com/pingok/event/service/IEventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/event/src/main/java/com/pingok/event/service/IEventService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/event/src/main/java/com/pingok/event/service/IVideoEventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/event/src/main/java/com/pingok/event/service/IVideoEventService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/event/src/main/java/com/pingok/event/service/impl/EventServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/event/src/main/java/com/pingok/event/service/impl/EventServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/event/src/main/java/com/pingok/event/service/impl/VideoEventServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/event/src/main/java/com/pingok/event/service/impl/VideoEventServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/monitor-communication/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/monitor-communication/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/controller/videoEvent/VideoEventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/controller/videoEvent/VideoEventController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/kafka/Consumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/kafka/Consumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/service/smartToilet/ISmartToiletService.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/service/smartToilet/ISmartToiletService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/service/smartToilet/impl/SmartToiletServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/service/smartToilet/impl/SmartToiletServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/service/videoEvent/IVideoEventService.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/service/videoEvent/IVideoEventService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/service/videoEvent/IVideoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/service/videoEvent/IVideoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/service/videoEvent/impl/VideoEventServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/service/videoEvent/impl/VideoEventServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/service/videoEvent/impl/VideoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/service/videoEvent/impl/VideoServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/monitor-communication/src/main/java/com/pingok/monitor/task/VmsCollectTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/monitor/monitor.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/monitor/src/main/java/com/pingok/monitor/service/smartToilet/impl/SmartToiletScheduleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/monitor/src/main/java/com/pingok/monitor/service/smartToilet/impl/SmartToiletScheduleServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/smart-g60.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/controller/report/GantryRecordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/controller/report/GantryRecordController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/controller/smartservice/SmartServiceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/controller/smartservice/SmartServiceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/device/TblDeviceStatusMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/device/TblDeviceStatusMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/parkingLot/TblPersonnelHealthMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/parkingLot/TblPersonnelHealthMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/report/TblGantryRecordMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/report/TblGantryRecordMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/roster/TblGreenListRecordMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/roster/TblGreenListRecordMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/roster/TblRecoveryListRecordMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/roster/TblRecoveryListRecordMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/roster/TblRescueListRecordMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/roster/TblRescueListRecordMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/roster/TblTractorListRecordMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/roster/TblTractorListRecordMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/roster/TblVehicleRecordMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/roster/TblVehicleRecordMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/roster/TblVehicleStressMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/mapper/roster/TblVehicleStressMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/service/smartservice/ISmartService.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/service/smartservice/ISmartService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/service/smartservice/impl/SmartServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vocational/src/main/java/com/pingok/vocational/service/smartservice/impl/SmartServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vocational/vocational.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-g60/vod/src/main/java/com/pingok/vod/service/impl/MonitorPresetServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vod/src/main/java/com/pingok/vod/service/impl/MonitorPresetServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smart-g60/vod/vod.iml" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/vod/vod.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smart-g60/websocket/websocket.iml" beforeDir="false" afterPath="$PROJECT_DIR$/smart-g60/websocket/websocket.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/station-roster/station-roster.iml" beforeDir="false" afterPath="$PROJECT_DIR$/station-roster/station-roster.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,11 +177,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.pingok.monitor.mapper.weather" />
       <recent name="com.pingok.vocational.domain.parkingLot" />
       <recent name="com.pingok.monitor.mapper.smartToilet" />
       <recent name="com.pingok.monitor.domain.smartToilet" />
       <recent name="com.pingok.monitor.domain.ParkingLot" />
-      <recent name="com.pingok.monitor.domain.device" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\IdeaProjects\smartg60\smart-g60\vocational\src\main\java\com\pingok\vocational\service\sectorlog" />
@@ -498,28 +543,8 @@
       <workItem from="1666073865406" duration="1690000" />
       <workItem from="1666076336720" duration="8765000" />
       <workItem from="1666144561927" duration="22654000" />
-      <workItem from="1666231638702" duration="3834000" />
-    </task>
-    <task id="LOCAL-00048" summary="新增算法模块">
-      <created>1651819619677</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1651819619677</updated>
-    </task>
-    <task id="LOCAL-00049" summary="解决中文乱码">
-      <created>1651828899715</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1651828899715</updated>
-    </task>
-    <task id="LOCAL-00050" summary="解决中文乱码">
-      <created>1651845169344</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1651845169344</updated>
+      <workItem from="1666231638702" duration="7276000" />
+      <workItem from="1666241214599" duration="7164000" />
     </task>
     <task id="LOCAL-00051" summary="解决时间问题">
       <created>1651907953819</created>
@@ -843,7 +868,28 @@
       <option name="project" value="LOCAL" />
       <updated>1666235108143</updated>
     </task>
-    <option name="localTasksCounter" value="97" />
+    <task id="LOCAL-00097" summary="提交">
+      <created>1666235589978</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1666235589978</updated>
+    </task>
+    <task id="LOCAL-00098" summary="data-center">
+      <created>1666235633655</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1666235633655</updated>
+    </task>
+    <task id="LOCAL-00099" summary="data-center">
+      <created>1666235659052</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1666235659052</updated>
+    </task>
+    <option name="localTasksCounter" value="100" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -984,7 +1030,6 @@
     <MESSAGE value="服务区监控-异常告警查询与告警确认接口" />
     <MESSAGE value="事件告警增加主键id字段，查询已确认的交通事件接口编写" />
     <MESSAGE value="交通事件查询分上下行" />
-    <MESSAGE value="data-center" />
     <MESSAGE value="厕位统计接口" />
     <MESSAGE value="厕位统计修改" />
     <MESSAGE value="工作人员健康状态mapper修改，外场设备展示页接口修改" />
@@ -993,83 +1038,96 @@
     <MESSAGE value="设备状态监控mapper修改" />
     <MESSAGE value="人流統計返回deviceId，創建人等改為nick_name" />
     <MESSAGE value="NICK_NAME等修改" />
-    <MESSAGE value="代码修改" />
     <MESSAGE value="提交" />
-    <option name="LAST_COMMIT_MESSAGE" value="提交" />
+    <MESSAGE value="data-center" />
+    <MESSAGE value="代码修改" />
+    <option name="LAST_COMMIT_MESSAGE" value="代码修改" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="765" y="221" key="#com.intellij.ide.util.MemberChooser" timestamp="1666000059100">
+    <state x="765" y="221" key="#com.intellij.ide.util.MemberChooser" timestamp="1666245117680">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state x="765" y="221" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1032@0.0.1920.1032" timestamp="1666000059100" />
+    <state x="765" y="221" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1032@0.0.1920.1032" timestamp="1666245117680" />
     <state x="430" y="438" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1666083322121">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
     <state x="430" y="438" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1920.1032@0.0.1920.1032" timestamp="1666083322121" />
-    <state x="368" y="82" key="CommitChangelistDialog2" timestamp="1666235514790">
+    <state x="368" y="82" key="CommitChangelistDialog2" timestamp="1666249876490">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state x="368" y="82" key="CommitChangelistDialog2/0.0.1920.1032@0.0.1920.1032" timestamp="1666235514790" />
+    <state x="368" y="82" key="CommitChangelistDialog2/0.0.1920.1032@0.0.1920.1032" timestamp="1666249876490" />
     <state width="514" height="466" key="DebuggerActiveHint" timestamp="1665729200490">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
     <state width="514" height="466" key="DebuggerActiveHint/0.0.1920.1032@0.0.1920.1032" timestamp="1665729200490" />
-    <state width="1542" height="315" key="GridCell.Tab.0.bottom" timestamp="1666234870960">
+    <state width="758" height="436" key="GridCell.Tab.0.bottom" timestamp="1666249774433">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state width="1542" height="315" key="GridCell.Tab.0.bottom/0.0.1920.1032@0.0.1920.1032" timestamp="1666234870960" />
-    <state width="1542" height="315" key="GridCell.Tab.0.center" timestamp="1666234870960">
+    <state width="758" height="436" key="GridCell.Tab.0.bottom/0.0.1920.1032@0.0.1920.1032" timestamp="1666249774433" />
+    <state width="758" height="436" key="GridCell.Tab.0.center" timestamp="1666249774433">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state width="1542" height="315" key="GridCell.Tab.0.center/0.0.1920.1032@0.0.1920.1032" timestamp="1666234870960" />
-    <state width="1542" height="315" key="GridCell.Tab.0.left" timestamp="1666234870960">
+    <state width="758" height="436" key="GridCell.Tab.0.center/0.0.1920.1032@0.0.1920.1032" timestamp="1666249774433" />
+    <state width="758" height="436" key="GridCell.Tab.0.left" timestamp="1666249774433">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state width="1542" height="315" key="GridCell.Tab.0.left/0.0.1920.1032@0.0.1920.1032" timestamp="1666234870960" />
-    <state width="1542" height="315" key="GridCell.Tab.0.right" timestamp="1666234870960">
+    <state width="758" height="436" key="GridCell.Tab.0.left/0.0.1920.1032@0.0.1920.1032" timestamp="1666249774433" />
+    <state width="758" height="436" key="GridCell.Tab.0.right" timestamp="1666249774433">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state width="1542" height="315" key="GridCell.Tab.0.right/0.0.1920.1032@0.0.1920.1032" timestamp="1666234870960" />
-    <state width="1542" height="315" key="GridCell.Tab.1.bottom" timestamp="1666234870960">
+    <state width="758" height="436" key="GridCell.Tab.0.right/0.0.1920.1032@0.0.1920.1032" timestamp="1666249774433" />
+    <state width="758" height="436" key="GridCell.Tab.1.bottom" timestamp="1666249774433">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state width="1542" height="315" key="GridCell.Tab.1.bottom/0.0.1920.1032@0.0.1920.1032" timestamp="1666234870960" />
-    <state width="1542" height="315" key="GridCell.Tab.1.center" timestamp="1666234870960">
+    <state width="758" height="436" key="GridCell.Tab.1.bottom/0.0.1920.1032@0.0.1920.1032" timestamp="1666249774433" />
+    <state width="758" height="436" key="GridCell.Tab.1.center" timestamp="1666249774433">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state width="1542" height="315" key="GridCell.Tab.1.center/0.0.1920.1032@0.0.1920.1032" timestamp="1666234870960" />
-    <state width="1542" height="315" key="GridCell.Tab.1.left" timestamp="1666234870960">
+    <state width="758" height="436" key="GridCell.Tab.1.center/0.0.1920.1032@0.0.1920.1032" timestamp="1666249774433" />
+    <state width="758" height="436" key="GridCell.Tab.1.left" timestamp="1666249774433">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state width="1542" height="315" key="GridCell.Tab.1.left/0.0.1920.1032@0.0.1920.1032" timestamp="1666234870960" />
-    <state width="1542" height="315" key="GridCell.Tab.1.right" timestamp="1666234870960">
+    <state width="758" height="436" key="GridCell.Tab.1.left/0.0.1920.1032@0.0.1920.1032" timestamp="1666249774433" />
+    <state width="758" height="436" key="GridCell.Tab.1.right" timestamp="1666249774433">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state width="1542" height="315" key="GridCell.Tab.1.right/0.0.1920.1032@0.0.1920.1032" timestamp="1666234870960" />
-    <state width="1542" height="315" key="GridCell.Tab.2.bottom" timestamp="1666234870960">
+    <state width="758" height="436" key="GridCell.Tab.1.right/0.0.1920.1032@0.0.1920.1032" timestamp="1666249774433" />
+    <state width="758" height="436" key="GridCell.Tab.2.bottom" timestamp="1666249774433">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state width="1542" height="315" key="GridCell.Tab.2.bottom/0.0.1920.1032@0.0.1920.1032" timestamp="1666234870960" />
-    <state width="1542" height="315" key="GridCell.Tab.2.center" timestamp="1666234870960">
+    <state width="758" height="436" key="GridCell.Tab.2.bottom/0.0.1920.1032@0.0.1920.1032" timestamp="1666249774433" />
+    <state width="758" height="436" key="GridCell.Tab.2.center" timestamp="1666249774433">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state width="1542" height="315" key="GridCell.Tab.2.center/0.0.1920.1032@0.0.1920.1032" timestamp="1666234870960" />
-    <state width="1542" height="315" key="GridCell.Tab.2.left" timestamp="1666234870960">
+    <state width="758" height="436" key="GridCell.Tab.2.center/0.0.1920.1032@0.0.1920.1032" timestamp="1666249774433" />
+    <state width="758" height="436" key="GridCell.Tab.2.left" timestamp="1666249774433">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state width="1542" height="315" key="GridCell.Tab.2.left/0.0.1920.1032@0.0.1920.1032" timestamp="1666234870960" />
-    <state width="1542" height="315" key="GridCell.Tab.2.right" timestamp="1666234870960">
+    <state width="758" height="436" key="GridCell.Tab.2.left/0.0.1920.1032@0.0.1920.1032" timestamp="1666249774433" />
+    <state width="758" height="436" key="GridCell.Tab.2.right" timestamp="1666249774433">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state width="1542" height="315" key="GridCell.Tab.2.right/0.0.1920.1032@0.0.1920.1032" timestamp="1666234870960" />
+    <state width="758" height="436" key="GridCell.Tab.2.right/0.0.1920.1032@0.0.1920.1032" timestamp="1666249774433" />
+    <state x="184" y="85" key="MergeDialog" timestamp="1666235713710">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state x="184" y="85" key="MergeDialog/0.0.1920.1032@0.0.1920.1032" timestamp="1666235713710" />
+    <state x="845" y="382" key="MultipleFileMergeDialog" timestamp="1666235738022">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state x="845" y="382" key="MultipleFileMergeDialog/0.0.1920.1032@0.0.1920.1032" timestamp="1666235738022" />
+    <state x="560" y="217" key="RollbackChangesDialog" timestamp="1666245818642">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state x="560" y="217" key="RollbackChangesDialog/0.0.1920.1032@0.0.1920.1032" timestamp="1666245818642" />
     <state x="461" y="160" key="SettingsEditor" timestamp="1665393728842">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
     <state x="461" y="160" key="SettingsEditor/0.0.1920.1032@0.0.1920.1032" timestamp="1665393728842" />
-    <state x="552" y="248" key="Vcs.Push.Dialog.v2" timestamp="1666234876697">
+    <state x="552" y="248" key="Vcs.Push.Dialog.v2" timestamp="1666249739421">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state x="552" y="248" key="Vcs.Push.Dialog.v2/0.0.1920.1032@0.0.1920.1032" timestamp="1666234876697" />
+    <state x="552" y="248" key="Vcs.Push.Dialog.v2/0.0.1920.1032@0.0.1920.1032" timestamp="1666249739421" />
     <state x="754" y="428" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1665558060891">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
@@ -1078,18 +1136,18 @@
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
     <state x="690" y="272" key="extract.method.dialog/0.0.1920.1032@0.0.1920.1032" timestamp="1666152561944" />
-    <state x="529" y="180" width="1121" height="584" key="find.popup" timestamp="1666232182953">
+    <state x="529" y="180" width="1121" height="584" key="find.popup" timestamp="1666248618179">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state x="529" y="180" width="1121" height="584" key="find.popup/0.0.1920.1032@0.0.1920.1032" timestamp="1666232182953" />
+    <state x="529" y="180" width="1121" height="584" key="find.popup/0.0.1920.1032@0.0.1920.1032" timestamp="1666248618179" />
     <state x="548" y="227" key="git4idea.branch.GitSmartOperationDialog" timestamp="1665737685510">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
     <state x="548" y="227" key="git4idea.branch.GitSmartOperationDialog/0.0.1920.1032@0.0.1920.1032" timestamp="1665737685510" />
-    <state x="652" y="302" key="git4idea.merge.GitPullDialog" timestamp="1666235254826">
+    <state x="652" y="302" key="git4idea.merge.GitPullDialog" timestamp="1666235677706">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
-    <state x="652" y="302" key="git4idea.merge.GitPullDialog/0.0.1920.1032@0.0.1920.1032" timestamp="1666235254826" />
+    <state x="652" y="302" key="git4idea.merge.GitPullDialog/0.0.1920.1032@0.0.1920.1032" timestamp="1666235677706" />
     <state x="623" y="223" width="672" height="678" key="search.everywhere.popup" timestamp="1665728727204">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
