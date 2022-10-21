@@ -30,7 +30,7 @@ public interface SmartToiletMapper {
             "FROM " +
             "TBL_SMART_TOILET_INFO sti " +
             "JOIN TBL_FIELD_INFO tfi ON tfi.ID = sti.FIELD_ID " +
-            "where tfi.FIELD_NUM = #{fieldNum}")
+            "where sti.FIELD_ID in (3940,3941) ")
     List<Map> findToiletInfoByFieldNum(@Param("fieldNum") String fieldNum);
 
     @Select("SELECT " +
