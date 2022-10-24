@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,10 +28,10 @@ public class RecoveryServiceImpl implements IRecoveryService {
     }
 
     @Override
-    public TblAuditData findById(Long id) {
+    public List<TblAuditData> findById(Long id) {
         Example example;
         example = new Example(TblAuditData.class);
         example.createCriteria().andEqualTo("versionId",id);
-        return tblAubitDataMapper.selectOneByExample(example);
+        return tblAubitDataMapper.selectByExample(example);
     }
 }

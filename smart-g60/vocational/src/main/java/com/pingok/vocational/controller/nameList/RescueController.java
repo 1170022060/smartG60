@@ -1,7 +1,7 @@
 package com.pingok.vocational.controller.nameList;
 
-import com.pingok.vocational.domain.nameList.TblAuditData;
-import com.pingok.vocational.service.nameList.IRecoveryService;
+import com.pingok.vocational.domain.nameList.TblEmgAppend;
+import com.pingok.vocational.service.nameList.IRescueService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,23 +17,23 @@ import java.util.Map;
  * @author lal
  */
 @RestController
-@RequestMapping("/recovery")
-public class RecoveryController extends BaseController {
+@RequestMapping("/rescue")
+public class RescueController extends BaseController {
 
     @Autowired
-    private IRecoveryService iRecoveryService;
+    private IRescueService iRescueService;
 
     @GetMapping
     public TableDataInfo list(String stationName,String version){
         startPage();
-        List<Map> info = iRecoveryService.getRecoveryList(stationName,version);
+        List<Map> info = iRescueService.getEmgAppendList(stationName,version);
         return getDataTable(info);
     }
 
     @GetMapping("/findById")
     public TableDataInfo findById(@RequestParam Long id){
         startPage();
-        List<TblAuditData> info = iRecoveryService.findById(id);
+        List<TblEmgAppend> info = iRescueService.findById(id);
         return getDataTable(info);
     }
 }
