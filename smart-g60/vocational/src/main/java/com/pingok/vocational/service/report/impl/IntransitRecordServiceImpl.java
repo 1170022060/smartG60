@@ -28,7 +28,7 @@ public class IntransitRecordServiceImpl implements IIntransitRecordService {
     }
 
     @Override
-    public List<IntransitRecordVo> selectIntransitRecordList(ReportVo reportVo) {
-        return tblIntransitRecordMapper.selectIntransitRecordList(reportVo);
+    public List<IntransitRecordVo> selectIntransitRecordList(Date startDate, Date endDate) {
+        return tblIntransitRecordMapper.selectIntransitRecordList(startDate,endDate);
     }
 }
