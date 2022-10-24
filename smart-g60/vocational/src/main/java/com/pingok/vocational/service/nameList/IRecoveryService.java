@@ -22,5 +22,5 @@ public interface IRecoveryService {
      * @param id
      * @return
      */
-    TblAuditData findById(Long id);
+    List<TblAuditData> findById(Long id);
 }
