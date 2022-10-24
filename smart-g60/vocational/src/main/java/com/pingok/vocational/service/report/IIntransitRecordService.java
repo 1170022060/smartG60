@@ -25,8 +25,9 @@ public interface IIntransitRecordService {
     /**
      * 通过起止日期查询在途总流量记录
      *
-     * @param reportVo
+     * @param startDate 开始日期
+     * @param endDate 结束日期
      * @return 在途总流量记录
      */
-    List<IntransitRecordVo> selectIntransitRecordList(ReportVo reportVo);
+    List<IntransitRecordVo> selectIntransitRecordList(Date startDate, Date endDate);
 }
