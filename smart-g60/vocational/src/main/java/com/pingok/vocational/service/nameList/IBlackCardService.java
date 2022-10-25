@@ -22,5 +22,5 @@ public interface IBlackCardService {
      * @param id
      * @return
      */
-    List<TblBlackCardLogN> findById(Long id);
+    List<Map> findById(Long id);
 }

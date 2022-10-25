@@ -29,10 +29,7 @@ public class RescueServiceImpl implements IRescueService {
     }
 
     @Override
-    public List<TblEmgAppend> findById(Long id) {
-        Example example;
-        example = new Example(TblEmgAppend.class);
-        example.createCriteria().andEqualTo("versionId",id);
-        return tblEmgAppendMapper.selectByExample(example);
+    public List<Map> findById(Long id) {
+        return tblEmgAppendMapper.findById(id);
     }
 }

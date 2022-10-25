@@ -28,10 +28,7 @@ public class BlackCardStationServiceImpl implements IBlackCardService {
     }
 
     @Override
-    public List<TblBlackCardLogN> findById(Long id) {
-        Example example;
-        example = new Example(TblBlackCardLogN.class);
-        example.createCriteria().andEqualTo(("versionId"),id);
-        return tblBlackCardLogNMapper.selectByExample(example);
+    public List<Map> findById(Long id) {
+        return tblBlackCardLogNMapper.findById(id);
     }
 }
