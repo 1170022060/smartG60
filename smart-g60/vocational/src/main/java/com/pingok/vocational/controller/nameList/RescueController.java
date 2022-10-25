@@ -33,7 +33,7 @@ public class RescueController extends BaseController {
     @GetMapping("/findById")
     public TableDataInfo findById(@RequestParam Long id){
         startPage();
-        List<TblEmgAppend> info = iRescueService.findById(id);
+        List<Map> info = iRescueService.findById(id);
         return getDataTable(info);
     }
 }

@@ -33,7 +33,7 @@ public class BlackCardController extends BaseController {
     @GetMapping("/findById")
     public TableDataInfo findById(@RequestParam Long id){
         startPage();
-        List<TblBlackCardLogN> info = iBlackCardService.findById(id);
+        List<Map> info = iBlackCardService.findById(id);
         return getDataTable(info);
     }
 }

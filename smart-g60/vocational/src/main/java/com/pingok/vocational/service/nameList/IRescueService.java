@@ -12,5 +12,5 @@ public interface IRescueService {
 
     List<Map> getEmgAppendList(String stationName,String version);
 
-    List<TblEmgAppend> findById(Long id);
+    List<Map> findById(Long id);
 }
