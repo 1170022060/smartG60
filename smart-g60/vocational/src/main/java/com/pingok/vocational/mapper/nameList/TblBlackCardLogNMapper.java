@@ -17,7 +17,7 @@ public interface TblBlackCardLogNMapper extends CommonRepository<TblBlackCardLog
     @Select(
             "select a.ID as \"id\", a.CARD_ID as \"cardId\" ," +
             "a.ISSUER_ID as \"issuerId\" , a.INSERT_TIME as \"insertTime\"," +
-            "c.TYPE as \"type\"," +
+            "a.TYPE as \"type\"," +
             "case when a.STATUS = 1 then '进入状态名单' when a.STATUS = 2 then '解除状态名单' end as \"status\"," +
             "a.CREATION_TIME as \"creationTime\" , a.VERSION as \"version\"," +
             "to_char(a.UPDATE_TIME,'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
