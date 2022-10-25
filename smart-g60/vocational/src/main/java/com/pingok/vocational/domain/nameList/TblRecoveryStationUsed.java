@@ -1,5 +1,6 @@
 package com.pingok.vocational.domain.nameList;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.Id;
@@ -33,9 +34,11 @@ public class TblRecoveryStationUsed implements Serializable {
     private String version;
 
     /** 创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /** 使用时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date applyTime;
 
 
