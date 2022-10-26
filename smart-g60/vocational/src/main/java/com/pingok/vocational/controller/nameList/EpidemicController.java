@@ -15,7 +15,7 @@ import java.util.Map;
  * @author lal
  */
 @RestController
-@RequestMapping("/epidemic")
+@RequestMapping("/epidemicInfo")
 public class EpidemicController extends BaseController {
 
     @Autowired

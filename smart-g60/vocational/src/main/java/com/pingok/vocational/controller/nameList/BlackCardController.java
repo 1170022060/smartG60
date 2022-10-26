@@ -17,7 +17,7 @@ import java.util.Map;
  * @author lal
  */
 @RestController
-@RequestMapping("/blackCard")
+@RequestMapping("/blackCardList")
 public class BlackCardController extends BaseController {
 
     @Autowired

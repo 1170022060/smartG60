@@ -18,7 +18,7 @@ import java.util.Map;
  * @author lal
  */
 @RestController
-@RequestMapping("/rate")
+@RequestMapping("/minRate")
 public class MinRateController extends BaseController {
 
     @Autowired

@@ -15,7 +15,7 @@ import java.util.Date;
  * @version 1.0.0 2022-10-21
  */
 @Data
-@Table(name = "TBL_BLACK_STATION_USED")
+@Table(name = "TBL_BLACK_CARD_STATION_USED")
 public class TblBlackCardStationUsedN implements Serializable {
     /** 版本号 */
     private static final long serialVersionUID = 2387147646897099985L;

@@ -17,7 +17,7 @@ import java.util.Map;
  * @author lal
  */
 @RestController
-@RequestMapping("/recovery")
+@RequestMapping("/recoveryList")
 public class RecoveryController extends BaseController {
 
     @Autowired
