@@ -81,6 +81,16 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 }
             }
         }
+        Example example = new Example(TblEventVehicleEvent.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("ubiLogicId", tblEventVehicleEvent.getUbiLogicId());
+        TblEventVehicleEvent eventVehicleEvent = tblEventVehicleEventMapper.selectOneByExample(example);
+        if (eventVehicleEvent == null) {
+            eventVehicleEvent = new TblEventVehicleEvent();
+            BeanUtils.copyNotNullProperties(tblEventVehicleEvent, eventVehicleEvent);
+            eventVehicleEvent.setId(remoteIdProducerService.nextId());
+            tblEventVehicleEventMapper.insert(eventVehicleEvent);
+        }
     }
 
     @Override
