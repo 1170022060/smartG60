@@ -16,10 +16,10 @@ import java.util.Map;
 public interface TblBlackCardLogNMapper extends CommonRepository<TblBlackCardLogN> {
     @Select(
             "select a.ID as \"id\", a.CARD_ID as \"cardId\" ," +
-            "a.ISSUER_ID as \"issuerId\" , a.INSERT_TIME as \"insertTime\"," +
+            "a.ISSUER_ID as \"issuerId\" , to_char(a.INSERT_TIME,'yyyy-mm-dd hh24:mi:ss') as \"insertTime\"," +
             "a.TYPE as \"type\"," +
             "case when a.STATUS = 1 then '进入状态名单' when a.STATUS = 2 then '解除状态名单' end as \"status\"," +
-            "a.CREATION_TIME as \"creationTime\" , a.VERSION as \"version\"," +
+            "to_char(a.CREATION_TIME,'yyyy-mm-dd hh24:mi:ss') as \"creationTime\" , a.VERSION as \"version\"," +
             "to_char(a.UPDATE_TIME,'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
             "a.VERSION_ID as \"versionId\" " +
             "from TBL_BLACK_CARD_LOG a " +
