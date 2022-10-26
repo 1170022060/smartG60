@@ -3,6 +3,7 @@ package com.pingok.datacenter.domain.roster;
 import lombok.Data;
 
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -12,6 +13,7 @@ import java.util.Date;
  * @version 1.0.0 2022-07-20
  */
 @Data
+@Table(name = "TBL_EPIDEMIC_PREFIX")
 public class TblEpidemicPrefix implements java.io.Serializable {
     /** 版本号 */
     private static final long serialVersionUID = 1L;
@@ -22,9 +24,11 @@ public class TblEpidemicPrefix implements java.io.Serializable {
     @Id
     private Long id;
 
+    /** 车牌前缀 */
     private String prefix;
 
     private Date startTime;
+
     /** 版本号 */
     private String version;
 
