@@ -87,7 +87,7 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
 
     @Override
     public void weather() {
-        Object weather = weatherMapper.weather();
+        Object weather = weatherMapper.weather(DateUtils.getDate());
         if (StringUtils.isNotNull(weather)) {
             List<TblSmartToiletInfo> list = tblSmartToiletInfoMapper.selectAll();
             if (list != null && list.size() > 0) {
