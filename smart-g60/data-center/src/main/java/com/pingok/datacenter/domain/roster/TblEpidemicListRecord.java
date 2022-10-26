@@ -3,6 +3,7 @@ package com.pingok.datacenter.domain.roster;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -11,6 +12,7 @@ import java.util.Date;
  * @author xia
  * @version 1.0.0 2022-07-20
  */
+@Table(name = "TBL_EPIDEMIC_LIST_RECORD")
 public class TblEpidemicListRecord implements java.io.Serializable {
     /** 版本号 */
     private static final long serialVersionUID = 4462453608842553099L;

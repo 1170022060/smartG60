@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -14,6 +15,7 @@ import java.util.Date;
  * @version 1.0.0 2022-07-20
  */
 @Data
+@Table(name = "TBL_RESCUE_STATION_USED")
 public class TblRescueStationUsed implements Serializable {
 
     private static final long serialVersionUID = 1L;

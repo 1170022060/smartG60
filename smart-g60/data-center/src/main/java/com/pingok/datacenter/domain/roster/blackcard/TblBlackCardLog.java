@@ -1,13 +1,11 @@
-package com.pingok.datacenter.domain.blackcard;
+package com.pingok.datacenter.domain.roster.blackcard;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -31,8 +29,8 @@ public class TblBlackCardLog implements Serializable {
     /**
      * 媒介id：obu或cpc id
      */
-    @ApiModelProperty(value = "媒介id：obu或cpc id")
-    private String mediaId;
+    @ApiModelProperty(value = "ETC卡号")
+    private String cardId;
 
     /**
      * 发行服务机构编码
@@ -65,26 +63,13 @@ public class TblBlackCardLog implements Serializable {
     private Date creationTime;
 
     /**
-     * 版本号
-     */
-    @ApiModelProperty(value = "版本号")
-    private String version;
-
-    /**
      * 创建或更新时间
      */
     @ApiModelProperty(value = "创建或更新时间")
     private Date updateTime;
 
     /**
-     * 媒介类型：1-obu；2-cpc
+     * 版本表主键Id
      */
-    @ApiModelProperty(value = "媒介类型：1-obu；2-cpc")
-    private Integer mediaType;
-
-    /**
-     * 名单启用时间
-     */
-    @ApiModelProperty(value = "名单启用时间")
-    private Date applyTime;
+    private Long versionId;
 }

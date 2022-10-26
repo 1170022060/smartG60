@@ -14,4 +14,10 @@ public interface IRateService  {
      * @param obj
      */
     void rate(JSONObject obj);
+
+    /**
+     * 下载最小费率
+     * @param version 版本号
+     */
+    void rateDownload(String version);
 }
