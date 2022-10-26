@@ -17,7 +17,7 @@ import java.util.Map;
  * @author lal
  */
 @RestController
-@RequestMapping("/rescue")
+@RequestMapping("/rescueList")
 public class RescueController extends BaseController {
 
     @Autowired
