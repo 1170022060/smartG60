@@ -67,30 +67,30 @@ public class TransController extends BaseController {
                 transService.updateSection(enTransEnum.getTblEnTrans().getWorkDate(),enTransEnum.getTblEnTrans().getLaneHex().substring(4,7),1,3);
             }
             enTransInfo.setInsertEnTransSummary(transService.insertEnTransSummary(enTransEnum));
-            String passId=null;
-            if(enTransEnum.getTblEnTrans().getPassType()==5 && enTransEnum.getTblEnEtcPass()!=null)
-            {
-                if(enTransEnum.getTblEnEtcPass().getEtcCardId()!=null && enTransEnum.getTblEnEtcPass().getEtcCardNet()!=null)
-                {
-                    SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
-                    String time=formatter.format(enTransEnum.getTblEnTrans().getTransTime());
-                    passId="01"+enTransEnum.getTblEnEtcPass().getEtcCardNet()+zero(enTransEnum.getTblEnEtcPass().getEtcCardId())+time;
-                }
-            }
-            if(enTransEnum.getTblEnTrans().getPassType()==6 && enTransEnum.getTblEnMtcPass()!=null)
-            {
-                if(enTransEnum.getTblEnMtcPass().getCpcCardId()!=null)
-                {
-                    SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
-                    String time=formatter.format(enTransEnum.getTblEnTrans().getTransTime());
-                    passId="020000"+zero(enTransEnum.getTblEnMtcPass().getCpcCardId())+time;
-                }
-            }
-            UpdatePassIdVo updatePassIdVo=new UpdatePassIdVo();
-            updatePassIdVo.setPassId(passId);
-            updatePassIdVo.setRecordId(enTransInfo.getInsertEnTrans().getRecordId());
-            updatePassIdVo.setTableName(enTransInfo.getInsertEnTrans().getTableName());
-            tblEnTransMapper.updatePassId(updatePassIdVo);
+//            String passId=null;
+//            if(enTransEnum.getTblEnTrans().getPassType()==5 && enTransEnum.getTblEnEtcPass()!=null)
+//            {
+//                if(enTransEnum.getTblEnEtcPass().getEtcCardId()!=null && enTransEnum.getTblEnEtcPass().getEtcCardNet()!=null)
+//                {
+//                    SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
+//                    String time=formatter.format(enTransEnum.getTblEnTrans().getTransTime());
+//                    passId="01"+enTransEnum.getTblEnEtcPass().getEtcCardNet()+zero(enTransEnum.getTblEnEtcPass().getEtcCardId())+time;
+//                }
+//            }
+//            if(enTransEnum.getTblEnTrans().getPassType()==6 && enTransEnum.getTblEnMtcPass()!=null)
+//            {
+//                if(enTransEnum.getTblEnMtcPass().getCpcCardId()!=null)
+//                {
+//                    SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
+//                    String time=formatter.format(enTransEnum.getTblEnTrans().getTransTime());
+//                    passId="020000"+zero(enTransEnum.getTblEnMtcPass().getCpcCardId())+time;
+//                }
+//            }
+//            UpdatePassIdVo updatePassIdVo=new UpdatePassIdVo();
+//            updatePassIdVo.setPassId(passId);
+//            updatePassIdVo.setRecordId(enTransInfo.getInsertEnTrans().getRecordId());
+//            updatePassIdVo.setTableName(enTransInfo.getInsertEnTrans().getTableName());
+//            tblEnTransMapper.updatePassId(updatePassIdVo);
         }
         return AjaxResult.success(enTransInfo);
     }
@@ -145,40 +145,40 @@ public class TransController extends BaseController {
             }
             exTransInfo.setInsertExTransSummary(transService.insertExTransSummary(exTransEnum));
         }
-        String passId=null;
-        if(exTransEnum.getTblExTrans().getPassType()==5 && exTransEnum.getTblExEtcPass()!=null)
-        {
-            if(exTransEnum.getTblExEtcPass().getEtcCardId()!=null)
-            {
-                SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
-                String time=formatter.format(exTransEnum.getTblExTrans().getEnTime());
-                passId="01"+exTransEnum.getTblExEtcPass().getEtcCardNet()+zero(exTransEnum.getTblExEtcPass().getEtcCardId())+time;
-            }
-
-        }
-        if(exTransEnum.getTblExTrans().getPassType()==6 && exTransEnum.getTblExMtcPass()!=null)
-        {
-            if(exTransEnum.getTblExMtcPass().getCpcCardId()!=null)
-            {
-                SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
-                String time=formatter.format(exTransEnum.getTblExTrans().getEnTime());
-                passId="020000"+zero(exTransEnum.getTblExMtcPass().getCpcCardId())+time;
-            }
-        }
-        if(exTransEnum.getTblExTrans().getPassType()==9 && exTransEnum.getTblExPaperPass()!=null)
-        {
-            if(exTransEnum.getTblExPaperPass().getLaneHex()!=null)
-            {
-                SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
-                String time=formatter.format(exTransEnum.getTblExTrans().getTransTime());
-                passId="030"+ transService.selectLaneGB((exTransEnum.getTblExPaperPass().getLaneHex())) +time;
-            }
-        }
-        UpdatePassIdVo updatePassIdVo=new UpdatePassIdVo();
-        updatePassIdVo.setPassId(passId);
-        updatePassIdVo.setRecordId(exTransInfo.getInsertExTrans().getRecordId());
-        updatePassIdVo.setTableName(exTransInfo.getInsertExTrans().getTableName());
-        tblExTransMapper.updatePassId(updatePassIdVo);
+//        String passId=null;
+//        if(exTransEnum.getTblExTrans().getPassType()==5 && exTransEnum.getTblExEtcPass()!=null)
+//        {
+//            if(exTransEnum.getTblExEtcPass().getEtcCardId()!=null)
+//            {
+//                SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
+//                String time=formatter.format(exTransEnum.getTblExTrans().getEnTime());
+//                passId="01"+exTransEnum.getTblExEtcPass().getEtcCardNet()+zero(exTransEnum.getTblExEtcPass().getEtcCardId())+time;
+//            }
+//
+//        }
+//        if(exTransEnum.getTblExTrans().getPassType()==6 && exTransEnum.getTblExMtcPass()!=null)
+//        {
+//            if(exTransEnum.getTblExMtcPass().getCpcCardId()!=null)
+//            {
+//                SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
+//                String time=formatter.format(exTransEnum.getTblExTrans().getEnTime());
+//                passId="020000"+zero(exTransEnum.getTblExMtcPass().getCpcCardId())+time;
+//            }
+//        }
+//        if(exTransEnum.getTblExTrans().getPassType()==9 && exTransEnum.getTblExPaperPass()!=null)
+//        {
+//            if(exTransEnum.getTblExPaperPass().getLaneHex()!=null)
+//            {
+//                SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
+//                String time=formatter.format(exTransEnum.getTblExTrans().getTransTime());
+//                passId="030"+ transService.selectLaneGB((exTransEnum.getTblExPaperPass().getLaneHex())) +time;
+//            }
+//        }
+//        UpdatePassIdVo updatePassIdVo=new UpdatePassIdVo();
+//        updatePassIdVo.setPassId(passId);
+//        updatePassIdVo.setRecordId(exTransInfo.getInsertExTrans().getRecordId());
+//        updatePassIdVo.setTableName(exTransInfo.getInsertExTrans().getTableName());
+//        tblExTransMapper.updatePassId(updatePassIdVo);
         return AjaxResult.success(exTransInfo);
     }
 
