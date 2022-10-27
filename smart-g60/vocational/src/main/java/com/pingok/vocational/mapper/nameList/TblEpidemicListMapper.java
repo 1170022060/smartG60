@@ -37,4 +37,14 @@ public interface TblEpidemicListMapper extends CommonRepository<TblEpidemicStati
             "</when> "+
             "</script>"})
     List<Map> getEpidemicList(@Param("stationName") String stationName,@Param("version") String version);
+
+    @Select("select * from ( "+
+            "SELECT " +
+            "VERSION as \"version\"," +
+            "row_number() over(partition by STATION_HEX  order by VERSION desc) as \"rn\"  "+
+            "from TBL_EPIDEMIC_STATION_USED ) a")
+    List<Map> getLatestEStation();
+
+    @Select("SELECT MAX(VERSION) as \"version\" FROM TBL_EPIDEMIC_STATION_USED ")
+    Object getLatestESVersion();
 }
