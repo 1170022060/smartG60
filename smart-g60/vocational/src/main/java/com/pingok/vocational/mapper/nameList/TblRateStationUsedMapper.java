@@ -35,4 +35,14 @@ public interface TblRateStationUsedMapper extends CommonRepository<TblRateStatio
             "</when> "+
             "</script>"})
     List<Map> getRateList(@Param("stationName") String stationName, @Param("version") String version);
+
+    @Select("select * from ( "+
+            "SELECT " +
+            "VERSION as \"version\"," +
+            "row_number() over(partition by STATION_HEX  order by VERSION desc) as \"rn\"  "+
+            "from TBL_RATE_STATION_USED ) a")
+    List<Map> getLatestRStation();
+
+    @Select("SELECT MAX(VERSION) as \"version\" FROM TBL_RATE_STATION_USED ")
+    Object getLatestRSVersion();
 }

@@ -27,6 +27,8 @@ public interface TblGantryStatusMapper extends CommonRepository<TblGantryStatus>
             "tgs.STATUS_DESC as \"statusDesc\", " +
             "tgs.TRANSACTION_NUMBER as \"transactionNumber\", " +
             "tgs.TRAVELIMAGE_NUMBER as \"travelimageNumber\", " +
+            "tgi.POS_X as \"pos_x\", "+
+            "tgi.POS_Y as \"pos_Y\", "+
             "tgi.DIRECTION as \"direction\" " +
             "FROM " +
             "TBL_GANTRY_INFO tgi " +

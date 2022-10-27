@@ -33,4 +33,14 @@ public interface TblBlackCardStationNMapper {
             "</when> "+
             "</script>"})
     List<Map> getBlackCardList(@Param("stationName") String stationName, @Param("version") String version);
+
+    @Select("select * from ( "+
+            "SELECT " +
+            "bsu.VERSION as \"version\"," +
+            "row_number() over(partition by bsu.STATION_HEX  order by bsu.VERSION desc) as \"rn\"  "+
+            "from TBL_BLACK_CARD_STATION_USED bsu ) a")
+    List<Map> getLatestBCStation();
+
+    @Select("SELECT MAX(VERSION) as \"version\" FROM TBL_BLACK_CARD_STATION_USED bcsu")
+    Object getLatestBCVersion();
 }

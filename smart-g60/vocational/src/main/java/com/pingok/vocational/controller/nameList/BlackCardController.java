@@ -3,6 +3,7 @@ package com.pingok.vocational.controller.nameList;
 import com.pingok.vocational.domain.nameList.TblBlackCardLogN;
 import com.pingok.vocational.service.nameList.IBlackCardService;
 import com.ruoyi.common.core.web.controller.BaseController;
+import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.web.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,5 +36,11 @@ public class BlackCardController extends BaseController {
         startPage();
         List<Map> info = iBlackCardService.findById(id);
         return getDataTable(info);
+    }
+
+    @GetMapping("/statisticsVersion")
+    public AjaxResult statisticsVersion(){
+        Object obj = iBlackCardService.statisticsVersion();
+        return AjaxResult.success(obj);
     }
 }
