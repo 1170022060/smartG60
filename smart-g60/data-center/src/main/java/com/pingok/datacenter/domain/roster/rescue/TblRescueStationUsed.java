@@ -1,4 +1,4 @@
-package com.pingok.datacenter.domain.roster;
+package com.pingok.datacenter.domain.roster.rescue;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

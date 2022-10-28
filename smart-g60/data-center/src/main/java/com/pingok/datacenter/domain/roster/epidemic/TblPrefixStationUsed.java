@@ -1,4 +1,4 @@
-package com.pingok.datacenter.domain.roster;
+package com.pingok.datacenter.domain.roster.epidemic;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,14 +8,14 @@ import javax.persistence.Table;
 import java.util.Date;
 
 /**
- * 中高风险地区车牌名单版本表(TBL_EPIDEMIC_PREFIX_STATION_USED)
+ * 中高风险地区车牌名单版本表(TBL_PREFIX_STATION_USED)
  *
  * @author xia
  * @version 1.0.0 2022-07-20
  */
 @Data
-@Table(name = "TBL_EPIDEMIC_PREFIX_STATION_USED")
-public class TblEpidemicPrefixStationUsed implements java.io.Serializable {
+@Table(name = "TBL_PREFIX_STATION_USED")
+public class TblPrefixStationUsed implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 

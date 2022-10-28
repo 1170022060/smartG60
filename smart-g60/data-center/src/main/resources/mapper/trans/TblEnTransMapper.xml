@@ -27,6 +27,7 @@
         <result property="truckCapacity"    column="truck_capacity"     />
         <result property="vehWeight"        column="veh_weight"         />
         <result property="specialType"      column="special_type"       />
+        <result property="passId"           column="pass_id"            />
     </resultMap>
 
     <insert id="insertEnTrans" parameterType="com.pingok.datacenter.domain.trans.TblEnTrans">
@@ -52,6 +53,7 @@
             <if test="truckCapacity != null ">truck_capacity,</if>
             <if test="vehWeight != null ">veh_weight,</if>
             <if test="specialType != null ">special_type,</if>
+            <if test="passId != null ">pass_id,</if>
             record_id
         )values(
             <if test="gid != null ">#{gid},</if>
@@ -75,6 +77,7 @@
             <if test="truckCapacity != null ">#{truckCapacity},</if>
             <if test="vehWeight != null ">#{vehWeight},</if>
             <if test="specialType != null ">#{specialType},</if>
+            <if test="passId != null ">#{passId},</if>
             #{recordId}
         )
     </insert>

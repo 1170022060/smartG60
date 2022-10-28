@@ -40,3 +40,6 @@ center:
   stationGB: ""
   cardPath: ""
   ratePath: ""
+  epidemicPath: ""
+  prefixPath: ""
+  recoveryPath: ""

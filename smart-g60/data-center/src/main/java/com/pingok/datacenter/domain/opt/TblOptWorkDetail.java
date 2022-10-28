@@ -3,10 +3,12 @@ package com.pingok.datacenter.domain.opt;
 import lombok.Data;
 
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
 @Data
+@Table(name = "TBL_OPT_WORK_DETAIL")
 public class TblOptWorkDetail implements Serializable {
     private static final long serialVersionUID = 1L;
 

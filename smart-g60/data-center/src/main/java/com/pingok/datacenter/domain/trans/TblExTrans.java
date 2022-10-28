@@ -144,7 +144,7 @@ public class TblExTrans implements Serializable {
     private String cardId;
 
     /** 交易金额 */
-    private Long amount;
+    private Integer amount;
 
     /** 特情类型 89：无子表型流水 通常为0   */
     private String specialType;
@@ -486,11 +486,11 @@ public class TblExTrans implements Serializable {
         this.cardId = cardId;
     }
 
-    public Long getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 

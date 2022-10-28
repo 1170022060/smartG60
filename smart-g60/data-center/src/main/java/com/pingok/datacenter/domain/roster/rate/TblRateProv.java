@@ -1,10 +1,12 @@
 package com.pingok.datacenter.domain.roster.rate;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 最小费率分省信息表(TBL_RATE_PROV)
@@ -53,5 +55,11 @@ public class TblRateProv implements Serializable {
 
     /** 分省门架收费信息 */
     private String groupFee;
+
+    /**
+     * 创建或更新时间
+     */
+    @ApiModelProperty(value = "创建或更新时间")
+    private Date updateTime;
 
 }

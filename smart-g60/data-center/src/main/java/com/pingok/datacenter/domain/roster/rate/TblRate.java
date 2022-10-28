@@ -1,5 +1,6 @@
 package com.pingok.datacenter.domain.roster.rate;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.Id;
@@ -54,6 +55,13 @@ public class TblRate implements Serializable {
 
     /** 生效时间 */
     private Date effectTime;
+
+
+    /**
+     * 创建或更新时间
+     */
+    @ApiModelProperty(value = "创建或更新时间")
+    private Date updateTime;
 
     /** 关联id */
     private Long versionId;
