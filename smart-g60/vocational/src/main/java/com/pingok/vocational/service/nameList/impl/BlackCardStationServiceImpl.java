@@ -97,6 +97,7 @@ public class BlackCardStationServiceImpl implements IBlackCardService {
         }
         object.put("alreadyUpdate",count1+count2+count3);
         object.put("notUpdate",BlackCardList.size()-count1+EpidmicList.size()-count2+RateList.size()-count3);
+        object.put("total",tblBlackCardStationNMapper.getStationCount());
         return object;
     }
 }

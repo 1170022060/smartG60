@@ -56,4 +56,9 @@ public class LaneServiceImpl implements ILaneService {
         laneEnum.setExtLane(exLane);
         return laneEnum;
     }
+
+    @Override
+    public List<Map> getStationFlowUpload() {
+        return tblLaneStatusMapper.getStationFlowUpload();
+    }
 }
