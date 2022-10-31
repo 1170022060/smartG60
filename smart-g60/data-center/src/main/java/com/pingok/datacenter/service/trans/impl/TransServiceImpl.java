@@ -142,52 +142,71 @@ public class TransServiceImpl implements ITransService {
     }
 
     @Override
-    public void insertSection(Date workDate,String stationId, Integer direction) {
+    public void updateSection(Date workDate,String stationId, Integer direction,Integer type,Integer amount) {
         Example example = new Example(TblSectionRecord.class);
-        example.createCriteria().andEqualTo("workDate", workDate);
-        example.createCriteria().andEqualTo("stationId", stationId);
-        example.createCriteria().andEqualTo("direction", direction);
-        if(tblSectionRecordMapper.selectOneByExample(example)==null)
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("workDate", workDate);
+        criteria.andEqualTo("stationId", stationId);
+        criteria.andEqualTo("direction", direction);
+        TblSectionRecord tblSectionRecord=tblSectionRecordMapper.selectOneByExample(example);
+        if(tblSectionRecord==null)
         {
-            TblSectionRecord tblSectionRecord=new TblSectionRecord();
+            tblSectionRecord=new TblSectionRecord();
             tblSectionRecord.setId(remoteIdProducerService.nextId());
             tblSectionRecord.setWorkDate(workDate);
             tblSectionRecord.setDirection(direction);
+            tblSectionRecord.setStationId(stationId);
             tblSectionRecord.setEtcLocal(0);
             tblSectionRecord.setEtcElse(0);
             tblSectionRecord.setMtcTrans(0);
             tblSectionRecord.setMtcSingle(0);
             tblSectionRecord.setLicense(0);
             tblSectionRecord.setAmount(0);
+            tblSectionRecord.setReleaseTrans(0);
+            tblSectionRecord.setFrontTrans(0);
+            tblSectionRecord.setBarrierTrans(0);
             tblSectionRecordMapper.insert(tblSectionRecord);
         }
-    }
-
-    @Override
-    public void updateSection(Date workDate,String stationId, Integer direction,Integer type) {
-        Example example = new Example(TblSectionRecord.class);
-        example.createCriteria().andEqualTo("workDate", workDate);
-        example.createCriteria().andEqualTo("stationId", stationId);
-        example.createCriteria().andEqualTo("direction", direction);
-        TblSectionRecord tblSectionRecord=tblSectionRecordMapper.selectOneByExample(example);
         if(type==1)
         {
             tblSectionRecord.setEtcLocal(tblSectionRecord.getEtcLocal()+1);
+            tblSectionRecord.setAmount(tblSectionRecord.getAmount()+amount);
             tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
         }
         if(type==2)
         {
             tblSectionRecord.setEtcElse(tblSectionRecord.getEtcElse()+1);
+            tblSectionRecord.setAmount(tblSectionRecord.getAmount()+amount);
             tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
         }
         if(type==3)
         {
-            tblSectionRecord.setMtcSingle(tblSectionRecord.getMtcTrans()+1);
+            tblSectionRecord.setMtcSingle(tblSectionRecord.getMtcSingle()+1);
+            tblSectionRecord.setAmount(tblSectionRecord.getAmount()+amount);
             tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
         }
         if(type==4)
         {
             tblSectionRecord.setMtcTrans(tblSectionRecord.getMtcTrans()+1);
+            tblSectionRecord.setAmount(tblSectionRecord.getAmount()+amount);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
+        if(type==5)
+        {
+            tblSectionRecord.setReleaseTrans(tblSectionRecord.getReleaseTrans()+1);
+            tblSectionRecord.setAmount(tblSectionRecord.getAmount()+amount);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
+        if(type==6)
+        {
+            tblSectionRecord.setBarrierTrans(tblSectionRecord.getBarrierTrans()+1);
+            tblSectionRecord.setAmount(tblSectionRecord.getAmount()+amount);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
+        if(type==7)
+        {
+            tblSectionRecord.setFrontTrans(tblSectionRecord.getFrontTrans()+1);
+            tblSectionRecord.setAmount(tblSectionRecord.getAmount()+amount);
             tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
         }
     }

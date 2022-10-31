@@ -68,13 +68,20 @@ public class BlackCardServiceImpl implements IBlackCardService {
 
     @Override
     public void blackCard(JSONObject obj) {
-            TblBlackCardStationUsed stationUsed = new TblBlackCardStationUsed();
+        Example example = new Example(TblBlackCardStationUsed.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("version", obj.getString("version"));
+        criteria.andEqualTo("stationHex", obj.getString("stationHex"));
+        TblBlackCardStationUsed stationUsed = tblBlackCardStationUsedMapper.selectOneByExample(example);
+        if (StringUtils.isNull(stationUsed)) {
+            stationUsed = new TblBlackCardStationUsed();
             stationUsed.setId(remoteIdProducerService.nextId());
             stationUsed.setStationHex(obj.getString("stationHex"));
             stationUsed.setApplyTime(obj.getDate("applyTime"));
             stationUsed.setCreateTime(DateUtils.getNowDate());
             stationUsed.setObuVersion(obj.getString("version"));
             tblBlackCardStationUsedMapper.insert(stationUsed);
+        }
     }
 
     @Override
@@ -359,6 +366,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
         TblBlackCard blackCard;
         TblBlackCardLog blackCardLog;
         TblBlackCardVersion blackCardVersion;
+        TblBlackCardVersion blackCardVersion2;
 
         Example example = new Example(TblBlackCardVersion.class);
         example.createCriteria().andEqualTo("version", version);
@@ -368,20 +376,16 @@ public class BlackCardServiceImpl implements IBlackCardService {
             blackCardVersion.setId(remoteIdProducerService.nextId());
             blackCardVersion.setVersion(version);
         }
-
         example = new Example(TblBlackCard.class);
         for (BlackVo blackIncrVo : list) {
-            example.createCriteria().andEqualTo("cardId", blackIncrVo.getCardId());
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("cardId", blackIncrVo.getCardId());
+            criteria.andEqualTo("type", blackIncrVo.getType());
             blackCard = tblBlackCardMapper.selectOneByExample(example);
             if (StringUtils.isNull(blackCard)) {
                 blackCard = new TblBlackCard();
                 blackCard.setId(remoteIdProducerService.nextId());
-                blackCard.setCreationTime(blackIncrVo.getCreationTime());
-                blackCard.setStatus(blackIncrVo.getStatus());
-                blackCard.setInsertTime(blackIncrVo.getInsertTime());
-                blackCard.setIssuerId(blackIncrVo.getIssuerId());
-                blackCard.setCardId(blackIncrVo.getCardId());
-                blackCard.setType(blackIncrVo.getType());
+                BeanUtils.copyNotNullProperties(blackIncrVo, blackCard);
                 blackCard.setVersionId(blackCardVersion.getId());
                 blackCard.setUpdateTime(DateUtils.getNowDate());
                 tblBlackCardMapper.insert(blackCard);
@@ -391,13 +395,12 @@ public class BlackCardServiceImpl implements IBlackCardService {
                 blackCardLog.setId(remoteIdProducerService.nextId());
                 tblBlackCardLogMapper.insert(blackCardLog);
             } else {
-                if (Long.parseLong(blackCardVersion.getVersion()) < Long.parseLong(version)) {
-                    blackCard.setCreationTime(blackIncrVo.getCreationTime());
-                    blackCard.setStatus(blackIncrVo.getStatus());
-                    blackCard.setInsertTime(blackIncrVo.getInsertTime());
-                    blackCard.setIssuerId(blackIncrVo.getIssuerId());
-                    blackCard.setCardId(blackIncrVo.getCardId());
-                    blackCard.setType(blackIncrVo.getType());
+                Example example2=new Example(TblBlackCardVersion.class);
+                example2.createCriteria().andEqualTo("id", blackCard.getVersionId());
+                blackCardVersion2 = tblBlackCardVersionMapper.selectOneByExample(example2);
+
+                if (Long.parseLong(blackCardVersion2.getVersion()) < Long.parseLong(version)) {
+                    BeanUtils.copyNotNullProperties(blackIncrVo, blackCard);
                     blackCard.setVersionId(blackCardVersion.getId());
                     blackCard.setUpdateTime(DateUtils.getNowDate());
                     tblBlackCardMapper.updateByPrimaryKey(blackCard);
@@ -414,6 +417,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
     public void insertAll(List<BlackVo> list, String version) {
         TblBlackCard blackCard;
         TblBlackCardVersion blackCardVersion;
+        TblBlackCardVersion blackCardVersion2;
 
         Example example = new Example(TblBlackCardVersion.class);
         example.createCriteria().andEqualTo("version", version);
@@ -426,7 +430,9 @@ public class BlackCardServiceImpl implements IBlackCardService {
 
         example = new Example(TblBlackCard.class);
         for (BlackVo blackIncrVo : list) {
-            example.createCriteria().andEqualTo("cardId", blackIncrVo.getCardId());
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("cardId", blackIncrVo.getCardId());
+            criteria.andEqualTo("versionId", blackCardVersion.getId());
             blackCard = tblBlackCardMapper.selectOneByExample(example);
             if (StringUtils.isNull(blackCard)) {
                 blackCard = new TblBlackCard();
@@ -441,6 +447,10 @@ public class BlackCardServiceImpl implements IBlackCardService {
                 blackCard.setUpdateTime(DateUtils.getNowDate());
                 tblBlackCardMapper.insert(blackCard);
             } else {
+                Example example2=new Example(TblBlackCardVersion.class);
+                example2.createCriteria().andEqualTo("id", blackCard.getVersionId());
+                blackCardVersion2 = tblBlackCardVersionMapper.selectOneByExample(example2);
+
                 if (Long.parseLong(blackCardVersion.getVersion()) < Long.parseLong(version)) {
                     blackCard.setCreationTime(blackIncrVo.getCreationTime());
                     blackCard.setStatus(blackIncrVo.getStatus());

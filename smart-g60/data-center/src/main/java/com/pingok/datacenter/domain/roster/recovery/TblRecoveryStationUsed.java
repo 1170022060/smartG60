@@ -1,21 +1,22 @@
-package com.pingok.datacenter.domain.roster;
+package com.pingok.datacenter.domain.roster.recovery;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 中高风险地区名单版本表(TBL_EPIDEMIC_STATION_USED)
+ * 追缴名单版本表(TBL_RECOVERY_STATION_USED)
  *
  * @author xia
  * @version 1.0.0 2022-07-20
  */
 @Data
-@Table(name = "TBL_EPIDEMIC_STATION_USED")
-public class TblEpidemicStationUsed implements java.io.Serializable {
+@Table(name = "TBL_RECOVERY_STATION_USED")
+public class TblRecoveryStationUsed implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -50,5 +51,4 @@ public class TblEpidemicStationUsed implements java.io.Serializable {
      */
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
-
 }

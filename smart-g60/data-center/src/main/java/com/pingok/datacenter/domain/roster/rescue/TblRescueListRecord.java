@@ -1,4 +1,4 @@
-package com.pingok.datacenter.domain.roster;
+package com.pingok.datacenter.domain.roster.rescue;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.core.annotation.Excel;

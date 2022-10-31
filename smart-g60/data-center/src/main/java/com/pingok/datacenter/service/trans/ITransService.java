@@ -78,9 +78,7 @@ public interface ITransService {
      */
     public int insertExTransSplit(ExInfoVo exInfoVo, List<TblExTransSplit> tblExTransSplit);
 
-    public void insertSection(Date workDate,String stationId,Integer direction);
-
-    public void updateSection(Date workDate,String stationId, Integer direction,Integer type);
+    public void updateSection(Date workDate,String stationId, Integer direction,Integer type,Integer amount);
 
     /**
      * 入口流水表入汇总表

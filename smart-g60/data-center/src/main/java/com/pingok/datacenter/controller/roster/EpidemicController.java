@@ -6,6 +6,7 @@ import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,4 +38,19 @@ public class EpidemicController extends BaseController {
         iEpidemicService.epidemicPrefix(object);
         return AjaxResult.success();
     }
+
+    @PostMapping("/epidemicDownload")
+    public AjaxResult epidemicDownload(@Validated @RequestBody String version)
+    {
+        iEpidemicService.epidemicDownload(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/prefixDownload")
+    public AjaxResult prefixDownload(@Validated @RequestBody String version)
+    {
+        iEpidemicService.prefixDownload(version);
+        return AjaxResult.success();
+    }
+
 }
