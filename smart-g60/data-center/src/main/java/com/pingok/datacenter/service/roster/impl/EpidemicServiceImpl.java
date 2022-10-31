@@ -3,6 +3,7 @@ package com.pingok.datacenter.service.roster.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.datacenter.domain.roster.blackcard.TblBlackCardVersion;
+import com.pingok.datacenter.domain.roster.blackcard.vo.BlackVo;
 import com.pingok.datacenter.domain.roster.epidemic.*;
 import com.pingok.datacenter.domain.roster.epidemic.vo.EpidemicVo;
 import com.pingok.datacenter.domain.roster.epidemic.vo.PrefixVo;
@@ -22,6 +23,7 @@ import tk.mybatis.mapper.entity.Example;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -269,8 +271,8 @@ public class EpidemicServiceImpl implements IEpidemicService {
                 }
                 if(zipEntryName.contains(".json"))
                 {
-                    EpidemicVo epidemicVo =jsonAnalysisE(outpath);
-                    insertEpidemic(epidemicVo,version);
+                    List<EpidemicVo> list =jsonAnalysisE(outpath);
+                    insertEpidemic(list,version);
                 }
             }
             zp.close();
@@ -280,25 +282,26 @@ public class EpidemicServiceImpl implements IEpidemicService {
         delFolder(resourcePath);
     }
 
-    public void insertEpidemic(EpidemicVo epidemicVo, String version) {
+    public void insertEpidemic(List<EpidemicVo> list, String version) {
         TblEpidemicVersion epidemicVersion;
 
         Example example = new Example(TblEpidemicVersion.class);
         example.createCriteria().andEqualTo("version", version);
         epidemicVersion = tblEpidemicVersionMapper.selectOneByExample(example);
         if (StringUtils.isNull(epidemicVersion)) {
-            epidemicVersion=new TblEpidemicVersion();
+            epidemicVersion = new TblEpidemicVersion();
             epidemicVersion.setId(remoteIdProducerService.nextId());
             epidemicVersion.setVersion(version);
             tblEpidemicVersionMapper.insert(epidemicVersion);
-
-            TblEpidemicListRecord epidemicListRecord=new TblEpidemicListRecord();
-            epidemicListRecord.setId(remoteIdProducerService.nextId());
-            epidemicListRecord.setVersionId(epidemicVersion.getId());
-            BeanUtils.copyNotNullProperties(epidemicListRecord, epidemicVo);
-            epidemicListRecord.setDbTime(DateUtils.getNowDate());
-            epidemicListRecord.setStartTime(epidemicVo.getEffective());
-            tblEpidemicListRecordMapper.insert(epidemicListRecord);
+            for (EpidemicVo epidemicVo : list) {
+                TblEpidemicListRecord epidemicListRecord=new TblEpidemicListRecord();
+                epidemicListRecord.setId(remoteIdProducerService.nextId());
+                epidemicListRecord.setVersionId(epidemicVersion.getId());
+                BeanUtils.copyNotNullProperties(epidemicVo, epidemicListRecord);
+                epidemicListRecord.setDbTime(DateUtils.getNowDate());
+                epidemicListRecord.setStartTime(epidemicVo.getEffective());
+                tblEpidemicListRecordMapper.insert(epidemicListRecord);
+            }
         }
     }
 
@@ -328,7 +331,7 @@ public class EpidemicServiceImpl implements IEpidemicService {
         }
     }
 
-    public static EpidemicVo jsonAnalysisE(String jsonPath){
+    public static List<EpidemicVo> jsonAnalysisE(String jsonPath){
 
         String jsonStr = "";
         try {
@@ -342,7 +345,7 @@ public class EpidemicServiceImpl implements IEpidemicService {
             fileReader.close();
             reader.close();
             jsonStr = sb.toString();
-            EpidemicVo listStr = JSON.parseObject(jsonStr, EpidemicVo.class);
+            List<EpidemicVo> listStr = JSON.parseArray(jsonStr, EpidemicVo.class);
             return listStr;
         } catch (Exception e) {
             e.printStackTrace();
