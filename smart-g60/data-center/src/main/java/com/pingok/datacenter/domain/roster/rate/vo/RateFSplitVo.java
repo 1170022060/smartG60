@@ -6,9 +6,7 @@ import lombok.Data;
 public class RateFSplitVo {
     private Integer index;
     private String prov;
+    private Integer pFee;
+    private Integer pFee95;
     private Integer pM;
-    private String group;
-    private String mVer;
-    private String pVer;
-    private String pFg;
 }

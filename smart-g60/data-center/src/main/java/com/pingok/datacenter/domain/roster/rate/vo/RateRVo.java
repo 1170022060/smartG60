@@ -11,8 +11,6 @@ public class RateRVo {
     private String exProv;
     private String exID;
     private Integer vType;
-    private Integer fee;
-    private Integer fee95;
     private Integer m;
     List<RateRSplitVo> splitProvince;
 }
