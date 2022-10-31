@@ -57,7 +57,7 @@ public class GantryUpperController {
         if (StringUtils.isNull(tblGantryEventRelease.getCryptoGraphicDigest())) {
             AjaxResult.error("消息摘要不能为空！");
         }
-        if (StringUtils.isNull(tblGantryEventRelease.getEventInfo())) {
+        if (tblGantryEventRelease.getEventType() == "02" && StringUtils.isNull(tblGantryEventRelease.getEventInfo())) {
             AjaxResult.error("事件消息内容不能为空！");
         }
         iGantryService.eventProcessing(tblGantryEventRelease);
