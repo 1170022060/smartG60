@@ -29,8 +29,8 @@ public class GantryUpperController {
     private IGantryService iGantryService;
 
 
-    @RequiresPermissions("deviceMonitor:gantryUpper:eventProcessing")
-    @Log(title = "门架管理", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("deviceMonitor:gantryUpper:eventProcessing")
+//    @Log(title = "门架管理", businessType = BusinessType.OTHER)
     @PostMapping("/eventProcessing")
     public AjaxResult eventProcessing(@RequestBody TblGantryEventRelease tblGantryEventRelease) {
         if (StringUtils.isNull(tblGantryEventRelease)) {
@@ -56,6 +56,9 @@ public class GantryUpperController {
         }
         if (StringUtils.isNull(tblGantryEventRelease.getCryptoGraphicDigest())) {
             AjaxResult.error("消息摘要不能为空！");
+        }
+        if (StringUtils.isNull(tblGantryEventRelease.getEventInfo())) {
+            AjaxResult.error("事件消息内容不能为空！");
         }
         iGantryService.eventProcessing(tblGantryEventRelease);
         return AjaxResult.success();

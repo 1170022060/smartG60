@@ -55,8 +55,8 @@ public class GantryServiceImpl implements IGantryService {
                 tblGantryEventReleaseMapper.insert(info);
 
                 param = new JSONObject();
-                param.put("GantryID", gantryId);
-                param.put("OBUDelay", tblGantryEventRelease.getObuDelay() != null ? tblGantryEventRelease.getObuDelay() : 0);
+                param.put("gantryId", gantryId);
+//                param.put("OBUDelay", tblGantryEventRelease.getObuDelay() != null ? tblGantryEventRelease.getObuDelay() : 0);
                 param.put("stakeNum", tblGantryEventRelease.getStakeNum());
                 param.put("direction", tblGantryEventRelease.getDirection());
                 param.put("broadcastRange", tblGantryEventRelease.getBroadcastRange() != null ? tblGantryEventRelease.getBroadcastRange() : 0);
@@ -65,10 +65,18 @@ public class GantryServiceImpl implements IGantryService {
                 param.put("eventPosition", tblGantryEventRelease.getEventPosition() != null ? tblGantryEventRelease.getBroadcastRange() : 0);
                 param.put("eventDiscount", tblGantryEventRelease.getEventDiscount() != null ? tblGantryEventRelease.getBroadcastRange() : 0);
                 param.put("eventInfo", tblGantryEventRelease.getEventInfo());
-                param.put("reportBeginTime", DateUtils.dateTime(tblGantryEventRelease.getReportBeginTime(), DateUtils.YYYY_MM_DDTHH_MM_SS));
-                param.put("reportEndTime", DateUtils.dateTime(tblGantryEventRelease.getReportEndTime(), DateUtils.YYYY_MM_DDTHH_MM_SS));
+                param.put("reportBeginTime", DateUtils.dateTime(tblGantryEventRelease.getReportBeginTime(), DateUtils.YYYY_MM_DD)+"T"+DateUtils.dateTime(tblGantryEventRelease.getReportBeginTime(), DateUtils.HH_MM_SS));
+                param.put("reportEndTime", DateUtils.dateTime(tblGantryEventRelease.getReportEndTime(), DateUtils.YYYY_MM_DD)+"T"+DateUtils.dateTime(tblGantryEventRelease.getReportEndTime(), DateUtils.HH_MM_SS));
                 param.put("cryptoGraphicDigest", tblGantryEventRelease.getStakeNum());
-                HttpUtil.post(GantryConfig.HOST + "/preservice/eventprocessing/notify/event", param.toJSONString());
+
+                String res = HttpUtil.post(GantryConfig.HOST + "/preservice/eventprocessing/notify/event", param.toJSONString());
+                JSONObject resj = JSONObject.parseObject(res);
+                if(!resj.containsKey("subCode")){
+                    throw new ServiceException(resj.getString("msg"));
+                }
+                if(!resj.getString("subCode").equals("200")){
+                    throw new ServiceException(resj.getString("info"));
+                }
                 info.setStatus(1);
                 tblGantryEventReleaseMapper.updateByPrimaryKey(info);
             }
