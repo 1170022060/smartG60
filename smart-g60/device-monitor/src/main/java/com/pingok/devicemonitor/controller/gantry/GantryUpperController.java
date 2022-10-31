@@ -29,7 +29,7 @@ public class GantryUpperController {
     private IGantryService iGantryService;
 
 
-    @RequiresPermissions("deviceMonitor:gantryUpper:eventProcessing")
+//    @RequiresPermissions("deviceMonitor:gantryUpper:eventProcessing")
     @Log(title = "门架管理", businessType = BusinessType.OTHER)
     @PostMapping("/eventProcessing")
     public AjaxResult eventProcessing(@RequestBody TblGantryEventRelease tblGantryEventRelease) {

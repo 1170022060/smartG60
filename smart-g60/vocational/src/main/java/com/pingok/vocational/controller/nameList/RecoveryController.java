@@ -1,6 +1,5 @@
 package com.pingok.vocational.controller.nameList;
 
-import com.pingok.vocational.domain.nameList.TblAuditData;
 import com.pingok.vocational.service.nameList.IRecoveryService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.page.TableDataInfo;
@@ -33,7 +32,7 @@ public class RecoveryController extends BaseController {
     @GetMapping("/findById")
     public TableDataInfo findById(@RequestParam Long id){
         startPage();
-        List<TblAuditData> info = iRecoveryService.findById(id);
+        List<Map> info = iRecoveryService.findById(id);
         return getDataTable(info);
     }
 }

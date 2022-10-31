@@ -1,6 +1,5 @@
 package com.pingok.vocational.controller.nameList;
 
-import com.pingok.vocational.domain.nameList.TblEmgAppend;
 import com.pingok.vocational.service.nameList.IRescueService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.page.TableDataInfo;

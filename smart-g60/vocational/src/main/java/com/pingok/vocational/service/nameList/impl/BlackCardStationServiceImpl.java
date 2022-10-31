@@ -66,6 +66,8 @@ public class BlackCardStationServiceImpl implements IBlackCardService {
                     }
                 }
             }
+        }else{
+            object.put("blackCard",0);
         }
         if (EpidmicList != null && EpidmicList.size() > 0) {
             for (int i=0;i<EpidmicList.size();i++){
@@ -80,6 +82,8 @@ public class BlackCardStationServiceImpl implements IBlackCardService {
                     }
                 }
             }
+        }else{
+            object.put("epidemic",0);
         }
         if (RateList != null && RateList.size() > 0) {
             for (int i=0;i<RateList.size();i++){
@@ -94,6 +98,8 @@ public class BlackCardStationServiceImpl implements IBlackCardService {
                     }
                 }
             }
+        }else{
+            object.put("minRate",0);
         }
         object.put("alreadyUpdate",count1+count2+count3);
         object.put("notUpdate",BlackCardList.size()-count1+EpidmicList.size()-count2+RateList.size()-count3);
