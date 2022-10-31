@@ -277,9 +277,11 @@ public class RecoveryServiceImpl implements IRecoveryService {
             recoveryVersion=new TblRecoveryVersion();
             recoveryVersion.setId(remoteIdProducerService.nextId());
             recoveryVersion.setVersion(version);
+            tblRecoveryVersionMapper.insert(recoveryVersion);
         }
-        example = new Example(TblRecoveryListRecord.class);
+
         for (RecoveryVo recoveryVo : list) {
+            example = new Example(TblRecoveryListRecord.class);
             Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("vehicleId", recoveryVo.getVehicleId());
             recoveryListRecord = tblRecoveryListRecordMapper.selectOneByExample(example);
@@ -327,9 +329,11 @@ public class RecoveryServiceImpl implements IRecoveryService {
             recoveryVersion=new TblRecoveryVersion();
             recoveryVersion.setId(remoteIdProducerService.nextId());
             recoveryVersion.setVersion(version);
+            tblRecoveryVersionMapper.insert(recoveryVersion);
         }
-        example = new Example(TblRecoveryListRecord.class);
+
         for (RecoveryVo recoveryVo : list) {
+            example = new Example(TblRecoveryListRecord.class);
             Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("vehicleId", recoveryVo.getVehicleId());
             recoveryListRecord = tblRecoveryListRecordMapper.selectOneByExample(example);

@@ -252,7 +252,7 @@ public class RescueServiceImpl implements IRescueService {
                 {
                     unzipIncr(outpath,resourcePath,version);
                 }
-                if(zipEntryName.contains("data.json"))
+                if(zipEntryName.contains("json"))
                 {
                     List<RescueVo> list = jsonAnalysis(outpath);
                     insertIncr(list,version);
@@ -278,9 +278,11 @@ public class RescueServiceImpl implements IRescueService {
             rescueVersion=new TblRescueVersion();
             rescueVersion.setId(remoteIdProducerService.nextId());
             rescueVersion.setVersion(version);
+            tblRescueVersionMapper.insert(rescueVersion);
         }
-        example = new Example(TblRescueListRecord.class);
+
         for (RescueVo rescueVo : list) {
+            example = new Example(TblRescueListRecord.class);
             Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("vehicleId", rescueVo.getVehicleId());
             rescueListRecord = tblRescueListRecordMapper.selectOneByExample(example);
@@ -330,9 +332,11 @@ public class RescueServiceImpl implements IRescueService {
             rescueVersion=new TblRescueVersion();
             rescueVersion.setId(remoteIdProducerService.nextId());
             rescueVersion.setVersion(version);
+            tblRescueVersionMapper.insert(rescueVersion);
         }
-        example = new Example(TblRescueListRecord.class);
+
         for (RescueVo rescueVo : list) {
+            example = new Example(TblRescueListRecord.class);
             Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("vehicleId", rescueVo.getVehicleId());
             rescueListRecord = tblRescueListRecordMapper.selectOneByExample(example);

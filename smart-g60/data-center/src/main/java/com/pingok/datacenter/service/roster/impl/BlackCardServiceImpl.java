@@ -377,8 +377,9 @@ public class BlackCardServiceImpl implements IBlackCardService {
             blackCardVersion.setVersion(version);
             tblBlackCardVersionMapper.insert(blackCardVersion);
         }
-        example = new Example(TblBlackCard.class);
+
         for (BlackVo blackIncrVo : list) {
+            example = new Example(TblBlackCard.class);
             Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("cardId", blackIncrVo.getCardId());
             criteria.andEqualTo("type", blackIncrVo.getType());
@@ -430,8 +431,9 @@ public class BlackCardServiceImpl implements IBlackCardService {
             tblBlackCardVersionMapper.insert(blackCardVersion);
         }
 
-        example = new Example(TblBlackCard.class);
+
         for (BlackVo blackIncrVo : list) {
+            example = new Example(TblBlackCard.class);
             Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("cardId", blackIncrVo.getCardId());
             criteria.andEqualTo("versionId", blackCardVersion.getId());

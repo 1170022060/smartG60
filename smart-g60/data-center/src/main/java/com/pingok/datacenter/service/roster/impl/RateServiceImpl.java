@@ -266,8 +266,9 @@ public class RateServiceImpl implements IRateService {
                 rate.setEnId(rateFVo.getEnID());
                 rate.setExId(rateFVo.getExID());
                 tblRateMapper.insert(rate);
-                example = new Example(TblRateProv.class);
+
                 for (RateFSplitVo rateFSplitVo : rateFVo.getSplitProvince()) {
+                    example = new Example(TblRateProv.class);
                     Example.Criteria criteria2 = example.createCriteria();
                     criteria2.andEqualTo("pIndex", rateFSplitVo.getIndex());
                     criteria2.andEqualTo("prov", rateFSplitVo.getProv());
@@ -293,8 +294,9 @@ public class RateServiceImpl implements IRateService {
                 BeanUtils.copyNotNullProperties(rateFVo, rate);
                 rate.setUpdateTime(DateUtils.getNowDate());
                 tblRateMapper.updateByPrimaryKey(rate);
-                example = new Example(TblRateProv.class);
+
                 for (RateFSplitVo rateFSplitVo : rateFVo.getSplitProvince()) {
+                    example = new Example(TblRateProv.class);
                     Example.Criteria criteria2 = example.createCriteria();
                     criteria2.andEqualTo("pIndex", rateFSplitVo.getIndex());
                     criteria2.andEqualTo("prov", rateFSplitVo.getProv());
@@ -342,8 +344,9 @@ public class RateServiceImpl implements IRateService {
                 rate.setVersionId(versionId);
                 rate.setUpdateTime(DateUtils.getNowDate());
                 tblRateMapper.insert(rate);
-                example = new Example(TblRateProv.class);
                 for (RateRSplitVo rateRSplitVo : rateRVo.getSplitProvince()) {
+
+                    example = new Example(TblRateProv.class);
                     Example.Criteria criteria2 = example.createCriteria();
                     criteria2.andEqualTo("pIndex", rateRSplitVo.getIndex());
                     criteria2.andEqualTo("prov", rateRSplitVo.getProv());
@@ -356,12 +359,15 @@ public class RateServiceImpl implements IRateService {
                         BeanUtils.copyNotNullProperties(rateRSplitVo, rateProv);
                         rateProv.setPIndex(rateRSplitVo.getIndex());
                         rateProv.setGroupInfo(rateRSplitVo.getGroup());
+                        rateProv.setGroupFee(rateRSplitVo.getPFg());
                         rateProv.setRateId(rate.getId());
                         rateProv.setUpdateTime(DateUtils.getNowDate());
                         tblRateProvMapper.insert(rateProv);
                     }else
                     {
                         BeanUtils.copyNotNullProperties(rateRSplitVo, rateProv);
+                        rateProv.setGroupInfo(rateRSplitVo.getGroup());
+                        rateProv.setGroupFee(rateRSplitVo.getPFg());
                         rateProv.setUpdateTime(DateUtils.getNowDate());
                         tblRateProvMapper.updateByPrimaryKey(rateProv);
                     }
@@ -370,8 +376,9 @@ public class RateServiceImpl implements IRateService {
                 BeanUtils.copyNotNullProperties(rateRVo, rate);
                 rate.setUpdateTime(DateUtils.getNowDate());
                 tblRateMapper.updateByPrimaryKey(rate);
-                example = new Example(TblRateProv.class);
+
                 for (RateRSplitVo rateRSplitVo : rateRVo.getSplitProvince()) {
+                    example = new Example(TblRateProv.class);
                     Example.Criteria criteria2 = example.createCriteria();
                     criteria2.andEqualTo("pIndex", rateRSplitVo.getIndex());
                     criteria2.andEqualTo("prov", rateRSplitVo.getProv());
@@ -390,6 +397,8 @@ public class RateServiceImpl implements IRateService {
                     }else
                     {
                         BeanUtils.copyNotNullProperties(rateRSplitVo, rateProv);
+                        rateProv.setGroupInfo(rateRSplitVo.getGroup());
+                        rateProv.setGroupFee(rateRSplitVo.getPFg());
                         rateProv.setUpdateTime(DateUtils.getNowDate());
                         tblRateProvMapper.updateByPrimaryKey(rateProv);
                     }

@@ -60,7 +60,7 @@ public class TblRescueListRecordLog implements Serializable {
     private String cardId;
 
     /** 车辆车牌号码+颜色（车牌号码+间隔符+车牌颜色间隔符：“_”车牌颜色2位数字:0-蓝色，1-黄色，2-黑色，3-白色，4- 渐变绿色5- 黄绿双拼色6- 蓝白渐变色7- 临时牌照11-绿色12-红色例：京A12345_1） */
-    private String vehiclePlateId;
+    private String vehicleId;
 
     /** 车牌颜色 */
     private Integer vehiclePlateColor;

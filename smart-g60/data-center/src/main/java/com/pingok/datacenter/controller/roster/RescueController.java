@@ -6,6 +6,7 @@ import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +33,7 @@ public class RescueController extends BaseController {
         return AjaxResult.success();
     }
 
+    @Transactional
     @PostMapping("/rescueIncr")
     public AjaxResult rescueIncr(@Validated @RequestBody String version)
     {
@@ -46,6 +48,7 @@ public class RescueController extends BaseController {
         return AjaxResult.success();
     }
 
+    @Transactional
     @PostMapping("/unzipRescueAll")
     public AjaxResult unzipRescueAll(@Validated @RequestBody String version)
     {
