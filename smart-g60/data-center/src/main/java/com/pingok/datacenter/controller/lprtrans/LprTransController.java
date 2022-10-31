@@ -37,7 +37,7 @@ public class LprTransController extends BaseController {
         EnLprInfo enLprInfo =new EnLprInfo();
         enLprInfo.setInsertEnLpr(lprTransService.insertEnLprTrans(tblEnLprTrans));
         enLprInfo.setInsertEnLprSummary(lprTransService.insertEnLprSummary(tblEnLprTrans));
-        return AjaxResult.success(enLprInfo);
+        return AjaxResult.success();
     }
 
     @Transactional
@@ -47,7 +47,7 @@ public class LprTransController extends BaseController {
         ExLprInfo exLprInfo =new ExLprInfo();
         exLprInfo.setInsertExLpr(lprTransService.insertExLprTrans(tblExLprTrans));
         exLprInfo.setInsertExLprSummary(lprTransService.insertExLprSummary(tblExLprTrans));
-        return AjaxResult.success(exLprInfo);
+        return AjaxResult.success();
     }
 
 }

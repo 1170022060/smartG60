@@ -43,6 +43,15 @@ public class TblSectionRecord implements java.io.Serializable {
     /** MTC跨省流量 */
     private Integer mtcTrans;
 
+    /** 放行流量 */
+    private Integer releaseTrans;
+
+    /** 闯关流量 */
+    private Integer barrierTrans;
+
+    /** 前亭流量 */
+    private Integer frontTrans;
+
     /** 牌识流量 */
     private Integer license;
 

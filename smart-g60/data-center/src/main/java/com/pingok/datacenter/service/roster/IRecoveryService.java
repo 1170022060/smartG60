@@ -14,4 +14,23 @@ public interface IRecoveryService {
      * @param obj
      */
     void recovery(JSONObject obj);
+
+    /**
+     * 下载追缴名单增量
+     * @param version 版本号
+     */
+    void increment(String version);
+
+    /**
+     * 下载追缴名单全量
+     * @param version 版本号
+     */
+    void all(String version);
+
+
+    /**
+     * 追缴名单全量入库
+     * @param version 版本号
+     */
+    void unzipAll(String version);
 }

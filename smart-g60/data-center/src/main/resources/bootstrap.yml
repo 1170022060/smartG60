@@ -35,3 +35,11 @@ spring:
 # config
 picturePath: "D:/gantry/picture"
 pictureFailPath: "D:/gantry/pictureFail"
+center:
+  host: ""
+  stationGB: ""
+  cardPath: ""
+  ratePath: ""
+  epidemicPath: ""
+  prefixPath: ""
+  recoveryPath: ""

@@ -6,6 +6,7 @@ import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,13 @@ public class RateController extends BaseController {
     public AjaxResult overLoad(@RequestBody JSONObject object) {
         log.info("最小费率名单----请求参数-----" + object.toJSONString());
         iRateService.rate(object);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/rateDownload")
+    public AjaxResult rateDownload(@Validated @RequestBody String version)
+    {
+        iRateService.rateDownload(version);
         return AjaxResult.success();
     }
 }

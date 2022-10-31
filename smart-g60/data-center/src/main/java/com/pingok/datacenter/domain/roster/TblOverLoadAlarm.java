@@ -3,6 +3,7 @@ package com.pingok.datacenter.domain.roster;
 import lombok.Data;
 
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -12,6 +13,7 @@ import java.util.Date;
  * @version 1.0.0 2022-07-20
  */
 @Data
+@Table(name = "TBL_OVER_LOAD_ALARM")
 public class TblOverLoadAlarm implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -12,7 +12,7 @@
     <artifactId>gis</artifactId>
 
     <description>
-        视频服务
+        GIS服务
     </description>
     <dependencies>
 

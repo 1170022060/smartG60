@@ -6,6 +6,7 @@ import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,28 @@ public class RecoveryController extends BaseController {
     public AjaxResult epidemic(@RequestBody JSONObject object) {
         log.info("追缴名单----请求参数-----" + object.toJSONString());
         iRecoveryService.recovery(object);
+        return AjaxResult.success();
+    }
+
+
+    @PostMapping("/recoveryIncr")
+    public AjaxResult recoveryIncr(@Validated @RequestBody String version)
+    {
+        iRecoveryService.increment(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/recoveryAll")
+    public AjaxResult recoveryAll(@Validated @RequestBody String version)
+    {
+        iRecoveryService.all(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/unzipRecoveryAll")
+    public AjaxResult unzipRecoveryAll(@Validated @RequestBody String version)
+    {
+        iRecoveryService.unzipAll(version);
         return AjaxResult.success();
     }
 }

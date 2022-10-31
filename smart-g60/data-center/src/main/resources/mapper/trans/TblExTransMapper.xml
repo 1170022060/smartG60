@@ -49,6 +49,7 @@
         <result property="specialType"  column="special_type"   />
         <result property="remark"  column="remark"   />
         <result property="reserve"  column="reserve"   />
+        <result property="passId"  column="pass_id"   />
     </resultMap>
 
     <insert id="insertExTrans" parameterType="com.pingok.datacenter.domain.trans.TblExTrans">
@@ -96,6 +97,7 @@
             <if test="specialType != null ">special_type,</if>
             <if test="remark != null ">remark,</if>
             <if test="reserve != null ">reserve,</if>
+            <if test="passId != null ">pass_id,</if>
             record_id
         )values(
             <if test="gid != null ">#{gid},</if>
@@ -141,6 +143,7 @@
             <if test="specialType != null ">#{specialType},</if>
             <if test="remark != null ">#{remark},</if>
             <if test="reserve != null ">#{reserve},</if>
+            <if test="passId != null ">#{passId},</if>
             #{recordId}
         )
     </insert>
