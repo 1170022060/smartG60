@@ -17,7 +17,7 @@ public interface TblRecoveryMapper extends CommonRepository<TblRecoveryStationUs
     @Select({"<script>"+
             "select * from ( " +
             "select  " +
-            "rv.ID as \"id\", " +
+            "NVL(rv.ID,0) as \"id\", " +
             "rsu.STATION_HEX as \"stationHex\",  " +
             "bsi.STATION_NAME as \"stationName\",  " +
             "rsu.VERSION as \"version\",  " +

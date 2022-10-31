@@ -15,7 +15,7 @@ public interface TblBlackCardStationNMapper {
     @Select({"<script>"+
             "select * from ( "+
             "SELECT " +
-            "bcv.ID as \"id\"," +
+            "NVL(bcv.ID,0) as \"id\"," +
             "bsu.STATION_HEX as \"stationHex\"," +
             "bsi.STATION_NAME as \"stationName\"," +
             "bsu.VERSION as \"version\"," +
