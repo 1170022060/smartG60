@@ -56,4 +56,11 @@ public interface TblLaneStatusMapper extends CommonRepository<TblLaneStatus> {
             "tls.UPDATE_TIME AS \"updateTime\", " +
             "tls.ORIENTATION \"orientation\"  FROM TBL_LANE_STATUS tls JOIN TBL_LANE_INFO tli ON tli.LANE_ID = tls.LANE_ID WHERE tli.STATION_ID = #{stationId} AND tls.ORIENTATION = #{orientation}")
     List<Map> findByStationId(@Param("stationId") String stationId, @Param("orientation") Integer orientation);
+
+    @Select("SELECT bsi.STATION_ID as \"stationId\",bsi.STATION_NAME as \"stationName\",NVL(SUM(tls.ERROR_TRANS), 0) as \"errorTrans\"," +
+            "NVL(SUM(tls.ERROR_LPR_TRANS), 0) as \"errorLprTrans\" FROM TBL_BASE_STATION_INFO bsi  " +
+            "left JOIN TBL_LANE_INFO tli on tli.STATION_ID=bsi.STATION_ID " +
+            "LEFT JOIN TBL_LANE_STATUS tls on tls.LANE_ID = tli.LANE_ID " +
+            "where STATION_HEX like '%310108%' AND STATION_HEX != '31010804' GROUP BY bsi.STATION_ID,bsi.STATION_NAME ")
+    List<Map> getStationFlowUpload();
 }

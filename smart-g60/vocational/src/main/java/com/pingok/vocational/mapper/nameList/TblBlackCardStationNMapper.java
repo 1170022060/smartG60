@@ -43,4 +43,7 @@ public interface TblBlackCardStationNMapper {
 
     @Select("SELECT MAX(VERSION) as \"version\" FROM TBL_BLACK_CARD_STATION_USED bcsu")
     Object getLatestBCVersion();
+
+    @Select("SELECT COUNT(STATION_HEX) as stationCount FROM TBL_BASE_STATION_INFO where STATION_HEX like '%310108%' AND STATION_HEX != '31010804' ")
+    Integer getStationCount();
 }

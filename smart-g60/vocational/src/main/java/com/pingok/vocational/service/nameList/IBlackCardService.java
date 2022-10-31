@@ -28,4 +28,5 @@ public interface IBlackCardService {
      * 统计各版本更新情况（状态名单、中高风险、最小费率）
      */
     Object statisticsVersion();
+
 }

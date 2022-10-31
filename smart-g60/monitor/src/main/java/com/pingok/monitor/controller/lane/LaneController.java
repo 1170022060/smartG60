@@ -30,4 +30,9 @@ public class LaneController extends BaseController {
     public AjaxResult findByStationId(@RequestParam String stationId) {
         return AjaxResult.success(iLaneService.findByStationId(stationId));
     }
+
+    @GetMapping("/getStationFlowUpload")
+    public AjaxResult getList(){
+        return AjaxResult.success(iLaneService.getStationFlowUpload());
+    }
 }

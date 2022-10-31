@@ -71,13 +71,13 @@ public class TblGantryEventRelease implements Serializable {
     /**
      * 播报开始时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date reportBeginTime;
 
     /**
      * 播报结束时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date reportEndTime;
 
     /**
