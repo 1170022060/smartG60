@@ -1,12 +1,10 @@
 package com.pingok.vocational.service.nameList.impl;
 
-import com.pingok.vocational.domain.nameList.TblAuditData;
-import com.pingok.vocational.mapper.nameList.TblAubitDataMapper;
+import com.pingok.vocational.mapper.nameList.TblRecoveryListRecordNMapper;
 import com.pingok.vocational.mapper.nameList.TblRecoveryMapper;
 import com.pingok.vocational.service.nameList.IRecoveryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +17,7 @@ public class RecoveryServiceImpl implements IRecoveryService {
     @Autowired
     private TblRecoveryMapper tblRecoveryMapper;
     @Autowired
-    private TblAubitDataMapper tblAubitDataMapper;
+    private TblRecoveryListRecordNMapper tblRecoveryListRecordNMapper;
 
     @Override
     public List<Map> getRecoveryList(String stationName,String version) {
@@ -27,10 +25,7 @@ public class RecoveryServiceImpl implements IRecoveryService {
     }
 
     @Override
-    public List<TblAuditData> findById(Long id) {
-        Example example;
-        example = new Example(TblAuditData.class);
-        example.createCriteria().andEqualTo("versionId",id);
-        return tblAubitDataMapper.selectByExample(example);
+    public List<Map> findById(Long id) {
+        return tblRecoveryListRecordNMapper.getRecoveryListById(id);
     }
 }

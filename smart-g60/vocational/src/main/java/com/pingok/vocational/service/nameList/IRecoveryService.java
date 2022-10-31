@@ -1,7 +1,5 @@
 package com.pingok.vocational.service.nameList;
 
-import com.pingok.vocational.domain.nameList.TblAuditData;
-
 import java.util.List;
 import java.util.Map;
 
@@ -22,5 +20,5 @@ public interface IRecoveryService {
      * @param id
      * @return
      */
-    List<TblAuditData> findById(Long id);
+    List<Map> findById(Long id);
 }

@@ -1,8 +1,9 @@
 package com.pingok.vocational.mapper.nameList;
 
-import com.pingok.vocational.domain.nameList.TblEmgAppend;
+import com.pingok.vocational.domain.nameList.TblRescueListRecordLog;
 import com.ruoyi.common.core.mapper.CommonRepository;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.Map;
  * @author lal
  */
 @Mapper
-public interface TblEmgAppendMapper extends CommonRepository<TblEmgAppend> {
+public interface TblRescueListRecordNMapper extends CommonRepository<TblRescueListRecordLog> {
     @Select("select  " +
             "VERSION_ID as \"versionId\", " +
             "case when DATA_TYPE=1 then '预约类' when DATA_TYPE=2 then '名单类' end as \"dataType\"," +
@@ -40,6 +41,7 @@ public interface TblEmgAppendMapper extends CommonRepository<TblEmgAppend> {
             "PROVINCE_IDS as \"provinceIds\"," +
             "EN_STATION as \"enStation\"," +
             "EX_STATION as \"exStation\"  " +
-            "from TBL_EMG_APPEND  ")
-    List<Map> findById(Long id);
+            "from TBL_RESCUE_LIST_RECORD_LOG " +
+            "where VERSION_ID = #{id}  ")
+    List<Map> findById(@Param("id") Long id);
 }
