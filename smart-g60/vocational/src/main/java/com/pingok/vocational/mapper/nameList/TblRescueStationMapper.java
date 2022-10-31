@@ -25,7 +25,7 @@ public interface TblRescueStationMapper extends CommonRepository<TblRescueStatio
             "row_number() over(partition by rsu.STATION_HEX  order by rsu.VERSION desc) as \"rn\"  "+
             "from TBL_RESCUE_STATION_USED rsu  " +
             "LEFT JOIN TBL_BASE_STATION_INFO bsi on bsi.STATION_HEX = rsu.STATION_HEX  " +
-            "LEFT JOIN TBL_RESCUE_LIST_RECORD_LOG rlrl on rlrl.VERSION = rsu.VERSION  " +
+            "LEFT JOIN TBL_RESCUE_VERSION rlrl on rlrl.VERSION = rsu.VERSION  " +
             ") a where a.\"rn\"=1 " +
             "<when test='stationName != null'> " +
             "and a.\"stationName\" like '%' || #{stationName} || '%' " +
