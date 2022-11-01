@@ -1,6 +1,6 @@
 package com.pingok.vocational.service.nameList;
 
-import com.pingok.vocational.domain.roster.TblEpidemicListRecord;
+import com.pingok.vocational.domain.nameList.TblEpidemicListRecordN;
 
 import java.util.List;
 import java.util.Map;
@@ -22,5 +22,5 @@ public interface IEpidemicService {
      * @param id
      * @return
      */
-//    TblEpidemicListRecord findById(Long id);
+    List<TblEpidemicListRecordN> findById(Long id);
 }

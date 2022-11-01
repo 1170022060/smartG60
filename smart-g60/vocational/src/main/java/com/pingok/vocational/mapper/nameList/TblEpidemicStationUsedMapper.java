@@ -13,21 +13,19 @@ import java.util.Map;
  * @author lal
  */
 @Mapper
-public interface TblEpidemicListMapper extends CommonRepository<TblEpidemicStationUsed> {
+public interface TblEpidemicStationUsedMapper extends CommonRepository<TblEpidemicStationUsed> {
     @Select({"<script>"+
             "select * from ( "+
             "SELECT " +
-            "ev.ID as \"id\"," +
+            "NVL(ev.ID,0) as \"id\"," +
             "esu.STATION_HEX as \"stationHex\"," +
             "bsi.STATION_NAME as \"stationName\"," +
             "esu.VERSION as \"version\"," +
-            "elr.REGION_NAME as \"regionName\", " +
             "to_char(esu.APPLY_TIME,'yyyy-mm-dd hh24:mi:ss') as \"applyTime\"," +
             "row_number() over(partition by esu.STATION_HEX  order by esu.VERSION desc) as \"rn\"  "+
             "from TBL_EPIDEMIC_STATION_USED esu  " +
             "LEFT JOIN TBL_BASE_STATION_INFO bsi on bsi.STATION_HEX = esu.STATION_HEX  " +
             "LEFT JOIN TBL_EPIDEMIC_VERSION ev on ev.VERSION = esu.VERSION  " +
-            "LEFT JOIN TBL_EPIDEMIC_LIST_RECORD elr on elr.VERSION_ID = ev.ID  " +
             ") a where a.\"rn\"=1 " +
             "<when test='stationName != null'> " +
             "and a.\"stationName\" like '%' || #{stationName} || '%' " +

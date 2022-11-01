@@ -1,16 +1,13 @@
 package com.pingok.vocational.service.nameList.impl;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.pingok.vocational.domain.nameList.TblBlackCardLogN;
 import com.pingok.vocational.mapper.nameList.TblBlackCardLogNMapper;
 import com.pingok.vocational.mapper.nameList.TblBlackCardStationNMapper;
-import com.pingok.vocational.mapper.nameList.TblEpidemicListMapper;
+import com.pingok.vocational.mapper.nameList.TblEpidemicStationUsedMapper;
 import com.pingok.vocational.mapper.nameList.TblRateStationUsedMapper;
 import com.pingok.vocational.service.nameList.IBlackCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +24,7 @@ public class BlackCardStationServiceImpl implements IBlackCardService {
     @Autowired
     private TblBlackCardLogNMapper tblBlackCardLogNMapper;
     @Autowired
-    private TblEpidemicListMapper tblEpidemicListMapper;
+    private TblEpidemicStationUsedMapper tblEpidemicStationUsedMapper;
     @Autowired
     private TblRateStationUsedMapper tblRateStationUsedMapper;
 
@@ -44,10 +41,10 @@ public class BlackCardStationServiceImpl implements IBlackCardService {
     @Override
     public Object statisticsVersion() {
         Object blackCardObj = tblBlackCardStationNMapper.getLatestBCVersion();
-        Object epidemicObj = tblEpidemicListMapper.getLatestESVersion();
+        Object epidemicObj = tblEpidemicStationUsedMapper.getLatestESVersion();
         Object rateObj = tblRateStationUsedMapper.getLatestRSVersion();
         List<Map> BlackCardList = tblBlackCardStationNMapper.getLatestBCStation();
-        List<Map> EpidmicList = tblEpidemicListMapper.getLatestEStation();
+        List<Map> EpidmicList = tblEpidemicStationUsedMapper.getLatestEStation();
         List<Map> RateList = tblRateStationUsedMapper.getLatestRStation();
         int count1 = 0;
         int count2 = 0;
