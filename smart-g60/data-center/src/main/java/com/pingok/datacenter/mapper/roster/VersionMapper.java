@@ -5,8 +5,11 @@ import org.apache.ibatis.annotations.Select;
 
 public interface VersionMapper {
 
-    @Select({"<script>" +
-            "select Version from ${tableName} where LENGTH(VERSION)=12 and ROWNUM=1 order by VERSION desc " +
-            "</script>"})
+    @Select("select * from ( " +
+            "select Version ," +
+            "row_number() over(order by VERSION desc) as \"rn\" " +
+            "from TBL_BLACK_CARD_VERSION " +
+            "where LENGTH(VERSION)=12 " +
+            ") a where a.\"rn\"=1 ")
     String selectVersion(@Param("tableName") String tableName);
 }
