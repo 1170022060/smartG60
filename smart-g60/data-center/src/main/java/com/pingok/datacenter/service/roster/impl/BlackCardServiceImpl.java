@@ -91,7 +91,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
     public void increment() {
         String versionNow=versionMapper.selectVersion("TBL_BLACK_CARD_VERSION");
         String version = DateUtils.getTimeMinute(DateUtils.getBeforeMillisEndWithMinute0or5(5,DateUtils.getNowDate()));
-        if(StringUtils.isNull(versionNow) && (Long.parseLong(versionNow) == Long.parseLong(version)))
+        if(StringUtils.isNotNull(versionNow) && (versionNow.equals(version)))
         {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
             try {
