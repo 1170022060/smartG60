@@ -1,5 +1,6 @@
 package com.pingok.vocational.controller.nameList;
 
+import com.pingok.vocational.domain.nameList.TblEpidemicListRecordN;
 import com.pingok.vocational.service.nameList.IEpidemicService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.page.TableDataInfo;
@@ -25,6 +26,13 @@ public class EpidemicController extends BaseController {
     public TableDataInfo list(String stationName,String version){
         startPage();
         List<Map> info = iEpidemicService.getEpidemicList(stationName,version);
+        return getDataTable(info);
+    }
+
+    @GetMapping("/findById")
+    public TableDataInfo findById(Long id){
+        startPage();
+        List<TblEpidemicListRecordN> info = iEpidemicService.findById(id);
         return getDataTable(info);
     }
 }
