@@ -30,7 +30,9 @@ import tk.mybatis.mapper.entity.Example;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -88,12 +90,16 @@ public class BlackCardServiceImpl implements IBlackCardService {
     @Transactional
     public void increment() {
         String versionNow=versionMapper.selectVersion("TBL_BLACK_CARD_VERSION");
-        String ver=DateUtils.getTimeMinute(DateUtils.getPreTime(DateUtils.parseDate(versionNow) ,5));
-
         String version = DateUtils.getTimeMinute(DateUtils.getBeforeMillisEndWithMinute0or5(5,DateUtils.getNowDate()));
         if(StringUtils.isNull(versionNow) && (Long.parseLong(versionNow) == Long.parseLong(version)))
         {
-            version=DateUtils.getTimeMinute(DateUtils.getPreTime(DateUtils.parseDate(versionNow) ,5));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+            try {
+                // 注意格式需要与上面一致，不然会出现异常
+                version=DateUtils.getTimeMinute(DateUtils.getPreTime(sdf.parse(versionNow) ,5));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         String url = host + "/api/lane-service/black-incr-list";
         OkHttpClient client = new OkHttpClient();
