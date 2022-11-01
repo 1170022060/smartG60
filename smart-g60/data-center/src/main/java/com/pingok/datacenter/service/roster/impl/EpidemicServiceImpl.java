@@ -8,6 +8,7 @@ import com.pingok.datacenter.domain.roster.epidemic.*;
 import com.pingok.datacenter.domain.roster.epidemic.vo.EpidemicVo;
 import com.pingok.datacenter.domain.roster.epidemic.vo.PrefixVo;
 import com.pingok.datacenter.domain.roster.vo.VersionVo;
+import com.pingok.datacenter.mapper.roster.VersionMapper;
 import com.pingok.datacenter.mapper.roster.epidemic.*;
 import com.pingok.datacenter.service.roster.IEpidemicService;
 import com.ruoyi.common.core.utils.DateUtils;
@@ -51,6 +52,8 @@ public class EpidemicServiceImpl implements IEpidemicService {
     private TblPrefixVersionMapper tblPrefixVersionMapper;
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
+    @Autowired
+    private VersionMapper versionMapper;
 
     @Value("${center.host}")
     private String host;

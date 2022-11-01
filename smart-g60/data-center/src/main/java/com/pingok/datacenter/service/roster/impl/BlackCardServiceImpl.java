@@ -10,6 +10,7 @@ import com.pingok.datacenter.domain.roster.blackcard.vo.BlackIncrValidateVo;
 import com.pingok.datacenter.domain.roster.blackcard.vo.BlackVo;
 import com.pingok.datacenter.domain.roster.vo.VersionAllVo;
 import com.pingok.datacenter.domain.roster.vo.VersionVo;
+import com.pingok.datacenter.mapper.roster.VersionMapper;
 import com.pingok.datacenter.mapper.roster.blackcard.TblBlackCardLogMapper;
 import com.pingok.datacenter.mapper.roster.blackcard.TblBlackCardMapper;
 import com.pingok.datacenter.mapper.roster.blackcard.TblBlackCardStationUsedMapper;
@@ -47,15 +48,14 @@ public class BlackCardServiceImpl implements IBlackCardService {
     private TblBlackCardStationUsedMapper tblBlackCardStationUsedMapper;
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
-
     @Autowired
     private TblBlackCardMapper tblBlackCardMapper;
-
     @Autowired
     private TblBlackCardLogMapper tblBlackCardLogMapper;
-
     @Autowired
     private TblBlackCardVersionMapper tblBlackCardVersionMapper;
+    @Autowired
+    private VersionMapper versionMapper;
 
     @Value("${center.host}")
     private String host;
@@ -86,7 +86,15 @@ public class BlackCardServiceImpl implements IBlackCardService {
 
     @Override
     @Transactional
-    public void increment(String version) {
+    public void increment() {
+        String versionNow=versionMapper.selectVersion("TBL_BLACK_CARD_VERSION");
+        String ver=DateUtils.getTimeMinute(DateUtils.getPreTime(DateUtils.parseDate(versionNow) ,5));
+
+        String version = DateUtils.getTimeMinute(DateUtils.getBeforeMillisEndWithMinute0or5(5,DateUtils.getNowDate()));
+        if(StringUtils.isNull(versionNow) && (Long.parseLong(versionNow) == Long.parseLong(version)))
+        {
+            version=DateUtils.getTimeMinute(DateUtils.getPreTime(DateUtils.parseDate(versionNow) ,5));
+        }
         String url = host + "/api/lane-service/black-incr-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo = new VersionVo();

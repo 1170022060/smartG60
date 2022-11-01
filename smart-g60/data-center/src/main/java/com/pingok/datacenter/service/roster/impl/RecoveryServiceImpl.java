@@ -8,6 +8,7 @@ import com.pingok.datacenter.domain.roster.recovery.TblRecoveryStationUsed;
 import com.pingok.datacenter.domain.roster.recovery.TblRecoveryVersion;
 import com.pingok.datacenter.domain.roster.recovery.vo.RecoveryVo;
 import com.pingok.datacenter.domain.roster.vo.VersionVo;
+import com.pingok.datacenter.mapper.roster.VersionMapper;
 import com.pingok.datacenter.mapper.roster.recovery.TblRecoveryListRecordLogMapper;
 import com.pingok.datacenter.mapper.roster.recovery.TblRecoveryListRecordMapper;
 import com.pingok.datacenter.mapper.roster.recovery.TblRecoveryStationUsedMapper;
@@ -49,7 +50,8 @@ public class RecoveryServiceImpl implements IRecoveryService {
     private TblRecoveryStationUsedMapper tblRecoveryStationUsedMapper;
     @Autowired
     private TblRecoveryVersionMapper tblRecoveryVersionMapper;
-
+    @Autowired
+    private VersionMapper versionMapper;
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
 

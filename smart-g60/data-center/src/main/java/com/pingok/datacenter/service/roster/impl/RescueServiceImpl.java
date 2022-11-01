@@ -8,6 +8,7 @@ import com.pingok.datacenter.domain.roster.rescue.TblRescueVersion;
 import com.pingok.datacenter.domain.roster.rescue.vo.RescueVo;
 import com.pingok.datacenter.domain.roster.rescue.TblRescueStationUsed;
 import com.pingok.datacenter.domain.roster.vo.VersionVo;
+import com.pingok.datacenter.mapper.roster.VersionMapper;
 import com.pingok.datacenter.mapper.roster.rescue.TblRescueVersionMapper;
 import com.pingok.datacenter.mapper.roster.rescue.TblRescueListRecordLogMapper;
 import com.pingok.datacenter.mapper.roster.rescue.TblRescueListRecordMapper;
@@ -49,7 +50,8 @@ public class RescueServiceImpl implements IRescueService {
     private TblRescueStationUsedMapper tblRescueStationUsedMapper;
     @Autowired
     private TblRescueVersionMapper tblRescueVersionMapper;
-
+    @Autowired
+    private VersionMapper versionMapper;
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
 

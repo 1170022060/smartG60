@@ -436,4 +436,22 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         Date endTime = DateUtils.addHours(calendar.getTime(), 1);
         return endTime;
     }
+
+    public static Date getBeforeMillisEndWithMinute0or5(Integer min,Date baseTime) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(baseTime);
+        int minute = calendar.get(Calendar.MINUTE);
+            int add;
+            if(min==5)
+            {
+                add = minute%10 < 5? - minute%10 : 5 - minute%10;
+            }else
+            {
+                add = -(minute % min);
+            }
+            calendar.add(Calendar.MINUTE,add);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            return calendar.getTime();
+    }
 }

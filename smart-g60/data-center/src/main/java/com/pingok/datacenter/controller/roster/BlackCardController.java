@@ -35,9 +35,9 @@ public class BlackCardController extends BaseController {
 
     @Transactional
     @PostMapping("/blackIncr")
-    public AjaxResult blackIncr(@Validated @RequestBody String version)
+    public AjaxResult blackIncr()
     {
-        iBlackCardService.increment(version);
+        iBlackCardService.increment();
         return AjaxResult.success();
     }
 
