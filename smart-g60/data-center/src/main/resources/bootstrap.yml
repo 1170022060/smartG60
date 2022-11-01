@@ -36,10 +36,11 @@ spring:
 picturePath: "D:/gantry/picture"
 pictureFailPath: "D:/gantry/pictureFail"
 center:
-  host: ""
-  stationGB: ""
-  cardPath: ""
-  ratePath: ""
-  epidemicPath: ""
-  prefixPath: ""
-  recoveryPath: ""
+  host: http://10.131.4.18:18180
+  stationGB: S0004310010010
+  cardPath: D:\\blacklist
+  ratePath: D:\\ratelist
+  epidemicPath: D:\\epidemiclist
+  prefixPath: D:\\prefixlist
+  recoveryPath: D:\\recoverylist
+  rescuePath: D:\\rescuelist

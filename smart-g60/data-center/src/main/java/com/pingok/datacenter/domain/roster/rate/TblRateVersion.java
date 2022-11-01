@@ -30,4 +30,5 @@ public class TblRateVersion implements Serializable {
 
     /** 生效时间 */
     private Date validTime;
+    private String stationId;
 }

@@ -41,11 +41,6 @@ public class TblEpidemicListRecord implements java.io.Serializable {
     /** 生效时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
-    /**
-     * 创建或更新时间
-     */
-    @ApiModelProperty(value = "创建或更新时间")
-    private Date updateTime;
 
     private Date dbTime;
 

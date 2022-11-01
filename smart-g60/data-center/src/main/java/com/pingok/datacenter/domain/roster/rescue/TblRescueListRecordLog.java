@@ -10,13 +10,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 抢险救灾名单记录表 TBL_RESCUE_LIST_RECORD
+ * 抢险救灾名单记录表历史表 TBL_RESCUE_LIST_RECORD_LOG
  *
  * @author ruoyi
  */
 @Data
-@Table(name = "TBL_RESCUE_LIST_RECORD")
-public class TblRescueListRecord implements Serializable {
+@Table(name = "TBL_RESCUE_LIST_RECORD_LOG")
+public class TblRescueListRecordLog implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** 主键ID */

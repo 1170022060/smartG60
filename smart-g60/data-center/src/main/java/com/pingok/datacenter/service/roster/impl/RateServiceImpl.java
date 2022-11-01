@@ -32,6 +32,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static com.pingok.datacenter.service.roster.impl.BlackCardServiceImpl.backMD5;
+import static com.pingok.datacenter.service.roster.impl.BlackCardServiceImpl.delFolder;
 
 /**
  * 最小费率 服务层处理
@@ -116,10 +117,8 @@ public class RateServiceImpl implements IRateService {
                     fos.flush();
                     fos.close();
                     RateVersionVo rateVersionVo=unzip(pathName, ratePath);
-                    if (version.equals(rateVersionVo.getVersion())) {
-                        Long versionId=insertVersion(rateVersionVo);
-                        unzipInside(pathName, ratePath,versionId);
-                    }
+                    Long versionId=insertVersion(rateVersionVo);
+                    unzipInside(pathName, ratePath,versionId);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -206,6 +205,10 @@ public class RateServiceImpl implements IRateService {
                 }
                 in.close();
                 out.close();
+                if(zipEntryName.contains(".zip"))
+                {
+                    unzipInside(outpath,resourcePath,versionId);
+                }
                 if (zipEntryName.contains(".json")&&zipEntryName.contains("MR")) {
                     List<RateRVo> rateRVo = jsonAnalysisR(outpath);
                     insertR(rateRVo,versionId);
@@ -219,95 +222,25 @@ public class RateServiceImpl implements IRateService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        delFolder(resourcePath);
     }
 
     public Long insertVersion(RateVersionVo rateVersionVo) {
         TblRateVersion tblRateVersion;
 
         Example example = new Example(TblRateVersion.class);
-        example.createCriteria().andEqualTo("version", rateVersionVo.getVersion());
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("stationId", rateVersionVo.getExStationId());
+        criteria.andEqualTo("version", rateVersionVo.getVersion());
         tblRateVersion = tblRateVersionMapper.selectOneByExample(example);
         if (StringUtils.isNull(tblRateVersion)) {
             tblRateVersion = new TblRateVersion();
             tblRateVersion.setId(remoteIdProducerService.nextId());
-            tblRateVersion.setVersion(rateVersionVo.getVersion());
-            tblRateVersion.setValidTime(rateVersionVo.getValidTime());
+            BeanUtils.copyNotNullProperties(rateVersionVo, tblRateVersion);
+            tblRateVersion.setStationId(rateVersionVo.getExStationId());
+            tblRateVersionMapper.insert(tblRateVersion);
         }
         return tblRateVersion.getId();
-    }
-
-    public void insertR(List<RateRVo> list, Long versionId) {
-        TblRate rate;
-        TblRateProv rateProv;
-        for (RateRVo rateRVo : list) {
-            Example example = new Example(TblRate.class);
-            Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("enProv", rateRVo.getEnProv());
-            criteria.andEqualTo("exProv", rateRVo.getExProv());
-            criteria.andEqualTo("enId", rateRVo.getEnID());
-            criteria.andEqualTo("exId", rateRVo.getEnID());
-            criteria.andEqualTo("vehClass", rateRVo.getVType());
-            criteria.andEqualTo("versionId", versionId);
-            rate = tblRateMapper.selectOneByExample(example);
-            if (StringUtils.isNull(rate)) {
-                rate = new TblRate();
-                rate.setId(remoteIdProducerService.nextId());
-                BeanUtils.copyNotNullProperties(rateRVo, rate);
-                rate.setVehClass(rateRVo.getVType());
-                rate.setVersionId(versionId);
-                rate.setUpdateTime(DateUtils.getNowDate());
-                tblRateMapper.insert(rate);
-                example = new Example(TblRateProv.class);
-                for (RateRSplitVo rateRSplitVo : rateRVo.getSplitProvince()) {
-                    Example.Criteria criteria2 = example.createCriteria();
-                    criteria2.andEqualTo("pIndex", rateRSplitVo.getIndex());
-                    criteria2.andEqualTo("prov", rateRSplitVo.getProv());
-                    criteria2.andEqualTo("pM", rateRSplitVo.getPM());
-                    criteria.andEqualTo("rateId", rate.getId());
-                    rateProv = tblRateProvMapper.selectOneByExample(example);
-                    if (StringUtils.isNull(rateProv)) {
-                        rateProv = new TblRateProv();
-                        rateProv.setId(remoteIdProducerService.nextId());
-                        BeanUtils.copyNotNullProperties(rateRSplitVo, rateProv);
-                        rateProv.setPIndex(rateRSplitVo.getIndex());
-                        rateProv.setRateId(rate.getId());
-                        rateProv.setUpdateTime(DateUtils.getNowDate());
-                        tblRateProvMapper.insert(rateProv);
-                    }else
-                    {
-                        BeanUtils.copyNotNullProperties(rateRSplitVo, rateProv);
-                        rateProv.setUpdateTime(DateUtils.getNowDate());
-                        tblRateProvMapper.updateByPrimaryKey(rateProv);
-                    }
-                }
-            } else {
-                BeanUtils.copyNotNullProperties(rateRVo, rate);
-                rate.setUpdateTime(DateUtils.getNowDate());
-                tblRateMapper.updateByPrimaryKey(rate);
-                example = new Example(TblRateProv.class);
-                for (RateRSplitVo rateRSplitVo : rateRVo.getSplitProvince()) {
-                    Example.Criteria criteria2 = example.createCriteria();
-                    criteria2.andEqualTo("pIndex", rateRSplitVo.getIndex());
-                    criteria2.andEqualTo("prov", rateRSplitVo.getProv());
-                    criteria2.andEqualTo("pM", rateRSplitVo.getPM());
-                    criteria.andEqualTo("rateId", rate.getId());
-                    rateProv = tblRateProvMapper.selectOneByExample(example);
-                    if (StringUtils.isNull(rateProv)) {
-                        rateProv = new TblRateProv();
-                        rateProv.setId(remoteIdProducerService.nextId());
-                        BeanUtils.copyNotNullProperties(rateRSplitVo, rateProv);
-                        rateProv.setPIndex(rateRSplitVo.getIndex());
-                        rateProv.setRateId(rate.getId());
-                        rateProv.setUpdateTime(DateUtils.getNowDate());
-                        tblRateProvMapper.insert(rateProv);
-                    } else {
-                        BeanUtils.copyNotNullProperties(rateRSplitVo, rateProv);
-                        rateProv.setUpdateTime(DateUtils.getNowDate());
-                        tblRateProvMapper.updateByPrimaryKey(rateProv);
-                    }
-                }
-            }
-        }
     }
 
     public void insertF(List<RateFVo> list, Long versionId) {
@@ -319,7 +252,7 @@ public class RateServiceImpl implements IRateService {
             criteria.andEqualTo("enProv", rateFVo.getEnProv());
             criteria.andEqualTo("exProv", rateFVo.getExProv());
             criteria.andEqualTo("enId", rateFVo.getEnID());
-            criteria.andEqualTo("exId", rateFVo.getEnID());
+            criteria.andEqualTo("exId", rateFVo.getExID());
             criteria.andEqualTo("vehClass", rateFVo.getVType());
             criteria.andEqualTo("versionId", versionId);
             rate = tblRateMapper.selectOneByExample(example);
@@ -330,21 +263,23 @@ public class RateServiceImpl implements IRateService {
                 rate.setVehClass(rateFVo.getVType());
                 rate.setVersionId(versionId);
                 rate.setUpdateTime(DateUtils.getNowDate());
+                rate.setEnId(rateFVo.getEnID());
+                rate.setExId(rateFVo.getExID());
                 tblRateMapper.insert(rate);
-                example = new Example(TblRateProv.class);
+
                 for (RateFSplitVo rateFSplitVo : rateFVo.getSplitProvince()) {
+                    example = new Example(TblRateProv.class);
                     Example.Criteria criteria2 = example.createCriteria();
                     criteria2.andEqualTo("pIndex", rateFSplitVo.getIndex());
                     criteria2.andEqualTo("prov", rateFSplitVo.getProv());
                     criteria2.andEqualTo("pM", rateFSplitVo.getPM());
-                    criteria.andEqualTo("rateId", rate.getId());
+                    criteria2.andEqualTo("rateId", rate.getId());
                     rateProv = tblRateProvMapper.selectOneByExample(example);
                     if (StringUtils.isNull(rateProv)) {
                         rateProv = new TblRateProv();
                         rateProv.setId(remoteIdProducerService.nextId());
                         BeanUtils.copyNotNullProperties(rateFSplitVo, rateProv);
                         rateProv.setPIndex(rateFSplitVo.getIndex());
-                        rateProv.setGroupInfo(rateFSplitVo.getGroup());
                         rateProv.setRateId(rate.getId());
                         rateProv.setUpdateTime(DateUtils.getNowDate());
                         tblRateProvMapper.insert(rateProv);
@@ -359,26 +294,111 @@ public class RateServiceImpl implements IRateService {
                 BeanUtils.copyNotNullProperties(rateFVo, rate);
                 rate.setUpdateTime(DateUtils.getNowDate());
                 tblRateMapper.updateByPrimaryKey(rate);
-                example = new Example(TblRateProv.class);
+
                 for (RateFSplitVo rateFSplitVo : rateFVo.getSplitProvince()) {
+                    example = new Example(TblRateProv.class);
                     Example.Criteria criteria2 = example.createCriteria();
                     criteria2.andEqualTo("pIndex", rateFSplitVo.getIndex());
                     criteria2.andEqualTo("prov", rateFSplitVo.getProv());
                     criteria2.andEqualTo("pM", rateFSplitVo.getPM());
-                    criteria.andEqualTo("rateId", rate.getId());
+                    criteria2.andEqualTo("rateId", rate.getId());
                     rateProv = tblRateProvMapper.selectOneByExample(example);
                     if (StringUtils.isNull(rateProv)) {
                         rateProv = new TblRateProv();
                         rateProv.setId(remoteIdProducerService.nextId());
                         BeanUtils.copyNotNullProperties(rateFSplitVo, rateProv);
                         rateProv.setPIndex(rateFSplitVo.getIndex());
-                        rateProv.setGroupInfo(rateFSplitVo.getGroup());
+                        rateProv.setRateId(rate.getId());
+                        rateProv.setUpdateTime(DateUtils.getNowDate());
+                        tblRateProvMapper.insert(rateProv);
+                    } else {
+                        BeanUtils.copyNotNullProperties(rateFSplitVo, rateProv);
+                        rateProv.setUpdateTime(DateUtils.getNowDate());
+                        tblRateProvMapper.updateByPrimaryKey(rateProv);
+                    }
+                }
+            }
+        }
+    }
+
+    public void insertR(List<RateRVo> list, Long versionId) {
+        TblRate rate;
+        TblRateProv rateProv;
+        for (RateRVo rateRVo : list) {
+            Example example = new Example(TblRate.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("enProv", rateRVo.getEnProv());
+            criteria.andEqualTo("exProv", rateRVo.getExProv());
+            criteria.andEqualTo("enId", rateRVo.getEnID());
+            criteria.andEqualTo("exId", rateRVo.getExID());
+            criteria.andEqualTo("vehClass", rateRVo.getVType());
+            criteria.andEqualTo("versionId", versionId);
+            rate = tblRateMapper.selectOneByExample(example);
+            if (StringUtils.isNull(rate)) {
+                rate = new TblRate();
+                rate.setId(remoteIdProducerService.nextId());
+                BeanUtils.copyNotNullProperties(rateRVo, rate);
+                rate.setVehClass(rateRVo.getVType());
+                rate.setEnId(rateRVo.getEnID());
+                rate.setExId(rateRVo.getExID());
+                rate.setVersionId(versionId);
+                rate.setUpdateTime(DateUtils.getNowDate());
+                tblRateMapper.insert(rate);
+                for (RateRSplitVo rateRSplitVo : rateRVo.getSplitProvince()) {
+
+                    example = new Example(TblRateProv.class);
+                    Example.Criteria criteria2 = example.createCriteria();
+                    criteria2.andEqualTo("pIndex", rateRSplitVo.getIndex());
+                    criteria2.andEqualTo("prov", rateRSplitVo.getProv());
+                    criteria2.andEqualTo("pM", rateRSplitVo.getPM());
+                    criteria2.andEqualTo("rateId", rate.getId());
+                    rateProv = tblRateProvMapper.selectOneByExample(example);
+                    if (StringUtils.isNull(rateProv)) {
+                        rateProv = new TblRateProv();
+                        rateProv.setId(remoteIdProducerService.nextId());
+                        BeanUtils.copyNotNullProperties(rateRSplitVo, rateProv);
+                        rateProv.setPIndex(rateRSplitVo.getIndex());
+                        rateProv.setGroupInfo(rateRSplitVo.getGroup());
+                        rateProv.setGroupFee(rateRSplitVo.getPFg());
                         rateProv.setRateId(rate.getId());
                         rateProv.setUpdateTime(DateUtils.getNowDate());
                         tblRateProvMapper.insert(rateProv);
                     }else
                     {
-                        BeanUtils.copyNotNullProperties(rateFSplitVo, rateProv);
+                        BeanUtils.copyNotNullProperties(rateRSplitVo, rateProv);
+                        rateProv.setGroupInfo(rateRSplitVo.getGroup());
+                        rateProv.setGroupFee(rateRSplitVo.getPFg());
+                        rateProv.setUpdateTime(DateUtils.getNowDate());
+                        tblRateProvMapper.updateByPrimaryKey(rateProv);
+                    }
+                }
+            } else {
+                BeanUtils.copyNotNullProperties(rateRVo, rate);
+                rate.setUpdateTime(DateUtils.getNowDate());
+                tblRateMapper.updateByPrimaryKey(rate);
+
+                for (RateRSplitVo rateRSplitVo : rateRVo.getSplitProvince()) {
+                    example = new Example(TblRateProv.class);
+                    Example.Criteria criteria2 = example.createCriteria();
+                    criteria2.andEqualTo("pIndex", rateRSplitVo.getIndex());
+                    criteria2.andEqualTo("prov", rateRSplitVo.getProv());
+                    criteria2.andEqualTo("pM", rateRSplitVo.getPM());
+                    criteria2.andEqualTo("rateId", rate.getId());
+                    rateProv = tblRateProvMapper.selectOneByExample(example);
+                    if (StringUtils.isNull(rateProv)) {
+                        rateProv = new TblRateProv();
+                        rateProv.setId(remoteIdProducerService.nextId());
+                        BeanUtils.copyNotNullProperties(rateRSplitVo, rateProv);
+                        rateProv.setPIndex(rateRSplitVo.getIndex());
+                        rateProv.setGroupInfo(rateRSplitVo.getGroup());
+                        rateProv.setRateId(rate.getId());
+                        rateProv.setUpdateTime(DateUtils.getNowDate());
+                        tblRateProvMapper.insert(rateProv);
+                    }else
+                    {
+                        BeanUtils.copyNotNullProperties(rateRSplitVo, rateProv);
+                        rateProv.setGroupInfo(rateRSplitVo.getGroup());
+                        rateProv.setGroupFee(rateRSplitVo.getPFg());
                         rateProv.setUpdateTime(DateUtils.getNowDate());
                         tblRateProvMapper.updateByPrimaryKey(rateProv);
                     }

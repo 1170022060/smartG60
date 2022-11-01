@@ -6,6 +6,8 @@ import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,29 @@ public class RescueController extends BaseController {
     public AjaxResult epidemic(@RequestBody JSONObject object) {
         log.info("抢险救灾名单----请求参数-----" + object.toJSONString());
         iRescueService.rescue(object);
+        return AjaxResult.success();
+    }
+
+    @Transactional
+    @PostMapping("/rescueIncr")
+    public AjaxResult rescueIncr(@Validated @RequestBody String version)
+    {
+        iRescueService.increment(version);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/rescueAll")
+    public AjaxResult rescueAll(@Validated @RequestBody String version)
+    {
+        iRescueService.all(version);
+        return AjaxResult.success();
+    }
+
+    @Transactional
+    @PostMapping("/unzipRescueAll")
+    public AjaxResult unzipRescueAll(@Validated @RequestBody String version)
+    {
+        iRescueService.unzipAll(version);
         return AjaxResult.success();
     }
 }

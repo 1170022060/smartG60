@@ -277,22 +277,19 @@ public class RecoveryServiceImpl implements IRecoveryService {
             recoveryVersion=new TblRecoveryVersion();
             recoveryVersion.setId(remoteIdProducerService.nextId());
             recoveryVersion.setVersion(version);
+            tblRecoveryVersionMapper.insert(recoveryVersion);
         }
-        example = new Example(TblRecoveryListRecord.class);
+
         for (RecoveryVo recoveryVo : list) {
+            example = new Example(TblRecoveryListRecord.class);
             Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("vehPlate", recoveryVo.getVehicleId().substring(0, recoveryVo.getVehicleId().indexOf("_")));
-            criteria.andEqualTo("vehColor", Integer.valueOf(recoveryVo.getVehicleId().substring(recoveryVo.getVehicleId().substring(0, recoveryVo.getVehicleId().indexOf("_")).length() + 1)));
+            criteria.andEqualTo("vehicleId", recoveryVo.getVehicleId());
             recoveryListRecord = tblRecoveryListRecordMapper.selectOneByExample(example);
             if (StringUtils.isNull(recoveryListRecord)) {
                 recoveryListRecord = new TblRecoveryListRecord();
                 recoveryListRecord.setId(remoteIdProducerService.nextId());
                 BeanUtils.copyNotNullProperties(recoveryVo, recoveryListRecord);
                 recoveryListRecord.setVersionId(recoveryVersion.getId());
-                recoveryListRecord.setVehPlate(recoveryVo.getVehicleId().substring(0, recoveryVo.getVehicleId().indexOf("_")));
-                recoveryListRecord.setVehColor(Integer.valueOf(recoveryVo.getVehicleId().substring(recoveryVo.getVehicleId().substring(0, recoveryVo.getVehicleId().indexOf("_")).length() + 1)));
-                recoveryListRecord.setCount(recoveryVo.getEvasionCount());
-                recoveryListRecord.setStatus(recoveryVo.getOweFee());
                 recoveryListRecord.setUpdateTime(DateUtils.getNowDate());
                 tblRecoveryListRecordMapper.insert(recoveryListRecord);
 
@@ -307,8 +304,6 @@ public class RecoveryServiceImpl implements IRecoveryService {
 
                 if (Long.parseLong(recoveryVersion2.getVersion()) < Long.parseLong(version)) {
                     BeanUtils.copyNotNullProperties(recoveryVo, recoveryListRecord);
-                    recoveryListRecord.setCount(recoveryVo.getEvasionCount());
-                    recoveryListRecord.setStatus(recoveryVo.getOweFee());
                     recoveryListRecord.setVersionId(recoveryVersion.getId());
                     recoveryListRecord.setUpdateTime(DateUtils.getNowDate());
                     tblRecoveryListRecordMapper.updateByPrimaryKey(recoveryListRecord);
@@ -334,22 +329,19 @@ public class RecoveryServiceImpl implements IRecoveryService {
             recoveryVersion=new TblRecoveryVersion();
             recoveryVersion.setId(remoteIdProducerService.nextId());
             recoveryVersion.setVersion(version);
+            tblRecoveryVersionMapper.insert(recoveryVersion);
         }
-        example = new Example(TblRecoveryListRecord.class);
+
         for (RecoveryVo recoveryVo : list) {
+            example = new Example(TblRecoveryListRecord.class);
             Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("vehPlate", recoveryVo.getVehicleId().substring(0, recoveryVo.getVehicleId().indexOf("_")));
-            criteria.andEqualTo("vehColor", Integer.valueOf(recoveryVo.getVehicleId().substring(recoveryVo.getVehicleId().substring(0, recoveryVo.getVehicleId().indexOf("_")).length() + 1)));
+            criteria.andEqualTo("vehicleId", recoveryVo.getVehicleId());
             recoveryListRecord = tblRecoveryListRecordMapper.selectOneByExample(example);
             if (StringUtils.isNull(recoveryListRecord)) {
                 recoveryListRecord = new TblRecoveryListRecord();
                 recoveryListRecord.setId(remoteIdProducerService.nextId());
                 BeanUtils.copyNotNullProperties(recoveryVo, recoveryListRecord);
                 recoveryListRecord.setVersionId(recoveryVersion.getId());
-                recoveryListRecord.setVehPlate(recoveryVo.getVehicleId().substring(0, recoveryVo.getVehicleId().indexOf("_")));
-                recoveryListRecord.setVehColor(Integer.valueOf(recoveryVo.getVehicleId().substring(recoveryVo.getVehicleId().substring(0, recoveryVo.getVehicleId().indexOf("_")).length() + 1)));
-                recoveryListRecord.setCount(recoveryVo.getEvasionCount());
-                recoveryListRecord.setStatus(recoveryVo.getOweFee());
                 recoveryListRecord.setUpdateTime(DateUtils.getNowDate());
                 tblRecoveryListRecordMapper.insert(recoveryListRecord);
             } else {
@@ -359,8 +351,6 @@ public class RecoveryServiceImpl implements IRecoveryService {
 
                 if (Long.parseLong(recoveryVersion2.getVersion()) < Long.parseLong(version)) {
                     BeanUtils.copyNotNullProperties(recoveryVo, recoveryListRecord);
-                    recoveryListRecord.setCount(recoveryVo.getEvasionCount());
-                    recoveryListRecord.setStatus(recoveryVo.getOweFee());
                     recoveryListRecord.setVersionId(recoveryVersion.getId());
                     recoveryListRecord.setUpdateTime(DateUtils.getNowDate());
                     tblRecoveryListRecordMapper.updateByPrimaryKey(recoveryListRecord);

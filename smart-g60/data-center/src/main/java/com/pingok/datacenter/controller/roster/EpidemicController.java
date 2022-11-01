@@ -6,6 +6,7 @@ import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +40,7 @@ public class EpidemicController extends BaseController {
         return AjaxResult.success();
     }
 
+    @Transactional
     @PostMapping("/epidemicDownload")
     public AjaxResult epidemicDownload(@Validated @RequestBody String version)
     {
@@ -46,6 +48,7 @@ public class EpidemicController extends BaseController {
         return AjaxResult.success();
     }
 
+    @Transactional
     @PostMapping("/prefixDownload")
     public AjaxResult prefixDownload(@Validated @RequestBody String version)
     {

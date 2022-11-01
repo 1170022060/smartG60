@@ -40,28 +40,21 @@ public class TblRecoveryListRecordLog implements Serializable {
     @Excel(name = "状态",readConverterExp = "1=进入黑名单,2=解除黑名单")
     private Integer status;
 
-    /** 车牌*/
-    @Excel(name = "车牌")
-    private String vehPlate;
-
-    /** 车牌颜色*/
-    @Excel(name = "车牌颜色")
-    private Integer vehColor;
+    /** 车辆车牌号码+颜色 */
+    private String vehicleId;
 
     /** 追缴原因 */
     @Excel(name = "追缴原因")
     private String reason;
 
     /** 欠费金额 */
-    @Excel(name = "欠费金额")
-    private Integer fee;
+    private Integer oweFee;
 
-    /** 欠费次数 */
-    @Excel(name = "欠费次数")
-    private Integer count;
+    /** 欠费行为次数 */
+    private Integer evasionCount;
 
-    /** 创建时间 */
-    @Excel(name = "欠费日期")
+    /** 中心创建时间 */
+    @Excel(name = "中心创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date creationTime;
 
