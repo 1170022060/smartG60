@@ -42,9 +42,9 @@ public class EpidemicController extends BaseController {
 
     @Transactional
     @PostMapping("/epidemicDownload")
-    public AjaxResult epidemicDownload(@Validated @RequestBody String version)
+    public AjaxResult epidemicDownload()
     {
-        iEpidemicService.epidemicDownload(version);
+        iEpidemicService.epidemicDownload();
         return AjaxResult.success();
     }
 

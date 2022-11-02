@@ -24,6 +24,8 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     public static String YYYYMMDDHHMM = "yyyyMMddHHmm";
 
+    public static String YYYYMMDD = "yyyyMMdd";
+
     public static String YYYYMMDDHHMMSSSSS = "yyyyMMddHHmmssSSS";
 
     public static String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
@@ -57,6 +59,9 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     public static final String getTimeMinute(Date date) {
         return dateTime(date,YYYYMMDDHHMM);
+    }
+    public static final String getTimeDay(Date date) {
+        return dateTime(date,YYYYMMDD);
     }
 
     public static final String getTime() {

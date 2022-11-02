@@ -23,6 +23,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -103,7 +104,19 @@ public class EpidemicServiceImpl implements IEpidemicService {
     }
 
     @Override
-    public void epidemicDownload(String version) {
+    public void epidemicDownload() {
+        String versionNow=versionMapper.selectVersionAll("TBL_EPIDEMIC_VERSION");
+        String version = DateUtils.getTimeDay(DateUtils.getNowDate());
+        if(StringUtils.isNotNull(versionNow) && (versionNow.equals(version)))
+        {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+            try {
+                // 注意格式需要与上面一致，不然会出现异常
+                version=DateUtils.getTimeDay(DateUtils.getPreTime(sdf.parse(versionNow) ,1440));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         String url = host + "/api/lane-service/epidemic-area-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo = new VersionVo();
