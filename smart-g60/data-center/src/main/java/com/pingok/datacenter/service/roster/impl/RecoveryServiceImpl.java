@@ -26,6 +26,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -83,7 +84,19 @@ public class RecoveryServiceImpl implements IRecoveryService {
     }
 
     @Override
-    public void increment(String version) {
+    public void increment() {
+        String versionNow=versionMapper.selectVersion("TBL_RECOVERY_VERSION");
+        String version = DateUtils.getTimeMinute(DateUtils.getBeforeMillisEndWithMinute0or5(5,DateUtils.getNowDate()));
+        if(StringUtils.isNotNull(versionNow) && (versionNow.equals(version)))
+        {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+            try {
+                // 注意格式需要与上面一致，不然会出现异常
+                version=DateUtils.getTimeMinute(DateUtils.getPreTime(sdf.parse(versionNow) ,5));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         String url=host+"/api/lane-service/vehicleblack-incr-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo=new VersionVo();

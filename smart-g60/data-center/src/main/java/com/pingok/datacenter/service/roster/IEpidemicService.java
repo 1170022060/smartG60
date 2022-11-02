@@ -29,7 +29,6 @@ public interface IEpidemicService {
 
     /**
      * 下载中高风险名单名单
-     * @param version 版本号
      */
-    void prefixDownload(String version);
+    void prefixDownload();
 }

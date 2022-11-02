@@ -35,9 +35,9 @@ public class RescueController extends BaseController {
 
     @Transactional
     @PostMapping("/rescueIncr")
-    public AjaxResult rescueIncr(@Validated @RequestBody String version)
+    public AjaxResult rescueIncr()
     {
-        iRescueService.increment(version);
+        iRescueService.increment();
         return AjaxResult.success();
     }
 

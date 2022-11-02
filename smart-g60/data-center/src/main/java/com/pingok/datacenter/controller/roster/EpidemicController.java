@@ -50,9 +50,9 @@ public class EpidemicController extends BaseController {
 
     @Transactional
     @PostMapping("/prefixDownload")
-    public AjaxResult prefixDownload(@Validated @RequestBody String version)
+    public AjaxResult prefixDownload()
     {
-        iEpidemicService.prefixDownload(version);
+        iEpidemicService.prefixDownload();
         return AjaxResult.success();
     }
 

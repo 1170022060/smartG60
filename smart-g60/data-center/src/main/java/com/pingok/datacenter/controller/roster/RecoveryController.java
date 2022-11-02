@@ -35,9 +35,9 @@ public class RecoveryController extends BaseController {
 
     @Transactional
     @PostMapping("/recoveryIncr")
-    public AjaxResult recoveryIncr(@Validated @RequestBody String version)
+    public AjaxResult recoveryIncr()
     {
-        iRecoveryService.increment(version);
+        iRecoveryService.increment();
         return AjaxResult.success();
     }
 

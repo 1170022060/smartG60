@@ -109,7 +109,7 @@ public class EpidemicServiceImpl implements IEpidemicService {
         String version = DateUtils.getTimeDay(DateUtils.getNowDate());
         if(StringUtils.isNotNull(versionNow) && (versionNow.equals(version)))
         {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             try {
                 // 注意格式需要与上面一致，不然会出现异常
                 version=DateUtils.getTimeDay(DateUtils.getPreTime(sdf.parse(versionNow) ,1440));
@@ -158,7 +158,19 @@ public class EpidemicServiceImpl implements IEpidemicService {
     }
 
     @Override
-    public void prefixDownload(String version) {
+    public void prefixDownload() {
+        String versionNow=versionMapper.selectVersionAll("TBL_PREFIX_VERSION");
+        String version = DateUtils.getTimeDay(DateUtils.getNowDate());
+        if(StringUtils.isNotNull(versionNow) && (versionNow.equals(version)))
+        {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            try {
+                // 注意格式需要与上面一致，不然会出现异常
+                version=DateUtils.getTimeDay(DateUtils.getPreTime(sdf.parse(versionNow) ,1440));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         String url = host + "/api/lane-service/epidemic-prefix-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo = new VersionVo();
