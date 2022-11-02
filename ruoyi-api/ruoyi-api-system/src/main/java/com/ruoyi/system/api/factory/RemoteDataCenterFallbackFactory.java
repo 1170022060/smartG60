@@ -67,6 +67,31 @@ public class RemoteDataCenterFallbackFactory implements FallbackFactory<RemoteDa
             public R<List<Map>> passRecord(String gantryId, String startTime, String endTime) {
                 return null;
             }
+
+            @Override
+            public R blackIncr() {
+                return null;
+            }
+
+            @Override
+            public R epidemicDownload() {
+                return null;
+            }
+
+            @Override
+            public R prefixDownload() {
+                return null;
+            }
+
+            @Override
+            public R recoveryIncr() {
+                return null;
+            }
+
+            @Override
+            public R rescueIncr() {
+                return null;
+            }
         };
     }
 }

@@ -92,4 +92,39 @@ public interface RemoteDataCenterService {
      */
     @GetMapping("/gantryAlgorithm/passRecord")
     R<List<Map>> passRecord(@RequestParam(name = "gantryId",required = false) String gantryId,@RequestParam(name = "startTime",required = false) String startTime, @RequestParam(name = "endTime",required = false) String endTime);
+
+    /**
+     * 状态名单增量
+     * @return
+     */
+    @PostMapping("/blackcard/blackIncr")
+    R blackIncr();
+
+    /**
+     * 中高风险名单
+     * @return
+     */
+    @PostMapping("/epidemic/epidemicDownload")
+    R epidemicDownload();
+
+    /**
+     * 中高风险车牌前缀名单
+     * @return
+     */
+    @PostMapping("/epidemic/prefixDownload")
+    R prefixDownload();
+
+    /**
+     * 追缴名单增量
+     * @return
+     */
+    @PostMapping("/recovery/recoveryIncr")
+    R recoveryIncr();
+
+    /**
+     * 抢险救灾名单增量
+     * @return
+     */
+    @PostMapping("/rescue/rescueIncr")
+    R rescueIncr();
 }
