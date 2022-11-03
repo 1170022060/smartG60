@@ -16,6 +16,7 @@ import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.io.*;
@@ -182,6 +183,7 @@ public class GreenServiceImpl implements IGreenService {
         delFolder(resourcePath);
     }
 
+    @Transactional
     public void insertGreen(List<GreenVo> list, String version) {
         TblGreenVersion greenVersion;
 
@@ -207,9 +209,11 @@ public class GreenServiceImpl implements IGreenService {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+                SimpleDateFormat format2 = new SimpleDateFormat("yyyyMMddHH");
+                Date date2 = null;
                 try {
-                    date = format.parse(greenVo.getEndTransportTime());
-                    greenListRecord.setEndTransportTime(date);
+                    date2 = format2.parse(greenVo.getEndTransportTime());
+                    greenListRecord.setEndTransportTime(date2);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
