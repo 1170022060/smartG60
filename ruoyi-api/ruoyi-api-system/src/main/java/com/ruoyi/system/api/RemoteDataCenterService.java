@@ -134,4 +134,11 @@ public interface RemoteDataCenterService {
      */
     @PostMapping("/rescue/rescueIncr")
     R rescueIncr();
+
+    /**
+     * 绿通名单
+     * @return
+     */
+    @PostMapping("/green/greenDownload")
+    R greenDownload();
 }

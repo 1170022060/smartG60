@@ -44,7 +44,6 @@ public class RosterTask {
         }
     }
 
-
     public void rateDownload() {
         R r = remoteDataCenterService.rateDownload();
         if (r.getCode() == 200) {
@@ -69,6 +68,15 @@ public class RosterTask {
             log.info("rosterTask定时任务rescueIncr----成功");
         } else {
             log.error("rosterTask定时任务rescueIncr----失败：" + r.getMsg());
+        }
+    }
+
+    public void greenDownload() {
+        R r = remoteDataCenterService.greenDownload();
+        if (r.getCode() == 200) {
+            log.info("rosterTask定时任务greenDownload----成功");
+        } else {
+            log.error("rosterTask定时任务greenDownload----失败：" + r.getMsg());
         }
     }
 }

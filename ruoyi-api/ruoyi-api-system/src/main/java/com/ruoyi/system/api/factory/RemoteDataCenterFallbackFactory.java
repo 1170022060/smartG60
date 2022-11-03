@@ -97,6 +97,11 @@ public class RemoteDataCenterFallbackFactory implements FallbackFactory<RemoteDa
             public R rescueIncr() {
                 return null;
             }
+
+            @Override
+            public R greenDownload() {
+                return null;
+            }
         };
     }
 }
