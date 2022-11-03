@@ -98,4 +98,18 @@ public class DeviceFaultServiceImpl implements IDeviceFaultService {
         return tblDeviceFaultMapper.selectDeviceFaultByTypeList(reportVo);
     }
 
+    @Override
+    public List<Map> selectFaultByDeviceName(String deviceName, Date startTime, Date endTime) {
+        return tblDeviceFaultMapper.selectFaultByDeviceName(deviceName,startTime,endTime);
+    }
+
+    @Override
+    public List<Map> selectFaultByDeviceType(Long deviceTypeId, Date startTime, Date endTime) {
+        return tblDeviceFaultMapper.selectFaultByDeviceType(deviceTypeId,startTime,endTime);
+    }
+
+    @Override
+    public List<Map> selectFaultByFaultType(Integer faultType, Date startTime, Date endTime) {
+        return tblDeviceFaultMapper.selectFaultByFaultType(faultType,startTime,endTime);
+    }
 }

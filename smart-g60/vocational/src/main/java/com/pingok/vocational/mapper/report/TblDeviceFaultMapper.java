@@ -240,5 +240,57 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
     @Select("select CATEGORY_POST as \"categoryPost\" from TBL_DEVICE_CATEGORY where ID= #{deviceCategory} ")
     String selectPostIDs(@Param("deviceCategory") Long deviceCategory);
 
+    @Select({"<script>" +
+            "SELECT tbi.DEVICE_NAME as \"deviceName\",tdf.FAULT_TYPE as \"faultType\", " +
+            "tdf.FAULT_DESCRIPTION as \"faultDesc\",to_char(tdf.FAULT_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"faultTime\",COUNT(tbi.DEVICE_NAME)as \"count\"  " +
+            "FROM TBL_DEVICE_FAULT tdf LEFT JOIN TBL_DEVICE_INFO tbi on tbi.ID=tdf.DEVICE_ID  " +
+            "WHERE tbi.DEVICE_NAME IS NOT NULL  " +
+            "<when test='deviceName != null'> " +
+            " and tbi.DEVICE_NAME like '%' || #{deviceName} || '%' " +
+            "</when>"+
+            "<when test='startTime != null'> " +
+            " and tdf.FAULT_TIME &gt;= #{startTime} " +
+            "</when>"+
+            "<when test='endTime != null'> " +
+            " and tdf.FAULT_TIME &lt;= #{endTime} " +
+            "</when>"+
+            "GROUP BY tbi.DEVICE_NAME,tdf.FAULT_TYPE,tdf.FAULT_DESCRIPTION,tdf.FAULT_TIME  " +
+            "ORDER BY tdf.FAULT_TIME DESC" +
+            "</script>"})
+    List<Map> selectFaultByDeviceName(@Param("deviceName") String deviceName,@Param("startTime") Date startTime, @Param("endTime")  Date endTime);
 
+    @Select({"<script>" +
+            "SELECT tbc.CATEGORY_NAME as \"categoryName\",COUNT(*)as \"count\"  " +
+            "FROM TBL_DEVICE_FAULT tdf  " +
+            "LEFT JOIN TBL_DEVICE_INFO tbi on tbi.ID=tdf.DEVICE_ID  " +
+            "LEFT JOIN TBL_DEVICE_CATEGORY tbc on tbi.DEVICE_CATEGORY=tbc.ID  " +
+            "WHERE tbi.DEVICE_CATEGORY = 927 " +
+            "<when test='deviceTypeId != null'> " +
+            " and tbi.DEVICE_CATEGORY = #{deviceTypeId} " +
+            "</when>"+
+            "<when test='startTime != null'> " +
+            " and tdf.FAULT_TIME &gt;= #{startTime} " +
+            "</when>"+
+            "<when test='endTime != null'> " +
+            " and tdf.FAULT_TIME &lt;= #{endTime} " +
+            "</when>" +
+            "GROUP BY tbc.CATEGORY_NAME"+
+            "</script>"})
+    List<Map> selectFaultByDeviceType(@Param("deviceTypeId") Long deviceTypeId,@Param("startTime") Date startTime, @Param("endTime")  Date endTime);
+
+    @Select({"<script>" +
+            "SELECT tdf.FAULT_TYPE as \"faultType\",tdf.FAULT_DESCRIPTION as \"faultDesc\",COUNT(*)as \"count\" FROM TBL_DEVICE_FAULT tdf  " +
+            "left join SYS_DICT_DATA b on b.DICT_VALUE=tdf.FAULT_TYPE and b.DICT_TYPE='fault_type' " +
+            "<when test='faultType != null'> " +
+            " and tdf.FAULT_TYPE = #{faultType} " +
+            "</when>"+
+            "<when test='startTime != null'> " +
+            " and tdf.FAULT_TIME &gt;= #{startTime} " +
+            "</when>"+
+            "<when test='endTime != null'> " +
+            " and tdf.FAULT_TIME &lt;= #{endTime} " +
+            "</when>"+
+            "GROUP BY tdf.FAULT_TYPE,tdf.FAULT_DESCRIPTION " +
+            "</script>"})
+    List<Map> selectFaultByFaultType(@Param("faultType")Integer faultType,@Param("startTime") Date startTime, @Param("endTime")  Date endTime);
 }

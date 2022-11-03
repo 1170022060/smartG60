@@ -77,4 +77,30 @@ public interface IDeviceFaultService {
      */
     List<DeviceFaultTypeVo> selectDeviceFaultByTypeList(ReportVo reportVo);
 
+    /**
+     * 通过设备名称统计故障
+     * @param deviceName
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<Map> selectFaultByDeviceName(String deviceName,Date startTime, Date endTime);
+
+    /**
+     * 通过设备类目统计故障
+     * @param deviceTypeId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<Map> selectFaultByDeviceType(Long deviceTypeId,Date startTime, Date endTime);
+
+    /**
+     * 通过故障类型统计故障
+     * @param faultType
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<Map> selectFaultByFaultType(Integer faultType,Date startTime, Date endTime);
 }

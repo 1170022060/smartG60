@@ -109,4 +109,24 @@ public class DeviceFaultController extends BaseController {
         ExcelUtil<DeviceFaultTypeVo> util = new ExcelUtil<DeviceFaultTypeVo>(DeviceFaultTypeVo.class);
         util.exportExcel(response, list, "故障统计(按故障类型)");
     }
+
+    @GetMapping("/countFaultByDevice")
+    public TableDataInfo getFaultByDevice(String deviceName,Date startTime,Date endTime){
+        startPage();
+        List<Map> info = deviceFaultService.selectFaultByDeviceName(deviceName,startTime,endTime);
+        return getDataTable(info);
+    }
+    @GetMapping("/countFaultByDevicetype")
+    public TableDataInfo getFaultByDeviceType(Long deviceTypeId, Date startTime, Date endTime){
+        startPage();
+        List<Map> info = deviceFaultService.selectFaultByDeviceType(deviceTypeId,startTime,endTime);
+        return getDataTable(info);
+    }
+
+    @GetMapping("/countFaultByFaultType")
+    public TableDataInfo getFaultByFaultType(Integer faultType, Date startTime, Date endTime){
+        startPage();
+        List<Map> info = deviceFaultService.selectFaultByFaultType(faultType,startTime,endTime);
+        return getDataTable(info);
+    }
 }
