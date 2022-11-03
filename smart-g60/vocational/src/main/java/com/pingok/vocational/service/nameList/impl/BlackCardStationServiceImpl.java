@@ -63,6 +63,7 @@ public class BlackCardStationServiceImpl implements IBlackCardService {
                     }
                 }
             }
+            object.put("versionBC",blackCardObj);
         }else{
             object.put("blackCard",0);
         }
@@ -79,6 +80,7 @@ public class BlackCardStationServiceImpl implements IBlackCardService {
                     }
                 }
             }
+            object.put("versionEpi",epidemicObj);
         }else{
             object.put("epidemic",0);
         }
@@ -95,6 +97,7 @@ public class BlackCardStationServiceImpl implements IBlackCardService {
                     }
                 }
             }
+            object.put("versionRate",rateObj);
         }else{
             object.put("minRate",0);
         }

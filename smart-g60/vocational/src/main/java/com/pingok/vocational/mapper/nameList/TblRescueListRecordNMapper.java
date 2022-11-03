@@ -29,7 +29,7 @@ public interface TblRescueListRecordNMapper extends CommonRepository<TblRescueLi
             "when VEHICLE_IDENTIFY_TYPE=3 then '通过ETC卡编号或车牌号确定车辆' when VEHICLE_IDENTIFY_TYPE=4 then '通过ETC卡编号且车牌号确定车辆' " +
             "end as \"vehicleIdentifyType\"," +
             "CARD_ID as \"cardId\"," +
-            "VEHICLE_PLATE_ID as \"vehiclePlateId\"," +
+            "VEHICLE_ID as \"vehicleId\"," +
             "VEHICLE_PLATE_COLOR as \"vehiclePlateColor\"," +
             "case when OPERATION=1 then '新增' when OPERATION=2 then '变更' when OPERATION=3 then '删除' end as \"operation\"," +
             "case when DISCOUNT_TYPE=1 then '按优惠折扣' when DISCOUNT_TYPE=2 then '按优惠金额' " +
