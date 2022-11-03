@@ -35,9 +35,9 @@ public class RateController extends BaseController {
 
     @Transactional
     @PostMapping("/rateDownload")
-    public AjaxResult rateDownload(@Validated @RequestBody String version)
+    public AjaxResult rateDownload()
     {
-        iRateService.rateDownload(version);
+        iRateService.rateDownload();
         return AjaxResult.success();
     }
 }

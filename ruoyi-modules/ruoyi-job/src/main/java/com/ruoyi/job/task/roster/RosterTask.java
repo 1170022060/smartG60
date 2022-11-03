@@ -44,6 +44,16 @@ public class RosterTask {
         }
     }
 
+
+    public void rateDownload() {
+        R r = remoteDataCenterService.rateDownload();
+        if (r.getCode() == 200) {
+            log.info("rosterTask定时任务rateDownload----成功");
+        } else {
+            log.error("rosterTask定时任务rateDownload----失败：" + r.getMsg());
+        }
+    }
+
     public void recoveryIncr() {
         R r = remoteDataCenterService.recoveryIncr();
         if (r.getCode() == 200) {

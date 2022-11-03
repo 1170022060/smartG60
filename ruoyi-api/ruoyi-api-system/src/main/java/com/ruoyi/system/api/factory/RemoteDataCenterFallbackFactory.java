@@ -84,6 +84,11 @@ public class RemoteDataCenterFallbackFactory implements FallbackFactory<RemoteDa
             }
 
             @Override
+            public R rateDownload() {
+                return null;
+            }
+
+            @Override
             public R recoveryIncr() {
                 return null;
             }

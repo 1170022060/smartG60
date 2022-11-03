@@ -17,7 +17,6 @@ public interface IRateService  {
 
     /**
      * 下载最小费率
-     * @param version 版本号
      */
-    void rateDownload(String version);
+    void rateDownload();
 }

@@ -115,6 +115,13 @@ public interface RemoteDataCenterService {
     R prefixDownload();
 
     /**
+     * 最小费率名单
+     * @return
+     */
+    @PostMapping("/rate/rateDownload")
+    R rateDownload();
+
+    /**
      * 追缴名单增量
      * @return
      */
