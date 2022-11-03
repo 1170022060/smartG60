@@ -116,7 +116,7 @@ public class DeviceFaultController extends BaseController {
         List<Map> info = deviceFaultService.selectFaultByDeviceName(deviceName,startTime,endTime);
         return getDataTable(info);
     }
-    @GetMapping("/countFaultByDevicetype")
+    @GetMapping("/countFaultByDeviceType")
     public TableDataInfo getFaultByDeviceType(Long deviceTypeId, Date startTime, Date endTime){
         startPage();
         List<Map> info = deviceFaultService.selectFaultByDeviceType(deviceTypeId,startTime,endTime);
