@@ -18,7 +18,7 @@ public interface TblGreenListRecordNMapper {
             "END AS \"vehicleSign\",VEHICLE_ID as \"vehicleId\", " +
             "to_char(END_TRANSPORT_TIME,'yyyy-mm-dd hh24:mi:ss') as \"endTransTime\", " +
             "to_char(APPOINTMENT_TIME,'yyyy-mm-dd hh24:mi:ss') as \"appointSubmitTime\",a.DICT_LABEL as \"enProv\",b.DICT_LABEL as \"exProv\", " +
-            "PHONE as \"phone\",APPOINT_TIME as \"appointTime\" " +
+            "PHONE as \"phone\",to_char(APPOINT_TIME,'yyyy-mm-dd hh24:mi:ss') as \"appointTime\" " +
             "FROM TBL_GREEN_LIST_RECORD  " +
             "LEFT JOIN SYS_DICT_DATA a on a.DICT_VALUE=START_DISTRICT_ID AND a.DICT_TYPE='province_id' " +
             "LEFT JOIN SYS_DICT_DATA b on b.DICT_VALUE=END_DISTRICT_ID AND b.DICT_TYPE='province_id' " +
