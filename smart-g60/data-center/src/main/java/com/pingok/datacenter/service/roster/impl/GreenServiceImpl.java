@@ -200,6 +200,7 @@ public class GreenServiceImpl implements IGreenService {
                 greenListRecord.setId(remoteIdProducerService.nextId());
                 greenListRecord.setVersionId(greenVersion.getId());
                 BeanUtils.copyNotNullProperties(greenVo, greenListRecord);
+                greenListRecord.setGreenId(greenVo.getId());
                 greenListRecord.setPhone(greenVo.getId().substring(0,11));
                 SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
                 Date date = null;
