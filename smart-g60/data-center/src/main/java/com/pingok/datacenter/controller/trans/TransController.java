@@ -66,7 +66,7 @@ public class TransController extends BaseController {
             if(enTransEnum.getTblEnTrans().getPassType()==0 && enTransEnum.getTblEnTrans().getVehStatus()==92) {
                 transService.updateSection(enTransEnum.getTblEnTrans().getWorkDate(),enTransEnum.getTblEnTrans().getLaneHex().substring(4,8),1,7,0);
             }
-            enTransInfo.setInsertEnTransSummary(transService.insertEnTransSummary(enTransEnum));
+//            enTransInfo.setInsertEnTransSummary(transService.insertEnTransSummary(enTransEnum));
         }
         return AjaxResult.success();
     }
@@ -127,7 +127,7 @@ public class TransController extends BaseController {
             if(exTransEnum.getTblExTrans().getPassType()==0 && exTransEnum.getTblExTrans().getVehStatus()==92) {
                 transService.updateSection(exTransEnum.getTblExTrans().getWorkDate(),exTransEnum.getTblExTrans().getLaneHex().substring(4,8),2,7,0);
             }
-            exTransInfo.setInsertExTransSummary(transService.insertExTransSummary(exTransEnum));
+//            exTransInfo.setInsertExTransSummary(transService.insertExTransSummary(exTransEnum));
         }
         return AjaxResult.success();
     }
