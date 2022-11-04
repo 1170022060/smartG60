@@ -75,7 +75,13 @@ public interface TblOdRecordMapper {
             "c.DICT_LABEL as \"vehClass\"," +
             "sum(a.FLOW) as \"flow\" from TBL_OD_RECORD a " +
             "left join  SYS_DICT_DATA c on c.DICT_VALUE=to_char(a.VEH_CLASS) and c.DICT_TYPE='veh_class' " +
-            "where a.WORK_DATE &gt;= #{startDate} and a.WORK_DATE &lt;= #{endDate} " +
+            "where 1=1 " +
+            "<when test='startDate != null'> " +
+            " and a.WORK_DATE &gt;= #{startDate} " +
+            "</when>"+
+            "<when test='endDate != null'> " +
+            " and a.WORK_DATE &lt;= #{endDate} " +
+            "</when>"+
             "<when test='vehClass != null'> " +
             "and a.VEH_CLASS= #{vehClass} " +
             "</when>"+
