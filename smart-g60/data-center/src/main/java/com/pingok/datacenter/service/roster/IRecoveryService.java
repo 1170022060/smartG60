@@ -17,9 +17,8 @@ public interface IRecoveryService {
 
     /**
      * 下载追缴名单增量
-     * @param version 版本号
      */
-    void increment(String version);
+    void increment();
 
     /**
      * 下载追缴名单全量

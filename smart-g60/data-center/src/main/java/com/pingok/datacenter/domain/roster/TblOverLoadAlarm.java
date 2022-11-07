@@ -7,7 +7,7 @@ import javax.persistence.Table;
 import java.util.Date;
 
 /**
- * 中高风险地区名单版本表(TBL_OVER_LOAD_ALARM)
+ * 超限车辆数据表(TBL_OVER_LOAD_ALARM)
  *
  * @author xia
  * @version 1.0.0 2022-07-20

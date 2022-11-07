@@ -27,7 +27,7 @@ public class RescueController extends BaseController {
     private IRescueService iRescueService;
 
     @PostMapping
-    public AjaxResult epidemic(@RequestBody JSONObject object) {
+    public AjaxResult rescue(@RequestBody JSONObject object) {
         log.info("抢险救灾名单----请求参数-----" + object.toJSONString());
         iRescueService.rescue(object);
         return AjaxResult.success();
@@ -35,9 +35,9 @@ public class RescueController extends BaseController {
 
     @Transactional
     @PostMapping("/rescueIncr")
-    public AjaxResult rescueIncr(@Validated @RequestBody String version)
+    public AjaxResult rescueIncr()
     {
-        iRescueService.increment(version);
+        iRescueService.increment();
         return AjaxResult.success();
     }
 

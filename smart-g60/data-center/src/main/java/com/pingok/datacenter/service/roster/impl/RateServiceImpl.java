@@ -9,6 +9,7 @@ import com.pingok.datacenter.domain.roster.rate.vo.*;
 import com.pingok.datacenter.domain.roster.vo.VersionGbVo;
 import com.pingok.datacenter.domain.roster.vo.VersionVo;
 import com.pingok.datacenter.domain.roster.rate.TblRateStationUsed;
+import com.pingok.datacenter.mapper.roster.VersionMapper;
 import com.pingok.datacenter.mapper.roster.rate.TblRateMapper;
 import com.pingok.datacenter.mapper.roster.rate.TblRateProvMapper;
 import com.pingok.datacenter.mapper.roster.rate.TblRateStationUsedMapper;
@@ -26,6 +27,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -52,6 +54,8 @@ public class RateServiceImpl implements IRateService {
     private TblRateStationUsedMapper tblRateStationUsedMapper;
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
+    @Autowired
+    private VersionMapper versionMapper;
 
     @Value("${center.host}")
     private String host;
@@ -78,7 +82,13 @@ public class RateServiceImpl implements IRateService {
     }
 
     @Override
-    public void rateDownload(String version) {
+    public void rateDownload() {
+        String versionNow=versionMapper.selectVersionAll("TBL_RATE_VERSION");
+        String version = DateUtils.getTimeDay(DateUtils.getNowDate())+"001";
+        if(StringUtils.isNotNull(versionNow) && (versionNow.equals(version)))
+        {
+            version=String.valueOf(Long.parseLong(versionNow)+1);
+        }
         List<String> stringList= tblRateMapper.selectStationGB();
         for (String stationGB:stringList)
         {

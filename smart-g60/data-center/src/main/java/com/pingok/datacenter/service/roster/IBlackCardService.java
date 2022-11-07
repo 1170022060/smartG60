@@ -17,9 +17,8 @@ public interface IBlackCardService {
 
     /**
      * 下载卡黑名单增量
-     * @param version 版本号
      */
-    void increment(String version);
+    void increment();
 
     /**
      * 下载卡黑名单全量

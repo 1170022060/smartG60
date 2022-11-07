@@ -8,6 +8,7 @@ import com.pingok.datacenter.domain.roster.epidemic.*;
 import com.pingok.datacenter.domain.roster.epidemic.vo.EpidemicVo;
 import com.pingok.datacenter.domain.roster.epidemic.vo.PrefixVo;
 import com.pingok.datacenter.domain.roster.vo.VersionVo;
+import com.pingok.datacenter.mapper.roster.VersionMapper;
 import com.pingok.datacenter.mapper.roster.epidemic.*;
 import com.pingok.datacenter.service.roster.IEpidemicService;
 import com.ruoyi.common.core.utils.DateUtils;
@@ -22,6 +23,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -51,6 +53,8 @@ public class EpidemicServiceImpl implements IEpidemicService {
     private TblPrefixVersionMapper tblPrefixVersionMapper;
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
+    @Autowired
+    private VersionMapper versionMapper;
 
     @Value("${center.host}")
     private String host;
@@ -100,7 +104,19 @@ public class EpidemicServiceImpl implements IEpidemicService {
     }
 
     @Override
-    public void epidemicDownload(String version) {
+    public void epidemicDownload() {
+        String versionNow=versionMapper.selectVersionAll("TBL_EPIDEMIC_VERSION");
+        String version = DateUtils.getTimeDay(DateUtils.getNowDate());
+        if(StringUtils.isNotNull(versionNow) && (versionNow.equals(version)))
+        {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            try {
+                // 注意格式需要与上面一致，不然会出现异常
+                version=DateUtils.getTimeDay(DateUtils.getPreTime(sdf.parse(versionNow) ,1440));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         String url = host + "/api/lane-service/epidemic-area-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo = new VersionVo();
@@ -142,7 +158,19 @@ public class EpidemicServiceImpl implements IEpidemicService {
     }
 
     @Override
-    public void prefixDownload(String version) {
+    public void prefixDownload() {
+        String versionNow=versionMapper.selectVersionAll("TBL_PREFIX_VERSION");
+        String version = DateUtils.getTimeDay(DateUtils.getNowDate());
+        if(StringUtils.isNotNull(versionNow) && (versionNow.equals(version)))
+        {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            try {
+                // 注意格式需要与上面一致，不然会出现异常
+                version=DateUtils.getTimeDay(DateUtils.getPreTime(sdf.parse(versionNow) ,1440));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         String url = host + "/api/lane-service/epidemic-prefix-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo = new VersionVo();

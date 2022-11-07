@@ -8,6 +8,7 @@ import com.pingok.datacenter.domain.roster.rescue.TblRescueVersion;
 import com.pingok.datacenter.domain.roster.rescue.vo.RescueVo;
 import com.pingok.datacenter.domain.roster.rescue.TblRescueStationUsed;
 import com.pingok.datacenter.domain.roster.vo.VersionVo;
+import com.pingok.datacenter.mapper.roster.VersionMapper;
 import com.pingok.datacenter.mapper.roster.rescue.TblRescueVersionMapper;
 import com.pingok.datacenter.mapper.roster.rescue.TblRescueListRecordLogMapper;
 import com.pingok.datacenter.mapper.roster.rescue.TblRescueListRecordMapper;
@@ -25,6 +26,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -49,7 +51,8 @@ public class RescueServiceImpl implements IRescueService {
     private TblRescueStationUsedMapper tblRescueStationUsedMapper;
     @Autowired
     private TblRescueVersionMapper tblRescueVersionMapper;
-
+    @Autowired
+    private VersionMapper versionMapper;
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
 
@@ -81,7 +84,19 @@ public class RescueServiceImpl implements IRescueService {
     }
 
     @Override
-    public void increment(String version) {
+    public void increment() {
+        String versionNow=versionMapper.selectVersion("TBL_RESCUE_VERSION");
+        String version = DateUtils.getTimeMinute(DateUtils.getBeforeMillisEndWithMinute0or5(15,DateUtils.getNowDate()));
+        if(StringUtils.isNotNull(versionNow) && (versionNow.equals(version)))
+        {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+            try {
+                // 注意格式需要与上面一致，不然会出现异常
+                version=DateUtils.getTimeMinute(DateUtils.getPreTime(sdf.parse(versionNow) ,15));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         String url=host+"/api/lane-service/emerg-incr-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo=new VersionVo();

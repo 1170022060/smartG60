@@ -16,9 +16,8 @@ public interface IRescueService {
 
     /**
      * 下载抢险救灾名单增量
-     * @param version 版本号
      */
-    void increment(String version);
+    void increment();
 
     /**
      * 下载抢险救灾名单全量
