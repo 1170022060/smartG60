@@ -63,7 +63,7 @@ public class GantryServiceImpl implements IGantryService {
                 param.put("eventType", tblGantryEventRelease.getEventType());
                 param.put("eventId", tblGantryEventRelease.getEventId());
                 param.put("eventPosition", tblGantryEventRelease.getEventPosition() != null ? tblGantryEventRelease.getEventPosition() : 0);
-                param.put("eventDiscount", tblGantryEventRelease.getEventDiscount() != null ? tblGantryEventRelease.getEventDiscount() : 0);
+                param.put("eventDiscount", tblGantryEventRelease.getEventDiscount() != null ? tblGantryEventRelease.getEventDiscount()*10 : 0);
                 param.put("eventInfo", tblGantryEventRelease.getEventInfo());
                 param.put("reportBeginTime", DateUtils.dateTime(tblGantryEventRelease.getReportBeginTime(), DateUtils.YYYY_MM_DD)+"T"+DateUtils.dateTime(tblGantryEventRelease.getReportBeginTime(), DateUtils.HH_MM_SS));
                 param.put("reportEndTime", DateUtils.dateTime(tblGantryEventRelease.getReportEndTime(), DateUtils.YYYY_MM_DD)+"T"+DateUtils.dateTime(tblGantryEventRelease.getReportEndTime(), DateUtils.HH_MM_SS));
