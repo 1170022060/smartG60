@@ -120,7 +120,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                     .andEqualTo("uiEventType", uiEventType);
             eventVehicleEvent = tblEventVehicleEventMapper.selectOneByExample(example);
             if (eventVehicleEvent != null) {
-                TblEventRecord eventRecord = iEventService.selectByEventId(tblEventVehicleEvent.getUbiLogicId());
+                TblEventRecord eventRecord = iEventService.selectByEventId(eventVehicleEvent.getUbiLogicId());
                 if (eventRecord != null && eventRecord.getStatus() == 0) {
                     eventRecord.setStatus(2);
                     eventRecord.setUpdateTime(DateUtils.getNowDate());
