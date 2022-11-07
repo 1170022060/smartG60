@@ -30,7 +30,7 @@ public class TblSoftwareHeartbeat  implements Serializable {
     /**
      * 软件编码
      */
-    private Long num;
+    private String num;
 
     /**
      * 软件名称
@@ -76,6 +76,16 @@ public class TblSoftwareHeartbeat  implements Serializable {
      * 软件ID
      */
     private Long softwareId;
+
+    /**
+     * 牌识上传及时率
+     */
+    private Double promptnessLpr;
+
+    /**
+     * 交易上传及时率
+     */
+    private Double promptnessTrans;
 
     @Transient
     private List<TblSoftwareDownloadStatus> downloadStatus;
