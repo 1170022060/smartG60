@@ -67,20 +67,6 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
     @Override
     public void relieveEvent(TblEventVehicleEvent tblEventVehicleEvent) {
-        if (StringUtils.isNotNull(tblEventVehicleEvent.getUiTrackId())) {
-            Example example = new Example(TblEventVehicleEvent.class);
-            Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("uiTrackId", tblEventVehicleEvent.getUiTrackId());
-            TblEventVehicleEvent eventVehicleEvent = tblEventVehicleEventMapper.selectOneByExample(example);
-            if (eventVehicleEvent != null) {
-                TblEventRecord eventRecord = iEventService.selectByEventId(tblEventVehicleEvent.getUbiLogicId());
-                if (eventRecord != null && eventRecord.getStatus() == 0) {
-                    eventRecord.setStatus(2);
-                    eventRecord.setUpdateTime(DateUtils.getNowDate());
-                    iEventService.update(eventRecord);
-                }
-            }
-        }
         Example example = new Example(TblEventVehicleEvent.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("ubiLogicId", tblEventVehicleEvent.getUbiLogicId());
@@ -89,8 +75,60 @@ public class VideoEventServiceImpl implements IVideoEventService {
             eventVehicleEvent = new TblEventVehicleEvent();
             BeanUtils.copyNotNullProperties(tblEventVehicleEvent, eventVehicleEvent);
             eventVehicleEvent.setId(remoteIdProducerService.nextId());
+            String imageUrl = null;
+            if (StringUtils.isNotNull(tblEventVehicleEvent.getSzImg())) {
+                MultipartFile multipartFile = ImageUtils.base64ToMultipartFile(tblEventVehicleEvent.getSzImg());
+                R<SysFile> r = remoteFileService.upload(multipartFile);
+                if (r.getCode() == R.SUCCESS) {
+                    imageUrl = r.getData().getUrl();
+                } else {
+                    log.error("上传事件图片失败：" + r.getMsg());
+                }
+            }
+            eventVehicleEvent.setSzImg(imageUrl);
             tblEventVehicleEventMapper.insert(eventVehicleEvent);
         }
+
+        Integer uiEventType = null;
+        switch (tblEventVehicleEvent.getUiEventType()) {
+            case 31:
+                uiEventType = 2;
+                break;
+            case 32:
+                uiEventType = 7;
+                break;
+            case 34:
+                uiEventType = 33;
+                break;
+            case 35:
+                uiEventType = 23;
+                break;
+            case 36:
+                uiEventType = 22;
+                break;
+            case 40:
+                uiEventType = 38;
+                break;
+            case 41:
+                uiEventType = 16;
+                break;
+        }
+
+        if (StringUtils.isNotNull(tblEventVehicleEvent.getUiTrackId()) && StringUtils.isNotNull(uiEventType)) {
+            example = new Example(TblEventVehicleEvent.class);
+            example.createCriteria().andEqualTo("uiTrackId", tblEventVehicleEvent.getUiTrackId())
+                    .andEqualTo("uiEventType", uiEventType);
+            eventVehicleEvent = tblEventVehicleEventMapper.selectOneByExample(example);
+            if (eventVehicleEvent != null) {
+                TblEventRecord eventRecord = iEventService.selectByEventId(eventVehicleEvent.getUbiLogicId());
+                if (eventRecord != null && eventRecord.getStatus() == 0) {
+                    eventRecord.setStatus(2);
+                    eventRecord.setUpdateTime(DateUtils.getNowDate());
+                    iEventService.update(eventRecord);
+                }
+            }
+        }
+
     }
 
     @Override

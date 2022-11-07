@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.monitor.config.HostConfig;
-import com.pingok.monitor.mqtt.MqttGateway;
+//import com.pingok.monitor.mqtt.MqttGateway;
 import com.pingok.monitor.service.smartToilet.ISmartToiletService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.StringUtils;
@@ -24,8 +24,8 @@ import javax.annotation.Resource;
 public class SmartToiletServiceImpl implements ISmartToiletService {
 
 
-    @Resource
-    private MqttGateway mqttGateway;
+//    @Resource
+//    private MqttGateway mqttGateway;
 
     @Async
     @Override
@@ -50,7 +50,7 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
             JSONObject object;
             for(int i=0;i<size;i++){
                 object = array.getJSONObject(i);
-                mqttGateway.sendToMqtt("$"+object.getString("ser_num")+"/command/pub",object.toJSONString());
+//                mqttGateway.sendToMqtt("$"+object.getString("ser_num")+"/command/pub",object.toJSONString());
             }
         }
     }
