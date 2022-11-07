@@ -209,6 +209,11 @@ public class TransServiceImpl implements ITransService {
             tblSectionRecord.setAmount(tblSectionRecord.getAmount()+amount);
             tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
         }
+        if(type==8)
+        {
+            tblSectionRecord.setLicense(tblSectionRecord.getLicense()+1);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
     }
 
     @Override
