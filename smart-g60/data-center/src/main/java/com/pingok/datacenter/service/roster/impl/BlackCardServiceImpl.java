@@ -81,7 +81,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
             stationUsed.setStationHex(obj.getString("stationHex"));
             stationUsed.setApplyTime(obj.getDate("applyTime"));
             stationUsed.setCreateTime(DateUtils.getNowDate());
-            stationUsed.setObuVersion(obj.getString("version"));
+            stationUsed.setVersion(obj.getString("version"));
             tblBlackCardStationUsedMapper.insert(stationUsed);
         }
     }
