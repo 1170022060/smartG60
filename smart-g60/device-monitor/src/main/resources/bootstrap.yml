@@ -29,3 +29,5 @@ spring:
         # 共享配置
         shared-configs:
           - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+Gantry:
+  host: http://10.131.152.42:8080
