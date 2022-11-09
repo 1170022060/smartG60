@@ -40,7 +40,7 @@ public class TblBlackCardStationUsed implements Serializable {
      * 卡名单版本
      */
     @ApiModelProperty(value = "卡名单版本")
-    private String obuVersion;
+    private String version;
 
     /**
      * 使用时间
