@@ -1,14 +1,7 @@
 package com.pingok.charge.kafka;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.pingok.charge.domain.sectorlog.vo.SectorLogVo;
 import com.pingok.charge.service.device.IStatusService;
-import com.pingok.charge.service.gantry.IGantryV2XService;
-import com.pingok.charge.service.opt.IOptInfoService;
-import com.pingok.charge.service.opt.IOptWorkInfoService;
-import com.pingok.charge.service.sectorlog.ISectorLogService;
-import com.pingok.charge.service.specialRecord.ISpecialRecordService;
 import com.ruoyi.common.core.kafka.KafkaGroup;
 import com.ruoyi.common.core.kafka.KafkaTopIc;
 import lombok.extern.slf4j.Slf4j;
@@ -34,35 +27,7 @@ import java.util.Optional;
 public class Consumer {
     @Autowired
     private IStatusService iStatusService;
-    @Autowired
-    private ISpecialRecordService iSpecialRecordService;
-    @Autowired
-    private ISectorLogService iSectorLogService;
-    @Autowired
-    private IOptInfoService iOptInfoService;
-    @Autowired
-    private IOptWorkInfoService iOptWorkInfoService;
-    @Autowired
-    private IGantryV2XService iGantryV2XService;
 
-    @KafkaListener(topics = KafkaTopIc.SECTOR_LOG, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
-    public void sectorLog(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        Optional message = Optional.ofNullable(record.value());
-        if (message.isPresent()) {
-            Object msg = message.get();
-            log.info("sectorLog 消费了： Topic:" + topic + ",Message:" + msg);
-            JSONObject object = JSONObject.parseObject(String.valueOf(msg));
-            try {
-                SectorLogVo sectorLogVo = iSectorLogService.getSectorLog( object.getString("laneHex"), object.getString("gid"));
-                if (sectorLogVo != null) {
-                    iSectorLogService.updateSectorLog(sectorLogVo);
-                }
-                ack.acknowledge();
-            } catch (Exception e) {
-                log.error("sectorLog消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
-            }
-        }
-    }
 
     @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_SERVER_STATUS, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
     public void serverStatus(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
@@ -80,21 +45,6 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.SPECIAL_RECORD, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
-    public void specialRecord(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        Optional message = Optional.ofNullable(record.value());
-        if (message.isPresent()) {
-            Object msg = message.get();
-            log.info("specialRecord 消费了： Topic:" + topic + ",Message:" + msg);
-            JSONObject object = JSONObject.parseObject(String.valueOf(msg));
-            try {
-                iSpecialRecordService.handleSpecial(object);
-                ack.acknowledge();
-            } catch (Exception e) {
-                log.error("specialRecord消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
-            }
-        }
-    }
 
     @KafkaListener(topics = KafkaTopIc.CHARGE_SIGNAL_PING_STATUS, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
     public void pingStatus(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
@@ -144,52 +94,7 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.OPT_INFO, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
-    public void optInfo(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        Optional message = Optional.ofNullable(record.value());
-        if (message.isPresent()) {
-            Object msg = message.get();
-            log.info("optInfo 消费了： Topic:" + topic + ",Message:" + msg);
-            JSONObject object = JSONObject.parseObject(String.valueOf(msg));
-            try {
-                iOptInfoService.optInfo(object);
-                ack.acknowledge();
-            } catch (Exception e) {
-                log.error("optInfo消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
-            }
-        }
-    }
 
-    @KafkaListener(topics = KafkaTopIc.OPT_WORK_INFO, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
-    public void optWorkInfo(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        Optional message = Optional.ofNullable(record.value());
-        if (message.isPresent()) {
-            Object msg = message.get();
-            log.info("optWorkInfo 消费了： Topic:" + topic + ",Message:" + msg);
-            JSONObject object = JSONObject.parseObject(String.valueOf(msg));
-            try {
-                iOptWorkInfoService.optWorkInfo(object);
-                ack.acknowledge();
-            } catch (Exception e) {
-                log.error("optWorkInfo消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
-            }
-        }
-    }
 
-    @KafkaListener(topics = KafkaTopIc.CHARGE_SIGNAL_GANTRY_V2X, groupId = KafkaGroup.CHARGE_SIGNAL_GROUP)
-    public void gantryV2X(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        Optional message = Optional.ofNullable(record.value());
-        if (message.isPresent()) {
-            Object msg = message.get();
-            log.info("gantryV2X 消费了： Topic:" + topic + ",Message:" + msg);
-            JSONObject object = JSONObject.parseObject(String.valueOf(msg));
-            try {
-                iGantryV2XService.sendEvent(object);
-                ack.acknowledge();
-            } catch (Exception e) {
-                log.error("gantryV2X 消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
-            }
-        }
-    }
 
 }
