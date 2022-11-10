@@ -4,6 +4,7 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.charge.config.DaasConfig;
 import com.pingok.charge.domain.device.TblDeviceInfo;
 import com.pingok.charge.domain.device.TblDeviceStatus;
 import com.pingok.charge.service.device.IStatusService;
@@ -27,8 +28,6 @@ import java.math.BigDecimal;
 @Service
 public class StatusServiceImpl implements IStatusService {
 
-    @Value("${daas.host}")
-    private String host;
 
     @Autowired
     private IHeartbeatService iHeartbeatService;
@@ -95,7 +94,7 @@ public class StatusServiceImpl implements IStatusService {
                 deviceStatus.setStatus(0);
                 deviceStatus.setStatusDesc("网络异常");
             }
-            post = HttpUtil.post(host + "/device-monitor/deviceMonitor", JSON.toJSONString(deviceStatus));
+            post = HttpUtil.post(DaasConfig.HOST + "/device-monitor/deviceMonitor", JSON.toJSONString(deviceStatus));
             if (!StringUtils.isEmpty(post)) {
                 ret = JSON.parseObject(post, R.class);
                 if (R.FAIL == ret.getCode()) {
@@ -129,7 +128,7 @@ public class StatusServiceImpl implements IStatusService {
                 deviceStatus.setStatus(0);
                 deviceStatus.setStatusDesc("网络异常");
             }
-            post = HttpUtil.post(host + "/device-monitor/deviceMonitor", deviceStatus.toString());
+            post = HttpUtil.post(DaasConfig.HOST + "/device-monitor/deviceMonitor", JSON.toJSONString(deviceStatus));
             if (!StringUtils.isEmpty(post)) {
                 ret = JSON.parseObject(post, R.class);
                 if (R.FAIL == ret.getCode()) {
