@@ -1,7 +1,7 @@
 package com.pingok.devicemonitor.mapper.gantry;
 
-import com.pingok.datacenter.domain.gantry.TblGantryChargeInfo;
-import com.pingok.datacenter.domain.gantry.model.ChargeFlowModel;
+import com.pingok.devicemonitor.domain.gantry.TblGantryChargeInfo;
+import com.pingok.devicemonitor.domain.gantry.vo.ChargeFlowModel;
 import com.ruoyi.common.core.mapper.CommonRepository;
 import org.apache.ibatis.annotations.Param;
 
