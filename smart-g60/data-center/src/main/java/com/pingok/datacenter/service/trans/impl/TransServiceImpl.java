@@ -133,10 +133,19 @@ public class TransServiceImpl implements ITransService {
         int result=0;
         for(TblExTransSplit list :tblExTransSplit)
         {
-            list.setRecordId(exInfoVo.getRecordId());
-            list.setTableName("TBL_EX_TRANS_SPLIT_"+ exInfoVo.getYear());
-            tblExTransSplitMapper.insertExTransSplit(list);
-            result++;
+            try{
+                list.setRecordId(exInfoVo.getRecordId());
+                list.setTableName("TBL_EX_TRANS_SPLIT_"+ exInfoVo.getYear());
+                tblExTransSplitMapper.insertExTransSplit(list);
+                result++;
+            }
+            catch (Exception e)
+            {
+                if(!e.getMessage().contains("unique constraint"))
+                {
+                    throw e;
+                }
+            }
         }
         return result;
     }
