@@ -27,7 +27,7 @@ public class RoadDoctorController extends BaseController {
     @Autowired
     private IRoadDoctorService iRoadDoctorService;
 
-    @InnerAuth
+//    @InnerAuth
     @PostMapping()
     public AjaxResult updateDisease() {
         iRoadDoctorService.updateDisease();

@@ -6,6 +6,8 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.common.http.HttpUtils;
+import com.pingok.external.config.AlWeatherConfig;
+import com.pingok.external.config.HfWeatherConfig;
 import com.pingok.external.domain.weather.TblWeather;
 import com.pingok.external.domain.weather.TblWeather2;
 import com.pingok.external.mapper.weather.TblWeather2Mapper;
@@ -41,20 +43,10 @@ https://market.aliyun.com/products/57126001/cmapi014302.html?spm=5176.21213303.4
 @Service
 public class WeatherServiceImpl implements IWeatherService {
 
-    //和风天气（免费版）
-    String _host = "https://devapi.qweather.com/v7/weather/now";
-    String _locSH = "101020100";
-//    String _locZJ = "101210101";
-    String _key = "b2bb5a5d8e564c23ba60957809dfaf0b";
-
-    //阿里天气
-    String _hostAl = "http://jisutqybmf.market.alicloudapi.com/weather/query";
-    String _appCode = "44e113b3836544fb9decf87824a366b1";
-
-    static Long nextId = 3L;
+    @Autowired
+    private TblWeatherMapper tblWeatherMapper;
 
     @Autowired
-//    private TblWeatherMapper tblWeatherMapper;
     private TblWeather2Mapper tblWeather2Mapper;
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
@@ -64,17 +56,16 @@ public class WeatherServiceImpl implements IWeatherService {
     public void getWeather() {
         try {
             Map<String, Object> params = new HashMap<>();
-            params.put("location", _locSH);
-            params.put("key", _key);
-            String resp = HttpUtil.get(_host, params);
+            params.put("location", HfWeatherConfig.LOCSH);
+            params.put("key", HfWeatherConfig.KEY);
+            String resp = HttpUtil.get(HfWeatherConfig.HOST, params);
             if(!StringUtils.isEmpty(resp)) {
                 JSONObject ret = JSON.parseObject(resp);
                 if(200 == ret.getInteger("code")) {
                     JSONObject now = ret.getJSONObject("now");
                     TblWeather tblWeather = JSON.parseObject(now.toJSONString(), TblWeather.class);
-//                    tblWeather.setId(remoteIdProducerService.nextId());
-                    tblWeather.setId(1L);
-//                    tblWeatherMapper.insert(tblWeather);
+                    tblWeather.setId(remoteIdProducerService.nextId());
+                    tblWeatherMapper.insert(tblWeather);
                 }
                 else {
                     log.error("调用天气接口失败。");
@@ -100,8 +91,8 @@ public class WeatherServiceImpl implements IWeatherService {
     void getWeather2ByCity(String city) {
         try {
 //            用.form("city")，需要将中文html转码
-            String resp = HttpRequest.get(_hostAl)
-                    .header("Authorization", "APPCODE " + _appCode)
+            String resp = HttpRequest.get(AlWeatherConfig.HOST)
+                    .header("Authorization", "APPCODE " + AlWeatherConfig.APPCODE)
                     .header("Content-Type", "application/json;charset=UTF-8")
                     .form("citycode", cvtCityCode(city))
                     .execute().body();
@@ -110,8 +101,7 @@ public class WeatherServiceImpl implements IWeatherService {
                 if(0 == ret.getInteger("status")) {
                     JSONObject result = ret.getJSONObject("result");
                     TblWeather2 tblWeather = JSON.parseObject(result.toJSONString(), TblWeather2.class);
-//                    tblWeather.setId(remoteIdProducerService.nextId());
-                    tblWeather.setId(nextId++);
+                    tblWeather.setId(remoteIdProducerService.nextId());
                     tblWeather.setWdate(tblWeather.getDate());
                     tblWeather.setCity(city);
                     tblWeather.setQuality(tblWeather.getAqi().getString("quality"));
