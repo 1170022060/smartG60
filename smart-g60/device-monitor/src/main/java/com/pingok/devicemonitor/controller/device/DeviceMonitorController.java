@@ -93,8 +93,10 @@ public class DeviceMonitorController extends BaseController {
                         TblDeviceInfo info = iDeviceService.info(deviceStatus.getDeviceId());
                         TblEventRecord eventRecord = new TblEventRecord();
                         eventRecord.setEventTime(DateUtils.getNowDate());
-                        eventRecord.setEventType("能见度告警：" + currentVisibility + "米");
+                        eventRecord.setEventType("23");
+                        eventRecord.setRemark("能见度告警：" + currentVisibility + "米");
                         eventRecord.setDirection("双向");
+                        eventRecord.setLocationInterval(info.getGps());
                         eventRecord.setPileNo(info != null ? info.getPileNo() : null);
                         R r = remoteEventService.add(eventRecord);
                         if (r.getCode() == R.FAIL) {
