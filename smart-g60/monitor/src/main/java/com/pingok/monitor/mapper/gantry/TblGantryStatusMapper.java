@@ -3,8 +3,10 @@ package com.pingok.monitor.mapper.gantry;
 import com.pingok.monitor.domain.gantry.TblGantryStatus;
 import com.ruoyi.common.core.mapper.CommonRepository;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,9 +31,16 @@ public interface TblGantryStatusMapper extends CommonRepository<TblGantryStatus>
             "tgs.TRAVELIMAGE_NUMBER as \"travelimageNumber\", " +
             "tgi.POS_X as \"posX\", "+
             "tgi.POS_Y as \"posY\", "+
+            "tgi.IS_FRONT as \"isFront\","+
             "tgi.DIRECTION as \"direction\" " +
             "FROM " +
             "TBL_GANTRY_INFO tgi " +
             "LEFT JOIN TBL_GANTRY_STATUS tgs ON tgi.ID = tgs.DEVICE_ID")
     List<Map> gantryStatus();
+
+    @Select("SELECT COUNT(*) as \"total\" FROM TBL_GANTRY_TRANSACTION_2022 WHERE to_char(TRANS_TIME,'yyyy-MM-dd') = #{currentDate} ")
+    Object getGantryTotalFlow(@Param("currentDate") String currentDate);
+
+    @Select("SELECT NVL(SUM(TRANSACTION_NUMBER+TRAVELIMAGE_NUMBER),0) as \"total\" FROM TBL_GANTRY_STATUS WHERE to_char(TIME,'yyyy-MM-dd') = #{currentDate} ")
+    Object getGantryNotUploadFlow(@Param("currentDate") String currentDate);
 }

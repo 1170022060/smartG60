@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -63,4 +64,20 @@ public interface TblLaneStatusMapper extends CommonRepository<TblLaneStatus> {
             "LEFT JOIN TBL_LANE_STATUS tls on tls.LANE_ID = tli.LANE_ID " +
             "where STATION_HEX like '%310108%' AND STATION_HEX != '31010804' GROUP BY bsi.STATION_ID,bsi.STATION_NAME ")
     List<Map> getStationFlowUpload();
+    
+    @Select("SELECT SUM(\"totalFlow\") as \"total\" FROM( " +
+            "SELECT COUNT(*) as \"totalFlow\" FROM TBL_EX_TRANS_2022 WHERE to_char(WORK_DATE,'yyyy-MM-dd') = #{currentDate}  " +
+            "UNION ALL " +
+            "SELECT COUNT(*) as \"totalFlow\" FROM TBL_EN_TRANS_2022 WHERE to_char(WORK_DATE,'yyyy-MM-dd') = #{currentDate} )")
+    Object getTotalFlow(@Param("currentDate") String currentDate);
+
+    @Select("SELECT NVL(SUM((tls.ERROR_TRANS + tls.ERROR_LPR_TRANS)),0) as \"total\" FROM TBL_BASE_STATION_INFO bsi  " +
+            "left JOIN TBL_LANE_INFO tli on tli.STATION_ID=bsi.STATION_ID  " +
+            "LEFT JOIN TBL_LANE_STATUS tls on tls.LANE_ID = tli.LANE_ID  " +
+            "where STATION_HEX like '%310108%' AND STATION_HEX != '31010804' AND to_char(TIME,'yyyy-MM-dd') = #{currentDate} ")
+    Object getNotUploadTotalFlow(@Param("currentDate") String currentDate);
+
+    @Select("SELECT STATION_HEX as \"stationHex\",STATION_NAME as \"stationName\",POS_X as \"posX\",POS_Y as \"posY\" " +
+            "FROM TBL_BASE_STATION_INFO where STATION_HEX like '%310108%' AND STATION_HEX != '31010804' ")
+    List<Map> getStationInfo();
 }

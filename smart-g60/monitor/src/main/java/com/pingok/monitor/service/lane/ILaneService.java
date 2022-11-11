@@ -4,6 +4,7 @@ import com.pingok.monitor.domain.lane.TblLaneStatus;
 import com.pingok.monitor.domain.lane.vo.LaneEnum;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,4 +26,12 @@ public interface ILaneService {
      * @return
      */
     List<Map> getStationFlowUpload();
+
+    Object getStationTotalFlow(String currentDate);
+
+    /**
+     * 获取站信息
+     * @return
+     */
+    List<Map> getStationInfo();
 }
