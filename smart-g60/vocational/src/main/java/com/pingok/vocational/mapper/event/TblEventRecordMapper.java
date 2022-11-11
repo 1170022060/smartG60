@@ -59,7 +59,7 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
     List<EventRecordTypeVo> selectEventRecordByTypeList(ReportVo reportVo);
 
     @Select({"<script>" +
-            "select LOCATION_INTERVAL as \"locationInterval\"," +
+            "select PILE_NO as \"locationInterval\"," +
             "count(1) as \"count\" ," +
             "to_char(#{startTime}, 'yyyy-mm-dd hh24:mi:ss') || ' - ' ||to_char(#{endTime}, 'yyyy-mm-dd hh24:mi:ss') as \"time\" from TBL_EVENT_RECORD a " +
             "where 1=1 " +
@@ -77,7 +77,7 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
     List<Map> selectEventRecordBySite(@Param("locationInterval") String locationInterval, @Param("startTime") Date startTime, @Param("endTime")  Date endTime);
 
     @Select({"<script>" +
-            "select LOCATION_INTERVAL as \"locationInterval\"," +
+            "select PILE_NO as \"locationInterval\"," +
             "count(1) as \"count\" ," +
             "to_char(#{startTime}, 'yyyy-mm-dd hh24:mi:ss') || ' - ' ||to_char(#{endTime}, 'yyyy-mm-dd hh24:mi:ss') as \"time\" from TBL_EVENT_RECORD a " +
             "where 1=1 " +
