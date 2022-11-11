@@ -1,17 +1,23 @@
 package com.pingok.datacenter.service.sectorlog.impl;
 
+import cn.hutool.http.HttpUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.pingok.datacenter.domain.sectorlog.*;
 import com.pingok.datacenter.domain.sectorlog.vo.SectorLogVo;
 import com.pingok.datacenter.mapper.sectorlog.*;
 import com.pingok.datacenter.service.sectorlog.ISectorLogService;
-import com.ruoyi.common.core.constant.UserConstants;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 扇区日志入库 服务层处理
@@ -19,6 +25,7 @@ import java.util.Date;
  * @author ruoyi
  */
 @Service
+@Slf4j
 public class SectorLogServiceImpl implements ISectorLogService {
 
     @Autowired
@@ -48,6 +55,40 @@ public class SectorLogServiceImpl implements ISectorLogService {
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
 
+    @Override
+    public void getSectorLog(String laneHex, String gid) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("LaneHex", laneHex);
+        body.put("Gid", gid);
+        String r = HttpUtil.post("10.131.155.7:8220/api/Lane/QueryReadRecord", JSON.toJSONString(body));
+        R ret = null;
+        if (!StringUtils.isEmpty(r)) {
+            ret = JSON.parseObject(r, R.class);
+        }
+        if(ret.getCode()==0)
+        {
+            JSONObject obj= (JSONObject) ret.getData();
+            SectorLogVo sectorLogVo=new SectorLogVo();
+            sectorLogVo.setGid(obj.getString("Gid"));
+            sectorLogVo.setPassType(obj.getInteger("PassType"));
+            sectorLogVo.setTransTime(obj.getDate("TransTime"));
+            sectorLogVo.setObuVehicleInfo(obj.getString("ObuVehicleInfo"));
+            sectorLogVo.setFile0015(obj.getString("File0015"));
+            sectorLogVo.setFile0019(obj.getString("File0019"));
+            sectorLogVo.setEf04(obj.getString("EF04"));
+            sectorLogVo.setEf02(obj.getString("EF02"));
+            String rs = HttpUtil.post("localhost:9306/sectorLog", JSON.toJSONString(sectorLogVo));
+            R rets;
+            if (!StringUtils.isEmpty(rs)) {
+                rets = JSON.parseObject(rs, R.class);
+                if (rets.getCode() == R.FAIL) {
+                    log.error("车道日志上传失败，错误" + rets.getMsg());
+                }
+            } else {
+                log.error("车道日志上传状态未知");
+            }
+        }
+    }
 
     @Override
     public long insertSectorLog(SectorLogVo sectorLogVo) {

@@ -25,6 +25,12 @@ public class SectorLogController extends BaseController {
     @Autowired
     private ISectorLogService sectorLogService;
 
+    @PostMapping(value = "/get")
+    public AjaxResult get(@RequestParam(name = "laneHex") String laneHex, @RequestParam(name = "gid")String gid) {
+        sectorLogService.getSectorLog(laneHex,gid);
+        return AjaxResult.success();
+    }
+
     @Transactional
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SectorLogVo sectorLogVo)
