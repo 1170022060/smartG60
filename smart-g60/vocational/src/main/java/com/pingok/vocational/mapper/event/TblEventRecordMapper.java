@@ -59,7 +59,7 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
     List<EventRecordTypeVo> selectEventRecordByTypeList(ReportVo reportVo);
 
     @Select({"<script>" +
-            "select PILE_NO as \"locationInterval\"," +
+            "select a.PILE_NO as \"locationInterval\"," +
             "count(1) as \"count\" ," +
             "to_char(#{startTime}, 'yyyy-mm-dd hh24:mi:ss') || ' - ' ||to_char(#{endTime}, 'yyyy-mm-dd hh24:mi:ss') as \"time\" from TBL_EVENT_RECORD a " +
             "where 1=1 " +
@@ -70,14 +70,14 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             " and a.EVENT_TIME &lt;= #{endTime} " +
             "</when>"+
             "<when test='locationInterval != null'> " +
-            "and a.LOCATION_INTERVAL like CONCAT(CONCAT('%',#{locationInterval}),'%') " +
+            "and a.PILE_NO like CONCAT(CONCAT('%',#{locationInterval}),'%') " +
             "</when>"+
-            "group by LOCATION_INTERVAL order by LOCATION_INTERVAL" +
+            "group by a.PILE_NO order by a.PILE_NO" +
             "</script>"})
     List<Map> selectEventRecordBySite(@Param("locationInterval") String locationInterval, @Param("startTime") Date startTime, @Param("endTime")  Date endTime);
 
     @Select({"<script>" +
-            "select PILE_NO as \"locationInterval\"," +
+            "select a.PILE_NO as \"locationInterval\"," +
             "count(1) as \"count\" ," +
             "to_char(#{startTime}, 'yyyy-mm-dd hh24:mi:ss') || ' - ' ||to_char(#{endTime}, 'yyyy-mm-dd hh24:mi:ss') as \"time\" from TBL_EVENT_RECORD a " +
             "where 1=1 " +
@@ -88,9 +88,9 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             " and a.EVENT_TIME &lt;= #{endTime} " +
             "</when>"+
             "<when test='locationInterval != null'> " +
-            "and a.LOCATION_INTERVAL like CONCAT(CONCAT('%',#{locationInterval}),'%') " +
+            "and a.PILE_NO like CONCAT(CONCAT('%',#{locationInterval}),'%') " +
             "</when>"+
-            "group by LOCATION_INTERVAL order by LOCATION_INTERVAL" +
+            "group by a.PILE_NO order by a.PILE_NO" +
             "</script>"})
     List<EventRecordSiteVo> selectEventRecordBySiteList(ReportVo reportVo);
 
