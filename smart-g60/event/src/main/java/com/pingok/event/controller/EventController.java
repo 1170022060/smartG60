@@ -44,6 +44,12 @@ public class EventController extends BaseController {
     @Autowired
     private RemoteKafkaService remoteKafkaService;
 
+
+    @GetMapping("/selectByEventTypeAndPileNo")
+    public AjaxResult selectByEventTypeAndPileNo(@RequestParam String eventType, @RequestParam String pileNo) {
+        return AjaxResult.success(iEventService.selectByEventTypeAndPileNo(eventType, pileNo));
+    }
+
     /**
      * 配置事件告警列表
      */
@@ -203,7 +209,7 @@ public class EventController extends BaseController {
      * 新增应
      */
 //    @RequiresPermissions("event:eventControl:add")
-//    @Log(title = "事件管理", businessType = BusinessType.INSERT)
+    @Log(title = "事件管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody TblEventRecord tblEventRecord) {
         return toAjax(iEventService.insert(tblEventRecord));
@@ -212,7 +218,7 @@ public class EventController extends BaseController {
     /**
      * 修改
      */
-    @RequiresPermissions("event:eventControl:edit")
+//    @RequiresPermissions("event:eventControl:edit")
     @Log(title = "事件管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody TblEventRecord tblEventRecord) {

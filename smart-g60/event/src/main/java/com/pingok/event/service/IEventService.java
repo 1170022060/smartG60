@@ -18,6 +18,13 @@ import java.util.Map;
  */
 public interface IEventService {
 
+    /**
+     * 根据事件类型及桩号查询事件
+     * @param eventType
+     * @param pileNo
+     * @return
+     */
+    TblEventRecord selectByEventTypeAndPileNo(String eventType,String pileNo);
 
     /**
      * 根据事件ID查询

@@ -91,17 +91,34 @@ public class DeviceMonitorController extends BaseController {
                     }
                     if (level > 0) {
                         TblDeviceInfo info = iDeviceService.info(deviceStatus.getDeviceId());
-                        TblEventRecord eventRecord = new TblEventRecord();
-                        eventRecord.setEventTime(DateUtils.getNowDate());
-                        eventRecord.setEventType("23");
-                        eventRecord.setRemark("能见度告警：" + currentVisibility + "米");
-                        eventRecord.setDirection("双向");
-                        eventRecord.setLocationInterval(info.getGps());
-                        eventRecord.setPileNo(info != null ? info.getPileNo() : null);
-                        R r = remoteEventService.add(eventRecord);
-                        if (r.getCode() == R.FAIL) {
-                            log.error("能见度预警事件新增失败");
+                        TblEventRecord eventRecord;
+                        R<TblEventRecord> re = remoteEventService.selectByEventTypeAndPileNo("23",info.getPileNo());
+                        if(re.getCode()==R.SUCCESS && re.getData()!=null){
+                            eventRecord = re.getData();
+                            eventRecord.setEventTime(DateUtils.getNowDate());
+                            eventRecord.setEventType("23");
+                            eventRecord.setRemark(currentVisibility.toString());
+                            eventRecord.setDirection("双向");
+                            eventRecord.setLocationInterval(info.getGps());
+                            eventRecord.setPileNo(info != null ? info.getPileNo() : null);
+                            R r = remoteEventService.edit(eventRecord);
+                            if (r.getCode() == R.FAIL) {
+                                log.error("能见度预警事件更新失败");
+                            }
+                        }else {
+                            eventRecord = new TblEventRecord();
+                            eventRecord.setEventTime(DateUtils.getNowDate());
+                            eventRecord.setEventType("23");
+                            eventRecord.setRemark(currentVisibility.toString());
+                            eventRecord.setDirection("双向");
+                            eventRecord.setLocationInterval(info.getGps());
+                            eventRecord.setPileNo(info != null ? info.getPileNo() : null);
+                            R r = remoteEventService.add(eventRecord);
+                            if (r.getCode() == R.FAIL) {
+                                log.error("能见度预警事件新增失败");
+                            }
                         }
+
                     }
                 }
             }
