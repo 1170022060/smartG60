@@ -60,7 +60,7 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "SELECT " +
             "ter.ID AS \"id\", " +
             "sdd.DICT_LABEL AS \"eventType\", " +
-            "ter.LOCATION_INTERVAL AS \"locationInterval\", " +
+            "ter.PILE_NO AS \"locationInterval\", " +
             "sdd1.DICT_LABEL AS \"vehClass\", " +
             "ter.VEH_PLATE AS \"vehPlate\", " +
             "sdd2.DICT_LABEL AS \"vehColor\", " +
