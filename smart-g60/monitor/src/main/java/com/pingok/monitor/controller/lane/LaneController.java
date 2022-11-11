@@ -54,4 +54,9 @@ public class LaneController extends BaseController {
     public AjaxResult getInfo(){
         return AjaxResult.success(iLaneService.getStationInfo());
     }
+
+    @GetMapping("/getDeviceStatus")
+    public AjaxResult getDeviceStatus(String stationHex){
+        return AjaxResult.success(iLaneService.getDeviceStatus(stationHex));
+    }
 }

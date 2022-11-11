@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -79,6 +81,59 @@ public class LaneServiceImpl implements ILaneService {
 
     @Override
     public List<Map> getStationInfo() {
-        return tblLaneStatusMapper.getStationInfo();
+        int faultTotal = 0;
+        List<Map> stationInfo = tblLaneStatusMapper.getStationInfo();
+        for (int n=0;n<stationInfo.size();n++){
+            Iterator iter1 = stationInfo.get(n).keySet().iterator();
+            while (iter1.hasNext()){
+                String key1 = (String) iter1.next();
+                if (key1.equals("stationHex")){
+                    List<Map> deviceTypeStatus=tblLaneStatusMapper.getDeviceTypeTotal(stationInfo.get(n).get(key1).toString());
+                    for (int i=0;i<deviceTypeStatus.size();i++){
+                        Iterator iter = deviceTypeStatus.get(i).keySet().iterator();
+                        while (iter.hasNext()){
+                            String key = (String) iter.next();
+                            if (key.equals("fault")){
+                                Integer temp=Integer.parseInt(deviceTypeStatus.get(i).get(key).toString());
+                                faultTotal += temp;
+                            }
+                        }
+                    }
+                }
+            }
+            if (faultTotal>0){
+                stationInfo.get(n).put("status",1);
+            }else {stationInfo.get(n).put("status",0);}
+        }
+        return stationInfo;
+    }
+
+    @Override
+    public Object getDeviceStatus(String stationHex) {
+        JSONObject obj = new JSONObject();
+        obj.put("faultList",tblLaneStatusMapper.getFaultList(stationHex));
+        obj.put("deviceTotal",tblLaneStatusMapper.getDeviceTotal(stationHex));
+        int normalTotal = 0;
+        int faultTotal = 0;
+        List<Map> deviceTypeStatus=tblLaneStatusMapper.getDeviceTypeTotal(stationHex);
+        for (int i=0;i<deviceTypeStatus.size();i++){
+            Iterator iter = deviceTypeStatus.get(i).keySet().iterator();
+            while (iter.hasNext()){
+                String key = (String) iter.next();
+                if (key.equals("normal")){
+                   Integer temp=Integer.parseInt(deviceTypeStatus.get(i).get(key).toString());
+                    normalTotal += temp;
+                }else if (key.equals("fault")){
+                    Integer temp=Integer.parseInt(deviceTypeStatus.get(i).get(key).toString());
+                    faultTotal += temp;
+                }
+            }
+        }
+        obj.put("normalTotal",normalTotal);
+        obj.put("faultTotal",faultTotal);
+        obj.put("OnlineRate",(normalTotal/(double)tblLaneStatusMapper.getDeviceTotal(stationHex))*100);
+        obj.put("deviceTypeStatus",tblLaneStatusMapper.getDeviceTypeTotal(stationHex));
+        obj.put("laneList",tblLaneStatusMapper.getLaneListByStation(stationHex));
+        return obj;
     }
 }
