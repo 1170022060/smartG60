@@ -80,4 +80,51 @@ public interface TblLaneStatusMapper extends CommonRepository<TblLaneStatus> {
     @Select("SELECT STATION_HEX as \"stationHex\",STATION_NAME as \"stationName\",POS_X as \"posX\",POS_Y as \"posY\" " +
             "FROM TBL_BASE_STATION_INFO where STATION_HEX like '%310108%' AND STATION_HEX != '31010804' ")
     List<Map> getStationInfo();
+
+    @Select("SELECT " +
+            "tdi.ID as \"deviceId\",tdi.DEVICE_NAME as \"deviceName\",tbsi.STATION_NAME as \"position\"," +
+            "tdf.FAULT_TIME as \"faultTime\",tdf.FAULT_TYPE as \"faultDESC\"," +
+            "tdf.FAULT_DESCRIPTION as \"faultDetail\",'--' as \"laneName\",tdf.STATUS as \"status\" " +
+            "FROM TBL_DEVICE_FAULT tdf " +
+            "LEFT JOIN TBL_DEVICE_INFO tdi on tdi.ID=tdf.DEVICE_ID " +
+            "LEFT JOIN TBL_BASE_STATION_INFO tbsi on tbsi.STATION_HEX =tdi.STATION_BELONG " +
+            "WHERE tbsi.STATION_HEX=#{stationHex} ")
+    List<Map> getFaultList(@Param("stationHex") String stationHex);
+
+    @Select("SELECT SUM(\"count\") as \"total\" FROM ( " +
+            "SELECT COUNT(*) as \"count\" FROM TBL_DEVICE_INFO tdi " +
+            "LEFT JOIN TBL_BASE_STATION_INFO tbsi on tbsi.STATION_HEX =tdi.STATION_BELONG " +
+            "WHERE tbsi.STATION_HEX = #{stationHex} " +
+            "UNION ALL " +
+            "SELECT COUNT(*)as \"count\" FROM TBL_DEVICE_INFO_LANE tdil " +
+            "LEFT JOIN TBL_BASE_STATION_INFO tbsi on tbsi.STATION_HEX =tdil.STATION_BELONG " +
+            "WHERE tbsi.STATION_HEX = #{stationHex})")
+    Integer getDeviceTotal(@Param("stationHex") String stationHex);
+
+    @Select("SELECT  " +
+            "COUNT(*) as \"total\", " +
+            "SUM(DECODE(tds.STATUS,1, 1, 0))as \"normal\", " +
+            "SUM(DECODE(tdf.STATUS,1, 1, 0))as \"fault\", " +
+            "tdi.DEVICE_TYPE as \"deviceType\",DECODE(tdc.CATEGORY_NAME, null,sdd.DICT_LABEL, tdc.CATEGORY_NAME) as \"deviceCat\" " +
+            "FROM TBL_DEVICE_INFO tdi " +
+            "LEFT JOIN TBL_BASE_STATION_INFO tbsi on tbsi.STATION_HEX =tdi.STATION_BELONG " +
+            "LEFT JOIN TBL_DEVICE_CATEGORY tdc on tdc.ID = tdi.DEVICE_CATEGORY " +
+            "LEFT JOIN TBL_DEVICE_STATUS tds on tdi.ID=tds.DEVICE_ID " +
+            "LEFT JOIN TBL_DEVICE_FAULT tdf on tdf.DEVICE_ID=tds.DEVICE_ID " +
+            "LEFT JOIN TBL_DEVICE_CATEGORY tdc on tdc.ID = tdi.DEVICE_CATEGORY " +
+            "LEFT JOIN SYS_DICT_DATA sdd on tdi.DEVICE_TYPE = sdd.DICT_VALUE AND sdd.DICT_TYPE = 'device_type' " +
+            "WHERE tbsi.STATION_HEX = #{stationHex} " +
+            "GROUP BY tdi.DEVICE_TYPE,sdd.DICT_LABEL,tdc.CATEGORY_NAME ")
+    List<Map> getDeviceTypeTotal(@Param("stationHex") String stationHex);
+    
+    @Select(" SELECT  " +
+            " tli.LANE_HEX as \"laneHex\",tli.LANE_NAME \"laneName\",tli.LANE_TYPE \"laneType\",tls.STATUS as \"status\" " +
+            " FROM TBL_LANE_INFO tli " +
+            " LEFT JOIN TBL_BASE_STATION_INFO tbsi on UPPER(tbsi.STATION_ID) =tli.STATION_ID " +
+            " LEFT JOIN TBL_LANE_STATUS tls on tls.LANE_HEX=tli.LANE_HEX " +
+            " WHERE  " +
+            " tbsi.STATION_HEX = #{stationHex} AND  " +
+            " tli.LANE_TYPE != 20 " +
+            " GROUP BY tli.LANE_TYPE,tli.LANE_NAME,tli.LANE_HEX,tls.STATUS ORDER BY tli.LANE_TYPE,tli.LANE_NAME")
+    List<Map> getLaneListByStation(@Param("stationHex") String stationHex);
 }

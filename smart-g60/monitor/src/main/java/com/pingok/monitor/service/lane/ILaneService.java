@@ -34,4 +34,11 @@ public interface ILaneService {
      * @return
      */
     List<Map> getStationInfo();
+
+    /**
+     * 获取站的设备状态监控
+     * @param stationHex
+     * @return
+     */
+    Object getDeviceStatus(String stationHex);
 }
