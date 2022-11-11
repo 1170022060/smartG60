@@ -84,6 +84,7 @@ public class GpsServiceImpl implements IGpsService {
                     }
                     maintainCarGpsLog = new TblMaintainCarGpsLog();
                     BeanUtils.copyNotNullProperties(maintainCarGps,maintainCarGpsLog);
+                    maintainCarGpsLog.setId(remoteIdProducerService.nextId());
                     maintainCarGpsLog.setCreateTime(DateUtils.getNowDate());
                     tblMaintainCarGpsLogMapper.insert(maintainCarGpsLog);
                 }
