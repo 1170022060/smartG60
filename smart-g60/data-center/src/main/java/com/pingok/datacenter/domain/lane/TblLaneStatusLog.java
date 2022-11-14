@@ -204,5 +204,13 @@ public class TblLaneStatusLog implements Serializable {
      */
     private Integer orientation;
 
+    /**
+     * 天线状态 0：正常 1：异常
+     */
+    private Integer rsuStatus;
 
+    /**
+     * 车道工控机状态 0：正常 1：异常
+     */
+    private Integer ipcStatus;
 }

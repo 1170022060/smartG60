@@ -13,7 +13,7 @@ public class TblOptId {
 
     /** 主键 */
     @Id
-    private Long id;
+    private Integer id;
 
     /** 员工姓名 */
     private String optName;
@@ -21,9 +21,9 @@ public class TblOptId {
     public Integer specialty;
     public Integer hisTimeType;
     public Integer timeType;
-    public Integer hisWorkID7;
-    public Integer hisWorkID19;
-    public Integer lastWorkID7;
-    public Integer lastWorkID19;
+    public Integer hisWorkId7;
+    public Integer hisWorkId19;
+    public Integer lastWorkId7;
+    public Integer lastWorkId19;
 
 }

@@ -6,10 +6,9 @@ import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 /**
  * 排班当岗 信息操作处理
@@ -29,5 +28,10 @@ public class OptWorkDetailController  extends BaseController {
         log.info("排班当岗----请求参数-----" + object.toJSONString());
         iOptWorkDetailService.optWorkDetail(object);
         return AjaxResult.success();
+    }
+
+    @GetMapping
+    public AjaxResult makeWorkTable(@RequestParam(name = "workDate") Date workDate) {
+        return AjaxResult.success(iOptWorkDetailService.makeWorkTable(workDate));
     }
 }
