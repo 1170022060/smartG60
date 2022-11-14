@@ -60,7 +60,7 @@ public interface TblLaneStatusMapper extends CommonRepository<TblLaneStatus> {
 
     @Select("SELECT bsi.STATION_ID as \"stationId\",bsi.STATION_NAME as \"stationName\",NVL(SUM(tls.ERROR_TRANS), 0) as \"errorTrans\"," +
             "NVL(SUM(tls.ERROR_LPR_TRANS), 0) as \"errorLprTrans\"," +
-            "a.PROMPTNESS_LPR,a.PROMPTNESS_TRANS FROM TBL_BASE_STATION_INFO bsi  " +
+            "a.\"PROMPTNESS_LPR\",a.\"PROMPTNESS_TRANS\" FROM TBL_BASE_STATION_INFO bsi  " +
             "left JOIN TBL_LANE_INFO tli on tli.STATION_ID=bsi.STATION_ID " +
             "LEFT JOIN TBL_LANE_STATUS tls on tls.LANE_ID = tli.LANE_ID " +
             "LEFT JOIN (SELECT * FROM TBL_SOFTWARE_INFO tsi WHERE NAME ='站上传部/省程序')a on UPPER(SUBSTR(a.NUM, -6, 4) ) = bsi.STATION_ID " +

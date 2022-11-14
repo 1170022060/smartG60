@@ -1,9 +1,11 @@
 package com.pingok.monitor.service.lane.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.monitor.domain.lane.LaneInfo;
 import com.pingok.monitor.domain.lane.TblLaneStatus;
 import com.pingok.monitor.domain.lane.TblSpecialRecord;
 import com.pingok.monitor.domain.lane.vo.LaneEnum;
+import com.pingok.monitor.domain.lane.vo.Tree;
 import com.pingok.monitor.mapper.gantry.TblGantryStatusMapper;
 import com.pingok.monitor.mapper.lane.TblLaneStatusMapper;
 import com.pingok.monitor.mapper.lane.TblSpecialRecordMapper;
@@ -13,10 +15,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 车道 服务层处理
@@ -40,25 +39,25 @@ public class LaneServiceImpl implements ILaneService {
         Example.Criteria criteria;
         List<Map> enLane = tblLaneStatusMapper.findByStationId(stationId, 1);
         int size = enLane.size();
-        for (int i=0;i<size;i++) {
+        for (int i = 0; i < size; i++) {
             example = new Example(TblSpecialRecord.class);
             criteria = example.createCriteria();
             criteria.andEqualTo("stationId", stationId);
             criteria.andEqualTo("status", 0);
             criteria.andEqualTo("laneId", enLane.get(i).get("laneId"));
-            enLane.get(i).put("specialRecords",tblSpecialRecordMapper.selectByExample(example));
+            enLane.get(i).put("specialRecords", tblSpecialRecordMapper.selectByExample(example));
         }
         laneEnum.setEnLane(enLane);
 
         List<Map> exLane = tblLaneStatusMapper.findByStationId(stationId, 2);
         size = exLane.size();
-        for (int i=0;i<size;i++) {
+        for (int i = 0; i < size; i++) {
             example = new Example(TblSpecialRecord.class);
             criteria = example.createCriteria();
             criteria.andEqualTo("stationId", stationId);
             criteria.andEqualTo("status", 0);
             criteria.andEqualTo("laneId", exLane.get(i).get("laneId"));
-            exLane.get(i).put("specialRecords",tblSpecialRecordMapper.selectByExample(example));
+            exLane.get(i).put("specialRecords", tblSpecialRecordMapper.selectByExample(example));
         }
         laneEnum.setExtLane(exLane);
         return laneEnum;
@@ -72,10 +71,10 @@ public class LaneServiceImpl implements ILaneService {
     @Override
     public Object getStationTotalFlow(String currentDate) {
         JSONObject obj = new JSONObject();
-        obj.put("stationToTalFlow",tblLaneStatusMapper.getTotalFlow(currentDate));
-        obj.put("stationNotUploadFlow",tblLaneStatusMapper.getNotUploadTotalFlow(currentDate));
-        obj.put("gantryTotalFlow",tblGantryStatusMapper.getGantryTotalFlow(currentDate));
-        obj.put("gantryNotUploadFlow",tblGantryStatusMapper.getGantryNotUploadFlow(currentDate));
+        obj.put("stationToTalFlow", tblLaneStatusMapper.getTotalFlow(currentDate));
+        obj.put("stationNotUploadFlow", tblLaneStatusMapper.getNotUploadTotalFlow(currentDate));
+        obj.put("gantryTotalFlow", tblGantryStatusMapper.getGantryTotalFlow(currentDate));
+        obj.put("gantryNotUploadFlow", tblGantryStatusMapper.getGantryNotUploadFlow(currentDate));
         return obj;
     }
 
@@ -83,27 +82,29 @@ public class LaneServiceImpl implements ILaneService {
     public List<Map> getStationInfo() {
         int faultTotal = 0;
         List<Map> stationInfo = tblLaneStatusMapper.getStationInfo();
-        for (int n=0;n<stationInfo.size();n++){
+        for (int n = 0; n < stationInfo.size(); n++) {
             Iterator iter1 = stationInfo.get(n).keySet().iterator();
-            while (iter1.hasNext()){
+            while (iter1.hasNext()) {
                 String key1 = (String) iter1.next();
-                if (key1.equals("stationHex")){
-                    List<Map> deviceTypeStatus=tblLaneStatusMapper.getDeviceTypeTotal(stationInfo.get(n).get(key1).toString());
-                    for (int i=0;i<deviceTypeStatus.size();i++){
+                if (key1.equals("stationHex")) {
+                    List<Map> deviceTypeStatus = tblLaneStatusMapper.getDeviceTypeTotal(stationInfo.get(n).get(key1).toString());
+                    for (int i = 0; i < deviceTypeStatus.size(); i++) {
                         Iterator iter = deviceTypeStatus.get(i).keySet().iterator();
-                        while (iter.hasNext()){
+                        while (iter.hasNext()) {
                             String key = (String) iter.next();
-                            if (key.equals("fault")){
-                                Integer temp=Integer.parseInt(deviceTypeStatus.get(i).get(key).toString());
+                            if (key.equals("fault")) {
+                                Integer temp = Integer.parseInt(deviceTypeStatus.get(i).get(key).toString());
                                 faultTotal += temp;
                             }
                         }
                     }
                 }
             }
-            if (faultTotal>0){
-                stationInfo.get(n).put("status",1);
-            }else {stationInfo.get(n).put("status",0);}
+            if (faultTotal > 0) {
+                stationInfo.get(n).put("status", 1);
+            } else {
+                stationInfo.get(n).put("status", 0);
+            }
         }
         return stationInfo;
     }
@@ -111,29 +112,71 @@ public class LaneServiceImpl implements ILaneService {
     @Override
     public Object getDeviceStatus(String stationHex) {
         JSONObject obj = new JSONObject();
-        obj.put("faultList",tblLaneStatusMapper.getFaultList(stationHex));
-        obj.put("deviceTotal",tblLaneStatusMapper.getDeviceTotal(stationHex));
+        obj.put("faultList", tblLaneStatusMapper.getFaultList(stationHex));
+        obj.put("deviceTotal", tblLaneStatusMapper.getDeviceTotal(stationHex));
         int normalTotal = 0;
         int faultTotal = 0;
-        List<Map> deviceTypeStatus=tblLaneStatusMapper.getDeviceTypeTotal(stationHex);
-        for (int i=0;i<deviceTypeStatus.size();i++){
+        List<Map> deviceTypeStatus = tblLaneStatusMapper.getDeviceTypeTotal(stationHex);
+        for (int i = 0; i < deviceTypeStatus.size(); i++) {
             Iterator iter = deviceTypeStatus.get(i).keySet().iterator();
-            while (iter.hasNext()){
+            while (iter.hasNext()) {
                 String key = (String) iter.next();
-                if (key.equals("normal")){
-                   Integer temp=Integer.parseInt(deviceTypeStatus.get(i).get(key).toString());
+                if (key.equals("normal")) {
+                    Integer temp = Integer.parseInt(deviceTypeStatus.get(i).get(key).toString());
                     normalTotal += temp;
-                }else if (key.equals("fault")){
-                    Integer temp=Integer.parseInt(deviceTypeStatus.get(i).get(key).toString());
+                } else if (key.equals("fault")) {
+                    Integer temp = Integer.parseInt(deviceTypeStatus.get(i).get(key).toString());
                     faultTotal += temp;
                 }
             }
         }
-        obj.put("normalTotal",normalTotal);
-        obj.put("faultTotal",faultTotal);
-        obj.put("OnlineRate",(normalTotal/(double)tblLaneStatusMapper.getDeviceTotal(stationHex))*100);
-        obj.put("deviceTypeStatus",tblLaneStatusMapper.getDeviceTypeTotal(stationHex));
-        obj.put("laneList",tblLaneStatusMapper.getLaneListByStation(stationHex));
+        obj.put("normalTotal", normalTotal);
+        obj.put("faultTotal", faultTotal);
+        obj.put("OnlineRate", (normalTotal / (double) tblLaneStatusMapper.getDeviceTotal(stationHex)) * 100);
+        obj.put("deviceTypeStatus", tblLaneStatusMapper.getDeviceTypeTotal(stationHex));
+        List<Map> laneList = tblLaneStatusMapper.getLaneListByStation(stationHex);
+        List<Tree> info = new ArrayList<>(4);
+        Tree MtcEn = new Tree();
+        Tree MtcEx = new Tree();
+        Tree EtcEn = new Tree();
+        Tree EtcEx = new Tree();
+        for (int i = 0; i < laneList.size(); i++) {
+            if (Integer.parseInt(laneList.get(i).get("laneType").toString()) == 1) {
+                MtcEn.setLaneName("MTC入口车道");
+                LaneInfo laneChildrenList = new LaneInfo();
+                laneChildrenList.setLaneHex(laneList.get(i).get("laneHex").toString());
+                laneChildrenList.setLaneName(laneList.get(i).get("laneName").toString());
+//                laneChildrenList.setStatus(Integer.parseInt(laneList.get(i).get("status").toString()));
+                MtcEn.getChildren().add(laneChildrenList);
+            } else if (Integer.parseInt(laneList.get(i).get("laneType").toString()) == 2) {
+                MtcEx.setLaneName("MTC出口车道");
+                LaneInfo laneChildrenList = new LaneInfo();
+                laneChildrenList.setLaneHex(laneList.get(i).get("laneHex").toString());
+                laneChildrenList.setLaneName(laneList.get(i).get("laneName").toString());
+//                laneChildrenList.setStatus(Integer.parseInt(laneList.get(i).get("status").toString()));
+                MtcEx.getChildren().add(laneChildrenList);
+            } else if (Integer.parseInt(laneList.get(i).get("laneType").toString()) == 3) {
+                EtcEx.setLaneName("ETC入口车道");
+                LaneInfo laneChildrenList = new LaneInfo();
+                laneChildrenList.setLaneHex(laneList.get(i).get("laneHex").toString());
+                laneChildrenList.setLaneName(laneList.get(i).get("laneName").toString());
+//                laneChildrenList.setStatus(Integer.parseInt(laneList.get(i).get("status").toString()));
+                EtcEn.getChildren().add(laneChildrenList);
+            } else {
+                EtcEx.setLaneName("ETC出口车道");
+                LaneInfo laneChildrenList = new LaneInfo();
+                laneChildrenList.setLaneHex(laneList.get(i).get("laneHex").toString());
+                laneChildrenList.setLaneName(laneList.get(i).get("laneName").toString());
+//                laneChildrenList.setStatus(Integer.parseInt(laneList.get(i).get("status").toString()));
+                EtcEx.getChildren().add(laneChildrenList);
+            }
+        }
+        info.add(MtcEn);
+        info.add(MtcEx);
+        info.add(EtcEn);
+        info.add(EtcEn);
+        obj.put("laneList", info);
+
         return obj;
     }
 }
