@@ -59,9 +59,11 @@ public interface TblLaneStatusMapper extends CommonRepository<TblLaneStatus> {
     List<Map> findByStationId(@Param("stationId") String stationId, @Param("orientation") Integer orientation);
 
     @Select("SELECT bsi.STATION_ID as \"stationId\",bsi.STATION_NAME as \"stationName\",NVL(SUM(tls.ERROR_TRANS), 0) as \"errorTrans\"," +
-            "NVL(SUM(tls.ERROR_LPR_TRANS), 0) as \"errorLprTrans\" FROM TBL_BASE_STATION_INFO bsi  " +
+            "NVL(SUM(tls.ERROR_LPR_TRANS), 0) as \"errorLprTrans\"," +
+            "a.PROMPTNESS_LPR,a.PROMPTNESS_TRANS FROM TBL_BASE_STATION_INFO bsi  " +
             "left JOIN TBL_LANE_INFO tli on tli.STATION_ID=bsi.STATION_ID " +
             "LEFT JOIN TBL_LANE_STATUS tls on tls.LANE_ID = tli.LANE_ID " +
+            "LEFT JOIN (SELECT * FROM TBL_SOFTWARE_INFO tsi WHERE NAME ='站上传部/省程序')a on UPPER(SUBSTR(a.NUM, -6, 4) ) = bsi.STATION_ID " +
             "where STATION_HEX like '%310108%' AND STATION_HEX != '31010804' GROUP BY bsi.STATION_ID,bsi.STATION_NAME ")
     List<Map> getStationFlowUpload();
     
@@ -83,7 +85,7 @@ public interface TblLaneStatusMapper extends CommonRepository<TblLaneStatus> {
 
     @Select("SELECT " +
             "tdi.ID as \"deviceId\",tdi.DEVICE_NAME as \"deviceName\",tbsi.STATION_NAME as \"position\"," +
-            "tdf.FAULT_TIME as \"faultTime\",tdf.FAULT_TYPE as \"faultDESC\"," +
+            "to_char(tdf.FAULT_TIME,'yyyy-MM-dd HH24:mi:ss') as \"faultTime\",tdf.FAULT_TYPE as \"faultDESC\"," +
             "tdf.FAULT_DESCRIPTION as \"faultDetail\",'--' as \"laneName\",tdf.STATUS as \"status\" " +
             "FROM TBL_DEVICE_FAULT tdf " +
             "LEFT JOIN TBL_DEVICE_INFO tdi on tdi.ID=tdf.DEVICE_ID " +
