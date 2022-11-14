@@ -64,7 +64,7 @@ public interface TblLaneStatusMapper extends CommonRepository<TblLaneStatus> {
             "left JOIN TBL_LANE_INFO tli on tli.STATION_ID=bsi.STATION_ID " +
             "LEFT JOIN TBL_LANE_STATUS tls on tls.LANE_ID = tli.LANE_ID " +
             "LEFT JOIN (SELECT * FROM TBL_SOFTWARE_INFO tsi WHERE NAME ='站上传部/省程序')a on UPPER(SUBSTR(a.NUM, -6, 4) ) = bsi.STATION_ID " +
-            "where STATION_HEX like '%310108%' AND STATION_HEX != '31010804' GROUP BY bsi.STATION_ID,bsi.STATION_NAME ")
+            "where STATION_HEX like '%310108%' AND STATION_HEX != '31010804' GROUP BY bsi.STATION_ID,bsi.STATION_NAME，a.PROMPTNESS_LPR,a.PROMPTNESS_TRANS ")
     List<Map> getStationFlowUpload();
     
     @Select("SELECT SUM(\"totalFlow\") as \"total\" FROM( " +
