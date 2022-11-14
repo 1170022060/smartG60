@@ -13,6 +13,7 @@ import java.util.Map;
 @Data
 public class Tree {
     private String laneName;
+    private Integer id;
     private List<LaneInfo> children;
 
     public Tree() {

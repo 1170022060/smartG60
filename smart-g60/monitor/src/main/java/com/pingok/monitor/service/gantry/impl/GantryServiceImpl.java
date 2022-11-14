@@ -7,6 +7,7 @@ import com.pingok.monitor.domain.gantry.TblGantryStatusDtl;
 import com.pingok.monitor.domain.gantry.vo.GantryEnum;
 import com.pingok.monitor.domain.gantry.vo.GantryV2X;
 import com.pingok.monitor.mapper.gantry.TblGantryDayTradingMapper;
+import com.pingok.monitor.mapper.gantry.TblGantryEventReleaseMapper;
 import com.pingok.monitor.mapper.gantry.TblGantryStatusDtlMapper;
 import com.pingok.monitor.mapper.gantry.TblGantryStatusMapper;
 import com.pingok.monitor.service.gantry.IGantryService;
@@ -17,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 门架 服务层处理
@@ -33,6 +36,8 @@ public class GantryServiceImpl implements IGantryService {
     private TblGantryDayTradingMapper tblGantryDayTradingMapper;
     @Autowired
     private TblGantryStatusDtlMapper tblGantryStatusDtlMapper;
+    @Autowired
+    private TblGantryEventReleaseMapper tblGantryEventReleaseMapper;
     @Autowired
     private RemoteKafkaService remoteKafkaService;
 
@@ -78,5 +83,10 @@ public class GantryServiceImpl implements IGantryService {
         remoteKafkaService.send(kafkaEnum);
 
         return ret;
+    }
+
+    @Override
+    public List<Map> getRecord(String gantryId, String eventType, Integer status, Date startTime, Date endTime) {
+        return tblGantryEventReleaseMapper.getRecord(gantryId,eventType,status,startTime,endTime);
     }
 }

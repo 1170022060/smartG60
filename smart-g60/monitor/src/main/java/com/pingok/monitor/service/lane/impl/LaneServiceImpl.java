@@ -143,6 +143,7 @@ public class LaneServiceImpl implements ILaneService {
         for (int i = 0; i < laneList.size(); i++) {
             if (Integer.parseInt(laneList.get(i).get("laneType").toString()) == 1) {
                 MtcEn.setLaneName("MTC入口车道");
+                MtcEn.setId(1);
                 LaneInfo laneChildrenList = new LaneInfo();
                 laneChildrenList.setLaneHex(laneList.get(i).get("laneHex").toString());
                 laneChildrenList.setLaneName(laneList.get(i).get("laneName").toString());
@@ -150,13 +151,15 @@ public class LaneServiceImpl implements ILaneService {
                 MtcEn.getChildren().add(laneChildrenList);
             } else if (Integer.parseInt(laneList.get(i).get("laneType").toString()) == 2) {
                 MtcEx.setLaneName("MTC出口车道");
+                MtcEx.setId(2);
                 LaneInfo laneChildrenList = new LaneInfo();
                 laneChildrenList.setLaneHex(laneList.get(i).get("laneHex").toString());
                 laneChildrenList.setLaneName(laneList.get(i).get("laneName").toString());
 //                laneChildrenList.setStatus(Integer.parseInt(laneList.get(i).get("status").toString()));
                 MtcEx.getChildren().add(laneChildrenList);
             } else if (Integer.parseInt(laneList.get(i).get("laneType").toString()) == 3) {
-                EtcEx.setLaneName("ETC入口车道");
+                EtcEn.setLaneName("ETC入口车道");
+                EtcEn.setId(3);
                 LaneInfo laneChildrenList = new LaneInfo();
                 laneChildrenList.setLaneHex(laneList.get(i).get("laneHex").toString());
                 laneChildrenList.setLaneName(laneList.get(i).get("laneName").toString());
@@ -164,6 +167,7 @@ public class LaneServiceImpl implements ILaneService {
                 EtcEn.getChildren().add(laneChildrenList);
             } else {
                 EtcEx.setLaneName("ETC出口车道");
+                EtcEx.setId(4);
                 LaneInfo laneChildrenList = new LaneInfo();
                 laneChildrenList.setLaneHex(laneList.get(i).get("laneHex").toString());
                 laneChildrenList.setLaneName(laneList.get(i).get("laneName").toString());
