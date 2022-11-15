@@ -84,7 +84,7 @@ public interface TblLaneStatusMapper extends CommonRepository<TblLaneStatus> {
     List<Map> getStationInfo();
 
     @Select("SELECT " +
-            "tdi.ID as \"deviceId\",tdi.DEVICE_NAME as \"deviceName\",tbsi.STATION_NAME as \"position\"," +
+            "tdf.ID as \"deviceId\",tdi.DEVICE_NAME as \"deviceName\",tbsi.STATION_NAME as \"position\"," +
             "to_char(tdf.FAULT_TIME,'yyyy-MM-dd HH24:mi:ss') as \"faultTime\",tdf.FAULT_TYPE as \"faultDESC\"," +
             "tdf.FAULT_DESCRIPTION as \"faultDetail\",'--' as \"laneName\",tdf.STATUS as \"status\" " +
             "FROM TBL_DEVICE_FAULT tdf " +
