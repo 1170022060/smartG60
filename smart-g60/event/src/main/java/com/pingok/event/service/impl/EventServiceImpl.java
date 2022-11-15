@@ -20,14 +20,12 @@ import com.ruoyi.system.api.domain.SysDictData;
 import com.ruoyi.system.api.domain.device.TblDeviceInfo;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import com.ruoyi.system.api.domain.release.TblReleasePreset;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 事件服务 服务层处理
@@ -66,6 +64,17 @@ public class EventServiceImpl implements IEventService {
     @Autowired
     private RemoteDeviceMonitorService remoteDeviceMonitorService;
 
+
+    @Override
+    public TblEventRecord selectByEventTypeAndPileNo(String eventType, String pileNo) {
+        List<Integer> status = Arrays.asList(0,1);
+        Example example = new Example(TblEventRecord.class);
+        example.orderBy("eventTime").desc();
+        example.createCriteria().andEqualTo("eventType", eventType)
+                .andEqualTo("pileNo",pileNo)
+                .andIn("status", status);
+        return tblEventRecordMapper.selectByExample(example).get(0);
+    }
 
     @Override
     public TblEventRecord selectByEventId(Long eventId) {

@@ -26,7 +26,17 @@ public class RemoteEventFallbackFactory implements FallbackFactory<RemoteEventSe
         log.error("事件服务调用失败:{}", throwable.getMessage());
         return new RemoteEventService() {
             @Override
+            public R<TblEventRecord> selectByEventTypeAndPileNo(String eventType, String pileNo) {
+                return null;
+            }
+
+            @Override
             public R add(TblEventRecord tblEventRecord) {
+                return null;
+            }
+
+            @Override
+            public R edit(TblEventRecord tblEventRecord) {
                 return null;
             }
 
