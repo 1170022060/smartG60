@@ -68,4 +68,6 @@ public interface IEventRecordService {
      * @return 事件记录统计
      */
     List<EventRecordClassVo> selectEventRecordByClassList(ReportVo reportVo);
+
+    List<Map> selectEventRecordByStatusType(Integer status, Date startTime, Date endTime);
 }
