@@ -132,4 +132,25 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "</script>"})
     List<EventRecordClassVo> selectEventRecordByClassList(ReportVo reportVo);
 
+    @Select({"<script>" +
+            "SELECT " +
+            "\"count\"," +
+            "CASE when STATUS =0 then '未处置' when STATUS =1 then '处置中' " +
+            "when STATUS =2 then '已解除' when STATUS =-1 then '误报' END as \"status\", " +
+            "to_char(#{startTime}, 'yyyy-mm-dd hh24:mi:ss') || ' - ' ||to_char(#{endTime}, 'yyyy-mm-dd hh24:mi:ss') as \"time\" "+
+            "FROM ( " +
+            "SELECT COUNT(*) as \"count\",STATUS FROM TBL_EVENT_RECORD " +
+            "where 1=1 " +
+            "<when test='startTime != null'> " +
+            " and CREATE_TIME &gt;= #{startTime} " +
+            "</when>"+
+            "<when test='endTime != null'> " +
+            " and CREATE_TIME &lt;= #{endTime} " +
+            "</when>"+
+            "<when test='status != null'> " +
+            "and STATUS= #{status} " +
+            "</when>"+
+            "GROUP BY STATUS) " +
+            "</script>"})
+    List<Map> selectEventRecordByStatusType(@Param("status") Integer status, @Param("startTime") Date startTime, @Param("endTime")  Date endTime);
 }
