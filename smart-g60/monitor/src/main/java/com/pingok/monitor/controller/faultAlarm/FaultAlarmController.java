@@ -31,7 +31,7 @@ public class FaultAlarmController extends BaseController {
         return getDataTable(info);
     }
 
-    @RequiresPermissions("monitor:serviceMonitor:alarmConfirm")
+//    @RequiresPermissions("monitor:serviceMonitor:alarmConfirm")
     @Log(title = "服务区监控-告警确认",businessType = BusinessType.UPDATE)
     @PutMapping("/alarmConfirm")
     public AjaxResult confirm(@RequestParam(name = "type") Integer type,@RequestParam(name = "id")Long id,@RequestParam(name = "alarmStatus")Integer alarmStatus){
