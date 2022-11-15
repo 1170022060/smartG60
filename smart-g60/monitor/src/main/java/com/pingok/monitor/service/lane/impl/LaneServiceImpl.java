@@ -165,7 +165,7 @@ public class LaneServiceImpl implements ILaneService {
                 laneChildrenList.setLaneName(laneList.get(i).get("laneName").toString());
 //                laneChildrenList.setStatus(Integer.parseInt(laneList.get(i).get("status").toString()));
                 EtcEn.getChildren().add(laneChildrenList);
-            } else {
+            } else if (Integer.parseInt(laneList.get(i).get("laneType").toString()) == 4){
                 EtcEx.setLaneName("ETC出口车道");
                 EtcEx.setId(4);
                 LaneInfo laneChildrenList = new LaneInfo();
@@ -178,7 +178,7 @@ public class LaneServiceImpl implements ILaneService {
         info.add(MtcEn);
         info.add(MtcEx);
         info.add(EtcEn);
-        info.add(EtcEn);
+        info.add(EtcEx);
         obj.put("laneList", info);
 
         return obj;
