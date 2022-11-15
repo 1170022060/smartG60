@@ -2,6 +2,7 @@ package com.pingok.devicemonitor.controller.smartToilet;
 
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.devicemonitor.domain.smartToilet.TblSmartToiletCubicle;
+import com.pingok.devicemonitor.domain.smartToilet.TblSmartToiletInfo;
 import com.pingok.devicemonitor.service.smartToilet.ISmartToiletService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
@@ -57,6 +58,9 @@ public class SmartToiletController extends BaseController {
     @Log(title = "更新厕所坑位状态",businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult update(@Validated @RequestBody TblSmartToiletCubicle tblSmartToiletCubicle){
-        return toAjax(iSmartToiletService.updateToiletStatus(tblSmartToiletCubicle));
+        TblSmartToiletCubicle cubicle = iSmartToiletService.updateToiletStatus(tblSmartToiletCubicle);
+        TblSmartToiletInfo info = iSmartToiletService.selectById(cubicle.getSerId());
+        iSmartToiletService.setSensor(info.getSerNum(),cubicle.getIndexId(),cubicle.getStatus());
+        return AjaxResult.success();
     }
 }

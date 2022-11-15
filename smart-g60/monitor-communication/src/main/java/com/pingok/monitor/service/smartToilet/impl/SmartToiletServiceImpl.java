@@ -45,12 +45,13 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
 
     @Override
     public void send(JSONArray array) {
-        if(array!=null && array.size()>0){
+        log.info("向智慧厕所下发指令：" + array.toJSONString());
+        if (array != null && array.size() > 0) {
             int size = array.size();
             JSONObject object;
-            for(int i=0;i<size;i++){
+            for (int i = 0; i < size; i++) {
                 object = array.getJSONObject(i);
-                mqttGateway.sendToMqtt("$"+object.getString("ser_num")+"/command/pub",object.toJSONString());
+                mqttGateway.sendToMqtt("$" + object.getString("ser_num") + "/command/pub", object.toJSONString());
             }
         }
     }
