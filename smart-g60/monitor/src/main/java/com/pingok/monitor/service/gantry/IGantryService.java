@@ -18,7 +18,7 @@ public interface IGantryService {
      * 查询门架状态列表
      * @return
      */
-    GantryEnum gantryStatus();
+    GantryEnum gantryStatus(String startTime,String endTime);
 
     /**
      * 根据门架主键id查询门架状态详情

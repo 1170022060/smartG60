@@ -11,6 +11,8 @@ import com.ruoyi.common.security.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +39,14 @@ public class GantryController extends BaseController {
 //    @Log(title = "门架监控服务", businessType = BusinessType.OTHER)
     @GetMapping("/gantryStatus")
     public AjaxResult gantryStatus() {
-        return AjaxResult.success(iGantryService.gantryStatus());
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+        int now = calendar.get(Calendar.MINUTE);
+        calendar.set(Calendar.MINUTE, now-5);
+        String startTime = df.format(calendar.getTime());//前五分钟的时间点
+        Date date=new Date();
+        String endTime = df.format(date);//当前时间点
+        return AjaxResult.success(iGantryService.gantryStatus(startTime,endTime));
     }
 
     @Log(title = "门架车路协同", businessType = BusinessType.OTHER)
