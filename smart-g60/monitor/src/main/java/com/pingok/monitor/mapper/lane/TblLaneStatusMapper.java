@@ -90,7 +90,7 @@ public interface TblLaneStatusMapper extends CommonRepository<TblLaneStatus> {
             "FROM TBL_DEVICE_FAULT tdf " +
             "LEFT JOIN TBL_DEVICE_INFO tdi on tdi.ID=tdf.DEVICE_ID " +
             "LEFT JOIN TBL_BASE_STATION_INFO tbsi on tbsi.STATION_HEX =tdi.STATION_BELONG " +
-            "WHERE tbsi.STATION_HEX=#{stationHex} ")
+            "WHERE tdf.STATUS = 0 AND tbsi.STATION_HEX=#{stationHex} ")
     List<Map> getFaultList(@Param("stationHex") String stationHex);
 
     @Select("SELECT SUM(\"count\") as \"total\" FROM ( " +
