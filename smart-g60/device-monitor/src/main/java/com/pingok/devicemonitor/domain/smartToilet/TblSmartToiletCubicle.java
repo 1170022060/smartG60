@@ -22,7 +22,7 @@ public class TblSmartToiletCubicle implements Serializable {
     /**
      * 厕所ID
      */
-    private Integer serId;
+    private Long serId;
 
     /**
      * 厕位编号

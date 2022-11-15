@@ -50,6 +50,36 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
     private WeatherMapper weatherMapper;
 
     @Override
+    public void setSensor(String serNum, Integer index, Integer status) {
+        JSONArray array = new JSONArray();
+        JSONObject object;
+        JSONObject payload;
+        object = new JSONObject();
+        object.put("message_id", DateUtils.getNowTimestampLong());
+        object.put("ser_num", serNum);
+        object.put("command_id", "set_sensor");
+        payload = new JSONObject();
+        payload.put("type", "cubicle");
+        payload.put("index", index);
+        Integer value = 0;
+        switch (status) {
+            case 0:
+                value = -2;
+                break;
+            case 3:
+                value = 2;
+                break;
+        }
+        payload.put("value", value);
+        object.put("payload", payload.toJSONString());
+        array.add(object);
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.SMART_TOILET);
+        kafkaEnum.setData(array.toJSONString());
+        remoteKafkaService.send(kafkaEnum);
+    }
+
+    @Override
     public void marqueeText() {
         List<TblSmartToiletInfo> list = tblSmartToiletInfoMapper.selectAll();
         if (list != null && list.size() > 0) {
@@ -61,18 +91,18 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
             Map schedule;
             for (TblSmartToiletInfo i : list) {
                 object = new JSONObject();
+                object.put("message_id", DateUtils.getNowTimestampLong());
                 object.put("ser_num", i.getSerNum());
-                object.put("command_id", "weather");
+                object.put("command_id", "marquee_text");
 
                 schedule = tblSmartToiletInfoMapper.schedule(i.getId());
                 texts = new JSONArray();
-                if(schedule!=null){
+                if (schedule != null) {
                     text = new JSONObject();
-                    text.put("id",schedule.get("id"));
-                    text.put("content",schedule.get("content"));
+                    text.put("id", schedule.get("id"));
+                    text.put("content", schedule.get("content"));
                     texts.add(text);
                 }
-
                 payload = new JSONObject();
                 payload.put("texts", texts);
                 object.put("payload", payload.toJSONString());
@@ -96,6 +126,7 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
                 JSONObject payload;
                 for (TblSmartToiletInfo i : list) {
                     object = new JSONObject();
+                    object.put("message_id", DateUtils.getNowTimestampLong());
                     object.put("ser_num", i.getSerNum());
                     object.put("command_id", "weather");
                     payload = new JSONObject();
@@ -120,6 +151,7 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
             JSONObject payload;
             for (TblSmartToiletInfo i : list) {
                 object = new JSONObject();
+                object.put("message_id", DateUtils.getNowTimestampLong());
                 object.put("ser_num", i.getSerNum());
                 object.put("command_id", "time_calibration");
                 payload = new JSONObject();
@@ -315,12 +347,18 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
     }
 
     @Override
-    public int updateToiletStatus(TblSmartToiletCubicle tblSmartToiletCubicle) {
+    public TblSmartToiletCubicle updateToiletStatus(TblSmartToiletCubicle tblSmartToiletCubicle) {
         TblSmartToiletCubicle tblSmartToiletCubicle1 = tblSmartToiletCubicleMapper.selectByPrimaryKey(tblSmartToiletCubicle.getId());
         tblSmartToiletCubicle1.setUpdateTime(DateUtils.getNowDate());
         tblSmartToiletCubicle1.setUpdateUserId(SecurityUtils.getUserId());
         tblSmartToiletCubicle1.setStatus(tblSmartToiletCubicle.getStatus());
         tblSmartToiletCubicle1.setRemark(tblSmartToiletCubicle.getRemark());
-        return tblSmartToiletCubicleMapper.updateByPrimaryKey(tblSmartToiletCubicle1);
+        tblSmartToiletCubicleMapper.updateByPrimaryKey(tblSmartToiletCubicle1);
+        return tblSmartToiletCubicle1;
+    }
+
+    @Override
+    public TblSmartToiletInfo selectById(Long id) {
+        return tblSmartToiletInfoMapper.selectByPrimaryKey(id);
     }
 }
