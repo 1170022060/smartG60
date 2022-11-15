@@ -106,13 +106,12 @@ public interface TblLaneStatusMapper extends CommonRepository<TblLaneStatus> {
     @Select("SELECT  " +
             "COUNT(*) as \"total\", " +
             "SUM(DECODE(tds.STATUS,1, 1, 0))as \"normal\", " +
-            "SUM(DECODE(tdf.STATUS,1, 1, 0))as \"fault\", " +
             "tdi.DEVICE_TYPE as \"deviceType\",DECODE(tdc.CATEGORY_NAME, null,sdd.DICT_LABEL, tdc.CATEGORY_NAME) as \"deviceCat\" " +
             "FROM TBL_DEVICE_INFO tdi " +
             "LEFT JOIN TBL_BASE_STATION_INFO tbsi on tbsi.STATION_HEX =tdi.STATION_BELONG " +
             "LEFT JOIN TBL_DEVICE_CATEGORY tdc on tdc.ID = tdi.DEVICE_CATEGORY " +
-            "LEFT JOIN TBL_DEVICE_STATUS tds on tdi.ID=tds.DEVICE_ID " +
-            "LEFT JOIN TBL_DEVICE_FAULT tdf on tdf.DEVICE_ID=tds.DEVICE_ID " +
+            "LEFT JOIN (SELECT DISTINCT DEVICE_ID,STATUS FROM TBL_DEVICE_STATUS ORDER BY DEVICE_ID) tds on tdi.ID=tds.DEVICE_ID " +
+            "LEFT JOIN (SELECT DISTINCT DEVICE_ID,STATUS FROM TBL_DEVICE_FAULT ORDER BY DEVICE_ID) on tdf.DEVICE_ID=tds.DEVICE_ID " +
             "LEFT JOIN TBL_DEVICE_CATEGORY tdc on tdc.ID = tdi.DEVICE_CATEGORY " +
             "LEFT JOIN SYS_DICT_DATA sdd on tdi.DEVICE_TYPE = sdd.DICT_VALUE AND sdd.DICT_TYPE = 'device_type' " +
             "WHERE tbsi.STATION_HEX = #{stationHex} " +

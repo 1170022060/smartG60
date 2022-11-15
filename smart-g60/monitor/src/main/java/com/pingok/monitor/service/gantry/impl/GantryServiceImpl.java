@@ -42,11 +42,11 @@ public class GantryServiceImpl implements IGantryService {
     private RemoteKafkaService remoteKafkaService;
 
     @Override
-    public GantryEnum gantryStatus() {
+    public GantryEnum gantryStatus(String startTime,String endTime) {
         GantryEnum gantryEnum = new GantryEnum();
         gantryEnum.setTransactionNumber(tblGantryStatusMapper.findAllTransactionNumber());
         gantryEnum.setTravelimageNumber(tblGantryStatusMapper.findAllTravelimageNumber());
-        gantryEnum.setGantryInfos(tblGantryStatusMapper.gantryStatus());
+        gantryEnum.setGantryInfos(tblGantryStatusMapper.gantryStatus(startTime,endTime));
         return gantryEnum;
     }
 

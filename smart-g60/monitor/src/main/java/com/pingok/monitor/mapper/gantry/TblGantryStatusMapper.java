@@ -40,14 +40,14 @@ public interface TblGantryStatusMapper extends CommonRepository<TblGantryStatus>
             "  LEFT JOIN TBL_GANTRY_STATUS tgs ON tgi.ID = tgs.DEVICE_ID" +
             "  LEFT JOIN (" +
             "   SELECT GANTRY_ID,COUNT(*) as total FROM TBL_GANTRY_TRANSACTION_2022 " +
-            "   WHERE TRANS_TIME between TO_DATE('2022-08-22 00:15:48','yyyy-MM-dd hh24:mi:ss') " +
-            " AND TO_DATE('2022-08-22 00:20:48','yyyy-MM-dd hh24:mi:ss') GROUP BY GANTRY_ID)a on a.GANTRY_ID = tgi.DEVICE_ID" +
+            "   WHERE TRANS_TIME between TO_DATE(#{startTime},'yyyy-MM-dd hh24:mi:ss') " +
+            " AND TO_DATE(#{endTime},'yyyy-MM-dd hh24:mi:ss') GROUP BY GANTRY_ID)a on a.GANTRY_ID = tgi.DEVICE_ID" +
             " LEFT JOIN(" +
             " SELECT GANTRY_ID,COUNT(*) as total FROM TBL_GANTRY_TRAVELIMAGE_2022 " +
-            " WHERE PIC_TIME between TO_DATE('2022-08-22 00:15:48','yyyy-MM-dd hh24:mi:ss') " +
-            " AND TO_DATE('2022-08-22 00:20:48','yyyy-MM-dd hh24:mi:ss') GROUP BY GANTRY_ID" +
-            ")b on b.GANTRY_ID = tgi.DEVICE_ID")
-    List<Map> gantryStatus();
+            " WHERE PIC_TIME between TO_DATE(#{startTime},'yyyy-MM-dd hh24:mi:ss') " +
+            " AND TO_DATE(#{endTime},'yyyy-MM-dd hh24:mi:ss') GROUP BY GANTRY_ID" +
+            ")b on b.GANTRY_ID = tgi.DEVICE_ID order by tgi.DEVICE_NAME")
+    List<Map> gantryStatus(@Param("startTime")String startTime,@Param("endTime")String endTime);
 
     @Select("SELECT COUNT(*) as \"total\" FROM TBL_GANTRY_TRANSACTION_2022 WHERE to_char(TRANS_TIME,'yyyy-MM-dd') = #{currentDate} ")
     Object getGantryTotalFlow(@Param("currentDate") String currentDate);
