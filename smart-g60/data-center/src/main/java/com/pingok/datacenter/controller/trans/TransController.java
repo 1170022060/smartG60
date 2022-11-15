@@ -1,9 +1,11 @@
 package com.pingok.datacenter.controller.trans;
 
+import com.alibaba.fastjson.JSON;
 import com.pingok.datacenter.domain.trans.vo.*;
 import com.pingok.datacenter.service.trans.ITransService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author ruoyi
  */
+@Slf4j
 @RestController
 @RequestMapping("/trans")
 public class TransController extends BaseController {
@@ -24,10 +27,11 @@ public class TransController extends BaseController {
     @Autowired
     private ITransService transService;
 
-    @Transactional
+//    @Transactional
     @PostMapping("/en")
     public AjaxResult en(@Validated @RequestBody EnTransEnum enTransEnum)
     {
+//        log.info("入口交易流水----"+ JSON.toJSONString(enTransEnum));
         EnTransInfo enTransInfo =new EnTransInfo();
         if(enTransEnum.getTblEnTrans()!=null)
         {
@@ -71,10 +75,11 @@ public class TransController extends BaseController {
         return AjaxResult.success();
     }
 
-    @Transactional
+//    @Transactional
     @PostMapping("/ex")
     public AjaxResult ex(@Validated @RequestBody ExTransEnum exTransEnum)
     {
+//        log.info("出口交易流水----"+ JSON.toJSONString(exTransEnum));
         ExTransInfo exTransInfo =new ExTransInfo();
         if(exTransEnum.getTblExTrans()!=null)
         {

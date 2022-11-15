@@ -36,7 +36,7 @@ public class LprTransController extends BaseController {
     @Autowired
     private ITransService transService;
 
-    @Transactional
+//    @Transactional
     @PostMapping("/en")
     public AjaxResult en(@Validated @RequestBody TblEnLprTrans tblEnLprTrans)
     {
@@ -59,7 +59,7 @@ public class LprTransController extends BaseController {
         return AjaxResult.success();
     }
 
-    @Transactional
+//    @Transactional
     @PostMapping("/ex")
     public AjaxResult ex(@Validated @RequestBody TblExLprTrans tblExLprTrans)
     {
