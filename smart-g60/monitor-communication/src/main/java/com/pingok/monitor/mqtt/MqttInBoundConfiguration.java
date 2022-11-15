@@ -107,13 +107,13 @@ public class MqttInBoundConfiguration {
     public MessageHandler handler() {
         return message -> {
             log.info("收到的完整消息为--->{}", message);
-            log.info("----------------------");
-            log.info("message:" + message.getPayload());
-            log.info("Id:" + message.getHeaders().getId());
-            log.info("receivedQos:" + message.getHeaders().get(MqttHeaders.RECEIVED_QOS));
+//            log.info("----------------------");
+//            log.info("message:" + message.getPayload());
+//            log.info("Id:" + message.getHeaders().getId());
+//            log.info("receivedQos:" + message.getHeaders().get(MqttHeaders.RECEIVED_QOS));
             String topic = (String) message.getHeaders().get(MqttHeaders.RECEIVED_TOPIC);
-            log.info("topic:" + topic);
-            log.info("----------------------");
+//            log.info("topic:" + topic);
+//            log.info("----------------------");
             iSmartToiletService.sensorData(JSON.parseObject(message.getPayload().toString()));
         };
     }

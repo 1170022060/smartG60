@@ -48,21 +48,15 @@ public class PilotLightServiceImpl implements IPilotLightService {
 
     @Override
     public void commandSend(JSONObject body) {
-        List<SysDictData> types = DictUtils.getDictCache("light_cmdType");
-        SysDictData find = types.stream()
-                .filter(t -> t.getDictValue().equals(body.getString("cmdType")))
-                .findFirst().orElse(null);
-        if (find != null) {
-            String deviceId = body.getString("deviceId");
-            Map<String, Object> paramMap = new HashMap<>();
-            paramMap.put("token", getToken());
-            paramMap.put("command", getParamV2(find.getDictValue(), deviceId).toJSONString());
-            String resp = HttpUtil.post(LightConfig.HOST + "/command/device/send", paramMap);
-            if (!StringUtils.isEmpty(resp)) {
-                JSONObject obj = JSON.parseObject(resp);
-                if (obj.getInteger("status") != 200) {
-                    log.error("超视距诱导等：发送指令失败，消息体内容——————————" + body.toJSONString());
-                }
+        String deviceId = body.getString("deviceId");
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("token", getToken());
+        paramMap.put("command", getParamV2(body.getString("cmdType"), deviceId).toJSONString());
+        String resp = HttpUtil.post(LightConfig.HOST + "/command/device/send", paramMap);
+        if (!StringUtils.isEmpty(resp)) {
+            JSONObject obj = JSON.parseObject(resp);
+            if (obj.getInteger("status") != 200) {
+                log.error("超视距诱导等：发送指令失败，消息体内容——————————" + body.toJSONString());
             }
         }
     }
