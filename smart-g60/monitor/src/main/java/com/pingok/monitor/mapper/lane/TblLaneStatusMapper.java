@@ -86,10 +86,20 @@ public interface TblLaneStatusMapper extends CommonRepository<TblLaneStatus> {
     @Select("SELECT " +
             "tdf.ID as \"deviceId\",tdi.DEVICE_NAME as \"deviceName\",tbsi.STATION_NAME as \"position\"," +
             "to_char(tdf.FAULT_TIME,'yyyy-MM-dd HH24:mi:ss') as \"faultTime\",tdf.FAULT_TYPE as \"faultDESC\"," +
-            "tdf.FAULT_DESCRIPTION as \"faultDetail\",'--' as \"laneName\",tdf.STATUS as \"status\" " +
+            "tdf.FAULT_DESCRIPTION as \"faultDetail\",null as \"laneName\",tdf.STATUS as \"status\" " +
             "FROM TBL_DEVICE_FAULT tdf " +
             "LEFT JOIN TBL_DEVICE_INFO tdi on tdi.ID=tdf.DEVICE_ID " +
             "LEFT JOIN TBL_BASE_STATION_INFO tbsi on tbsi.STATION_HEX =tdi.STATION_BELONG " +
+            "WHERE tdf.STATUS = 0 AND tbsi.STATION_HEX=#{stationHex} " +
+            "UNION ALL " +
+            "SELECT  " +
+            "tdf.ID as \"deviceId\",tdil.DEVICE_NAME as \"deviceName\",tbsi.STATION_NAME as \"position\",  " +
+            "to_char(tdf.FAULT_TIME,'yyyy-MM-dd HH24:mi:ss') as \"faultTime\",tdf.FAULT_TYPE as \"faultDESC\",  " +
+            "tdf.FAULT_DESCRIPTION as \"faultDetail\",tli.LANE_NAME as \"laneName\",tdf.STATUS as \"status\" " +
+            "FROM TBL_DEVICE_FAULT tdf  " +
+            "LEFT JOIN TBL_DEVICE_INFO_LANE tdil on tdil.ID = tdf.DEVICE_ID " +
+            "LEFT JOIN TBL_LANE_INFO tli on tli.LANE_HEX = tdil.LANE_BELONG " +
+            "LEFT JOIN TBL_BASE_STATION_INFO tbsi on UPPER(tbsi.STATION_ID) =tli.STATION_ID " +
             "WHERE tdf.STATUS = 0 AND tbsi.STATION_HEX=#{stationHex} ")
     List<Map> getFaultList(@Param("stationHex") String stationHex);
 
