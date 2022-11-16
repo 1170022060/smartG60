@@ -111,7 +111,7 @@ public interface TblLaneStatusMapper extends CommonRepository<TblLaneStatus> {
             "LEFT JOIN TBL_BASE_STATION_INFO tbsi on tbsi.STATION_HEX =tdi.STATION_BELONG " +
             "LEFT JOIN TBL_DEVICE_CATEGORY tdc on tdc.ID = tdi.DEVICE_CATEGORY " +
             "LEFT JOIN (SELECT DISTINCT DEVICE_ID,STATUS FROM TBL_DEVICE_STATUS ORDER BY DEVICE_ID) tds on tdi.ID=tds.DEVICE_ID " +
-            "LEFT JOIN (SELECT DISTINCT DEVICE_ID,STATUS FROM TBL_DEVICE_FAULT ORDER BY DEVICE_ID) on tdf.DEVICE_ID=tds.DEVICE_ID " +
+            "LEFT JOIN (SELECT DISTINCT DEVICE_ID,STATUS FROM TBL_DEVICE_FAULT ORDER BY DEVICE_ID) tdf on tdf.DEVICE_ID=tds.DEVICE_ID " +
             "LEFT JOIN TBL_DEVICE_CATEGORY tdc on tdc.ID = tdi.DEVICE_CATEGORY " +
             "LEFT JOIN SYS_DICT_DATA sdd on tdi.DEVICE_TYPE = sdd.DICT_VALUE AND sdd.DICT_TYPE = 'device_type' " +
             "WHERE tbsi.STATION_HEX = #{stationHex} " +
