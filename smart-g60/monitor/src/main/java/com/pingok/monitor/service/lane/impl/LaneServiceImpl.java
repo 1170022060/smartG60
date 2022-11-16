@@ -80,9 +80,10 @@ public class LaneServiceImpl implements ILaneService {
 
     @Override
     public List<Map> getStationInfo() {
-        int faultTotal = 0;
+
         List<Map> stationInfo = tblLaneStatusMapper.getStationInfo();
         for (int n = 0; n < stationInfo.size(); n++) {
+            int faultTotal = 0;
             Iterator iter1 = stationInfo.get(n).keySet().iterator();
             while (iter1.hasNext()) {
                 String key1 = (String) iter1.next();
@@ -102,7 +103,7 @@ public class LaneServiceImpl implements ILaneService {
             }
             if (faultTotal > 0) {
                 stationInfo.get(n).put("status", 1);
-            } else {
+            } else if (faultTotal == 0){
                 stationInfo.get(n).put("status", 0);
             }
         }
