@@ -24,7 +24,7 @@ public interface TblLaneStatusMapper extends CommonRepository<TblLaneStatus> {
             "tli.LANE_ID AS \"laneId\", " +
             "tli.MARK_NAME AS \"markName\", " +
             "tls.LANE_HEX AS \"laneHex\", " +
-            "tls.TIME AS \"time\", " +
+            "to_char(tls.TIME,'yyyy-MM-dd HH24:mi:ss') AS \"time\", " +
             "tls.OPT_ID AS \"optId\", " +
             "tls.OPT_NAME AS \"optName\", " +
             "tls.CARD_CNT AS \"cardCnt\", " +
@@ -46,16 +46,16 @@ public interface TblLaneStatusMapper extends CommonRepository<TblLaneStatus> {
             "tls.OVER_LOAD_STATUS AS \"overLoadStatus\", " +
             "tls.NET_STATUS AS \"netStatus\", " +
             "tls.PSAM_ID AS \"psamId\", " +
-            "tls.OPT_INFO_UPDATE_TIME AS \"optInfoUpdateTime\", " +
-            "tls.FREE_INFO_UPDATE_TIME AS \"freeInfoUpdateTime\", " +
-            "tls.TRACTOR_BLACK_VER AS \"tractorBlackVer\", " +
+            "to_char(tls.OPT_INFO_UPDATE_TIME,'yyyy-MM-dd HH24:mi:ss') AS \"optInfoUpdateTime\", " +
+            "to_char(tls.FREE_INFO_UPDATE_TIME,'yyyy-MM-dd HH24:mi:ss') AS \"freeInfoUpdateTime\", " +
+            "to_char(tls.TRACTOR_BLACK_VER,'yyyy-MM-dd HH24:mi:ss') AS \"tractorBlackVer\", " +
             "tls.CURR_VERSION AS \"currVersion\", " +
-            "tls.CURR_START_TIME AS \"currStartTime\", " +
+            "to_char(tls.CURR_START_TIME,'yyyy-MM-dd HH24:mi:ss') AS \"currStartTime\", " +
             "tls.NEXT_VERSION AS \"nextVersion\", " +
-            "tls.NEXT_VER_START_TIME AS \"nextVerStartTime\", " +
-            "tls.CREATE_TIME AS \"createTime\", " +
-            "tls.UPDATE_TIME AS \"updateTime\", " +
-            "tls.ORIENTATION \"orientation\"  FROM TBL_LANE_STATUS tls JOIN TBL_LANE_INFO tli ON tli.LANE_ID = tls.LANE_ID WHERE tli.STATION_ID = #{stationId} AND tls.ORIENTATION = #{orientation}")
+            "to_char(tls.NEXT_VER_START_TIME,'yyyy-MM-dd HH24:mi:ss') AS \"nextVerStartTime\", " +
+            "to_char(tls.CREATE_TIME,'yyyy-MM-dd HH24:mi:ss') AS \"createTime\", " +
+            "to_char(tls.UPDATE_TIME,'yyyy-MM-dd HH24:mi:ss') AS \"updateTime\", " +
+            "tls.ORIENTATION \"orientation\"  FROM TBL_LANE_STATUS tls JOIN TBL_LANE_INFO tli ON tli.LANE_HEX = tls.LANE_HEX WHERE tli.STATION_ID = #{stationId} AND tls.ORIENTATION = #{orientation}")
     List<Map> findByStationId(@Param("stationId") String stationId, @Param("orientation") Integer orientation);
 
     @Select("SELECT bsi.STATION_ID as \"stationId\",bsi.STATION_NAME as \"stationName\",NVL(SUM(tls.ERROR_TRANS), 0) as \"errorTrans\"," +

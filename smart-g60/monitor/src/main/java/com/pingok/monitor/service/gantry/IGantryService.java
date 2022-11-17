@@ -44,4 +44,11 @@ public interface IGantryService {
      * @return
      */
     List<Map> getRecord(String gantryId, String eventType, Integer status, Date startTime, Date endTime);
+
+    /**
+     * 获取门架设备告警列表
+     * @param gantryId
+     * @return
+     */
+    List<Map> getFaultList(String gantryId);
 }

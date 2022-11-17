@@ -54,4 +54,10 @@ public interface TblGantryStatusMapper extends CommonRepository<TblGantryStatus>
 
     @Select("SELECT NVL(SUM(TRANSACTION_NUMBER+TRAVELIMAGE_NUMBER),0) as \"total\" FROM TBL_GANTRY_STATUS WHERE to_char(TIME,'yyyy-MM-dd') = #{currentDate} ")
     Object getGantryNotUploadFlow(@Param("currentDate") String currentDate);
+    
+    @Select("SELECT tdi.DEVICE_NAME as \"deviceName\",to_char(tdf.FAULT_TIME,'yyyy-MM-dd HH24:mi:ss') as \"faultTime\"," +
+            "tdf.FAULT_TYPE \"faultType\",tdf.FAULT_DESCRIPTION as \"faultDesc\" FROM TBL_DEVICE_FAULT tdf  " +
+            "LEFT JOIN TBL_DEVICE_INFO tdi on tdf.DEVICE_ID=tdi.ID " +
+            "WHERE tdi.STATION_BELONG = #{gantryId} ")
+    List<Map> getGantryFaultList(@Param("gantryId") String gantryId);
 }

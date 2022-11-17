@@ -15,6 +15,7 @@ import java.util.Map;
 public interface TblGantryEventReleaseMapper {
     @Select({"<script>" +
             "SELECT  " +
+            "tgi.DEVICE_NAME as \"gantryName\"," +
             "ger.GANTRY_ID as \"gantryId\", " +
             "ger.OBU_DELAY as \"obuDelay\", " +
             "ger.STAKE_NUM as \"stakeNum\", " +
@@ -35,6 +36,7 @@ public interface TblGantryEventReleaseMapper {
             "a.USER_NAME as \"createUser\", " +
             "b.USER_NAME as \"updateUser\" " +
             "FROM TBL_GANTRY_EVENT_RELEASE ger " +
+            "LEFT JOIN TBL_GANTRY_INFO tgi on tgi.DEVICE_ID = ger.GANTRY_ID" +
             "LEFT JOIN SYS_USER a on a.USER_ID = ger.CREATE_USER_ID " +
             "LEFT JOIN SYS_USER b on b.USER_ID = ger.UPDATE_USER_ID " +
             "LEFT JOIN SYS_DICT_DATA c on c.DICT_VALUE=ger.EVENT_ID and c.DICT_TYPE='gantry_v2x_event_type' " +
