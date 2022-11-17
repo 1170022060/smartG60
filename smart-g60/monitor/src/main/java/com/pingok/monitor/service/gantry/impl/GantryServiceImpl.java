@@ -89,4 +89,9 @@ public class GantryServiceImpl implements IGantryService {
     public List<Map> getRecord(String gantryId, String eventType, Integer status, Date startTime, Date endTime) {
         return tblGantryEventReleaseMapper.getRecord(gantryId,eventType,status,startTime,endTime);
     }
+
+    @Override
+    public List<Map> getFaultList(String gantryId) {
+        return tblGantryStatusMapper.getGantryFaultList(gantryId);
+    }
 }

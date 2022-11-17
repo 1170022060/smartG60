@@ -42,6 +42,10 @@ public class GantryInfoDtlController extends BaseController {
     @PostMapping
     public AjaxResult add(@Validated @RequestBody DtlEnum dtlEnum)
     {
-        return toAjax(gantryInfoDtlService.insertGantryInfoDtl(dtlEnum));
+        if (dtlEnum.getDtlList().size()==0){
+            return AjaxResult.error("设备列表不能为空");
+        }else{
+            return AjaxResult.success(gantryInfoDtlService.insertGantryInfoDtl(dtlEnum));
+        }
     }
 }

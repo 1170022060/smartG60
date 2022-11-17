@@ -35,7 +35,8 @@ public interface TblBaseStationInfoMapper extends CommonRepository<TblBaseStatio
             "</script>"})
     List<Map> selectBaseStation(@Param("stationName") String stationName);
 
-    @Select("select ID as \"id\",STATION_NAME as \"stationName\",STATION_ID as \"stationId\" from TBL_BASE_STATION_INFO where STATION_HEX like '%310108%'")
+    @Select("select ID as \"id\",STATION_NAME as \"stationName\",STATION_ID as \"stationId\" " +
+            "from TBL_BASE_STATION_INFO where STATION_HEX like '%310108%' AND STATION_HEX != '31010804' ")
     List<Map> selectStationInfo();
 
     @Select("select 0 as \"id\",'沪杭路段中心' as \"stationName\",'08' as \"stationId\" from dual " +

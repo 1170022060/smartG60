@@ -46,7 +46,7 @@ public interface TblGantryStatusMapper extends CommonRepository<TblGantryStatus>
             " SELECT GANTRY_ID,COUNT(*) as total FROM TBL_GANTRY_TRAVELIMAGE_2022 " +
             " WHERE PIC_TIME between TO_DATE(#{startTime},'yyyy-MM-dd hh24:mi:ss') " +
             " AND TO_DATE(#{endTime},'yyyy-MM-dd hh24:mi:ss') GROUP BY GANTRY_ID" +
-            ")b on b.GANTRY_ID = tgi.DEVICE_ID order by tgi.DEVICE_NAME")
+            ")b on b.GANTRY_ID = tgi.DEVICE_ID order by tgi.DEVICE_ID")
     List<Map> gantryStatus(@Param("startTime")String startTime,@Param("endTime")String endTime);
 
     @Select("SELECT COUNT(*) as \"total\" FROM TBL_GANTRY_TRANSACTION_2022 WHERE to_char(TRANS_TIME,'yyyy-MM-dd') = #{currentDate} ")
@@ -54,4 +54,10 @@ public interface TblGantryStatusMapper extends CommonRepository<TblGantryStatus>
 
     @Select("SELECT NVL(SUM(TRANSACTION_NUMBER+TRAVELIMAGE_NUMBER),0) as \"total\" FROM TBL_GANTRY_STATUS WHERE to_char(TIME,'yyyy-MM-dd') = #{currentDate} ")
     Object getGantryNotUploadFlow(@Param("currentDate") String currentDate);
+    
+    @Select("SELECT tdi.DEVICE_NAME as \"deviceName\",to_char(tdf.FAULT_TIME,'yyyy-MM-dd HH24:mi:ss') as \"faultTime\"," +
+            "tdf.FAULT_TYPE \"faultType\",tdf.FAULT_DESCRIPTION as \"faultDesc\" FROM TBL_DEVICE_FAULT tdf  " +
+            "LEFT JOIN TBL_DEVICE_INFO tdi on tdf.DEVICE_ID=tdi.ID " +
+            "WHERE tdi.STATION_BELONG = #{gantryId} ")
+    List<Map> getGantryFaultList(@Param("gantryId") String gantryId);
 }

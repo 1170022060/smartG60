@@ -61,4 +61,11 @@ public class GantryController extends BaseController {
         List<Map> info = iGantryService.getRecord(gantryId,eventType,status,startTime,endTime);
         return getDataTable(info);
     }
+
+    @GetMapping("/getFaultList")
+    public TableDataInfo getFaultList(String gantryId){
+        startPage();
+        List<Map> info = iGantryService.getFaultList(gantryId);
+        return getDataTable(info);
+    }
 }
