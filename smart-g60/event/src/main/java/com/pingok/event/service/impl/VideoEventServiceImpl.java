@@ -203,9 +203,6 @@ public class VideoEventServiceImpl implements IVideoEventService {
             }
             eventRecord.setEventPhoto(imageUrl);
             iEventService.insert(eventRecord);
-        } else {
-            BeanUtils.copyNotNullProperties(tblEventVehicleEvent, eventVehicleEvent);
-            tblEventVehicleEventMapper.updateByPrimaryKey(eventVehicleEvent);
         }
 
 
