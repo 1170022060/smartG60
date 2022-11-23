@@ -225,7 +225,17 @@ public class ParkingLotServiceImpl implements IParkingLotService {
     }
 
     @Override
+    public Map trafficCount(String fieldNum, Integer vehType, Date startDate, Date endDate) {
+        return tblParkingStatisticsMapper.trafficCount(fieldNum,vehType,startDate,endDate);
+    }
+
+    @Override
     public List<Map> humanFlow(String fieldNum, Integer areaId, Date startDate, Date endDate, Integer statisticsType) {
         return tblEventPassengerFlowMapper.humanFlow(fieldNum,areaId,startDate,endDate,statisticsType);
+    }
+
+    @Override
+    public Map humanFlowCount(String fieldNum, Integer areaId, Date startDate, Date endDate) {
+        return tblEventPassengerFlowMapper.humanFlowCount(fieldNum,areaId,startDate,endDate);
     }
 }

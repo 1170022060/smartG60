@@ -12,4 +12,8 @@ import java.util.Date;
 public interface IOilPriceService {
 
     TblOilPrice selectOilPrice(Date date);
+    TblOilPrice selectOilPriceById(Long Id);
+    int insertOilPrice(TblOilPrice tblOilPrice);
+    int updateOilPrice(TblOilPrice tblOilPrice);
+    public String checkDateUnique(TblOilPrice tblOilPrice);
 }
