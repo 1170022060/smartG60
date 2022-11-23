@@ -55,7 +55,7 @@ public class TblEmergencySuppliesServiceImpl implements TblEmergencySuppliesServ
     public int updateEmergencySupplies(TblEmergencySupplies tblEmergencySupplies) {
         tblEmergencySupplies.setUpdateTime(new Date());
         tblEmergencySupplies.setUpdateUserId(SecurityUtils.getUserId());
-        return tblEmergencySuppliesMapper.updateByPrimaryKeySelective(tblEmergencySupplies);
+        return tblEmergencySuppliesMapper.updateByPrimaryKey(tblEmergencySupplies);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class TblEmergencySuppliesServiceImpl implements TblEmergencySuppliesServ
         TblEmergencySupplies tblEmergencySupplies= tblEmergencySuppliesMapper.selectByPrimaryKey(id);
         tblEmergencySupplies.setUpdateTime(new Date());
         tblEmergencySupplies.setUpdateUserId(SecurityUtils.getUserId());
-        return tblEmergencySuppliesMapper.updateByPrimaryKeySelective(tblEmergencySupplies);
+        return tblEmergencySuppliesMapper.updateByPrimaryKey(tblEmergencySupplies);
     }
 
     @Override

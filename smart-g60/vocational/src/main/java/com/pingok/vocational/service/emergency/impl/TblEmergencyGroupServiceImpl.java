@@ -59,7 +59,7 @@ public class TblEmergencyGroupServiceImpl implements TblEmergencyGroupService {
         tblEmergencyGroup.setGroupMembers(JSON.toJSONString(tblEmergencyGroup.getGroupMembersStr()));
         tblEmergencyGroup.setUpdateTime(new Date());
         tblEmergencyGroup.setUpdateUserId(SecurityUtils.getUserId());
-        return tblEmergencyGroupMapper.updateByPrimaryKeySelective(tblEmergencyGroup);
+        return tblEmergencyGroupMapper.updateByPrimaryKey(tblEmergencyGroup);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class TblEmergencyGroupServiceImpl implements TblEmergencyGroupService {
         tblEmergencyGroup.setUpdateTime(new Date());
         tblEmergencyGroup.setUpdateUserId(SecurityUtils.getUserId());
         tblEmergencyGroup.setStatus(status);
-        return tblEmergencyGroupMapper.updateByPrimaryKeySelective(tblEmergencyGroup);
+        return tblEmergencyGroupMapper.updateByPrimaryKey(tblEmergencyGroup);
     }
 
     @Override

@@ -50,7 +50,7 @@ public class SoftwareInfoServiceImpl implements ISoftwareInfoService {
     public int updateSoftwareInfo(TblSoftwareInfo tblSoftwareInfo) {
         tblSoftwareInfo.setUpdateTime(new Date());
         tblSoftwareInfo.setUpdateUserId(SecurityUtils.getUserId());
-        return tblSoftwareInfoMapper.updateByPrimaryKeySelective(tblSoftwareInfo);
+        return tblSoftwareInfoMapper.updateByPrimaryKey(tblSoftwareInfo);
     }
 
     @Override

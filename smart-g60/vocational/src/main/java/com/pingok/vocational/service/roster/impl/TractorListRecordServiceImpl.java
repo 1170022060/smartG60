@@ -64,7 +64,7 @@ public class TractorListRecordServiceImpl implements ITractorListRecordService {
     public int updateTractorList(TblTractorListRecord tblTractorListRecord) {
         tblTractorListRecord.setUpdateTime(new Date());
         tblTractorListRecord.setUpdateUserId(SecurityUtils.getUserId());
-        return tblTractorListRecordMapper.updateByPrimaryKeySelective(tblTractorListRecord);
+        return tblTractorListRecordMapper.updateByPrimaryKey(tblTractorListRecord);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class TractorListRecordServiceImpl implements ITractorListRecordService {
         tblTractorListRecord.setUpdateTime(new Date());
         tblTractorListRecord.setUpdateUserId(SecurityUtils.getUserId());
         tblTractorListRecord.setStatus(status);
-        return tblTractorListRecordMapper.updateByPrimaryKeySelective(tblTractorListRecord);
+        return tblTractorListRecordMapper.updateByPrimaryKey(tblTractorListRecord);
     }
 
     @Override

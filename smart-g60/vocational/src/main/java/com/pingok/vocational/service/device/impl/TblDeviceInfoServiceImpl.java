@@ -82,7 +82,7 @@ public class TblDeviceInfoServiceImpl implements TblDeviceInfoService {
         }
         tblDeviceInfo.setUpdateTime(new Date());
         tblDeviceInfo.setUpdateUserId(SecurityUtils.getUserId());
-        int r = tblDeviceInfoMapper.updateByPrimaryKeySelective(tblDeviceInfo);
+        int r = tblDeviceInfoMapper.updateByPrimaryKey(tblDeviceInfo);
         return r;
     }
 
