@@ -58,6 +58,6 @@ public class PersonnelHealthServiceImpl implements IPersonnelHealthService {
     public int updatePersonnelHealth(TblPersonnelHealth tblPersonnelHealth) {
         tblPersonnelHealth.setUpdateTime(new Date());
         tblPersonnelHealth.setUpdateUserId(SecurityUtils.getUserId());
-        return tblPersonnelHealthMapper.updateByPrimaryKeySelective(tblPersonnelHealth);
+        return tblPersonnelHealthMapper.updateByPrimaryKey(tblPersonnelHealth);
     }
 }

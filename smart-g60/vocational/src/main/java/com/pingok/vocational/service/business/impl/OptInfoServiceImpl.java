@@ -59,7 +59,7 @@ public class OptInfoServiceImpl implements IOptInfoService {
         tblOptInfo.setUpdateTime(new Date());
         tblOptInfo.setUpdateUserId(SecurityUtils.getUserId());
         tblOptInfo.setIssueStatus(0);
-        return tblOptInfoMapper.updateByPrimaryKeySelective(tblOptInfo);
+        return tblOptInfoMapper.updateByPrimaryKey(tblOptInfo);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class OptInfoServiceImpl implements IOptInfoService {
         tblOptInfo.setUpdateUserId(SecurityUtils.getUserId());
         tblOptInfo.setStatus(status);
         tblOptInfo.setIssueStatus(0);
-        return tblOptInfoMapper.updateByPrimaryKeySelective(tblOptInfo);
+        return tblOptInfoMapper.updateByPrimaryKey(tblOptInfo);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class OptInfoServiceImpl implements IOptInfoService {
         {
             tblOptInfo.setIssueStatus(1);
             tblOptInfo.setIssueTime(new Date());
-            tblOptInfoMapper.updateByPrimaryKeySelective(tblOptInfo);
+            tblOptInfoMapper.updateByPrimaryKey(tblOptInfo);
         }
     }
 }

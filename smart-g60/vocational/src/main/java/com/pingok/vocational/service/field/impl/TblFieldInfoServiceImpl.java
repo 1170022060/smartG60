@@ -59,7 +59,7 @@ public class TblFieldInfoServiceImpl implements TblFieldInfoService {
         {
             tblFieldInfo.setFieldNum(PinYinUtil.getPinYinHeadChar(tblFieldInfo.getFieldName()));
         }
-        return tblFieldInfoMapper.updateByPrimaryKeySelective(tblFieldInfo);
+        return tblFieldInfoMapper.updateByPrimaryKey(tblFieldInfo);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class TblFieldInfoServiceImpl implements TblFieldInfoService {
         tblFieldInfo.setUpdateTime(new Date());
         tblFieldInfo.setUpdateUserId(SecurityUtils.getUserId());
         tblFieldInfo.setStatus(status);
-        return tblFieldInfoMapper.updateByPrimaryKeySelective(tblFieldInfo);
+        return tblFieldInfoMapper.updateByPrimaryKey(tblFieldInfo);
     }
 
     @Override

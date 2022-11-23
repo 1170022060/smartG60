@@ -64,7 +64,7 @@ public class BaseStationInfoServiceImpl implements IBaseStationInfoService {
     public int updateBaseStation(TblBaseStationInfo tblBaseStationInfo) {
         tblBaseStationInfo.setUpdateTime(new Date());
         tblBaseStationInfo.setUpdateUserId(SecurityUtils.getUserId());
-        return tblBaseStationInfoMapper.updateByPrimaryKeySelective(tblBaseStationInfo);
+        return tblBaseStationInfoMapper.updateByPrimaryKey(tblBaseStationInfo);
     }
 
     @Override

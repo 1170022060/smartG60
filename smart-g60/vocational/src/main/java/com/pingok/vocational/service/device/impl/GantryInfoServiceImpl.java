@@ -79,7 +79,7 @@ public class GantryInfoServiceImpl implements IGantryInfoService {
         }
         tblDeviceInfoGantry.setUpdateTime(new Date());
         tblDeviceInfoGantry.setUpdateUserId(SecurityUtils.getUserId());
-        int r = tblGantryInfoMapper.updateByPrimaryKeySelective(tblDeviceInfoGantry);
+        int r = tblGantryInfoMapper.updateByPrimaryKey(tblDeviceInfoGantry);
         if (StringUtils.isNotNull(tblDeviceInfoGantry.getGps())) {
             String[] gps = tblDeviceInfoGantry.getGps().split(",");
             TblDeviceCategory deviceCategory = tblDeviceCategoryService.selectCategoryById(tblDeviceInfoGantry.getDeviceCategory());

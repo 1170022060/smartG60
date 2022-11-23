@@ -50,7 +50,7 @@ public class PolicyRecordServiceImpl implements IPolicyRecordService {
     public int updatePolicyRecord(TblPolicyRecord tblPolicyRecord) {
         tblPolicyRecord.setUpdateTime(new Date());
         tblPolicyRecord.setUpdateUserId(SecurityUtils.getUserId());
-        return tblPolicyRecordMapper.updateByPrimaryKeySelective(tblPolicyRecord);
+        return tblPolicyRecordMapper.updateByPrimaryKey(tblPolicyRecord);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class PolicyRecordServiceImpl implements IPolicyRecordService {
         tblPolicyRecord.setUpdateTime(new Date());
         tblPolicyRecord.setUpdateUserId(SecurityUtils.getUserId());
         tblPolicyRecord.setStatus(status);
-        return tblPolicyRecordMapper.updateByPrimaryKeySelective(tblPolicyRecord);
+        return tblPolicyRecordMapper.updateByPrimaryKey(tblPolicyRecord);
     }
 
     @Override

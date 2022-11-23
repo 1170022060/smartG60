@@ -65,7 +65,7 @@ public class TblDeviceInfoLaneServiceImpl implements TblDeviceInfoLaneService {
         }
         tblDeviceInfoLane.setUpdateTime(new Date());
         tblDeviceInfoLane.setUpdateUserId(SecurityUtils.getUserId());
-        return tblDeviceInfoLaneMapper.updateByPrimaryKeySelective(tblDeviceInfoLane);
+        return tblDeviceInfoLaneMapper.updateByPrimaryKey(tblDeviceInfoLane);
     }
     @Override
     public int updateStatus(Long id, Integer status) {
@@ -73,7 +73,7 @@ public class TblDeviceInfoLaneServiceImpl implements TblDeviceInfoLaneService {
         tblDeviceInfoLane.setUpdateTime(new Date());
         tblDeviceInfoLane.setUpdateUserId(SecurityUtils.getUserId());
         tblDeviceInfoLane.setStatus(status);
-        return tblDeviceInfoLaneMapper.updateByPrimaryKeySelective(tblDeviceInfoLane);
+        return tblDeviceInfoLaneMapper.updateByPrimaryKey(tblDeviceInfoLane);
     }
 
     @Override
