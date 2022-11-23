@@ -82,10 +82,22 @@ public class ParkingLotController extends BaseController {
         return getDataTable(iParkingLotService.traffic(fieldNum,vehType,startDate,endDate,statisticsType));
     }
 
+    @Log(title = "车流统计(页面)-出入口总流量", businessType = BusinessType.OTHER)
+    @GetMapping("/trafficCount")
+    public AjaxResult trafficCount(@RequestParam(name = "fieldNum",required = false) String fieldNum, @RequestParam(name = "vehType",required = false) Integer vehType,@RequestParam(name = "startDate",required = false) Date startDate,@RequestParam(name = "endDate",required = false) Date endDate){
+        return AjaxResult.success(iParkingLotService.trafficCount(fieldNum,vehType,startDate,endDate));
+    }
+
     @Log(title = "人流统计(页面)", businessType = BusinessType.OTHER)
     @GetMapping("/humanFlow")
     public TableDataInfo humanFlow(@RequestParam(name = "fieldNum",required = false) String fieldNum, @RequestParam(name = "areaId",required = false) Integer areaId,@RequestParam(name = "startDate",required = false) Date startDate,@RequestParam(name = "endDate",required = false) Date endDate, @RequestParam(name = "statisticsType") Integer statisticsType){
         startPage();
         return getDataTable(iParkingLotService.humanFlow(fieldNum,areaId,startDate,endDate,statisticsType));
+    }
+
+    @Log(title = "人流统计(页面)-总流量", businessType = BusinessType.OTHER)
+    @GetMapping("/humanFlowCount")
+    public AjaxResult humanFlowCount(@RequestParam(name = "fieldNum",required = false) String fieldNum, @RequestParam(name = "areaId",required = false) Integer areaId,@RequestParam(name = "startDate",required = false) Date startDate,@RequestParam(name = "endDate",required = false) Date endDate){
+        return AjaxResult.success(iParkingLotService.humanFlowCount(fieldNum,areaId,startDate,endDate));
     }
 }

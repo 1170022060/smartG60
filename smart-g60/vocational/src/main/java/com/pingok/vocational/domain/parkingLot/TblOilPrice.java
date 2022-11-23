@@ -1,6 +1,7 @@
 package com.pingok.vocational.domain.parkingLot;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.core.annotation.Excel;
 import lombok.Data;
 
 import javax.persistence.Id;
@@ -42,4 +43,21 @@ public class TblOilPrice implements java.io.Serializable {
     /** 0汽油价格 */
     private Integer price0;
 
+    /** 创建时间 */
+    @Excel(name = "创建时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
+
+    /** 更新时间 */
+    @Excel(name = "更新时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
+
+    /** 创建用户ID */
+    @Excel(name = "创建用户工号")
+    private Long createUserId;
+
+    /** 更新用户ID */
+    @Excel(name = "更新用户ID")
+    private Long updateUserId;
 }

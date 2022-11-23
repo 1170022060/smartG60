@@ -108,4 +108,26 @@ public interface TblEventPassengerFlowMapper extends CommonRepository<TblEventPa
             "</script>"})
     List<Map> humanFlow(@Param("fieldNum") String fieldNum,@Param("areaId") Integer areaId ,@Param("startDate") Date startDate,@Param("endDate") Date endDate,@Param("statisticsType") Integer statisticsType);
 
+    @Select({"<script>" +
+            "SELECT " +
+            "sum(eps.ENTRY) AS \"flow\" " +
+            "FROM " +
+            "TBL_EVENT_PASSENGER_STATISTICS eps " +
+            "JOIN TBL_FIELD_INFO tfi ON tfi.ID = eps.FIELD_ID " +
+            "WHERE 1=1 " +
+            "<when test='fieldNum != null'> " +
+            "and tfi.FIELD_NUM = #{fieldNum}" +
+            "</when>"+
+            "<when test='areaId != null'> " +
+            "and eps.AREA_ID = #{areaId}" +
+            "</when>"+
+            "<when test='startDate != null'> " +
+            " and to_date(eps.WORK_DATE,'yyyy-mm-dd') &gt;= #{startDate} " +
+            "</when>"+
+            "<when test='endDate != null'> " +
+            " and to_date(eps.WORK_DATE,'yyyy-mm-dd') &lt;= #{endDate} " +
+            "</when>"+
+            "</script>"})
+    Map humanFlowCount(@Param("fieldNum") String fieldNum,@Param("areaId") Integer areaId ,@Param("startDate") Date startDate,@Param("endDate") Date endDate);
+
 }

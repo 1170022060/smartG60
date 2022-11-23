@@ -87,4 +87,27 @@ public interface TblParkingStatisticsMapper extends CommonRepository<TblParkingS
             "</script>"})
     List<Map> traffic(@Param("fieldNum") String fieldNum,@Param("vehType") Integer vehType ,@Param("startDate") Date startDate,@Param("endDate") Date endDate,@Param("statisticsType") Integer statisticsType);
 
+    @Select({"<script>" +
+            "SELECT " +
+            "sum(ENTER) AS \"enter\", " +
+            "sum(OUT) AS \"out\" " +
+            "FROM " +
+            "TBL_PARKING_STATISTICS tps " +
+            "JOIN TBL_FIELD_INFO tfi ON tfi.ID = tps.FIELD_ID " +
+            "WHERE 1=1 " +
+            "<when test='fieldNum != null'> " +
+            "and tfi.FIELD_NUM = #{fieldNum}" +
+            "</when>"+
+            "<when test='vehType != null'> " +
+            "and tps.VEH_TYPE = #{vehType}" +
+            "</when>"+
+            "<when test='startDate != null'> " +
+            " and tps.DAY &gt;= #{startDate} " +
+            "</when>"+
+            "<when test='endDate != null'> " +
+            " and tps.DAY &lt;= #{endDate} " +
+            "</when>"+
+            "</script>"})
+    Map trafficCount(@Param("fieldNum") String fieldNum,@Param("vehType") Integer vehType ,@Param("startDate") Date startDate,@Param("endDate") Date endDate);
+
 }
