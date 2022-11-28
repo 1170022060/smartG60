@@ -17,6 +17,7 @@ import com.ruoyi.common.security.utils.DictUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.*;
 import com.ruoyi.system.api.domain.SysDictData;
+import com.ruoyi.system.api.domain.amap.TblAutoNaviMapRecord;
 import com.ruoyi.system.api.domain.device.TblDeviceInfo;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import com.ruoyi.system.api.domain.release.TblReleasePreset;
@@ -211,6 +212,7 @@ public class EventServiceImpl implements IEventService {
         JSONObject info;
         JSONObject data;
         String content;
+        TblAutoNaviMapRecord autoNaviMapRecord;
         int size;
         for (int i = 0; i < eventPlan.size(); i++) {
             tblEventHandle = new TblEventHandle();
@@ -225,160 +227,160 @@ public class EventServiceImpl implements IEventService {
             switch (plan.getInteger("type")) {
                 case 4://可变信息标志推送
                     content = "情报板信息发布：";
-//                    rReleasePreset = remoteReleaseService.idInfo(plan.getLong("presetId"));
-//                    if (rReleasePreset != null) {
-//                        if (rReleasePreset.getCode() == R.SUCCESS) {
-//                            if (plan.containsKey("deviceIds")) {
-//                                vmsPublishInfo = new JSONObject();
-//                                devicdIds = plan.getJSONArray("deviceIds");
-//                                if (devicdIds != null && devicdIds.size() > 0) {
-//                                    size = devicdIds.size();
-//                                    infos = new JSONArray();
-//                                    for (int j = 0; j < size; j++) {
-//                                        rDevice = remoteDeviceMonitorService.selectByDeviceId(devicdIds.getString(j));
-//                                        deviceInfo = rDevice.getData();
-//                                        info = new JSONObject();
-//                                        info.put("devId", deviceInfo.getDeviceId());
-//                                        info.put("ip", deviceInfo.getDeviceIp());
-//                                        info.put("port", deviceInfo.getPort());
-//                                        info.put("slave", deviceInfo.getSlaveId());
-//                                        info.put("protocol", deviceInfo.getProtocol());
-//                                        info.put("width", deviceInfo.getWidth());
-//                                        info.put("height", deviceInfo.getHigh());
-//                                        infos.add(info);
-//                                    }
-//                                    vmsPublishInfo.put("devInfo", infos);
-//
-//                                    tblReleasePreset = rReleasePreset.getData();
-//                                    info = new JSONObject();
-//                                    info.put("content", tblReleasePreset.getPresetInfo());
-//                                    info.put("typeface", tblReleasePreset.getTypeface());
-//                                    info.put("textColor", tblReleasePreset.getColor());
-//                                    info.put("textSize", tblReleasePreset.getTypefaceSize());
-//                                    info.put("picId", tblReleasePreset.getPictureType());
-//                                    infos = new JSONArray();
-//                                    infos.add(info);
-//                                    vmsPublishInfo.put("data", infos);
-//                                    r = remoteInfoBoardService.publish(vmsPublishInfo);
-//                                    if (r.getCode() == R.SUCCESS) {
-//                                        content += "发布成功";
-//                                    }
-//                                }else {
-//                                    content += "发布失败，无设备信息";
-//                                }
-//                            }else {
-//                                content += "发布失败，无设备信息";
-//                            }
-//
-//                        } else {
-//                            content += "ID为：" + plan.getLong("presetId") + "：预设信息查询失败，失败原因" + rReleasePreset.getMsg() + "；";
-//                        }
-//                    } else {
-//                        content += "ID为：" + plan.getLong("presetId") + "的情报板预设信息不存在，推送失败；";
-//                    }
+                    rReleasePreset = remoteReleaseService.idInfo(plan.getLong("presetId"));
+                    if (rReleasePreset != null) {
+                        if (rReleasePreset.getCode() == R.SUCCESS) {
+                            if (plan.containsKey("deviceIds")) {
+                                vmsPublishInfo = new JSONObject();
+                                devicdIds = plan.getJSONArray("deviceIds");
+                                if (devicdIds != null && devicdIds.size() > 0) {
+                                    size = devicdIds.size();
+                                    infos = new JSONArray();
+                                    for (int j = 0; j < size; j++) {
+                                        rDevice = remoteDeviceMonitorService.selectByDeviceId(devicdIds.getString(j));
+                                        deviceInfo = rDevice.getData();
+                                        info = new JSONObject();
+                                        info.put("devId", deviceInfo.getDeviceId());
+                                        info.put("ip", deviceInfo.getDeviceIp());
+                                        info.put("port", deviceInfo.getPort());
+                                        info.put("slave", deviceInfo.getSlaveId());
+                                        info.put("protocol", deviceInfo.getProtocol());
+                                        info.put("width", deviceInfo.getWidth());
+                                        info.put("height", deviceInfo.getHigh());
+                                        infos.add(info);
+                                    }
+                                    vmsPublishInfo.put("devInfo", infos);
+
+                                    tblReleasePreset = rReleasePreset.getData();
+                                    info = new JSONObject();
+                                    info.put("content", tblReleasePreset.getPresetInfo());
+                                    info.put("typeface", tblReleasePreset.getTypeface());
+                                    info.put("textColor", tblReleasePreset.getColor());
+                                    info.put("textSize", tblReleasePreset.getTypefaceSize());
+                                    info.put("picId", tblReleasePreset.getPictureType());
+                                    infos = new JSONArray();
+                                    infos.add(info);
+                                    vmsPublishInfo.put("data", infos);
+                                    r = remoteInfoBoardService.publish(vmsPublishInfo);
+                                    if (r.getCode() == R.SUCCESS) {
+                                        content += "发布成功";
+                                    }
+                                }else {
+                                    content += "发布失败，无设备信息";
+                                }
+                            }else {
+                                content += "发布失败，无设备信息";
+                            }
+
+                        } else {
+                            content += "ID为：" + plan.getLong("presetId") + "：预设信息查询失败，失败原因" + rReleasePreset.getMsg() + "；";
+                        }
+                    } else {
+                        content += "ID为：" + plan.getLong("presetId") + "的情报板预设信息不存在，推送失败；";
+                    }
                     break;
                 case 5://可变限速标志推送
                     content = "限速板信息发布：";
-//                    if (plan.containsKey("deviceIds")) {
-//                        vmsPublishInfo = new JSONObject();
-//                        devicdIds = plan.getJSONArray("deviceIds");
-//                        if (devicdIds != null && devicdIds.size() > 0) {
-//                            size = devicdIds.size();
-//                            infos = new JSONArray();
-//                            for (int j = 0; j < size; j++) {
-//                                rDevice = remoteDeviceMonitorService.selectByDeviceId(devicdIds.getString(j));
-//                                deviceInfo = rDevice.getData();
-//                                info = new JSONObject();
-//                                info.put("devId", deviceInfo.getDeviceId());
-//                                info.put("ip", deviceInfo.getDeviceIp());
-//                                info.put("port", deviceInfo.getPort());
-//                                info.put("slave", deviceInfo.getSlaveId());
-//                                info.put("protocol", deviceInfo.getProtocol());
-//                                info.put("width", deviceInfo.getWidth());
-//                                info.put("height", deviceInfo.getHigh());
-//                                infos.add(info);
-//                            }
-//                            if (plan.containsKey("presetId")) {
-//                                vmsPublishInfo.put("devInfo", infos);
-//                                info = new JSONObject();
-//                                info.put("picId", plan.getLong("presetId"));
-//                                infos = new JSONArray();
-//                                infos.add(info);
-//                                vmsPublishInfo.put("data", infos);
-//                                r = remoteInfoBoardService.publish(vmsPublishInfo);
-//                                if (r.getCode() == R.SUCCESS) {
-//                                    content += "发布成功";
-//                                }
-//                            } else {
-//                                content += "发布失败，发布内容为空";
-//                            }
-//                        }else {
-//                            content += "发布失败，无设备信息";
-//                        }
-//                    }else {
-//                        content += "发布失败，无设备信息";
-//                    }
+                    if (plan.containsKey("deviceIds")) {
+                        vmsPublishInfo = new JSONObject();
+                        devicdIds = plan.getJSONArray("deviceIds");
+                        if (devicdIds != null && devicdIds.size() > 0) {
+                            size = devicdIds.size();
+                            infos = new JSONArray();
+                            for (int j = 0; j < size; j++) {
+                                rDevice = remoteDeviceMonitorService.selectByDeviceId(devicdIds.getString(j));
+                                deviceInfo = rDevice.getData();
+                                info = new JSONObject();
+                                info.put("devId", deviceInfo.getDeviceId());
+                                info.put("ip", deviceInfo.getDeviceIp());
+                                info.put("port", deviceInfo.getPort());
+                                info.put("slave", deviceInfo.getSlaveId());
+                                info.put("protocol", deviceInfo.getProtocol());
+                                info.put("width", deviceInfo.getWidth());
+                                info.put("height", deviceInfo.getHigh());
+                                infos.add(info);
+                            }
+                            if (plan.containsKey("presetId")) {
+                                vmsPublishInfo.put("devInfo", infos);
+                                info = new JSONObject();
+                                info.put("picId", plan.getLong("presetId"));
+                                infos = new JSONArray();
+                                infos.add(info);
+                                vmsPublishInfo.put("data", infos);
+                                r = remoteInfoBoardService.publish(vmsPublishInfo);
+                                if (r.getCode() == R.SUCCESS) {
+                                    content += "发布成功";
+                                }
+                            } else {
+                                content += "发布失败，发布内容为空";
+                            }
+                        }else {
+                            content += "发布失败，无设备信息";
+                        }
+                    }else {
+                        content += "发布失败，无设备信息";
+                    }
                     break;
                 case 6://ETC门架车路协同推送
                     break;
                 case 7://超视距诱导灯推送
                     content = "超视距诱导模式推送：";
-//                    if (plan.containsKey("deviceIds")) {
-//                        JSONObject body = new JSONObject();
-//                        devicdIds = plan.getJSONArray("deviceIds");
-//                        if (devicdIds != null && devicdIds.size() > 0) {
-//                            size = devicdIds.size();
-//                            if (plan.containsKey("cmdType")) {
-//                                for (int j = 0; j < size; j++) {
-//                                    rDevice = remoteDeviceMonitorService.selectByDeviceId(devicdIds.getString(j));
-//                                    if (rDevice != null && rDevice.getCode() == R.SUCCESS) {
-//                                        deviceInfo = rDevice.getData();
-//                                        body.put("deviceId", deviceInfo.getDeviceId());
-//                                        body.put("cmdType", plan.getJSONArray("cmdType"));
-//                                        r = remotePilotLightService.send(body);
-//                                        if (r != null) {
-//                                            if (r != null && r.getCode() == R.SUCCESS) {
-//                                                content += deviceInfo.getDeviceName() + "：推送成功；";
-//                                            } else {
-//                                                content += deviceInfo.getDeviceName() + "：推送失败，失败原因" + r.getMsg() + "；";
-//                                            }
-//                                        } else {
-//                                            content += deviceInfo.getDeviceName() + "：推送失败，原因：服务无响应；";
-//                                        }
-//                                    } else {
-//                                        content += "ID为：" + devicdIds.getLong(j) + "的超视距诱导设备信息不存在，推送失败；";
-//                                    }
-//                                }
-//                            }else {
-//                                content += "发布失败，模式信息为空";
-//                            }
-//                        }else {
-//                            content += "发布失败，无设备信息";
-//                        }
-//                    }else {
-//                        content += "发布失败，无设备信息";
-//                    }
+                    if (plan.containsKey("deviceIds")) {
+                        JSONObject body = new JSONObject();
+                        devicdIds = plan.getJSONArray("deviceIds");
+                        if (devicdIds != null && devicdIds.size() > 0) {
+                            size = devicdIds.size();
+                            if (plan.containsKey("cmdType")) {
+                                for (int j = 0; j < size; j++) {
+                                    rDevice = remoteDeviceMonitorService.selectByDeviceId(devicdIds.getString(j));
+                                    if (rDevice != null && rDevice.getCode() == R.SUCCESS) {
+                                        deviceInfo = rDevice.getData();
+                                        body.put("deviceId", deviceInfo.getDeviceId());
+                                        body.put("cmdType", plan.getJSONArray("cmdType"));
+                                        r = remotePilotLightService.send(body);
+                                        if (r != null) {
+                                            if (r != null && r.getCode() == R.SUCCESS) {
+                                                content += deviceInfo.getDeviceName() + "：推送成功；";
+                                            } else {
+                                                content += deviceInfo.getDeviceName() + "：推送失败，失败原因" + r.getMsg() + "；";
+                                            }
+                                        } else {
+                                            content += deviceInfo.getDeviceName() + "：推送失败，原因：服务无响应；";
+                                        }
+                                    } else {
+                                        content += "ID为：" + devicdIds.getLong(j) + "的超视距诱导设备信息不存在，推送失败；";
+                                    }
+                                }
+                            }else {
+                                content += "发布失败，模式信息为空";
+                            }
+                        }else {
+                            content += "发布失败，无设备信息";
+                        }
+                    }else {
+                        content += "发布失败，无设备信息";
+                    }
 
                     break;
                 case 8://高德地图推送
-//                    content = "高德地图事件推送：";
-//                    TblAutoNaviMapRecord autoNaviMapRecord = new TblAutoNaviMapRecord();
-//                    autoNaviMapRecord.setId(id);
-//                    autoNaviMapRecord.setType(plan.getInteger("amapType"));
-//                    autoNaviMapRecord.setLocs("[" + tblEventRecord.getLocationInterval() + "]");
-//                    autoNaviMapRecord.setStartDate(tblEventRecord.getEventTime());
-//                    autoNaviMapRecord.setDesc(tblEventRecord.getRemark());
-//                    autoNaviMapRecord.setDirection(tblEventRecord.getDirection());
-//                    r = remoteAmapService.eventPublish(autoNaviMapRecord);
-//                    if (r != null) {
-//                        if (r.getCode() == R.SUCCESS) {
-//                            content += "推送成功";
-//                        } else {
-//                            content += "推送失败，原因：" + r.getMsg();
-//                        }
-//                    } else {
-//                        content += "推送失败，原因：服务无响应；";
-//                    }
+                    content = "高德地图事件推送：";
+                    autoNaviMapRecord = new TblAutoNaviMapRecord();
+                    autoNaviMapRecord.setId(id);
+                    autoNaviMapRecord.setType(plan.getInteger("amapType"));
+                    autoNaviMapRecord.setLocs("[" + tblEventRecord.getLocationInterval() + "]");
+                    autoNaviMapRecord.setStartDate(tblEventRecord.getEventTime());
+                    autoNaviMapRecord.setDesc(tblEventRecord.getRemark());
+                    autoNaviMapRecord.setDirection(tblEventRecord.getDirection());
+                    r = remoteAmapService.eventPublish(autoNaviMapRecord);
+                    if (r != null) {
+                        if (r.getCode() == R.SUCCESS) {
+                            content += "推送成功";
+                        } else {
+                            content += "推送失败，原因：" + r.getMsg();
+                        }
+                    } else {
+                        content += "推送失败，原因：服务无响应；";
+                    }
                     break;
                 case 10://百度地图推送
 //                    content = "百度地图事件推送：";

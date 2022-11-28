@@ -1,0 +1,51 @@
+# Tomcat
+server:
+  port: 8081
+  tomcat:
+    uri-encoding: UTF-8
+
+# Spring
+spring: 
+  application:
+    # 应用名称
+    name: gateway-internet
+  profiles:
+    # 环境配置
+    active: dev
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 172.29.10.22:8848
+        #namespace: ed01487a-41a0-480e-a369-39f2be469364
+        #group: SMARTG60
+      config:
+        #namespace: ed01487a-41a0-480e-a369-39f2be469364
+        #group: SMARTG60
+        # 配置中心地址
+        server-addr: 172.29.10.22:8848
+        # 配置文件格式
+        file-extension: yml
+        # 共享配置
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+    sentinel:
+      # 取消控制台懒加载
+      eager: true
+      transport:
+        # 控制台地址
+        dashboard: 172.29.10.21:8858
+        port: 8719
+        client-ip: 172.29.10.21
+      # nacos配置持久化
+      datasource:
+        ds1:
+          nacos:
+            server-addr: 172.29.10.22:8848
+            dataId: sentinel-internet
+            groupId: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow
