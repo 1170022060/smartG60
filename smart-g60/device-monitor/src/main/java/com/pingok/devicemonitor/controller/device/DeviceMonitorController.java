@@ -89,11 +89,11 @@ public class DeviceMonitorController extends BaseController {
                             }
                         }
                     }
+                    TblDeviceInfo info = iDeviceService.info(deviceStatus.getDeviceId());
+                    TblEventRecord eventRecord;
+                    R<TblEventRecord> re = remoteEventService.selectByEventTypeAndPileNo("23", info.getPileNo());
                     if (level > 0) {
-                        TblDeviceInfo info = iDeviceService.info(deviceStatus.getDeviceId());
-                        TblEventRecord eventRecord;
-                        R<TblEventRecord> re = remoteEventService.selectByEventTypeAndPileNo("23",info.getPileNo());
-                        if(re.getCode()==R.SUCCESS && re.getData()!=null){
+                        if (re.getCode() == R.SUCCESS && re.getData() != null) {
                             eventRecord = re.getData();
                             eventRecord.setEventTime(DateUtils.getNowDate());
                             eventRecord.setEventType("23");
@@ -105,7 +105,7 @@ public class DeviceMonitorController extends BaseController {
                             if (r.getCode() == R.FAIL) {
                                 log.error("能见度预警事件更新失败");
                             }
-                        }else {
+                        } else {
                             eventRecord = new TblEventRecord();
                             eventRecord.setEventTime(DateUtils.getNowDate());
                             eventRecord.setEventType("23");
@@ -118,7 +118,25 @@ public class DeviceMonitorController extends BaseController {
                                 log.error("能见度预警事件新增失败");
                             }
                         }
+                    }
 
+                    if (currentVisibility >= 1500) {
+                        if (re.getCode() == R.SUCCESS && re.getData() != null) {
+                            eventRecord = re.getData();
+                            eventRecord.setStatus(2);
+                            R r = remoteEventService.edit(eventRecord);
+                            if (r.getCode() == R.FAIL) {
+                                log.error("能见度预警事件更新失败");
+                            }
+                            KafkaEnum kafkaEnum = new KafkaEnum();
+                            kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SIGNAL_PILOTLIGHT);
+                            JSONObject params = new JSONObject();
+                            params.put("kafkaType", "commandSend");
+                            params.put("deviceId", info.getDeviceId());
+                            params.put("cmdType", 8);
+                            kafkaEnum.setData(JSON.toJSONString(params));
+                            remoteKafkaService.send(kafkaEnum);
+                        }
                     }
                 }
             }

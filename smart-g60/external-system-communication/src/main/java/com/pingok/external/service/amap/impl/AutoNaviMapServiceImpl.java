@@ -41,12 +41,12 @@ public class AutoNaviMapServiceImpl implements IAutoNaviMapService {
         param.put("id", autoNaviMapRecord.getId());
         param.put("stateFlag", 0);
         param.put("type", autoNaviMapRecord.getType());
-        param.put("locType", 2);
-        param.put("roadName", "G60沪杭高速");
+        param.put("locType", 1);
+//        param.put("roadName", "G60沪杭高速");
         param.put("locs", autoNaviMapRecord.getLocs());
         param.put("startDate", autoNaviMapRecord.getStartDate());
         param.put("desc", autoNaviMapRecord.getDesc());
-        param.put("callback", AutoNaviMapConfig.CALLBACK + "amap/callback");
+//        param.put("callback", AutoNaviMapConfig.CALLBACK + "amap/callback");
         String digest = "";
         for (String key : param.keySet()) {
             digest += param.get(key).toString();
