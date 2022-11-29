@@ -1,6 +1,7 @@
 package com.pingok.external.domain.amap;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.Id;
@@ -21,20 +22,10 @@ public class TblAutoNaviMapRecord implements Serializable {
     @Id
     private Long keyId;
 
-    /** 授权城市ADCODE，例如310100 */
-    private String adcode;
-
-    /** 授权⾼德开放平台WEB服务序列号 */
-    private String clientKey;
 
     /** 时间戳，1621243952 单位秒 */
     private Integer timestamp;
 
-    /** 鉴权动态密钥 */
-    private String digest;
-
-    /** 事件源ID，由⾼德分配 */
-    private String sourceId;
 
     /** 事件id */
     private Long id;
@@ -43,7 +34,7 @@ public class TblAutoNaviMapRecord implements Serializable {
     private Integer stateFlag;
 
     /** 事件类型 */
-    private Integer type;
+    private Integer eventType;
 
     /** 2:坐标 1:桩号 4:收费站 */
     private Integer locType;
@@ -58,19 +49,21 @@ public class TblAutoNaviMapRecord implements Serializable {
     private String locs;
 
     /** 影响等级 0-默认、1-轻微、2-⼀般、3-重⼤、4-特⼤ */
-    private Integer level;
+    private Integer eventLevel;
 
     /** ⻋道位置，可⽀持多个，逗号分隔 0-⽆、1-左侧⼀⻋道、2-左侧⼆⻋道、3-左侧三⻋道、4- 左侧四⻋道、5-左侧五⻋道、6-左侧六⻋道、7-左侧七⻋ 道、11-硬路肩、12-匝道、13-紧急停⻋带、 14-应急⻋道、 15左侧⻋道、16、中间⻋ 道、17、右侧⻋道 */
     private String lanes;
 
     /** 开始时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startDate;
 
     /** 结束时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endDate;
 
     /** 事件描述 */
-    private String desc;
+    private String eventDesc;
 
     /** 回调地址 */
     private String callback;
@@ -88,9 +81,11 @@ public class TblAutoNaviMapRecord implements Serializable {
     private Integer status;
 
     /** 创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /** 更新时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     /** 创建用户ID */
