@@ -366,10 +366,10 @@ public class EventServiceImpl implements IEventService {
                     content = "高德地图事件推送：";
                     autoNaviMapRecord = new TblAutoNaviMapRecord();
                     autoNaviMapRecord.setId(id);
-                    autoNaviMapRecord.setType(plan.getInteger("amapType"));
+                    autoNaviMapRecord.setEventType(plan.getInteger("amapType"));
                     autoNaviMapRecord.setLocs("[" + tblEventRecord.getLocationInterval() + "]");
                     autoNaviMapRecord.setStartDate(tblEventRecord.getEventTime());
-                    autoNaviMapRecord.setDesc(tblEventRecord.getRemark());
+                    autoNaviMapRecord.setEventDesc(tblEventRecord.getRemark());
                     autoNaviMapRecord.setDirection(tblEventRecord.getDirection());
                     r = remoteAmapService.eventPublish(autoNaviMapRecord);
                     if (r != null) {

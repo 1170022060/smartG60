@@ -75,7 +75,6 @@ public class AutoNaviMapServiceImpl implements IAutoNaviMapService {
                             .andEqualTo("id", autoNaviMapRecord.getId());
                     autoNaviMapRecord = tblAutoNaviMapRecordMapper.selectOneByExample(example);
                     if (autoNaviMapRecord == null) {
-                        autoNaviMapRecord = JSON.parseObject(param.toString(), TblAutoNaviMapRecord.class);
                         autoNaviMapRecord.setId(remoteIdProducerService.nextId());
                         autoNaviMapRecord.setStatus(0);
                         autoNaviMapRecord.setCreateTime(DateUtils.getNowDate());
