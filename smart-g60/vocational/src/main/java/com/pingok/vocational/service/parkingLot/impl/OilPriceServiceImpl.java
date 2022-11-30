@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 今日油价 服务层实现层
@@ -33,6 +34,13 @@ public class OilPriceServiceImpl implements IOilPriceService {
         Example example = new Example(TblOilPrice.class);
         example.createCriteria().andEqualTo("transDate", date);
         return tblOilPriceMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public List<TblOilPrice> selectOilPriceList(Date date) {
+        Example example = new Example(TblOilPrice.class);
+        example.createCriteria().andEqualTo("transDate", date);
+        return tblOilPriceMapper.selectByExample(example);
     }
 
     @Override

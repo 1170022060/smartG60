@@ -6,6 +6,7 @@ import com.ruoyi.common.core.constant.UserConstants;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
+import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
@@ -27,12 +28,20 @@ public class OilPriceController extends BaseController {
     @Autowired
     private IOilPriceService iOilPriceService;
 
-    @Log(title = "今日油价", businessType = BusinessType.OTHER)
+    @Log(title = "今日油价-监控", businessType = BusinessType.OTHER)
     @GetMapping(value="/monitor")
-    public AjaxResult monitor(@RequestParam(name = "date",required = false) Date date)
+    public AjaxResult monitor(@RequestParam(name = "date") Date date)
     {
         TblOilPrice info = iOilPriceService.selectOilPrice(date);
         return AjaxResult.success(info);
+    }
+
+    @Log(title = "今日油价-查询", businessType = BusinessType.OTHER)
+    @GetMapping(value="/search")
+    public TableDataInfo search(@RequestParam(name = "date",required = false) Date date)
+    {
+        startPage();
+        return getDataTable(iOilPriceService.selectOilPriceList(date));
     }
 
     @Log(title = "今日油价-根据ID查询", businessType = BusinessType.OTHER)
