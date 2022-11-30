@@ -1,5 +1,6 @@
 package com.pingok.event.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.event.domain.TblEventAlarm;
@@ -19,6 +20,7 @@ import com.ruoyi.system.api.*;
 import com.ruoyi.system.api.domain.SysDictData;
 import com.ruoyi.system.api.domain.amap.TblAutoNaviMapRecord;
 import com.ruoyi.system.api.domain.device.TblDeviceInfo;
+import com.ruoyi.system.api.domain.emergency.TblEmergencySupplies;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import com.ruoyi.system.api.domain.release.TblReleasePreset;
 import io.swagger.models.auth.In;
@@ -366,10 +368,10 @@ public class EventServiceImpl implements IEventService {
                     content = "高德地图事件推送：";
                     autoNaviMapRecord = new TblAutoNaviMapRecord();
                     autoNaviMapRecord.setId(id);
-                    autoNaviMapRecord.setType(plan.getInteger("amapType"));
-                    autoNaviMapRecord.setLocs("[" + tblEventRecord.getLocationInterval() + "]");
+                    autoNaviMapRecord.setEventType(plan.getInteger("amapType"));
+                    autoNaviMapRecord.setLocs(JSON.toJSONString(Arrays.asList(Arrays.asList(tblEventRecord.getPileNo()))));
                     autoNaviMapRecord.setStartDate(tblEventRecord.getEventTime());
-                    autoNaviMapRecord.setDesc(tblEventRecord.getRemark());
+                    autoNaviMapRecord.setEventDesc(tblEventRecord.getRemark());
                     autoNaviMapRecord.setDirection(tblEventRecord.getDirection());
                     r = remoteAmapService.eventPublish(autoNaviMapRecord);
                     if (r != null) {
@@ -408,38 +410,38 @@ public class EventServiceImpl implements IEventService {
                     break;
                 case 9://应急资源
                     content = "应急资源：";
-//                    JSONArray materials = plan.getJSONArray("materials");
-//                    JSONObject object;
-//                    if (materials != null && materials.size() > 0) {
-//                        size = materials.size();
-//                        TblEmergencySupplies emergencySupplies;
-//                        R<TblEmergencySupplies> emergencySuppliesR;
-//                        for (int j = 0; j < size; j++) {
-//                            object = materials.getJSONObject(j);
-//                            emergencySuppliesR = remoteEmergencySuppliesService.idInfo(object.getLong("materialId"));
-//                            if (emergencySuppliesR == null) {
-//                                if (emergencySuppliesR.getCode() == R.SUCCESS) {
-//                                    emergencySupplies = emergencySuppliesR.getData();
-//                                    switch (emergencySupplies.getSuppliesType()) {
-//                                        case 1: //物资
-//                                            content += "应急物资：" + emergencySupplies.getSuppliesName() + "，数量：" + emergencySupplies.getSuppliesCount() + "；";
-//                                            break;
-//                                        case 2: //专家
-//                                            content += "应急专家：" + emergencySupplies.getExpertName() + "，联系电话：" + emergencySupplies.getExpertPhone() + "；";
-//                                            break;
-//                                        case 3: //车辆
-//                                            content += "应急车辆：" + emergencySupplies.getVehPlate() + "，车牌颜色：" + emergencySupplies.getVehColor() + "，车型：" + emergencySupplies.getVehClass() + "；";
-//                                            break;
-//                                    }
-//                                } else {
-//                                    content += "ID为：" + object.getLong("materialId") + "的应急资源信息查询失败，原因：" + emergencySuppliesR.getMsg() + "；";
-//                                }
-//                            } else {
-//                                content += "ID为：" + object.getLong("materialId") + "的应急资源信息查询失败，原因：应急资源查询服务无响应；";
-//                            }
-//
-//                        }
-//                    }
+                    JSONArray materials = plan.getJSONArray("materials");
+                    JSONObject object;
+                    if (materials != null && materials.size() > 0) {
+                        size = materials.size();
+                        TblEmergencySupplies emergencySupplies;
+                        R<TblEmergencySupplies> emergencySuppliesR;
+                        for (int j = 0; j < size; j++) {
+                            object = materials.getJSONObject(j);
+                            emergencySuppliesR = remoteEmergencySuppliesService.idInfo(object.getLong("materialId"));
+                            if (emergencySuppliesR == null) {
+                                if (emergencySuppliesR.getCode() == R.SUCCESS) {
+                                    emergencySupplies = emergencySuppliesR.getData();
+                                    switch (emergencySupplies.getSuppliesType()) {
+                                        case 1: //物资
+                                            content += "应急物资：" + emergencySupplies.getSuppliesName() + "，数量：" + emergencySupplies.getSuppliesCount() + "；";
+                                            break;
+                                        case 2: //专家
+                                            content += "应急专家：" + emergencySupplies.getExpertName() + "，联系电话：" + emergencySupplies.getExpertPhone() + "；";
+                                            break;
+                                        case 3: //车辆
+                                            content += "应急车辆：" + emergencySupplies.getVehPlate() + "，车牌颜色：" + emergencySupplies.getVehColor() + "，车型：" + emergencySupplies.getVehClass() + "；";
+                                            break;
+                                    }
+                                } else {
+                                    content += "ID为：" + object.getLong("materialId") + "的应急资源信息查询失败，原因：" + emergencySuppliesR.getMsg() + "；";
+                                }
+                            } else {
+                                content += "ID为：" + object.getLong("materialId") + "的应急资源信息查询失败，原因：应急资源查询服务无响应；";
+                            }
+
+                        }
+                    }
                     break;
             }
             tblEventHandle.setHandleContent(content);
@@ -478,6 +480,8 @@ public class EventServiceImpl implements IEventService {
         tblEventHandle.setUserId(SecurityUtils.getUserId());
         tblEventHandle.setHandleContent("事件确认");
         tblEventHandleMapper.insert(tblEventHandle);
+
+
 
 //        eventUpdate(tblEventRecord.getEventId(), 2, null, SecurityUtils.getUsername());
     }
@@ -588,7 +592,7 @@ public class EventServiceImpl implements IEventService {
         data.put("szRemark", szRemark);
         data.put("szUser", szUser);
         KafkaEnum kafkaEnum = new KafkaEnum();
-        kafkaEnum.setTopIc(KafkaTopIc.UPDATE_EVENT_INFO);
+        kafkaEnum.setTopIc(KafkaTopIc.MONITOR_UPDATE_EVENT_INFO);
         kafkaEnum.setData(data.toJSONString());
         remoteKafkaService.send(kafkaEnum);
     }

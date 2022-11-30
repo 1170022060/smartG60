@@ -74,7 +74,7 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
         object.put("payload", payload.toJSONString());
         array.add(object);
         KafkaEnum kafkaEnum = new KafkaEnum();
-        kafkaEnum.setTopIc(KafkaTopIc.SMART_TOILET);
+        kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SMART_TOILET);
         kafkaEnum.setData(array.toJSONString());
         remoteKafkaService.send(kafkaEnum);
     }
@@ -109,7 +109,7 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
                 array.add(object);
             }
             KafkaEnum kafkaEnum = new KafkaEnum();
-            kafkaEnum.setTopIc(KafkaTopIc.SMART_TOILET);
+            kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SMART_TOILET);
             kafkaEnum.setData(array.toJSONString());
             remoteKafkaService.send(kafkaEnum);
         }
@@ -135,7 +135,7 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
                     array.add(object);
                 }
                 KafkaEnum kafkaEnum = new KafkaEnum();
-                kafkaEnum.setTopIc(KafkaTopIc.SMART_TOILET);
+                kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SMART_TOILET);
                 kafkaEnum.setData(array.toJSONString());
                 remoteKafkaService.send(kafkaEnum);
             }
@@ -160,7 +160,7 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
                 array.add(object);
             }
             KafkaEnum kafkaEnum = new KafkaEnum();
-            kafkaEnum.setTopIc(KafkaTopIc.SMART_TOILET);
+            kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SMART_TOILET);
             kafkaEnum.setData(array.toJSONString());
             remoteKafkaService.send(kafkaEnum);
         }

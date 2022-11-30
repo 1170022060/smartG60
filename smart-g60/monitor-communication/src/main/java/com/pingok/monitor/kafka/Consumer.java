@@ -56,7 +56,7 @@ public class Consumer {
      * @param ack
      * @param topic
      */
-    @KafkaListener(topics = KafkaTopIc.UPDATE_EVENT_INFO, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.MONITOR_UPDATE_EVENT_INFO, groupId = KafkaGroup.MONITOR_UPDATE_EVENT_GROUP)
     public void updateEventInfo(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -82,7 +82,7 @@ public class Consumer {
      * @param ack
      * @param topic
      */
-    @KafkaListener(topics = KafkaTopIc.UPDATE_EVENT_VIDEO, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.MONITOR_UPDATE_EVENT_VIDEO, groupId = KafkaGroup.MONITOR_UPDATE_EVENT_VIDEO_GROUP)
     public void updateEventVideo(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -105,7 +105,7 @@ public class Consumer {
      * @param ack
      * @param topic
      */
-    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_SERVER_STATUS, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_SERVER_STATUS, groupId = KafkaGroup.MONITOR_SIGNAL_SERVER_STATUS_GROUP)
     public void serverStatus(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -128,7 +128,7 @@ public class Consumer {
      * @param ack
      * @param topic
      */
-    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_PING_STATUS, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_PING_STATUS, groupId = KafkaGroup.MONITOR_SIGNAL_PING_STATUS_GROUP)
     public void pingStatus(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -144,7 +144,7 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_SWITCH_STATUS, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_SWITCH_STATUS, groupId = KafkaGroup.MONITOR_SIGNAL_SWITCH_STATUS_GROUP)
     public void switchStatus(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -160,7 +160,7 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_FIREWALL_STATUS, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_FIREWALL_STATUS, groupId = KafkaGroup.MONITOR_SIGNAL_FIREWALL_STATUS_GROUP)
     public void firewallStatus(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -176,7 +176,7 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PUBLISH, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PUBLISH, groupId = KafkaGroup.MONITOR_SIGNAL_INFOBOARD_PUBLISH_GROUP)
     public void infoBoardPublish(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -192,7 +192,7 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PING, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PING, groupId = KafkaGroup.MONITOR_SIGNAL_INFOBOARD_PING_GROUP)
     public void infoBoardPing(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -206,7 +206,7 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_PILOTLIGHT, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_PILOTLIGHT, groupId = KafkaGroup.MONITOR_SIGNAL_PILOTLIGHT_GROUP)
     public void pilotLightHandle(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -230,7 +230,7 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_VDT, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_VDT, groupId = KafkaGroup.MONITOR_SIGNAL_VDT_GROUP)
     public void vdtCollect(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -244,7 +244,7 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.SMART_TOILET, groupId = KafkaGroup.MONITOR_SIGNAL_GROUP)
+    @KafkaListener(topics = KafkaTopIc.MONITOR_SMART_TOILET, groupId = KafkaGroup.MONITOR_SMART_TOILET_GROUP)
     public void smartToilet(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {

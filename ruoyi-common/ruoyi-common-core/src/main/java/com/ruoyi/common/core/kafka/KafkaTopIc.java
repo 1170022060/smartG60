@@ -2,7 +2,7 @@ package com.ruoyi.common.core.kafka;
 
 public class KafkaTopIc {
 
-    public final static String SMART_TOILET = "smartToilet";
+    public final static String MONITOR_SMART_TOILET = "monitorSmartToilet";
     public final static String GIS_UPDATE_STATUS = "gisUpdateStatus";
     public final static String WEBSOCKET_SEND = "sendMassage";
 
@@ -10,8 +10,8 @@ public class KafkaTopIc {
 
     public final static String SPECIAL_RECORD = "specialRecord";
 
-    public final static String UPDATE_EVENT_INFO = "updateEventInfo";
-    public final static String UPDATE_EVENT_VIDEO = "updateEventVideo";
+    public final static String MONITOR_UPDATE_EVENT_INFO = "monitorUpdateEventInfo";
+    public final static String MONITOR_UPDATE_EVENT_VIDEO = "monitorupdateEventVideo";
 
     public final static String MONITOR_SIGNAL_SERVER_STATUS = "monitorSignalServerStatus";
 
