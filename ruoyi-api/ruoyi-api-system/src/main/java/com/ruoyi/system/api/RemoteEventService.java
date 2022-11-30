@@ -21,7 +21,7 @@ import java.util.List;
 @FeignClient(contextId = "remoteEventService", value = ServiceNameConstants.EVENT_SERVICE, fallbackFactory = RemoteEventFallbackFactory.class)
 public interface RemoteEventService {
 
-    @PostMapping("/selectByEventTypeAndPileNo")
+    @GetMapping("/eventControl/selectByEventTypeAndPileNo")
     R<TblEventRecord> selectByEventTypeAndPileNo(@RequestParam(value = "eventType") String eventType, @RequestParam(value = "pileNo") String pileNo);
 
     @PostMapping("/eventControl")
