@@ -32,7 +32,7 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "LEFT JOIN TBL_FIELD_INFO tfi on tfi.ID = tdi.FIELD_BELONG " +
             "LEFT JOIN TBL_DEVICE_STATUS tds ON tds.DEVICE_ID = tdi.ID  " +
             "LEFT JOIN SYS_DICT_DATA sdd on sdd.DICT_VALUE=to_char(tdi.DEVICE_TYPE) and sdd.DICT_TYPE='device_type' " +
-            "where tdi.FIELD_BELONG in (3941,3940) " +
+            "where tfi.FIELD_NAME like '%枫泾服务区%' and tfi.TYPE=4 " +
             "<when test='fieldNum != null'> " +
             "and tfi.FIELD_NUM = #{fieldNum} " +
             "</when>" +
@@ -57,7 +57,7 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "LEFT JOIN TBL_FIELD_INFO tfi on tfi.ID = tdi.FIELD_BELONG " +
             "LEFT JOIN TBL_DEVICE_STATUS tds ON tds.DEVICE_ID = tdi.ID  " +
             "LEFT JOIN SYS_DICT_DATA sdd on sdd.DICT_VALUE=to_char(tdi.DEVICE_TYPE) and sdd.DICT_TYPE='device_type' " +
-            "where tdi.FIELD_BELONG in (3940,3941) " +
+            "where tfi.FIELD_NAME like '%枫泾服务区%' and tfi.TYPE=4 " +
             "<when test='fieldNum != null'> " +
             "and tfi.FIELD_NUM = #{fieldNum} " +
             "</when>" +
@@ -104,7 +104,7 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "LEFT JOIN  SYS_USER creatUser ON creatUser.USER_ID = tdf.CREATE_USER_ID " +
             "LEFT JOIN  SYS_USER updateUser ON updateUser.USER_ID = tdf.UPDATE_USER_ID " +
             "LEFT JOIN SYS_DICT_DATA sdd on sdd.DICT_VALUE=to_char(tdi.DEVICE_TYPE) and sdd.DICT_TYPE='device_type' " +
-            "where tdi.FIELD_BELONG in (3941,3940) " +
+            "where tfi.FIELD_NAME like '%枫泾服务区%' and tfi.TYPE=4 " +
             "<when test='fieldNum != null'> " +
             "and tfi.FIELD_NUM = #{fieldNum} " +
             "</when>" +
@@ -132,7 +132,8 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "b.STATUS_DESC as \"statusDesc\", b.STATUS_DETAILS as \"statusDetails\" " +
             " from TBL_DEVICE_INFO a " +
             " LEFT JOIN TBL_DEVICE_STATUS b on a.ID = b.DEVICE_ID " +
-            "where FIELD_BELONG in (3940,3941) " +
+            " LEFT JOIN  TBL_FIELD_INFO tfi on tfi.ID = a.FIELD_BELONG " +
+            "where tfi.FIELD_NAME like '%枫泾服务区%' and tfi.TYPE=4 " +
             "</script>")
     List<Map> getDeviceStatusDesc();
 }

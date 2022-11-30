@@ -43,7 +43,7 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "( " +
             "SELECT " +
             "tdf.ID AS \"id\", " +
-            "tdf.FAULT_TYPE AS \"faultType\", " +
+            "case tdf.FAULT_TYPE when 'offLine' then '离线' else tdf.FAULT_TYPE end AS \"faultType\", " +
             "tdf.FAULT_ID AS \"faultId\", " +
             "tdf.FAULT_DESCRIPTION AS \"faultDescription\", " +
             "tdf.REGISTER_TYPE AS \"registerType\", " +
@@ -88,7 +88,7 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "LEFT JOIN  SYS_USER updateUser ON updateUser.USER_ID = tdf.UPDATE_USER_ID UNION " +
             "SELECT " +
             "tdf.ID AS \"id\", " +
-            "tdf.FAULT_TYPE AS \"faultType\", " +
+            "case tdf.FAULT_TYPE when 'offLine' then '离线' else tdf.FAULT_TYPE end AS \"faultType\", " +
             "tdf.FAULT_ID AS \"faultId\", " +
             "tdf.FAULT_DESCRIPTION AS \"faultDescription\", " +
             "tdf.REGISTER_TYPE AS \"registerType\", " +
@@ -133,7 +133,7 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "LEFT JOIN  SYS_USER updateUser ON updateUser.USER_ID = tdf.UPDATE_USER_ID UNION " +
             "SELECT " +
             "tdf.ID AS \"id\", " +
-            "tdf.FAULT_TYPE AS \"faultType\", " +
+            "case tdf.FAULT_TYPE when 'offLine' then '离线' else tdf.FAULT_TYPE end AS \"faultType\", " +
             "tdf.FAULT_ID AS \"faultId\", " +
             "tdf.FAULT_DESCRIPTION AS \"faultDescription\", " +
             "tdf.REGISTER_TYPE AS \"registerType\", " +

@@ -162,6 +162,7 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "<when test='protocol != null'> " +
             "and PROTOCOL = #{protocol}" +
             "</when>" +
+            " order by a.ID" +
             "</script>"
     })
     List<VmsInfoByType> getVmsListByType(@Param("type") String type, @Param("protocol") String protocol);

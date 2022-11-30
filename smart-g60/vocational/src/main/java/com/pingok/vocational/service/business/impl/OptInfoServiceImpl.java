@@ -48,7 +48,7 @@ public class OptInfoServiceImpl implements IOptInfoService {
     public int insertOptInfo(TblOptInfo tblOptInfo) {
         tblOptInfo.setId(remoteIdProducerService.nextId());
         tblOptInfo.setStatus(1);
-        tblOptInfo.setIssueStatus(0);
+        tblOptInfo.setIssuseStatus(0);
         tblOptInfo.setCreateTime(new Date());
         tblOptInfo.setCreateUserId(SecurityUtils.getUserId());
         return tblOptInfoMapper.insert(tblOptInfo);
@@ -58,7 +58,7 @@ public class OptInfoServiceImpl implements IOptInfoService {
     public int updateOptInfo(TblOptInfo tblOptInfo) {
         tblOptInfo.setUpdateTime(new Date());
         tblOptInfo.setUpdateUserId(SecurityUtils.getUserId());
-        tblOptInfo.setIssueStatus(0);
+        tblOptInfo.setIssuseStatus(0);
         return tblOptInfoMapper.updateByPrimaryKey(tblOptInfo);
     }
 
@@ -68,7 +68,7 @@ public class OptInfoServiceImpl implements IOptInfoService {
         tblOptInfo.setUpdateTime(new Date());
         tblOptInfo.setUpdateUserId(SecurityUtils.getUserId());
         tblOptInfo.setStatus(status);
-        tblOptInfo.setIssueStatus(0);
+        tblOptInfo.setIssuseStatus(0);
         return tblOptInfoMapper.updateByPrimaryKey(tblOptInfo);
     }
 
@@ -97,8 +97,8 @@ public class OptInfoServiceImpl implements IOptInfoService {
         }
         for(TblOptInfo tblOptInfo: optInfoArray)
         {
-            tblOptInfo.setIssueStatus(1);
-            tblOptInfo.setIssueTime(new Date());
+            tblOptInfo.setIssuseStatus(1);
+            tblOptInfo.setIssuseTime(new Date());
             tblOptInfoMapper.updateByPrimaryKey(tblOptInfo);
         }
     }
