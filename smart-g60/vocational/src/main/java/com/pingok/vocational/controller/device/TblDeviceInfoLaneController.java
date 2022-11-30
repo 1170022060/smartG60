@@ -28,7 +28,7 @@ public class TblDeviceInfoLaneController extends BaseController {
     @Autowired
     private TblDeviceInfoLaneService tblDeviceInfoLaneService;
 
-    @RequiresPermissions("vocational:deviceLane:idInfo")
+//    @RequiresPermissions("vocational:deviceLane:idInfo")
     @Log(title = "车道设备信息-根据ID查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/idInfo")
     public AjaxResult idInfo(@RequestParam(name = "id") Long id)
@@ -37,7 +37,7 @@ public class TblDeviceInfoLaneController extends BaseController {
         return AjaxResult.success(idInfo);
     }
 
-    @RequiresPermissions("vocational:deviceLane:info")
+//    @RequiresPermissions("vocational:deviceLane:info")
     @Log(title = "车道设备信息-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
     public TableDataInfo info(@RequestParam(name = "laneHex") String laneHex,@RequestParam(name = "deviceCategory",required = false) Long deviceCategory, @RequestParam(name = "status",required = false) Integer status, @RequestParam(name = "laneBelong",required = false) String laneBelong, @RequestParam(name = "deviceId",required = false) String deviceId, @RequestParam(name = "userSide",required = false) Long userSide, @RequestParam(name = "managementSide",required = false) Long managementSide, @RequestParam(name = "serviceLife",required = false) Integer serviceLife, @RequestParam(name = "deviceName",required = false) String deviceName)

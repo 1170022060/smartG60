@@ -29,7 +29,7 @@ public class OilPriceController extends BaseController {
 
     @Log(title = "今日油价", businessType = BusinessType.OTHER)
     @GetMapping(value="/monitor")
-    public AjaxResult monitor(@RequestParam(name = "date") Date date)
+    public AjaxResult monitor(@RequestParam(name = "date",required = false) Date date)
     {
         TblOilPrice info = iOilPriceService.selectOilPrice(date);
         return AjaxResult.success(info);

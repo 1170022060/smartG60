@@ -45,8 +45,8 @@ public class TblOptInfo implements Serializable {
 
     private Long updateUserId;
 
-    private Integer issueStatus;
+    private Integer issuseStatus;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date issueTime;
+    private Date issuseTime;
 }
