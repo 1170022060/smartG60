@@ -96,7 +96,7 @@ public class EventController extends BaseController {
         JSONObject data = new JSONObject();
         data.put("ubiLogicId", eventId);
         KafkaEnum kafkaEnum = new KafkaEnum();
-        kafkaEnum.setTopIc(KafkaTopIc.UPDATE_EVENT_VIDEO);
+        kafkaEnum.setTopIc(KafkaTopIc.MONITOR_UPDATE_EVENT_VIDEO);
         kafkaEnum.setData(data.toJSONString());
         remoteKafkaService.send(kafkaEnum);
         return AjaxResult.success("请求成功，后台正在下载，请等待");

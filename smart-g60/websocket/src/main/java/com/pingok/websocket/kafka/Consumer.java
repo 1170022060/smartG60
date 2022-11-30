@@ -29,7 +29,7 @@ public class Consumer {
     @Autowired
     private MassageLinkApplicationService massageLinkApplicationService;
 
-    @KafkaListener(topics = KafkaTopIc.WEBSOCKET_SEND, groupId = KafkaGroup.WEBSOCKET_GROUP)
+    @KafkaListener(topics = KafkaTopIc.WEBSOCKET_SEND, groupId = KafkaGroup.WEBSOCKET_SEND_GROUP)
     public void send(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
@@ -47,7 +47,7 @@ public class Consumer {
         }
     }
 
-    @KafkaListener(topics = KafkaTopIc.WEBSOCKET_BROADCAST, groupId = KafkaGroup.WEBSOCKET_GROUP)
+    @KafkaListener(topics = KafkaTopIc.WEBSOCKET_BROADCAST, groupId = KafkaGroup.WEBSOCKET_BROADCAST_GROUP)
     public void broadcast(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
