@@ -2,6 +2,8 @@ package com.ruoyi.common.core.kafka;
 
 public class KafkaTopIc {
 
+    public final static String MONITOR_LINKAGE = "monitorLinkage";
+
     public final static String MONITOR_SMART_TOILET = "monitorSmartToilet";
     public final static String GIS_UPDATE_STATUS = "gisUpdateStatus";
     public final static String WEBSOCKET_SEND = "sendMassage";

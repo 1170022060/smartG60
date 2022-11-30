@@ -481,6 +481,13 @@ public class EventServiceImpl implements IEventService {
         tblEventHandle.setHandleContent("事件确认");
         tblEventHandleMapper.insert(tblEventHandle);
 
+        JSONObject data = new JSONObject();
+        data.put("ubiLogicId",tblEventRecord.getEventId());
+        KafkaEnum kafkaEnum = new KafkaEnum();
+        kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+        kafkaEnum.setData(data.toJSONString());
+        remoteKafkaService.send(kafkaEnum);
+
 
 
 //        eventUpdate(tblEventRecord.getEventId(), 2, null, SecurityUtils.getUsername());

@@ -2,6 +2,8 @@ package com.ruoyi.common.core.kafka;
 
 public class KafkaGroup {
 
+    public final static String MONITOR_LINKAGE_GROUP = "monitorLinkageGroup";
+
     public final static String GIS_GROUP = "gisGroup";
     public final static String WEBSOCKET_SEND_GROUP = "sendMassageGroup";
 

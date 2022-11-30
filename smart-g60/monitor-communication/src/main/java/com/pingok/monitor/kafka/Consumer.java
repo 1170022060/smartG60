@@ -259,4 +259,20 @@ public class Consumer {
             }
         }
     }
+
+    @KafkaListener(topics = KafkaTopIc.MONITOR_LINKAGE, groupId = KafkaGroup.MONITOR_LINKAGE_GROUP)
+    public void linkage(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        Optional message = Optional.ofNullable(record.value());
+        if (message.isPresent()) {
+            log.info("linkage 消费了： Topic:" + topic + ",Message:" + message.get());
+            try {
+                Object msg = message.get();
+                JSONObject jo = JSONObject.parseObject(String.valueOf(msg));
+                iVideoService.linkage(jo.getLong("ubiLogicId"));
+                ack.acknowledge();
+            } catch (Exception e) {
+                log.error("linkage 消费者，Topic" + topic + ",Message:" + message.get() + "处理失败。错误信息：" + e.getMessage());
+            }
+        }
+    }
 }

@@ -54,10 +54,10 @@ public class VideoEventController extends BaseController {
                 if (!list.contains(tblEventVehicleEvent.getUiEventType())) {
                     iVideoEventService.vehicleEvent(tblEventVehicleEvent);
                     iVideoEventService.updateVehicleEvent(tblEventVehicleEvent);
-                    list = Arrays.asList(31, 32, 34, 35, 36, 40, 41);
-                    if (!list.contains(tblEventVehicleEvent.getUiEventType())) {
-                        iVideoService.linkage(tblEventVehicleEvent.getUbiLogicId());
-                    }
+//                    list = Arrays.asList(31, 32, 34, 35, 36, 40, 41);
+//                    if (!list.contains(tblEventVehicleEvent.getUiEventType())) {
+//                        iVideoService.linkage(tblEventVehicleEvent.getUbiLogicId());
+//                    }
                 }
                 break;
             case "PASSENGER_FLOW":
