@@ -46,6 +46,8 @@ public class VmsServiceImpl implements IVmsService {
     @Autowired
     private ISocketService iSocketService;
 
+    static String[] A7pngFileName = { "0","120","110","100","90","80","70","65","60","55","50","45","40","35","30","25","20","叉","上箭头","右上箭头","左上箭头" };
+
     @Override
     public JSONObject publish(String pubInfo) {
 
@@ -566,7 +568,7 @@ public class VmsServiceImpl implements IVmsService {
                         if(wndInfo.getType() == 0) { //图片
                             String xyPic = String.format("%03d%03d", (wndInfo.getWinW() - picSize) / 2, 0);
                             playlstItem.append("\\C" + xyPic);
-                            playlstItem.append("\\P" + picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, pubInfo.getPicId()));
+                            playlstItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, pubInfo.getPicId()));
                         }
                         else
                         {
@@ -609,6 +611,9 @@ public class VmsServiceImpl implements IVmsService {
         }
         return playlst;
     }
+
+    // 判断多分区（A7,A8）图片前缀是 \B还是\P
+
 
     // playlst上传文件
     private int ULOneFile10(Integer slaveID, String ip, Integer port, byte[] data) {
@@ -827,11 +832,27 @@ public class VmsServiceImpl implements IVmsService {
             }
         } else if(protocol == InfoBoardConfig.SANSI_PLIST_MULTI) {
             switch (picId) {
-                case "叉": picCode = "z00"; break;
-                case "上箭头": picCode = "z01"; break;
-                case "右上箭头": picCode = "z02"; break;
-                case "左上箭头": picCode = "z03"; break;
-                default: picCode = picId;
+                case "叉": picCode = "\\Pz00"; break;
+                case "上箭头": picCode = "\\Pz01"; break;
+                case "右上箭头": picCode = "\\Pz02"; break;
+                case "左上箭头": picCode = "\\Pz03"; break;
+                case "120": picCode = "\\P120"; break;
+                case "110": picCode = "\\P110"; break;
+                case "100": picCode = "\\P100"; break;
+                case "90": picCode = "\\P90"; break;
+                case "80": picCode = "\\P80"; break;
+                case "70": picCode = "\\P70"; break;
+                case "65": picCode = "\\P65"; break;
+                case "60": picCode = "\\P60"; break;
+                case "55": picCode = "\\P55"; break;
+                case "50": picCode = "\\P50"; break;
+                case "45": picCode = "\\P45"; break;
+                case "40": picCode = "\\P40"; break;
+                case "35": picCode = "\\P35"; break;
+                case "30": picCode = "\\P30"; break;
+                case "25": picCode = "\\P25"; break;
+                case "20": picCode = "\\P20"; break;
+                default: picCode = "\\B"+picId;
             }
         }
         return picCode;
