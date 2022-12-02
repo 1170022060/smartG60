@@ -58,6 +58,11 @@ public interface TblLaneStatusMapper extends CommonRepository<TblLaneStatus> {
             "tls.ORIENTATION \"orientation\"  FROM TBL_LANE_STATUS tls JOIN TBL_LANE_INFO tli ON tli.LANE_HEX = tls.LANE_HEX WHERE tli.STATION_ID = #{stationId} AND tls.ORIENTATION = #{orientation}")
     List<Map> findByStationId(@Param("stationId") String stationId, @Param("orientation") Integer orientation);
 
+    @Select("SELECT b.DEVICE_ID,b.DEVICE_NAME,b.PROTOCOL,a.LANE_HEX FROM TBL_LANE_INFO a " +
+            "LEFT JOIN TBL_DEVICE_INFO b on a.LANE_HEX=b.LANE_BELONG " +
+            "WHERE a.LANE_TYPE !=20 AND DEVICE_TYPE=10 and a.LANE_HEX = #{laneHex} ")
+    List<Map> getCameraId(@Param("laneHex") String laneHex);
+
     @Select("SELECT bsi.STATION_ID as \"stationId\",bsi.STATION_NAME as \"stationName\",NVL(SUM(tls.ERROR_TRANS), 0) as \"errorTrans\"," +
             "NVL(SUM(tls.ERROR_LPR_TRANS), 0) as \"errorLprTrans\"," +
             "a.PROMPTNESS_LPR as \"promptnessLpr\",a.PROMPTNESS_TRANS as \"promptnessTrans\" FROM TBL_BASE_STATION_INFO bsi  " +
