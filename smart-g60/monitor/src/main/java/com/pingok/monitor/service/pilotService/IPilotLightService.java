@@ -3,6 +3,7 @@ package com.pingok.monitor.service.pilotService;
 import com.pingok.monitor.domain.device.TblDeviceStatus;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,4 +15,5 @@ public interface IPilotLightService {
      */
     List<Map> pilotLightStatus();
     List<TblDeviceStatus> getRtStatus(Integer roadId);
+    List<Map> visibilityTotal(Date startTime,Date endTime);
 }

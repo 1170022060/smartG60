@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -50,5 +51,10 @@ public class PilotLightServiceImpl implements IPilotLightService {
         }
         List<TblDeviceStatus> list = tblDeviceStatusMapper.selectByExample(example);
         return list;
+    }
+
+    @Override
+    public List<Map> visibilityTotal(Date startTime, Date endTime) {
+        return pilotLightMapper.visibilityTotal(startTime,endTime);
     }
 }
