@@ -60,7 +60,7 @@ public class SpecialRecordServiceImpl implements ISpecialRecordService {
             SysUser user = userResult.getData().getSysUser();
             tblSpecialRecord.setRecordId(tblSpecialRecord.getNetWork()+tblSpecialRecord.getStationId()+tblSpecialRecord.getLaneId()+DateUtils.dateTimeNowDtl());
             tblSpecialRecord.setCreateUserId(SecurityUtils.getUserId());
-            tblSpecialRecord.setOptId(Integer.valueOf(user.getUserName()));
+            tblSpecialRecord.setOptId(Long.valueOf(user.getUserName()));
             tblSpecialRecord.setOptName(user.getNickName());
             int hour = DateUtils.getNowDate().getHours();
             if (hour >= 0 && hour < 7) {
