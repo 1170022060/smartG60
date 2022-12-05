@@ -132,5 +132,12 @@ public class TblEventRecord implements Serializable {
      */
     private String pileNo;
 
+    /**
+     * 检测设备类型
+     */
+    private Integer deviceType;
+
+    private Integer eventLevel;
+
 
 }

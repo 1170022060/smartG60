@@ -140,6 +140,8 @@ public class TblEventRecord implements Serializable {
      */
     private Integer deviceType;
 
+    private Integer eventLevel;
+
     @Transient
     private List<TblEventHandle> eventHandles;
 

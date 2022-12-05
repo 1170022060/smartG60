@@ -157,6 +157,30 @@ public class TblEventRecord implements Serializable {
      */
     private String pileNo;
 
+
+    /**
+     * 检测设备类型
+     */
+    private Integer deviceType;
+
+    public Integer getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(Integer deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public Integer getEventLevel() {
+        return eventLevel;
+    }
+
+    public void setEventLevel(Integer eventLevel) {
+        this.eventLevel = eventLevel;
+    }
+
+    private Integer eventLevel;
+
     public String getPileNo() {
         return pileNo;
     }
