@@ -102,7 +102,7 @@ public class DeviceMonitorController extends BaseController {
                             eventRecord.setLocationInterval(info.getGps());
                             eventRecord.setPileNo(info != null ? info.getPileNo() : null);
                             eventRecord.setEventLevel(level);
-                            eventRecord.setDeviceType(2);
+                            eventRecord.setDeviceType(10);
                             R r = remoteEventService.edit(eventRecord);
                             if (r.getCode() == R.FAIL) {
                                 log.error("能见度预警事件更新失败");
@@ -116,7 +116,7 @@ public class DeviceMonitorController extends BaseController {
                             eventRecord.setLocationInterval(info.getGps());
                             eventRecord.setPileNo(info != null ? info.getPileNo() : null);
                             eventRecord.setEventLevel(level);
-                            eventRecord.setDeviceType(2);
+                            eventRecord.setDeviceType(10);
                             R r = remoteEventService.add(eventRecord);
                             if (r.getCode() == R.FAIL) {
                                 log.error("能见度预警事件新增失败");
