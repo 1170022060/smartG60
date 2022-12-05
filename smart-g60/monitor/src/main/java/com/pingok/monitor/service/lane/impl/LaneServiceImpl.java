@@ -46,6 +46,7 @@ public class LaneServiceImpl implements ILaneService {
             criteria.andEqualTo("status", 0);
             criteria.andEqualTo("laneId", enLane.get(i).get("laneId"));
             enLane.get(i).put("specialRecords", tblSpecialRecordMapper.selectByExample(example));
+            enLane.get(i).put("cameraArr",tblLaneStatusMapper.getCameraId(enLane.get(i).get("laneHex").toString()));
         }
         laneEnum.setEnLane(enLane);
 
@@ -58,6 +59,7 @@ public class LaneServiceImpl implements ILaneService {
             criteria.andEqualTo("status", 0);
             criteria.andEqualTo("laneId", exLane.get(i).get("laneId"));
             exLane.get(i).put("specialRecords", tblSpecialRecordMapper.selectByExample(example));
+            exLane.get(i).put("cameraArr",tblLaneStatusMapper.getCameraId(exLane.get(i).get("laneHex").toString()));
         }
         laneEnum.setExtLane(exLane);
         return laneEnum;
