@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -60,5 +61,10 @@ public class PilotLightController extends BaseController {
     @GetMapping("/rtStatus")
     public AjaxResult getRtStatus(@RequestParam(required = false) Integer roadId) {
         return AjaxResult.success(iPilotLightService.getRtStatus(roadId));
+    }
+
+    @GetMapping("/total")
+    public AjaxResult total(Date startTime,Date endTime){
+        return AjaxResult.success(iPilotLightService.visibilityTotal(startTime,endTime));
     }
 }

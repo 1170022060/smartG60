@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -26,5 +27,17 @@ public interface PilotLightMapper {
             "WHERE " +
             "DEVICE_TYPE = #{deviceType}")
     List<Map> pilotLightStatus(@Param("deviceType") Integer deviceType);
+
+    @Select({"<script>" +"SELECT COUNT(*) as \"count\",EVENT_LEVEL as \"eventLevel\" from TBL_EVENT_RECORD a " +
+            "WHERE EVENT_TYPE=23 " +
+            "<when test='startTime != null'> " +
+            "and tdf.EVENT_TIME &gt;= #{startTime} " +
+            "</when> " +
+            "<when test='endTime != null'> " +
+            "and tdf.EVENT_TIME &lt;= #{endTime} " +
+            "</when> " +
+            "GROUP BY EVENT_LEVEL"+
+            "</script>"})
+    List<Map> visibilityTotal(@Param("startTime")Date startTime,@Param("endTime")Date endTime);
 
 }
