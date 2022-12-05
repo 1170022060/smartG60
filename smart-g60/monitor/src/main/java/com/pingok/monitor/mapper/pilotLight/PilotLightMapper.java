@@ -31,10 +31,10 @@ public interface PilotLightMapper {
     @Select({"<script>" +"SELECT COUNT(*) as \"count\",EVENT_LEVEL as \"eventLevel\" from TBL_EVENT_RECORD a " +
             "WHERE EVENT_TYPE=23 " +
             "<when test='startTime != null'> " +
-            "and tdf.EVENT_TIME &gt;= #{startTime} " +
+            "and a.EVENT_TIME &gt;= #{startTime} " +
             "</when> " +
             "<when test='endTime != null'> " +
-            "and tdf.EVENT_TIME &lt;= #{endTime} " +
+            "and a.EVENT_TIME &lt;= #{endTime} " +
             "</when> " +
             "GROUP BY EVENT_LEVEL"+
             "</script>"})
