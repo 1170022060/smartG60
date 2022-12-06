@@ -264,7 +264,7 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "FROM TBL_DEVICE_FAULT tdf  " +
             "LEFT JOIN TBL_DEVICE_INFO tbi on tbi.ID=tdf.DEVICE_ID  " +
             "LEFT JOIN TBL_DEVICE_CATEGORY tbc on tbi.DEVICE_CATEGORY=tbc.ID  " +
-            "WHERE tbi.DEVICE_CATEGORY = 927 " +
+            "WHERE 1=1 " +
             "<when test='deviceTypeId != null'> " +
             " and tbi.DEVICE_CATEGORY = #{deviceTypeId} " +
             "</when>"+

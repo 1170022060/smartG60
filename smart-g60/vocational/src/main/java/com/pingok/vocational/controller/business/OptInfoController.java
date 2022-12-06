@@ -47,7 +47,7 @@ public class OptInfoController extends BaseController {
         return getDataTable(info);
     }
 
-    @RequiresPermissions("vocational:optInfo:add")
+//    @RequiresPermissions("vocational:optInfo:add")
     @Log(title = "员工信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody TblOptInfo tblOptInfo)
