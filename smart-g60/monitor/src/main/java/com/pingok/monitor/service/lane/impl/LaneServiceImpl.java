@@ -150,14 +150,17 @@ public class LaneServiceImpl implements ILaneService {
                 LaneInfo laneChildrenList = new LaneInfo();
                 laneChildrenList.setLaneHex(laneList.get(i).get("laneHex").toString());
                 laneChildrenList.setLaneName(laneList.get(i).get("laneName").toString());
+                laneChildrenList.setCameraArr(tblLaneStatusMapper.getCameraId(laneList.get(i).get("laneHex").toString()));
 //                laneChildrenList.setStatus(Integer.parseInt(laneList.get(i).get("status").toString()));
                 MtcEn.getChildren().add(laneChildrenList);
+
             } else if (Integer.parseInt(laneList.get(i).get("laneType").toString()) == 2) {
                 MtcEx.setLaneName("MTC出口车道");
                 MtcEx.setId(2);
                 LaneInfo laneChildrenList = new LaneInfo();
                 laneChildrenList.setLaneHex(laneList.get(i).get("laneHex").toString());
                 laneChildrenList.setLaneName(laneList.get(i).get("laneName").toString());
+                laneChildrenList.setCameraArr(tblLaneStatusMapper.getCameraId(laneList.get(i).get("laneHex").toString()));
 //                laneChildrenList.setStatus(Integer.parseInt(laneList.get(i).get("status").toString()));
                 MtcEx.getChildren().add(laneChildrenList);
             } else if (Integer.parseInt(laneList.get(i).get("laneType").toString()) == 3) {
@@ -166,6 +169,7 @@ public class LaneServiceImpl implements ILaneService {
                 LaneInfo laneChildrenList = new LaneInfo();
                 laneChildrenList.setLaneHex(laneList.get(i).get("laneHex").toString());
                 laneChildrenList.setLaneName(laneList.get(i).get("laneName").toString());
+                laneChildrenList.setCameraArr(tblLaneStatusMapper.getCameraId(laneList.get(i).get("laneHex").toString()));
 //                laneChildrenList.setStatus(Integer.parseInt(laneList.get(i).get("status").toString()));
                 EtcEn.getChildren().add(laneChildrenList);
             } else if (Integer.parseInt(laneList.get(i).get("laneType").toString()) == 4){
@@ -174,6 +178,7 @@ public class LaneServiceImpl implements ILaneService {
                 LaneInfo laneChildrenList = new LaneInfo();
                 laneChildrenList.setLaneHex(laneList.get(i).get("laneHex").toString());
                 laneChildrenList.setLaneName(laneList.get(i).get("laneName").toString());
+                laneChildrenList.setCameraArr(tblLaneStatusMapper.getCameraId(laneList.get(i).get("laneHex").toString()));
 //                laneChildrenList.setStatus(Integer.parseInt(laneList.get(i).get("status").toString()));
                 EtcEx.getChildren().add(laneChildrenList);
             }
