@@ -98,7 +98,7 @@ public class OptInfoServiceImpl implements IOptInfoService {
         for(TblOptInfo tblOptInfo: optInfoArray)
         {
             tblOptInfo.setIssuseStatus(1);
-            tblOptInfo.setIssuseTime(new Date());
+//            tblOptInfo.setIssuseTime(new Date());
             tblOptInfoMapper.updateByPrimaryKey(tblOptInfo);
         }
     }
