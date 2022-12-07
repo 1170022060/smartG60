@@ -299,7 +299,7 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
                     reqBody = req.getJSONObject("ret_body");
                     liveUrl = new JSONObject();
                     liveUrl.put("id", cameraId);
-                    liveUrl.put("url", reqBody.getString("live_flv_url")+"&mark_user=daas-hkgs");
+                    liveUrl.put("url", reqBody.getString("live_flv_url"));
                     liveUrls.add(liveUrl);
                     ptzControl(cameraId,"gotopreset","4");
                 } else {
