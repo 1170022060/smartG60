@@ -385,7 +385,7 @@ public class EventServiceImpl implements IEventService {
                     }
                     break;
                 case 10://百度地图推送
-//                    content = "百度地图事件推送：";
+                    content = "百度地图事件推送：";
 //                    TblBaiDuMapRecord baiDuMapRecord = new TblBaiDuMapRecord();
 //                    baiDuMapRecord.setEventType(plan.getInteger("amapType"));
 //                    baiDuMapRecord.setLevel(1);
@@ -397,16 +397,16 @@ public class EventServiceImpl implements IEventService {
 //                    baiDuMapRecord.setLocation(tblEventRecord.getLocationInterval());
 //                    baiDuMapRecord.setLocationType(1);
 //                    baiDuMapRecord.setDataType("test");
-//                    r = remoteBaiDuService.eventPublish(baiDuMapRecord);
-//                    if (r != null) {
-//                        if (r.getCode() == R.SUCCESS) {
-//                            content += "推送成功";
-//                        } else {
-//                            content += "推送失败，原因：" + r.getMsg();
-//                        }
-//                    } else {
-//                        content += "推送失败，原因：服务无响应；";
-//                    }
+                    r = remoteBaiDuService.eventPublish(id,plan.getLong("baiduType"));
+                    if (r != null) {
+                        if (r.getCode() == R.SUCCESS) {
+                            content += "推送成功";
+                        } else {
+                            content += "推送失败，原因：" + r.getMsg();
+                        }
+                    } else {
+                        content += "推送失败，原因：服务无响应；";
+                    }
                     break;
                 case 9://应急资源
                     content = "应急资源：";

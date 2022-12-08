@@ -20,7 +20,7 @@ public interface RemoteBaiDuService {
 
 
     @PostMapping("/baidu")
-    R eventPublish(@RequestBody TblBaiDuMapRecord tblBaiDuMapRecord);
+    R eventPublish(@RequestParam(value = "id") Long id,@RequestParam(value = "eventType") Long eventType);
 
     @PutMapping("/baidu")
     R eventRelieve(@RequestParam(value = "id") Long id);

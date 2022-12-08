@@ -1,14 +1,12 @@
 package com.pingok.external.service.baidu;
 
-import com.pingok.external.domain.baidu.TblBaiDuMapRecord;
-
 public interface IBaiDuMapService {
     /**
      * 事件推送
      *
-     * @param baiDuMapRecord
+     * @param id
      */
-    void eventPublish(TblBaiDuMapRecord baiDuMapRecord);
+    void eventPublish(Long id,Long eventType);
 
     /**
      * 事件解除

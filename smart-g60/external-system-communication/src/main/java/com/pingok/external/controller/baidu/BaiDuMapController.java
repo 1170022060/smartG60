@@ -1,6 +1,5 @@
 package com.pingok.external.controller.baidu;
 
-import com.pingok.external.domain.baidu.TblBaiDuMapRecord;
 import com.pingok.external.service.baidu.IBaiDuMapService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
@@ -24,8 +23,8 @@ public class BaiDuMapController extends BaseController {
 
     @PostMapping()
     @Log(title = "百度地图", businessType = BusinessType.OTHER)
-    public AjaxResult eventPublish(@RequestBody TblBaiDuMapRecord tblBaiDuMapRecord) {
-        iBaiDuMapService.eventPublish(tblBaiDuMapRecord);
+    public AjaxResult eventPublish(@RequestParam Long id,Long eventType) {
+        iBaiDuMapService.eventPublish(id,eventType);
         return AjaxResult.success();
     }
 
