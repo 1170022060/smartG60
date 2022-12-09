@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -25,7 +26,7 @@ public class RemoteBaiDuFallbackFactory implements FallbackFactory<RemoteBaiDuSe
         return new RemoteBaiDuService() {
 
             @Override
-            public R eventPublish(@RequestParam(value = "id") Long id, @RequestParam(value = "eventType") Long eventType) {
+            public R eventPublish(@RequestBody TblBaiDuMapRecord tblBaiDuMapRecord) {
                 return null;
             }
 
