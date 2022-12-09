@@ -19,6 +19,7 @@ import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.*;
 import com.ruoyi.system.api.domain.SysDictData;
 import com.ruoyi.system.api.domain.amap.TblAutoNaviMapRecord;
+import com.ruoyi.system.api.domain.baidu.TblBaiDuMapRecord;
 import com.ruoyi.system.api.domain.device.TblDeviceInfo;
 import com.ruoyi.system.api.domain.emergency.TblEmergencySupplies;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
@@ -373,6 +374,7 @@ public class EventServiceImpl implements IEventService {
                     autoNaviMapRecord.setStartDate(tblEventRecord.getEventTime());
                     autoNaviMapRecord.setEventDesc(tblEventRecord.getRemark());
                     autoNaviMapRecord.setDirection(tblEventRecord.getDirection());
+                    System.out.println(autoNaviMapRecord);
                     r = remoteAmapService.eventPublish(autoNaviMapRecord);
                     if (r != null) {
                         if (r.getCode() == R.SUCCESS) {
@@ -386,18 +388,21 @@ public class EventServiceImpl implements IEventService {
                     break;
                 case 10://百度地图推送
                     content = "百度地图事件推送：";
-//                    TblBaiDuMapRecord baiDuMapRecord = new TblBaiDuMapRecord();
-//                    baiDuMapRecord.setEventType(plan.getInteger("amapType"));
-//                    baiDuMapRecord.setLevel(1);
-//                    baiDuMapRecord.setTraffic(2);
-//                    baiDuMapRecord.setDirection(tblEventRecord.getDirection());
-//                    baiDuMapRecord.setStartTime(DateUtils.getDateShortTimestamp(tblEventRecord.getEventTime()).intValue());
-//                    baiDuMapRecord.setEndTime(DateUtils.getDateShortTimestamp(DateUtils.getPreTime(tblEventRecord.getEventTime(), 600)).intValue());
-//                    baiDuMapRecord.setContent(tblEventRecord.getRemark());
-//                    baiDuMapRecord.setLocation(tblEventRecord.getLocationInterval());
-//                    baiDuMapRecord.setLocationType(1);
-//                    baiDuMapRecord.setDataType("test");
-                    r = remoteBaiDuService.eventPublish(id,plan.getLong("baiduType"));
+                    TblBaiDuMapRecord baiDuMapRecord = new TblBaiDuMapRecord();
+                    baiDuMapRecord.setId(id);
+                    baiDuMapRecord.setEventType(plan.getInteger("baiduType"));
+                    baiDuMapRecord.setEventId("shlq_"+tblEventRecord.getEventId());
+                    baiDuMapRecord.setEventLevel(1);
+                    baiDuMapRecord.setTraffic(0);
+                    baiDuMapRecord.setDirection(tblEventRecord.getDirection());
+                    baiDuMapRecord.setStartTime(DateUtils.getDateShortTimestamp(tblEventRecord.getEventTime()).intValue());
+                    baiDuMapRecord.setEndTime(DateUtils.getDateShortTimestamp(DateUtils.getPreTime(tblEventRecord.getEventTime(), 60)).intValue());
+                    baiDuMapRecord.setContent(tblEventRecord.getRemark());
+                    baiDuMapRecord.setLocation(tblEventRecord.getLocationInterval().replace("[","").replace("]",""));
+                    baiDuMapRecord.setLocationType(1);
+                    System.out.println(baiDuMapRecord);
+
+                    r = remoteBaiDuService.eventPublish(baiDuMapRecord);
                     if (r != null) {
                         if (r.getCode() == R.SUCCESS) {
                             content += "推送成功";
