@@ -97,7 +97,7 @@ public class TblBaiDuMapRecord implements Serializable {
     /**
      * 事件开始时间
      */
-    private Date startTime;
+    private Integer startTime;
 
     /**
      * 事件结束时间
