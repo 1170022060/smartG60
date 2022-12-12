@@ -214,6 +214,7 @@ public class EventServiceImpl implements IEventService {
         JSONArray infos;
         JSONObject info;
         JSONObject data;
+        JSONArray devInfoArr;
         String content;
         TblAutoNaviMapRecord autoNaviMapRecord;
         int size;
@@ -239,6 +240,7 @@ public class EventServiceImpl implements IEventService {
                                 if (devicdIds != null && devicdIds.size() > 0) {
                                     size = devicdIds.size();
                                     infos = new JSONArray();
+
                                     for (int j = 0; j < size; j++) {
                                         rDevice = remoteDeviceMonitorService.selectByDeviceId(devicdIds.getString(j));
                                         deviceInfo = rDevice.getData();
@@ -254,6 +256,7 @@ public class EventServiceImpl implements IEventService {
                                     }
                                     vmsPublishInfo.put("devInfo", infos);
 
+                                    devInfoArr = new JSONArray();
                                     tblReleasePreset = rReleasePreset.getData();
                                     info = new JSONObject();
                                     info.put("content", tblReleasePreset.getPresetInfo());
@@ -263,7 +266,8 @@ public class EventServiceImpl implements IEventService {
                                     info.put("picId", tblReleasePreset.getPictureType());
                                     infos = new JSONArray();
                                     infos.add(info);
-                                    vmsPublishInfo.put("data", infos);
+                                    devInfoArr.add(infos);
+                                    vmsPublishInfo.put("data", devInfoArr);
                                     r = remoteInfoBoardService.publish(vmsPublishInfo);
                                     if (r.getCode() == R.SUCCESS) {
                                         content += "发布成功";

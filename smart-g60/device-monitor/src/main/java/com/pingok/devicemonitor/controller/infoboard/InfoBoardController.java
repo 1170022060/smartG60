@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/** 已废弃（2022-08-24）
+/**
  * @author
  * @time 2022/5/2 8:46
  */
