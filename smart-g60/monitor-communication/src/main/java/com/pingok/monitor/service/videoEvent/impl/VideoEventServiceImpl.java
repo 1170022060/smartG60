@@ -120,6 +120,9 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 log.error(tblEventFlux.getUbiLogicId() + " 流量统计上报失败：" + e.getMessage());
             }
             time += 3;
+            if(time>9){
+                return;
+            }
         }
         tblEventFluxMapper.delete(tblEventFlux);
     }
@@ -148,6 +151,9 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 log.error(tblEventPlateInfo.getUbiLogicId() + " 过车数据上报失败：" + e.getMessage());
             }
             time += 3;
+            if(time>9){
+                return;
+            }
         }
         tblEventPlateInfoMapper.delete(tblEventPlateInfo);
     }
@@ -177,6 +183,9 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 log.error(tblEventVehicleEvent.getUbiLogicId() + " 交通事件上报失败：" + e.getMessage());
             }
             time += 3;
+            if(time>9){
+                return;
+            }
         }
 
         tblEventVehicleEventMapper.delete(tblEventVehicleEvent);
@@ -211,6 +220,9 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 log.error(tblEventPassengerFlow.getUiType() + " 客流量上报失败：" + e.getMessage());
             }
             time += 3;
+            if(time>9){
+                return;
+            }
         }
         tblEventPassengerFlowMapper.delete(tblEventPassengerFlow);
     }
@@ -239,6 +251,9 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 log.error(tblEventParkingEvent.getUbiLogicId() + " 货车检查事件上报失败：" + e.getMessage());
             }
             time += 3;
+            if(time>9){
+                return;
+            }
         }
         tblEventParkingEventMapper.delete(tblEventParkingEvent);
     }
