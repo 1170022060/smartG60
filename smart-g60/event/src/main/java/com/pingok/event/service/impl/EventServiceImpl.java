@@ -471,12 +471,13 @@ public class EventServiceImpl implements IEventService {
     }
 
     @Override
-    public void confirm(Long id, String eventType, String remark, String direction) {
+    public void confirm(Long id, String eventType,String eventSubtype, String remark, String direction) {
         TblEventRecord tblEventRecord = tblEventRecordMapper.selectByPrimaryKey(id);
         tblEventRecord.setStatus(1);
         tblEventRecord.setConfirmTime(DateUtils.getNowDate());
         tblEventRecord.setConfirmUserId(SecurityUtils.getUserId());
         tblEventRecord.setEventType(eventType);
+        tblEventRecord.setEventSubtype(eventSubtype);
         tblEventRecord.setRemark(remark);
         tblEventRecord.setDirection(direction);
         tblEventRecordMapper.updateByPrimaryKey(tblEventRecord);

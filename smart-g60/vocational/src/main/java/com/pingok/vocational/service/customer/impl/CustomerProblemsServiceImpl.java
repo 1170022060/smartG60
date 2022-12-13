@@ -47,8 +47,8 @@ public class CustomerProblemsServiceImpl implements ICustomerProblemsService {
 
     @Override
     public int updateCustomer(TblCustomerProblems tblCustomerProblems) {
-        tblCustomerProblems.setUpdateTime(new Date());
-        tblCustomerProblems.setUpdateUserId(SecurityUtils.getUserId());
+//        tblCustomerProblems.setUpdateTime(new Date());
+//        tblCustomerProblems.setUpdateUserId(SecurityUtils.getUserId());
         tblCustomerProblems.setHandleTime(new Date());
         tblCustomerProblems.setHandleUserId(SecurityUtils.getUserId());
         return tblCustomerProblemsMapper.updateByPrimaryKey(tblCustomerProblems);

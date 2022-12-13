@@ -32,6 +32,11 @@ public class TblEventRecord implements Serializable {
      */
     private String eventType;
 
+    /**
+     * 事件子类型
+     */
+    private String eventSubtype;
+
     @Transient
     private String eventTypeLabel;
 

@@ -94,7 +94,7 @@ public interface IEventService {
      * 事件确认
      * @param id
      */
-    void confirm(Long id,String eventType,String remark,String direction);
+    void confirm(Long id,String eventType,String eventSubtype,String remark,String direction);
 
     /**
      * 分页查询
