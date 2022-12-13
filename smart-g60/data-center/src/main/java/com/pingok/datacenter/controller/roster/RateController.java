@@ -33,7 +33,7 @@ public class RateController extends BaseController {
         return AjaxResult.success();
     }
 
-    @Transactional
+//    @Transactional
     @PostMapping("/rateDownload")
     public AjaxResult rateDownload()
     {

@@ -84,11 +84,12 @@ public class RateServiceImpl implements IRateService {
     @Override
     public void rateDownload() {
         String versionNow=versionMapper.selectVersionAll("TBL_RATE_VERSION");
-        String version = DateUtils.getTimeDay(DateUtils.getNowDate())+"001";
-        if(StringUtils.isNotNull(versionNow) && (versionNow.equals(version)))
-        {
-            version=String.valueOf(Long.parseLong(versionNow)+1);
-        }
+//        String version = DateUtils.getTimeDay(DateUtils.getNowDate())+"001";
+//        if(StringUtils.isNotNull(versionNow) && (versionNow.equals(version)))
+//        {
+//            version=String.valueOf(Long.parseLong(versionNow)+1);
+//        }
+        String version ="20221205001";
         List<String> stringList= tblRateMapper.selectStationGB();
         for (String stationGB:stringList)
         {
@@ -117,7 +118,7 @@ public class RateServiceImpl implements IRateService {
                     if (!file.exists()) {
                         file.mkdir();
                     }
-                    String pathName = ratePath + "\\" + fileName;
+                    String pathName = ratePath + "/" + fileName;
                     file = new File(pathName);
                     if (!file.exists()) {
                         file.createNewFile();
@@ -152,7 +153,7 @@ public class RateServiceImpl implements IRateService {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
                 String zipEntryName = entry.getName();
                 InputStream in = zp.getInputStream(entry);
-                String outpath = (resourcePath + "\\" + zipEntryName).replace("/", File.separator);
+                String outpath = (resourcePath + "/" + zipEntryName).replace("/", File.separator);
                 //判断路径是否存在，不存在则创建文件路径
                 File file = new File(outpath.substring(0, outpath.lastIndexOf(File.separator)));
                 if (!file.exists()) {
@@ -198,7 +199,7 @@ public class RateServiceImpl implements IRateService {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
                 String zipEntryName = entry.getName();
                 InputStream in = zp.getInputStream(entry);
-                String outpath = (resourcePath + "\\" + zipEntryName).replace("/", File.separator);
+                String outpath = (resourcePath + "/" + zipEntryName).replace("/", File.separator);
                 //判断路径是否存在，不存在则创建文件路径
                 File file = new File(outpath.substring(0, outpath.lastIndexOf(File.separator)));
                 if (!file.exists()) {
