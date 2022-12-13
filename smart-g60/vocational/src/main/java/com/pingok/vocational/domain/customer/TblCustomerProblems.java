@@ -52,34 +52,42 @@ public class TblCustomerProblems implements Serializable {
 
     /** 处理部门 */
     @Excel(name = "处理部门")
-    private Long handleDept;
+    private String handleDept;
+
+    /** 处理人 */
+    @Excel(name = "处理人")
+    private String handler;
 
     /** 处理时间 */
-    @Excel(name = "处理时间")
+    @Excel(name = "回复时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date handleTime;
+
+    /** 更新时间 */
+//    @Excel(name = "更新时间")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    private Date updateTime;
+
+    /** 处理用户ID */
+    @Excel(name = "回复用户工号")
+    private Long handleUserId;
 
     /** 创建时间 */
     @Excel(name = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-    /** 更新时间 */
-    @Excel(name = "更新时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updateTime;
-
-    /** 处理用户ID */
-    @Excel(name = "处理用户工号")
-    private Long handleUserId;
-
     /** 创建用户ID */
     @Excel(name = "创建用户工号")
     private Long createUserId;
 
-    /** 更新用户ID */
-    @Excel(name = "更新用户ID")
-    private Long updateUserId;
+//    /** 更新用户ID */
+//    @Excel(name = "更新用户ID")
+//    private Long updateUserId;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public Long getId() {
         return id;
@@ -141,12 +149,20 @@ public class TblCustomerProblems implements Serializable {
         this.contactInfo = contactInfo;
     }
 
-    public Long getHandleDept() {
+    public String getHandleDept() {
         return handleDept;
     }
 
-    public void setHandleDept(Long handleDept) {
+    public void setHandleDept(String handleDept) {
         this.handleDept = handleDept;
+    }
+
+    public String getHandler() {
+        return handler;
+    }
+
+    public void setHandler(String handler) {
+        this.handler = handler;
     }
 
     public Date getHandleTime() {
@@ -157,28 +173,12 @@ public class TblCustomerProblems implements Serializable {
         this.handleTime = handleTime;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public Long getHandleUserId() {
         return handleUserId;
     }
 
     public void setHandleUserId(Long handleUserId) {
         this.handleUserId = handleUserId;
-    }
-
-    public Long getUpdateUserId() {
-        return updateUserId;
-    }
-
-    public void setUpdateUserId(Long updateUserId) {
-        this.updateUserId = updateUserId;
     }
 
     public Date getCreateTime() {
@@ -209,10 +209,12 @@ public class TblCustomerProblems implements Serializable {
                 .append("contactInfo", getContactInfo())
                 .append("handleTime", getHandleTime())
                 .append("createTime", getCreateTime())
-                .append("updateTime", getUpdateTime())
+//                .append("updateTime", getUpdateTime())
                 .append("handleUserId", getHandleUserId())
                 .append("createUserId", getCreateUserId())
-                .append("updateUserId", getUpdateUserId())
+                .append("handleDept", getHandleDept())
+                .append("handler", getHandler())
+//                .append("updateUserId", getUpdateUserId())
                 .toString();
     }
 }

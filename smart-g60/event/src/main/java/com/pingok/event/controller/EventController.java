@@ -79,7 +79,7 @@ public class EventController extends BaseController {
 //    @RequiresPermissions("event:eventControl:fault")
     @Log(title = "事件管理", businessType = BusinessType.UPDATE)
     @PutMapping("/fault")
-    public AjaxResult fault(@RequestParam Long id, @RequestParam String remark) {
+    public AjaxResult fault(@RequestParam Long id, @RequestParam(required = false) String remark) {
         iEventService.fault(id, remark);
         return AjaxResult.success();
     }
@@ -161,10 +161,10 @@ public class EventController extends BaseController {
      * 事件确认
      */
 //    @RequiresPermissions("event:eventControl:confirm")
-    @Log(title = "事件管理", businessType = BusinessType.UPDATE)
+    @Log(title = "事件确认", businessType = BusinessType.UPDATE)
     @PutMapping("/confirm")
-    public AjaxResult confirm(@RequestParam Long id, @RequestParam String eventType, @RequestParam String remark, @RequestParam String direction) {
-        iEventService.confirm(id, eventType, remark, direction);
+    public AjaxResult confirm(@RequestParam Long id, @RequestParam String eventType,@RequestParam(required = false) String eventSubtype, @RequestParam String remark, @RequestParam String direction) {
+        iEventService.confirm(id, eventType,eventSubtype, remark, direction);
         return AjaxResult.success();
     }
 
