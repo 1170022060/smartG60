@@ -125,7 +125,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
                 if (!file.exists()) {
                     file.mkdir();
                 }
-                String pathName = cardPath + "\\" + fileName;
+                String pathName = cardPath + "/" + fileName;
                 file = new File(pathName);
                 if (!file.exists()) {
                     file.createNewFile();
@@ -172,11 +172,11 @@ public class BlackCardServiceImpl implements IBlackCardService {
                     if (!file.exists()) {
                         file.mkdirs();
                     }
-                    file = new File(cardPath+"_all" + "\\" + province);
+                    file = new File(cardPath+"_all" + "/" + province);
                     if (!file.exists()) {
                         file.mkdirs();
                     }
-                    String pathName = cardPath+"_all" + "\\" + province + "\\" + fileName;
+                    String pathName = cardPath+"_all" + "/" + province + "/" + fileName;
                     file = new File(pathName);
                     if (!file.exists()) {
                         file.createNewFile();
@@ -198,7 +198,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
         List<String> dataList = Arrays.asList("11", "12", "13", "14", "15", "21", "22", "23", "31", "32", "33", "34", "35", "36", "37", "41", "42", "43", "44", "45", "46", "50", "51", "52", "53", "54", "61", "62", "63", "64", "65" ,"99");
         File zipFile;
         for (String province : dataList) {
-            String zipPath = cardPath+"_all" + "\\" + province + "\\" + version + "_" + province + ".zip";
+            String zipPath = cardPath+"_all" + "/" + province + "/" + version + "_" + province + ".zip";
             zipFile = new File(zipPath);
             if (zipFile.exists()) {
                 try {
@@ -210,7 +210,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
                         ZipEntry entry = (ZipEntry) entries.nextElement();
                         String zipEntryName = entry.getName();
                         InputStream in = zp.getInputStream(entry);
-                        String outpath = (cardPath + "_all" + "\\" + province + "\\" + zipEntryName).replace("/", File.separator);
+                        String outpath = (cardPath + "_all" + "/" + province + "/" + zipEntryName).replace("/", File.separator);
                         File fileDelete = new File(outpath);
                         //判断路径是否存在，不存在则创建文件路径
                         File file = new File(outpath.substring(0, outpath.lastIndexOf(File.separator)));
@@ -294,7 +294,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
                 String zipEntryName = entry.getName();
                 InputStream in = zp.getInputStream(entry);
-                String outpath = (resourcePath + "\\" + zipEntryName).replace("/", File.separator);
+                String outpath = (resourcePath + "/" + zipEntryName).replace("/", File.separator);
                 //判断路径是否存在，不存在则创建文件路径
                 File file = new File(outpath.substring(0, outpath.lastIndexOf(File.separator)));
                 if (!file.exists()) {
@@ -333,7 +333,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
         List<String> dataList = Arrays.asList("11", "12", "13", "14", "15", "21", "22", "23", "31", "32", "33", "34", "35", "36", "37", "41", "42", "43", "44", "45", "46", "50", "51", "52", "53", "54", "61", "62", "63", "64", "65");
         File zipFile;
         for (String data : dataList) {
-            String zipPath = resourcePath + "\\" + version + "_" + data + ".zip";
+            String zipPath = resourcePath + "/" + version + "_" + data + ".zip";
             zipFile = new File(zipPath);
             if (zipFile.exists()) {
                 try {

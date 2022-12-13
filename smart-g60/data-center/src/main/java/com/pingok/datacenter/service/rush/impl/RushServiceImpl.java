@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 闯关确认 服务层处理
@@ -54,5 +55,12 @@ public class RushServiceImpl implements IRushService {
     @Override
     public List<TblRushRecord> list(String stationName, String vehPlate, String startTime, String endTime) {
         return tblRushRecordMapper.list(stationName, vehPlate, startTime, endTime);
+    }
+
+    @Override
+    public Map detail(String passId) {
+
+        Map entry=tblRushRecordMapper.entry(passId,passId);
+        return entry;
     }
 }

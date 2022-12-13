@@ -116,7 +116,7 @@ public class GreenServiceImpl implements IGreenService {
                 if(!file.exists()){
                     file.mkdirs();
                 }
-                String pathName=greenPath+"\\"+fileName;
+                String pathName=greenPath+"/"+fileName;
                 file  = new File(pathName);
                 if(!file.exists()){
                     file.createNewFile();
@@ -149,7 +149,7 @@ public class GreenServiceImpl implements IGreenService {
                 ZipEntry entry= (ZipEntry) entries.nextElement();
                 String zipEntryName=entry.getName();
                 InputStream in=zp.getInputStream(entry);
-                String outpath=(resourcePath+"\\"+zipEntryName).replace("/",File.separator);
+                String outpath=(resourcePath+"/"+zipEntryName).replace("/",File.separator);
                 //判断路径是否存在，不存在则创建文件路径
                 File file = new  File(outpath.substring(0,outpath.lastIndexOf(File.separator)));
                 if(!file.exists()){
