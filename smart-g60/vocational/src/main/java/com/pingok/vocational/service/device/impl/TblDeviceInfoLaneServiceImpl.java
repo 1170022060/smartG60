@@ -50,7 +50,7 @@ public class TblDeviceInfoLaneServiceImpl implements TblDeviceInfoLaneService {
             laneEnum.getTblDeviceInfoLane().setItemListTime(projectInfoService.selectProjectInfoById(laneEnum.getTblDeviceInfoLane().getItemName()).getProjectTime());
         }
         laneEnum.getTblDeviceInfoLane().setStationBelong(laneEnum.getLaneHex().substring(4,8));
-        laneEnum.getTblDeviceInfoLane().setLaneBelong(laneEnum.getLaneHex().substring(8,10));
+        laneEnum.getTblDeviceInfoLane().setLaneBelong(laneEnum.getLaneHex());
         laneEnum.getTblDeviceInfoLane().setStatus(1);
         laneEnum.getTblDeviceInfoLane().setCreateTime(new Date());
         laneEnum.getTblDeviceInfoLane().setCreateUserId(SecurityUtils.getUserId());
