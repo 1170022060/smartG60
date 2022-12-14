@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -59,8 +60,23 @@ public class RushServiceImpl implements IRushService {
 
     @Override
     public Map detail(String passId) {
+        if(passId.startsWith("01")||passId.startsWith("02"))
+        {
+            Map entry=tblRushRecordMapper.entry(passId.substring(22,26),passId);
+            Map exit=tblRushRecordMapper.exit(passId.substring(22,26),passId);
+            List<Map> exitAll=tblRushRecordMapper.exitAll(passId.substring(22,26),(Date)exit.get("transTime"),exit.get("laneHex").toString(),passId);
+            entry.put("exit",exitAll);
+            return entry;
+        }
+        if(passId.startsWith("03"))
+        {
+            Map entry=tblRushRecordMapper.entry(passId.substring(24,28),passId);
+            Map exit=tblRushRecordMapper.exit(passId.substring(24,28),passId);
 
-        Map entry=tblRushRecordMapper.entry(passId,passId);
-        return entry;
+            List<Map> exitAll=tblRushRecordMapper.exitAll(passId.substring(24,28),(Date)exit.get("transTime"),exit.get("laneHex").toString(),passId);
+            entry.put("exit",exitAll);
+            return exit;
+        }
+        return null;
     }
 }
