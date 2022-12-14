@@ -73,9 +73,9 @@ public interface IEventService {
 
     /**
      * 填报处置内容
-     * @param tblEventHandles
+     * @param tblEventHandle
      */
-    void handleContent(List<TblEventHandle> tblEventHandles);
+    void handleContent(TblEventHandle tblEventHandle);
 
     /**
      * 应急处置

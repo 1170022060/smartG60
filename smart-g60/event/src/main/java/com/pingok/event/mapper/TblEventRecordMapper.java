@@ -40,6 +40,13 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "WHEN -1 THEN " +
             "'误报'  " +
             "END AS \"statusDesc\", " +
+            "CASE " +
+            "ter.IS_FILL  " +
+            "WHEN 0 THEN " +
+            "'已填报'  " +
+            "WHEN 1 THEN " +
+            "'未填报'  " +
+            "END AS \"isFill\", " +
             "tdi.PILE_NO AS \"pileNo\", " +
             "tdi.DEVICE_ID AS \"deviceId\" " +
             "FROM " +
@@ -81,6 +88,13 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "WHEN -1 THEN " +
             "'误报'  " +
             "END AS \"statusDesc\", " +
+            "CASE " +
+            "ter.IS_FILL  " +
+            "WHEN 0 THEN " +
+            "'已填报'  " +
+            "WHEN 1 THEN " +
+            "'未填报'  " +
+            "END AS \"isFill\", " +
             "to_char(ter.CONFIRM_TIME, 'yyyy-mm-dd hh24:mi:ss') AS \"confirmTime\", " +
             "to_char(ter.RELIEVE_TIME, 'yyyy-mm-dd hh24:mi:ss') AS \"relieveTime\", " +
             "case " +

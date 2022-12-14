@@ -142,7 +142,10 @@ public class EventServiceImpl implements IEventService {
             }
         }
         if (eventRecord != null) {
-            eventRecord.setEventHandles(tblEventHandleMapper.findByEventId(eventRecord.getId()));
+            List<TblEventHandle> tblEventHandles = tblEventHandleMapper.findByEventId(eventRecord.getId());
+            for (TblEventHandle l:tblEventHandles){
+                eventRecord.setEventHandle(l);
+            }
         }
         return eventRecord;
     }
@@ -178,14 +181,19 @@ public class EventServiceImpl implements IEventService {
     }
 
     @Override
-    public void handleContent(List<TblEventHandle> tblEventHandles) {
-        for (TblEventHandle tblEventHandle : tblEventHandles) {
-            tblEventHandle.setId(remoteIdProducerService.nextId());
-            tblEventHandle.setCreateTime(DateUtils.getNowDate());
-            tblEventHandle.setUserId(SecurityUtils.getUserId());
-            tblEventHandle.setHandleTime(DateUtils.getNowDate());
-            tblEventHandleMapper.insert(tblEventHandle);
+    public void handleContent(TblEventHandle tblEventHandle) {
+        Example example = new Example(TblEventRecord.class);
+        example.createCriteria().andEqualTo("eventId", tblEventHandle.getEventId());
+        TblEventRecord eventRecord = tblEventRecordMapper.selectOneByExample(example);
+        tblEventHandle.setId(remoteIdProducerService.nextId());
+        tblEventHandle.setUserId(SecurityUtils.getUserId());
+        tblEventHandle.setHandleTime(DateUtils.getNowDate());
+        tblEventHandle.setCreateTime(DateUtils.getNowDate());
+        if (tblEventHandle.getHandleContent() !=null ){
+            eventRecord.setIsFill(0);
+            tblEventRecordMapper.updateByPrimaryKey(eventRecord);
         }
+        tblEventHandleMapper.insert(tblEventHandle);
     }
 
     @Override

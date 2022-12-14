@@ -25,11 +25,14 @@ public interface TblCustomerProblemsMapper extends CommonRepository<TblCustomerP
             "a.COMPLAINT_NAME as \"complaintName\" ," +
             "a.CONTACT_INFO as \"contactInfo\" ," +
             "d.DEPT_NAME as \"handleDept\" ," +
+            "e.NICK_NAME as \"handler\"," +
             "to_char(a.HANDLE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"handleTime\" ," +
+            "case a.STATUS when 0 then '已回复' else '待回复' end as \"status\"," +
             "case when a.HANDLE_USER_ID is null then null else c.NICK_NAME end as \"handleUserNum\" from TBL_CUSTOMER_PROBLEMS a " +
             "left join  SYS_DICT_DATA b on b.DICT_VALUE=a.COMPLAINT_TYPE and b.DICT_TYPE='complaint_type' " +
             "left join  SYS_USER c on a.HANDLE_USER_ID=c.USER_ID " +
             "left join  SYS_DEPT d ON d.DEPT_ID = a.HANDLE_DEPT " +
+            "left join  SYS_USER e on a.HANDLER=e.USER_ID " +
             "where 1=1 " +
             "<when test='startTime != null'> " +
             " and a.COMPLAINT_DATE &gt;= #{startTime} " +

@@ -45,9 +45,8 @@ public interface TblEmergencyGroupMapper extends CommonRepository<TblEmergencyGr
     @Select("select * from TBL_EMERGENCY_GROUP where GROUP_NAME= #{groupName} and rownum = 1")
     TblEmergencyGroup checkGroupNameUnique(@Param("groupName") String groupName);
 
-    @Select("select USER_ID as \"userId\",DEPT_NAME || '_' || NICK_NAME as \"userName\" from  SYS_USER a " +
-            "left join  SYS_DEPT b on b.DEPT_ID=a.DEPT_ID " +
-            "order by a.DEPT_ID")
+    @Select("select USER_ID as \"userId\",NICK_NAME as \"userName\" from  SYS_USER a " +
+            "order by NICK_NAME ")
     List<Map> selectDeptUser();
 
 }

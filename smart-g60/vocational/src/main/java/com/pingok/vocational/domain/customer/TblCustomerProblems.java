@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.core.annotation.Excel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.ibatis.annotations.Insert;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -38,10 +39,6 @@ public class TblCustomerProblems implements Serializable {
     @Excel(name = "问题描述")
     private String describe;
 
-    /** 处理结果*/
-    @Excel(name = "处理结果")
-    private String result;
-
     /** 投诉人姓名*/
     @Excel(name = "投诉人姓名")
     private String complaintName;
@@ -52,11 +49,15 @@ public class TblCustomerProblems implements Serializable {
 
     /** 处理部门 */
     @Excel(name = "处理部门")
-    private String handleDept;
+    private Long handleDept;
 
     /** 处理人 */
     @Excel(name = "处理人")
-    private String handler;
+    private Long handler;
+
+    /** 处理结果*/
+    @Excel(name = "回复内容")
+    private String result;
 
     /** 处理时间 */
     @Excel(name = "回复时间")
@@ -69,8 +70,11 @@ public class TblCustomerProblems implements Serializable {
 //    private Date updateTime;
 
     /** 处理用户ID */
-    @Excel(name = "回复用户工号")
+    @Excel(name = "回复人工号")
     private Long handleUserId;
+
+    @Excel(name = "回复状态")
+    private Integer status;
 
     /** 创建时间 */
     @Excel(name = "创建时间")
@@ -149,19 +153,19 @@ public class TblCustomerProblems implements Serializable {
         this.contactInfo = contactInfo;
     }
 
-    public String getHandleDept() {
+    public Long getHandleDept() {
         return handleDept;
     }
 
-    public void setHandleDept(String handleDept) {
+    public void setHandleDept(Long handleDept) {
         this.handleDept = handleDept;
     }
 
-    public String getHandler() {
+    public Long getHandler() {
         return handler;
     }
 
-    public void setHandler(String handler) {
+    public void setHandler(Long handler) {
         this.handler = handler;
     }
 
@@ -179,6 +183,14 @@ public class TblCustomerProblems implements Serializable {
 
     public void setHandleUserId(Long handleUserId) {
         this.handleUserId = handleUserId;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Date getCreateTime() {

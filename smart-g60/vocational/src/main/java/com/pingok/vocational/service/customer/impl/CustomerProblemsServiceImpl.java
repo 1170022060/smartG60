@@ -51,6 +51,9 @@ public class CustomerProblemsServiceImpl implements ICustomerProblemsService {
 //        tblCustomerProblems.setUpdateUserId(SecurityUtils.getUserId());
         tblCustomerProblems.setHandleTime(new Date());
         tblCustomerProblems.setHandleUserId(SecurityUtils.getUserId());
+        if (tblCustomerProblems.getResult() !=null){
+            tblCustomerProblems.setStatus(0);
+        }
         return tblCustomerProblemsMapper.updateByPrimaryKey(tblCustomerProblems);
     }
 }
