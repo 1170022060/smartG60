@@ -31,6 +31,13 @@ public class VideoEventController extends BaseController {
     @Autowired
     private IVideoService iVideoService;
 
+    @GetMapping
+    public AjaxResult getVideo(Long ubiLogicId) {
+        iVideoEventService.updateEventVideo(ubiLogicId);
+        return AjaxResult.success();
+    }
+
+
     @PostMapping
     public AjaxResult videoEvent(@RequestParam String type, @RequestBody JSONObject object) {
         String data = new String(Base64.getDecoder().decode(object.getString("data")));
