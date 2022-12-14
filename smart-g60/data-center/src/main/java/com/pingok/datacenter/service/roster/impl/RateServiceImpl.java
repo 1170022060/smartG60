@@ -84,12 +84,11 @@ public class RateServiceImpl implements IRateService {
     @Override
     public void rateDownload() {
         String versionNow=versionMapper.selectVersionAll("TBL_RATE_VERSION");
-//        String version = DateUtils.getTimeDay(DateUtils.getNowDate())+"001";
-//        if(StringUtils.isNotNull(versionNow) && (versionNow.equals(version)))
-//        {
-//            version=String.valueOf(Long.parseLong(versionNow)+1);
-//        }
-        String version ="20221205001";
+        String version = DateUtils.getTimeDay(DateUtils.getNowDate())+"001";
+        if(StringUtils.isNotNull(versionNow) && (versionNow.equals(version)))
+        {
+            version=String.valueOf(Long.parseLong(versionNow)+1);
+        }
         List<String> stringList= tblRateMapper.selectStationGB();
         for (String stationGB:stringList)
         {
