@@ -33,18 +33,3 @@ spring:
         # 共享配置
         shared-configs:
           - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
-
-# config
-picturePath: "D:/gantry/picture"
-pictureFailPath: "D:/gantry/pictureFail"
-
-center:
-  host: http://10.131.4.18:18180
-  stationGB: S0004310010010
-  cardPath: /data/list/blacklist
-  ratePath: /data/list/ratelist
-  epidemicPath: /data/list/epidemiclist
-  prefixPath: /data/list/prefixlist
-  recoveryPath: /data/list/recoverylist
-  rescuePath: /data/list/rescuelist
-  greenPath: /data/list/greenlist
