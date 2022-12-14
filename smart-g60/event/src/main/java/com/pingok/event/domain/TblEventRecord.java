@@ -113,6 +113,11 @@ public class TblEventRecord implements Serializable {
      */
     private Integer status;
 
+    /**
+     * 是否填报 0-已填报 1-未填报
+     */
+    private Integer isFill;
+
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
@@ -147,7 +152,7 @@ public class TblEventRecord implements Serializable {
 
     private Integer eventLevel;
 
-    @Transient
-    private List<TblEventHandle> eventHandles;
+//    @Transient
+    private TblEventHandle eventHandle;
 
 }

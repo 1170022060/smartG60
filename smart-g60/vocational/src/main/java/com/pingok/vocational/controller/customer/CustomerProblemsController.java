@@ -37,7 +37,7 @@ public class CustomerProblemsController extends BaseController {
         return AjaxResult.success(idInfo);
     }
 
-    @RequiresPermissions("vocational:customerProblems:info")
+//    @RequiresPermissions("vocational:customerProblems:info")
     @Log(title = "客户投诉与咨询记录-分页查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/info")
     public TableDataInfo info(@RequestParam(name = "handleUserId",required = false) Long handleUserId, @RequestParam(name = "startTime",required = false) Date startTime, @RequestParam(name = "endTime",required = false) Date endTime,@RequestParam(name = "handleDept",required = false) Long handleDept)
@@ -47,7 +47,7 @@ public class CustomerProblemsController extends BaseController {
         return getDataTable(info);
     }
 
-    @RequiresPermissions("vocational:customerProblems:add")
+//    @RequiresPermissions("vocational:customerProblems:add")
     @Log(title = "客户投诉与咨询记录", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody TblCustomerProblems tblCustomerProblems)
@@ -55,7 +55,7 @@ public class CustomerProblemsController extends BaseController {
         return toAjax(customerProblemsService.insertCustomer(tblCustomerProblems));
     }
 
-    @RequiresPermissions("vocational:customerProblems:edit")
+//    @RequiresPermissions("vocational:customerProblems:edit")
     @Log(title = "客户投诉与咨询记录", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody TblCustomerProblems tblCustomerProblems)

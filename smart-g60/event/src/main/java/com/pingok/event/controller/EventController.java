@@ -139,10 +139,10 @@ public class EventController extends BaseController {
      * 填报处置内容
      */
 //    @RequiresPermissions("event:eventControl:handleContent")
-    @Log(title = "事件管理", businessType = BusinessType.UPDATE)
+    @Log(title = "填报处置内容", businessType = BusinessType.UPDATE)
     @PutMapping("/handleContent")
-    public AjaxResult handleContent(@RequestBody List<TblEventHandle> tblEventHandles) {
-        iEventService.handleContent(tblEventHandles);
+    public AjaxResult handleContent(@RequestBody TblEventHandle tblEventHandle) {
+        iEventService.handleContent(tblEventHandle);
         return AjaxResult.success();
     }
 
