@@ -107,6 +107,25 @@ public class DeviceMonitorController extends BaseController {
                             if (r.getCode() == R.FAIL) {
                                 log.error("能见度预警事件更新失败");
                             }
+
+//                            if (currentVisibility >= 1500) {
+//                                if (re.getCode() == R.SUCCESS && re.getData() != null) {
+//                                    eventRecord = re.getData();
+//                                    eventRecord.setStatus(2);
+//                                    r = remoteEventService.edit(eventRecord);
+//                                    if (r.getCode() == R.FAIL) {
+//                                        log.error("能见度预警事件更新失败");
+//                                    }
+//                                    KafkaEnum kafkaEnum = new KafkaEnum();
+//                                    kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SIGNAL_PILOTLIGHT);
+//                                    JSONObject params = new JSONObject();
+//                                    params.put("kafkaType", "commandSend");
+//                                    params.put("deviceId", info.getDeviceId());
+//                                    params.put("cmdType", 8);
+//                                    kafkaEnum.setData(JSON.toJSONString(params));
+//                                    remoteKafkaService.send(kafkaEnum);
+//                                }
+//                            }
                         } else {
                             eventRecord = new TblEventRecord();
                             eventRecord.setEventTime(DateUtils.getNowDate());
@@ -121,25 +140,6 @@ public class DeviceMonitorController extends BaseController {
                             if (r.getCode() == R.FAIL) {
                                 log.error("能见度预警事件新增失败");
                             }
-                        }
-                    }
-
-                    if (currentVisibility >= 1500) {
-                        if (re.getCode() == R.SUCCESS && re.getData() != null) {
-                            eventRecord = re.getData();
-                            eventRecord.setStatus(2);
-                            R r = remoteEventService.edit(eventRecord);
-                            if (r.getCode() == R.FAIL) {
-                                log.error("能见度预警事件更新失败");
-                            }
-                            KafkaEnum kafkaEnum = new KafkaEnum();
-                            kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SIGNAL_PILOTLIGHT);
-                            JSONObject params = new JSONObject();
-                            params.put("kafkaType", "commandSend");
-                            params.put("deviceId", info.getDeviceId());
-                            params.put("cmdType", 8);
-                            kafkaEnum.setData(JSON.toJSONString(params));
-                            remoteKafkaService.send(kafkaEnum);
                         }
                     }
                 }
