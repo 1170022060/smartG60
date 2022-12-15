@@ -94,6 +94,20 @@ public interface TblRushRecordMapper extends CommonRepository<TblRushRecord> {
             "</script>"})
     List<TblRushRecord> list(@Param("stationName") String stationName, @Param("vehPlate") String vehPlate, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
+    @Select({"SELECT\n" +
+            "ex.PASS_ID AS \"passId\" " +
+            "FROM " +
+            "TBL_EX_TRANS_${year} ex " +
+            " JOIN TBL_EX_LPR_TRANS_${year} exlpr ON ex.VEH_PLATE = exlpr.VEH_PLATE " +
+            "AND ex.VEH_COLOR = exlpr.VEH_COLOR " +
+            "and ex.TRANS_TIME >= TO_DATE('2022-12-15 15:34:38','yyyy-mm-dd hh24:mi:ss')-(1/24) " +
+            "AND ex.TRANS_TIME <= TO_DATE('2022-12-15 15:34:38','yyyy-mm-dd hh24:mi:ss') +(1/24) " +
+            "WHERE 1 = 1 " +
+            "and trim(exlpr.VEH_PLATE)=#{vehPlate} " +
+            "and CONCAT('3101', trim(exlpr.LANE_HEX)) =#{laneHex} " +
+            "and rownum=1"})
+    String getPassId(@Param("vehPlate") String vehPlate,@Param("laneHex") String laneHex,@Param("transTime") Date transTime,@Param("year") String year);
+
     @Select({"SELECT " +
             "en.PASS_ID AS \"passId\", " +
             "en.GID AS \"gid\", " +
@@ -126,7 +140,6 @@ public interface TblRushRecordMapper extends CommonRepository<TblRushRecord> {
             "WHERE 1 = 1 " +
             "and PASS_ID=#{passId} "})
     Map entry(@Param("year") String year, @Param("passId") String passId);
-
 
     @Select({"SELECT " +
             "ex.PASS_ID AS \"passId\", " +
