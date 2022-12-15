@@ -424,7 +424,6 @@ public class TblDeviceInfoLane implements Serializable {
 
     public void setStationBelong(String stationBelong) { this.stationBelong = stationBelong; }
 
-    @Size(min = 0, max = 6, message = "所属车道不能超过6个字符")
     public String getLaneBelong()
     {
         return laneBelong;
