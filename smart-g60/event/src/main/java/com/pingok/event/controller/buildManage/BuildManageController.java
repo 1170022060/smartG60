@@ -39,7 +39,7 @@ public class BuildManageController extends BaseController {
         return toAjax(iBuildManageService.add(tblBuildManage));
     }
 
-    @RequiresPermissions("event:buildManage:edit")
+//    @RequiresPermissions("event:buildManage:edit")
     @Log(title = "编辑施工管理", businessType = BusinessType.INSERT)
     @PutMapping
     public AjaxResult edit(@RequestBody TblBuildManage tblBuildManage){

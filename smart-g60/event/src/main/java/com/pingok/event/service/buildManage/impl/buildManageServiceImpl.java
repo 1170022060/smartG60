@@ -39,11 +39,8 @@ public class buildManageServiceImpl implements IBuildManageService {
 
     @Override
     public int edit(TblBuildManage tblBuildManage) {
-//        Example example = new Example(TblBuildManage.class);
-//        example.createCriteria().andEqualTo("ID",tblBuildManage.getId());
-
         tblBuildManage.setUpdateTime(DateUtils.getNowDate());
         tblBuildManage.setUpdateUserId(SecurityUtils.getUserId());
-        return tblBuildManaMapper.updateByPrimaryKey(tblBuildManage);
+        return tblBuildManaMapper.updateByPrimaryKeySelective(tblBuildManage);
     }
 }
