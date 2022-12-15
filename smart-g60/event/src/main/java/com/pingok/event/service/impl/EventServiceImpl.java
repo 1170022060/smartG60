@@ -183,7 +183,7 @@ public class EventServiceImpl implements IEventService {
     @Override
     public void handleContent(TblEventHandle tblEventHandle) {
         Example example = new Example(TblEventRecord.class);
-        example.createCriteria().andEqualTo("eventId", tblEventHandle.getEventId());
+        example.createCriteria().andEqualTo("id", tblEventHandle.getEventId());
         TblEventRecord eventRecord = tblEventRecordMapper.selectOneByExample(example);
         tblEventHandle.setId(remoteIdProducerService.nextId());
         tblEventHandle.setUserId(SecurityUtils.getUserId());
@@ -202,6 +202,8 @@ public class EventServiceImpl implements IEventService {
         if (tblEventRecord == null) {
             throw new SecurityException("id为：" + id + ",事件信息不存在");
         }
+        tblEventRecord.setIsFill(1);
+        tblEventRecordMapper.updateByPrimaryKeySelective(tblEventRecord);
         JSONObject plan;
         TblEventHandle tblEventHandle;
         tblEventHandle = new TblEventHandle();
@@ -512,8 +514,8 @@ public class EventServiceImpl implements IEventService {
     }
 
     @Override
-    public List<Map> search(Integer status) {
-        return tblEventRecordMapper.search(status);
+    public List<Map> search(Integer status,Date startTime,Date endTime,String eventType) {
+        return tblEventRecordMapper.search(status,startTime,endTime,eventType);
     }
 
     @Override

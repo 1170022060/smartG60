@@ -202,6 +202,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
             List<TblEventPaln> eventPalns = tblEventPalnMapper.findByEventType(eventType);
             JSONArray jsonArray;
             int size;
+
             for (TblEventPaln e : eventPalns) {
                 if (!e.getEventType().isEmpty()) {
                     e.setEventTypeList(JSONArray.parseArray(e.getEventType()));
@@ -222,6 +223,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
                                         if (gps != null) {
                                             jsonArray.getJSONObject(i).put("ids", getGeoIds("xsb", gps, jsonArray.getJSONObject(i).getDouble("range")));
                                         }
+                                        break;
                                     case 6:
                                         if (gps != null) {
                                             jsonArray.getJSONObject(i).put("ids", getGeoIds("gantry", gps, jsonArray.getJSONObject(i).getDouble("range")));
