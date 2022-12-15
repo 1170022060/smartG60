@@ -8,6 +8,7 @@ import io.swagger.models.auth.In;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -101,7 +102,7 @@ public interface IEventService {
      * @param status
      * @return
      */
-    List<Map> search(Integer status);
+    List<Map> search(Integer status, Date startTime,Date endTime,String eventType);
 
     /**
      * 根据id查询事件

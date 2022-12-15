@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -176,9 +177,9 @@ public class EventController extends BaseController {
 //    @RequiresPermissions("event:eventControl:list")
 //    @Log(title = "事件管理", businessType = BusinessType.OTHER)
     @GetMapping("/list")
-    public TableDataInfo list(Integer status) {
+    public TableDataInfo list(Integer status, Date startTime,Date endTime,String eventType) {
         startPage();
-        List<Map> list = iEventService.search(status);
+        List<Map> list = iEventService.search(status,startTime,endTime,eventType);
         return getDataTable(list);
     }
 

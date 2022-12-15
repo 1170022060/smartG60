@@ -5,6 +5,7 @@ import com.ruoyi.common.core.mapper.CommonRepository;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -118,11 +119,18 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "<when test='status != null'>" +
             "AND ter.STATUS = #{status} " +
             "</when>" +
+            "<when test='startTime != null'> " +
+            " and ter.EVENT_TIME &gt;= #{startTime} " +
+            "</when>"+
+            "<when test='endTime != null'> " +
+            " and ter.EVENT_TIME &lt;= #{endTime} " +
+            "</when>"+
+            "<when test='eventType != null'> " +
+            "and ter.EVENT_TYPE in (SELECT DICT_VALUE FROM SYS_DICT_DATA WHERE DICT_VALUE = #{eventType} AND DICT_TYPE = 'event_type' ) " +
+            "</when>"+
             "ORDER BY ter.EVENT_TIME DESC" +
             "</script>")
-    List<Map> search(@Param("status") Integer status);
-
-
+    List<Map> search(@Param("status") Integer status, @Param("startTime")Date startTime,@Param("endTime")Date endTime,@Param("eventType")String eventType);
 
 
     @Select("SELECT DICT_LABEL FROM SYS_DICT_DATA WHERE DICT_TYPE = 'event_type' AND DICT_VALUE = #{eventType}")
