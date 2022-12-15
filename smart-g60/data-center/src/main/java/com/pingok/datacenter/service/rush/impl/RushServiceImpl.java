@@ -59,7 +59,10 @@ public class RushServiceImpl implements IRushService {
     }
 
     @Override
-    public Map detail(String passId) {
+    public Map detail(String vehPlate, String laneHex,Date transTime) {
+        String year=DateUtils.getTimeDay(transTime).substring(0,4);
+
+        String passId=tblRushRecordMapper.getPassId(vehPlate, laneHex, transTime,year);
         if(passId.startsWith("01")||passId.startsWith("02"))
         {
             Map entry=tblRushRecordMapper.entry(passId.substring(22,26),passId);
