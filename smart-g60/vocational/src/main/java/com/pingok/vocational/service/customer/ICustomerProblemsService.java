@@ -1,7 +1,9 @@
 package com.pingok.vocational.service.customer;
 
 
+import com.pingok.vocational.domain.customer.CustomerProblemsEx;
 import com.pingok.vocational.domain.customer.TblCustomerProblems;
+import com.pingok.vocational.domain.customer.vo.CustomerProblemsVo;
 
 import java.util.Date;
 import java.util.List;
@@ -25,13 +27,9 @@ public interface ICustomerProblemsService {
     /**
      * 通过处理人ID、起止时间查询客户投诉与咨询记录
      *
-     * @param handleUserId 处理人ID
-     * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @param handleDept 处理部门
      * @return 客户投诉与咨询记录
      */
-    List<Map> selectCustomerProblems(Long handleUserId, Date startTime, Date endTime,Long handleDept);
+    List<CustomerProblemsEx> selectCustomerProblems(CustomerProblemsVo customerProblemsVo);
 
     /**
      * 新增客户投诉与咨询记录

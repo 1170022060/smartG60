@@ -62,7 +62,7 @@ public class TblCustomerProblems implements Serializable {
     /** 处理时间 */
     @Excel(name = "回复时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date handleTime;
+    private Date replyTime;
 
     /** 更新时间 */
 //    @Excel(name = "更新时间")
@@ -71,7 +71,7 @@ public class TblCustomerProblems implements Serializable {
 
     /** 处理用户ID */
     @Excel(name = "回复人工号")
-    private Long handleUserId;
+    private Long replyUserId;
 
     @Excel(name = "回复状态")
     private Integer status;
@@ -169,20 +169,20 @@ public class TblCustomerProblems implements Serializable {
         this.handler = handler;
     }
 
-    public Date getHandleTime() {
-        return handleTime;
+    public Date getReplyTime() {
+        return replyTime;
     }
 
-    public void setHandleTime(Date handleTime) {
-        this.handleTime = handleTime;
+    public void setReplyTime(Date replyTime) {
+        this.replyTime = replyTime;
     }
 
-    public Long getHandleUserId() {
-        return handleUserId;
+    public Long getReplyUserId() {
+        return replyUserId;
     }
 
-    public void setHandleUserId(Long handleUserId) {
-        this.handleUserId = handleUserId;
+    public void setReplyUserId(Long replyUserId) {
+        this.replyUserId = replyUserId;
     }
 
     public Integer getStatus() {
@@ -219,10 +219,10 @@ public class TblCustomerProblems implements Serializable {
                 .append("result", getResult())
                 .append("complaintName", getComplaintName())
                 .append("contactInfo", getContactInfo())
-                .append("handleTime", getHandleTime())
+                .append("replyTime", getReplyTime())
                 .append("createTime", getCreateTime())
 //                .append("updateTime", getUpdateTime())
-                .append("handleUserId", getHandleUserId())
+                .append("replyUserId", getReplyUserId())
                 .append("createUserId", getCreateUserId())
                 .append("handleDept", getHandleDept())
                 .append("handler", getHandler())
