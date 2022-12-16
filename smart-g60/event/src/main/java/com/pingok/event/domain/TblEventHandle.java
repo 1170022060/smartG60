@@ -63,7 +63,7 @@ public class TblEventHandle implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-//    @Transient
-//    private String user;
+    @Transient
+    private String handler;
 
 }
