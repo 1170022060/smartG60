@@ -142,10 +142,8 @@ public class EventServiceImpl implements IEventService {
             }
         }
         if (eventRecord != null) {
-            List<TblEventHandle> tblEventHandles = tblEventHandleMapper.findByEventId(eventRecord.getId());
-            for (TblEventHandle l:tblEventHandles){
-                eventRecord.setEventHandle(l);
-            }
+//            List<TblEventHandle> tblEventHandles = ;
+            eventRecord.setEventHandle(tblEventHandleMapper.findByEventId(eventRecord.getId()));
         }
         return eventRecord;
     }

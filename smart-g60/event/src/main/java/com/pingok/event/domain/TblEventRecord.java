@@ -152,7 +152,7 @@ public class TblEventRecord implements Serializable {
 
     private Integer eventLevel;
 
-//    @Transient
-    private TblEventHandle eventHandle;
+    @Transient
+    private List<TblEventHandle> eventHandle;
 
 }
