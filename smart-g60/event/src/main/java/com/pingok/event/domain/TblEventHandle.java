@@ -64,6 +64,6 @@ public class TblEventHandle implements Serializable {
     private Date createTime;
 
     @Transient
-    private String user;
+    private String handler;
 
 }

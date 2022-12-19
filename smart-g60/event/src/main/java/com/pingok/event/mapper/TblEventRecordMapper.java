@@ -5,6 +5,7 @@ import com.ruoyi.common.core.mapper.CommonRepository;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +41,13 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "WHEN -1 THEN " +
             "'误报'  " +
             "END AS \"statusDesc\", " +
+            "CASE " +
+            "ter.IS_FILL  " +
+            "WHEN 0 THEN " +
+            "'已填报'  " +
+            "WHEN 1 THEN " +
+            "'未填报'  " +
+            "END AS \"isFill\", " +
             "tdi.PILE_NO AS \"pileNo\", " +
             "tdi.DEVICE_ID AS \"deviceId\" " +
             "FROM " +
@@ -51,7 +59,7 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "LEFT JOIN  SYS_DICT_DATA sdd2 ON sdd2.DICT_VALUE = ter.VEH_COLOR  " +
             "AND sdd2.DICT_TYPE = 'veh_color' " +
             "LEFT JOIN  TBL_DEVICE_INFO tdi ON tdi.DEVICE_ID = ter.SZ_SOURCE_CODE  " +
-            "where 1=1 " +
+            "where to_char(ter.EVENT_TIME,'yyyy-mm-dd')=to_char(sysdate,'yyyy-mm-dd') " +
             "AND ter.STATUS in (0,1) " +
             "ORDER BY ter.EVENT_TIME DESC" )
     List<Map> searchEvent();
@@ -81,6 +89,13 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "WHEN -1 THEN " +
             "'误报'  " +
             "END AS \"statusDesc\", " +
+            "CASE " +
+            "ter.IS_FILL  " +
+            "WHEN 0 THEN " +
+            "'已填报'  " +
+            "WHEN 1 THEN " +
+            "'未填报'  " +
+            "END AS \"isFill\", " +
             "to_char(ter.CONFIRM_TIME, 'yyyy-mm-dd hh24:mi:ss') AS \"confirmTime\", " +
             "to_char(ter.RELIEVE_TIME, 'yyyy-mm-dd hh24:mi:ss') AS \"relieveTime\", " +
             "case " +
@@ -104,11 +119,18 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "<when test='status != null'>" +
             "AND ter.STATUS = #{status} " +
             "</when>" +
+            "<when test='startTime != null'> " +
+            " and ter.EVENT_TIME &gt;= #{startTime} " +
+            "</when>"+
+            "<when test='endTime != null'> " +
+            " and ter.EVENT_TIME &lt;= #{endTime} " +
+            "</when>"+
+            "<when test='eventType != null'> " +
+            "and ter.EVENT_TYPE in (SELECT DICT_VALUE FROM SYS_DICT_DATA WHERE DICT_VALUE = #{eventType} AND DICT_TYPE = 'event_type' ) " +
+            "</when>"+
             "ORDER BY ter.EVENT_TIME DESC" +
             "</script>")
-    List<Map> search(@Param("status") Integer status);
-
-
+    List<Map> search(@Param("status") Integer status, @Param("startTime")Date startTime,@Param("endTime")Date endTime,@Param("eventType")String eventType);
 
 
     @Select("SELECT DICT_LABEL FROM SYS_DICT_DATA WHERE DICT_TYPE = 'event_type' AND DICT_VALUE = #{eventType}")

@@ -17,7 +17,7 @@ public interface TblEventHandleMapper extends CommonRepository<TblEventHandle> {
             "teh.ID as \"id\", " +
             "teh.HANDLE_TIME as \"handleTime\", " +
             "teh.HANDLE_CONTENT as \"handleContent\", " +
-            "usr.NICK_NAME as \"user\" " +
+            "usr.NICK_NAME as \"handler\" " +
             "FROM " +
             "TBL_EVENT_HANDLE teh " +
             "LEFT JOIN  SYS_USER usr on usr.USER_ID = teh.USER_ID " +

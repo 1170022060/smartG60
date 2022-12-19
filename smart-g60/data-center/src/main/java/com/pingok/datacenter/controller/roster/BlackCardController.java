@@ -48,7 +48,7 @@ public class BlackCardController extends BaseController {
         return AjaxResult.success();
     }
 
-    @Transactional
+//    @Transactional
     @PostMapping("/unzipBlackAll")
     public AjaxResult unzipBlackAll(@Validated @RequestBody String version)
     {

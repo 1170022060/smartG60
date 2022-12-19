@@ -121,7 +121,7 @@ public class RescueServiceImpl implements IRescueService {
                 if(!file.exists()){
                     file.mkdirs();
                 }
-                String pathName=rescuePath+"\\"+fileName;
+                String pathName=rescuePath+"/"+fileName;
                 file  = new File(pathName);
                 if(!file.exists()){
                     file.createNewFile();
@@ -164,7 +164,7 @@ public class RescueServiceImpl implements IRescueService {
                 if(!file.exists()){
                     file.mkdirs();
                 }
-                String pathName=rescuePath+"_all"+"\\"+fileName;
+                String pathName=rescuePath+"_all"+"/"+fileName;
                 file  = new File(pathName);
                 if(!file.exists()){
                     file.createNewFile();
@@ -191,14 +191,14 @@ public class RescueServiceImpl implements IRescueService {
             {
                 try {
                     //指定编码，否则压缩包里面不能有中文目录
-                    zp = new ZipFile(resourcePath+"\\"+zipName, Charset.forName("gbk"));
+                    zp = new ZipFile(resourcePath+"/"+zipName, Charset.forName("gbk"));
                     //遍历里面的文件及文件夹
                     Enumeration entries = zp.entries();
                     while (entries.hasMoreElements()) {
                         ZipEntry entry = (ZipEntry) entries.nextElement();
                         String zipEntryName = entry.getName();
                         InputStream in = zp.getInputStream(entry);
-                        String outpath = (resourcePath+"\\"+ zipEntryName).replace("/", File.separator);
+                        String outpath = (resourcePath+"/"+ zipEntryName).replace("/", File.separator);
                         File fileDelete = new File(outpath);
                         //判断路径是否存在，不存在则创建文件路径
                         File file = new File(outpath.substring(0, outpath.lastIndexOf(File.separator)));
@@ -246,7 +246,7 @@ public class RescueServiceImpl implements IRescueService {
                 ZipEntry entry= (ZipEntry) entries.nextElement();
                 String zipEntryName=entry.getName();
                 InputStream in=zp.getInputStream(entry);
-                String outpath=(resourcePath+"\\"+zipEntryName).replace("/",File.separator);
+                String outpath=(resourcePath+"/"+zipEntryName).replace("/",File.separator);
                 //判断路径是否存在，不存在则创建文件路径
                 File file = new  File(outpath.substring(0,outpath.lastIndexOf(File.separator)));
                 if(!file.exists()){

@@ -19,6 +19,7 @@ spring:
       discovery:
         # 服务注册地址
         server-addr: 10.131.33.63:8848
+#        server-addr: 172.29.10.22:8848
         #namespace: ed01487a-41a0-480e-a369-39f2be469364
         #group: SMARTG60
       config:
@@ -26,22 +27,9 @@ spring:
         #group: SMARTG60
         # 配置中心地址
         server-addr: 10.131.33.63:8848
+#        server-addr: 172.29.10.22:8848
         # 配置文件格式
         file-extension: yml
         # 共享配置
         shared-configs:
           - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
-
-# config
-picturePath: "D:/gantry/picture"
-pictureFailPath: "D:/gantry/pictureFail"
-center:
-  host: http://10.131.4.18:18180
-  stationGB: S0004310010010
-  cardPath: D:\\blacklist
-  ratePath: D:\\ratelist
-  epidemicPath: D:\\epidemiclist
-  prefixPath: D:\\prefixlist
-  recoveryPath: D:\\recoverylist
-  rescuePath: D:\\rescuelist
-  greenPath: D:\\greenlist

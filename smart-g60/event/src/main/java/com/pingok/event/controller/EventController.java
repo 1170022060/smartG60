@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +80,7 @@ public class EventController extends BaseController {
 //    @RequiresPermissions("event:eventControl:fault")
     @Log(title = "事件管理", businessType = BusinessType.UPDATE)
     @PutMapping("/fault")
-    public AjaxResult fault(@RequestParam Long id, @RequestParam String remark) {
+    public AjaxResult fault(@RequestParam Long id, @RequestParam(required = false) String remark) {
         iEventService.fault(id, remark);
         return AjaxResult.success();
     }
@@ -139,10 +140,10 @@ public class EventController extends BaseController {
      * 填报处置内容
      */
 //    @RequiresPermissions("event:eventControl:handleContent")
-    @Log(title = "事件管理", businessType = BusinessType.UPDATE)
+    @Log(title = "填报处置内容", businessType = BusinessType.UPDATE)
     @PutMapping("/handleContent")
-    public AjaxResult handleContent(@RequestBody List<TblEventHandle> tblEventHandles) {
-        iEventService.handleContent(tblEventHandles);
+    public AjaxResult handleContent(@RequestBody TblEventHandle tblEventHandle) {
+        iEventService.handleContent(tblEventHandle);
         return AjaxResult.success();
     }
 
@@ -161,10 +162,10 @@ public class EventController extends BaseController {
      * 事件确认
      */
 //    @RequiresPermissions("event:eventControl:confirm")
-    @Log(title = "事件管理", businessType = BusinessType.UPDATE)
+    @Log(title = "事件确认", businessType = BusinessType.UPDATE)
     @PutMapping("/confirm")
-    public AjaxResult confirm(@RequestParam Long id, @RequestParam String eventType, @RequestParam String remark, @RequestParam String direction) {
-        iEventService.confirm(id, eventType, remark, direction);
+    public AjaxResult confirm(@RequestParam Long id, @RequestParam String eventType,@RequestParam(required = false) String eventSubtype, @RequestParam String remark, @RequestParam String direction) {
+        iEventService.confirm(id, eventType,eventSubtype, remark, direction);
         return AjaxResult.success();
     }
 
@@ -176,9 +177,9 @@ public class EventController extends BaseController {
 //    @RequiresPermissions("event:eventControl:list")
 //    @Log(title = "事件管理", businessType = BusinessType.OTHER)
     @GetMapping("/list")
-    public TableDataInfo list(Integer status) {
+    public TableDataInfo list(Integer status, Date startTime,Date endTime,String eventType) {
         startPage();
-        List<Map> list = iEventService.search(status);
+        List<Map> list = iEventService.search(status,startTime,endTime,eventType);
         return getDataTable(list);
     }
 

@@ -19,6 +19,7 @@ import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.*;
 import com.ruoyi.system.api.domain.SysDictData;
 import com.ruoyi.system.api.domain.amap.TblAutoNaviMapRecord;
+import com.ruoyi.system.api.domain.baidu.TblBaiDuMapRecord;
 import com.ruoyi.system.api.domain.device.TblDeviceInfo;
 import com.ruoyi.system.api.domain.emergency.TblEmergencySupplies;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
@@ -141,7 +142,8 @@ public class EventServiceImpl implements IEventService {
             }
         }
         if (eventRecord != null) {
-            eventRecord.setEventHandles(tblEventHandleMapper.findByEventId(eventRecord.getId()));
+//            List<TblEventHandle> tblEventHandles = ;
+            eventRecord.setEventHandle(tblEventHandleMapper.findByEventId(eventRecord.getId()));
         }
         return eventRecord;
     }
@@ -177,14 +179,19 @@ public class EventServiceImpl implements IEventService {
     }
 
     @Override
-    public void handleContent(List<TblEventHandle> tblEventHandles) {
-        for (TblEventHandle tblEventHandle : tblEventHandles) {
-            tblEventHandle.setId(remoteIdProducerService.nextId());
-            tblEventHandle.setCreateTime(DateUtils.getNowDate());
-            tblEventHandle.setUserId(SecurityUtils.getUserId());
-            tblEventHandle.setHandleTime(DateUtils.getNowDate());
-            tblEventHandleMapper.insert(tblEventHandle);
+    public void handleContent(TblEventHandle tblEventHandle) {
+        Example example = new Example(TblEventRecord.class);
+        example.createCriteria().andEqualTo("id", tblEventHandle.getEventId());
+        TblEventRecord eventRecord = tblEventRecordMapper.selectOneByExample(example);
+        tblEventHandle.setId(remoteIdProducerService.nextId());
+        tblEventHandle.setUserId(SecurityUtils.getUserId());
+        tblEventHandle.setHandleTime(DateUtils.getNowDate());
+        tblEventHandle.setCreateTime(DateUtils.getNowDate());
+        if (tblEventHandle.getHandleContent() !=null ){
+            eventRecord.setIsFill(0);
+            tblEventRecordMapper.updateByPrimaryKey(eventRecord);
         }
+        tblEventHandleMapper.insert(tblEventHandle);
     }
 
     @Override
@@ -193,6 +200,8 @@ public class EventServiceImpl implements IEventService {
         if (tblEventRecord == null) {
             throw new SecurityException("id为：" + id + ",事件信息不存在");
         }
+        tblEventRecord.setIsFill(1);
+        tblEventRecordMapper.updateByPrimaryKeySelective(tblEventRecord);
         JSONObject plan;
         TblEventHandle tblEventHandle;
         tblEventHandle = new TblEventHandle();
@@ -213,6 +222,7 @@ public class EventServiceImpl implements IEventService {
         JSONArray infos;
         JSONObject info;
         JSONObject data;
+        JSONArray devInfoArr;
         String content;
         TblAutoNaviMapRecord autoNaviMapRecord;
         int size;
@@ -238,6 +248,7 @@ public class EventServiceImpl implements IEventService {
                                 if (devicdIds != null && devicdIds.size() > 0) {
                                     size = devicdIds.size();
                                     infos = new JSONArray();
+
                                     for (int j = 0; j < size; j++) {
                                         rDevice = remoteDeviceMonitorService.selectByDeviceId(devicdIds.getString(j));
                                         deviceInfo = rDevice.getData();
@@ -253,6 +264,7 @@ public class EventServiceImpl implements IEventService {
                                     }
                                     vmsPublishInfo.put("devInfo", infos);
 
+                                    devInfoArr = new JSONArray();
                                     tblReleasePreset = rReleasePreset.getData();
                                     info = new JSONObject();
                                     info.put("content", tblReleasePreset.getPresetInfo());
@@ -262,7 +274,8 @@ public class EventServiceImpl implements IEventService {
                                     info.put("picId", tblReleasePreset.getPictureType());
                                     infos = new JSONArray();
                                     infos.add(info);
-                                    vmsPublishInfo.put("data", infos);
+                                    devInfoArr.add(infos);
+                                    vmsPublishInfo.put("data", devInfoArr);
                                     r = remoteInfoBoardService.publish(vmsPublishInfo);
                                     if (r.getCode() == R.SUCCESS) {
                                         content += "发布成功";
@@ -373,6 +386,7 @@ public class EventServiceImpl implements IEventService {
                     autoNaviMapRecord.setStartDate(tblEventRecord.getEventTime());
                     autoNaviMapRecord.setEventDesc(tblEventRecord.getRemark());
                     autoNaviMapRecord.setDirection(tblEventRecord.getDirection());
+                    System.out.println(autoNaviMapRecord);
                     r = remoteAmapService.eventPublish(autoNaviMapRecord);
                     if (r != null) {
                         if (r.getCode() == R.SUCCESS) {
@@ -386,18 +400,21 @@ public class EventServiceImpl implements IEventService {
                     break;
                 case 10://百度地图推送
                     content = "百度地图事件推送：";
-//                    TblBaiDuMapRecord baiDuMapRecord = new TblBaiDuMapRecord();
-//                    baiDuMapRecord.setEventType(plan.getInteger("amapType"));
-//                    baiDuMapRecord.setLevel(1);
-//                    baiDuMapRecord.setTraffic(2);
-//                    baiDuMapRecord.setDirection(tblEventRecord.getDirection());
-//                    baiDuMapRecord.setStartTime(DateUtils.getDateShortTimestamp(tblEventRecord.getEventTime()).intValue());
-//                    baiDuMapRecord.setEndTime(DateUtils.getDateShortTimestamp(DateUtils.getPreTime(tblEventRecord.getEventTime(), 600)).intValue());
-//                    baiDuMapRecord.setContent(tblEventRecord.getRemark());
-//                    baiDuMapRecord.setLocation(tblEventRecord.getLocationInterval());
-//                    baiDuMapRecord.setLocationType(1);
-//                    baiDuMapRecord.setDataType("test");
-                    r = remoteBaiDuService.eventPublish(id,plan.getLong("baiduType"));
+                    TblBaiDuMapRecord baiDuMapRecord = new TblBaiDuMapRecord();
+                    baiDuMapRecord.setId(id);
+                    baiDuMapRecord.setEventType(plan.getInteger("baiduType"));
+                    baiDuMapRecord.setEventId("shlq_"+tblEventRecord.getEventId());
+                    baiDuMapRecord.setEventLevel(1);
+                    baiDuMapRecord.setTraffic(0);
+                    baiDuMapRecord.setDirection(tblEventRecord.getDirection());
+                    baiDuMapRecord.setStartTime(DateUtils.getDateShortTimestamp(tblEventRecord.getEventTime()).intValue());
+                    baiDuMapRecord.setEndTime(DateUtils.getDateShortTimestamp(DateUtils.getPreTime(tblEventRecord.getEventTime(), 60)).intValue());
+                    baiDuMapRecord.setContent(tblEventRecord.getRemark());
+                    baiDuMapRecord.setLocation(tblEventRecord.getLocationInterval().replace("[","").replace("]",""));
+                    baiDuMapRecord.setLocationType(1);
+                    System.out.println(baiDuMapRecord);
+
+                    r = remoteBaiDuService.eventPublish(baiDuMapRecord);
                     if (r != null) {
                         if (r.getCode() == R.SUCCESS) {
                             content += "推送成功";
@@ -462,12 +479,13 @@ public class EventServiceImpl implements IEventService {
     }
 
     @Override
-    public void confirm(Long id, String eventType, String remark, String direction) {
+    public void confirm(Long id, String eventType,String eventSubtype, String remark, String direction) {
         TblEventRecord tblEventRecord = tblEventRecordMapper.selectByPrimaryKey(id);
         tblEventRecord.setStatus(1);
         tblEventRecord.setConfirmTime(DateUtils.getNowDate());
         tblEventRecord.setConfirmUserId(SecurityUtils.getUserId());
         tblEventRecord.setEventType(eventType);
+        tblEventRecord.setEventSubtype(eventSubtype);
         tblEventRecord.setRemark(remark);
         tblEventRecord.setDirection(direction);
         tblEventRecordMapper.updateByPrimaryKey(tblEventRecord);
@@ -494,8 +512,8 @@ public class EventServiceImpl implements IEventService {
     }
 
     @Override
-    public List<Map> search(Integer status) {
-        return tblEventRecordMapper.search(status);
+    public List<Map> search(Integer status,Date startTime,Date endTime,String eventType) {
+        return tblEventRecordMapper.search(status,startTime,endTime,eventType);
     }
 
     @Override

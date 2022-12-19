@@ -8,6 +8,7 @@ import io.swagger.models.auth.In;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -73,9 +74,9 @@ public interface IEventService {
 
     /**
      * 填报处置内容
-     * @param tblEventHandles
+     * @param tblEventHandle
      */
-    void handleContent(List<TblEventHandle> tblEventHandles);
+    void handleContent(TblEventHandle tblEventHandle);
 
     /**
      * 应急处置
@@ -94,14 +95,14 @@ public interface IEventService {
      * 事件确认
      * @param id
      */
-    void confirm(Long id,String eventType,String remark,String direction);
+    void confirm(Long id,String eventType,String eventSubtype,String remark,String direction);
 
     /**
      * 分页查询
      * @param status
      * @return
      */
-    List<Map> search(Integer status);
+    List<Map> search(Integer status, Date startTime,Date endTime,String eventType);
 
     /**
      * 根据id查询事件

@@ -12,7 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 闯关管理
@@ -49,4 +51,9 @@ public class RushController extends BaseController {
         return AjaxResult.success();
     }
 
+    @GetMapping("/detail")
+    public AjaxResult detail(@RequestParam(value = "vehPlate") String vehPlate, @RequestParam(value = "laneHex") String laneHex, @RequestParam(value = "transTime")Date transTime) {
+        Map detail = iRushService.detail(vehPlate,laneHex,transTime);
+        return AjaxResult.success(detail);
+    }
 }
