@@ -71,6 +71,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         tblEventParkingEventMapper.insert(tblEventParkingEvent);
     }
 
+
     @Override
     public void updateEventVideo(Long ubiLogicId) {
         String url = iVideoService.getEventVideoById(ubiLogicId, 2, 1);
@@ -192,6 +193,12 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
         List<Integer> list = Arrays.asList(5, 6, 14, 15, 10016, 31, 32, 34, 35, 36, 40, 41, 37);
         if (!list.contains(tblEventVehicleEvent.getUiEventType())) {
+//            try {
+//                Thread.sleep(120 * 1000);
+//                updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
             updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
         }
     }

@@ -72,8 +72,8 @@ public class EventPalnServiceImpl implements IEventPalnService {
         JSONArray planFunction = JSON.parseArray(eventPaln.getPlanFunction());
         Integer range = 0;
         for (int i = 0; i < planFunction.size(); i++) {
-            if (type == planFunction.getJSONObject(i).getInteger("type")) {
-                range = planFunction.getJSONObject(i).getInteger("range");
+            if (type == planFunction.getJSONObject(i).getInteger("type") && planFunction.getJSONObject(i).containsKey("range")) {
+                range = planFunction.getJSONObject(i).getInteger("range") * 1000;
             }
         }
         Integer deviceType = null;
@@ -117,6 +117,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
             for (TblDeviceInfo i : deviceInfos) {
                 pileNo = Integer.parseInt(Pattern.compile("[^0-9]").matcher(i.getPileNo()).replaceAll("").trim());
                 switch (eventRecord.getDirection()) {
+                    case "上行":
                     case "1":
                         if ((position - pileNo) >= 0 && (position - pileNo) <= range) {
                             info = new JSONObject();
@@ -127,6 +128,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
                             list.add(info);
                         }
                         break;
+                    case "下行":
                     case "2":
                         if ((position - pileNo) <= 0 && (position - pileNo) <= -range) {
                             info = new JSONObject();
@@ -137,6 +139,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
                             list.add(info);
                         }
                         break;
+                    case "双向":
                     case "3":
                         if (Math.abs(position - pileNo) <= range) {
                             info = new JSONObject();
@@ -152,6 +155,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
             for (TblGantryInfo i : gantryInfos) {
                 pileNo = Integer.parseInt(Pattern.compile("[^0-9]").matcher(i.getPileNo()).replaceAll("").trim());
                 switch (eventRecord.getDirection()) {
+                    case "上行":
                     case "1":
                         if ((position - pileNo) <= range) {
                             info = new JSONObject();
@@ -162,6 +166,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
                             list.add(info);
                         }
                         break;
+                    case "下行":
                     case "2":
                         if ((position - pileNo) <= -range) {
                             info = new JSONObject();
@@ -172,6 +177,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
                             list.add(info);
                         }
                         break;
+                    case "双向":
                     case "3":
                         if (Math.abs(position - pileNo) <= range) {
                             info = new JSONObject();

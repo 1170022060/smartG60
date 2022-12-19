@@ -178,6 +178,8 @@ public class VideoEventServiceImpl implements IVideoEventService {
             eventVehicleEvent.setId(remoteIdProducerService.nextId());
             tblEventVehicleEventMapper.insert(eventVehicleEvent);
 
+
+
             TblDeviceInfo info = null;
             R<TblDeviceInfo> r = remoteDeviceMonitorService.selectByDeviceId(eventVehicleEvent.getSzSourceCode());
             if (r.getCode() == R.SUCCESS && r.getData() != null) {
