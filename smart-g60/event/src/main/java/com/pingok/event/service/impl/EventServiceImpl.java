@@ -302,6 +302,7 @@ public class EventServiceImpl implements IEventService {
                         if (devicdIds != null && devicdIds.size() > 0) {
                             size = devicdIds.size();
                             infos = new JSONArray();
+                            devInfoArr = new JSONArray();
                             for (int j = 0; j < size; j++) {
                                 rDevice = remoteDeviceMonitorService.selectByDeviceId(devicdIds.getString(j));
                                 deviceInfo = rDevice.getData();
@@ -321,7 +322,8 @@ public class EventServiceImpl implements IEventService {
                                 info.put("picId", plan.getLong("presetId"));
                                 infos = new JSONArray();
                                 infos.add(info);
-                                vmsPublishInfo.put("data", infos);
+                                devInfoArr.add(infos);
+                                vmsPublishInfo.put("data", devInfoArr);
                                 r = remoteInfoBoardService.publish(vmsPublishInfo);
                                 if (r.getCode() == R.SUCCESS) {
                                     content += "发布成功";
@@ -351,7 +353,7 @@ public class EventServiceImpl implements IEventService {
                                     if (rDevice != null && rDevice.getCode() == R.SUCCESS) {
                                         deviceInfo = rDevice.getData();
                                         body.put("deviceId", deviceInfo.getDeviceId());
-                                        body.put("cmdType", plan.getJSONArray("cmdType"));
+                                        body.put("cmdType", plan.get("cmdType"));
                                         r = remotePilotLightService.send(body);
                                         if (r != null) {
                                             if (r != null && r.getCode() == R.SUCCESS) {

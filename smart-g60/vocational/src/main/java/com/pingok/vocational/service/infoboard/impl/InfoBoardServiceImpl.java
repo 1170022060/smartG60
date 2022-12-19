@@ -58,21 +58,25 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
             else {}
         }
 
+        A.setId(1);
         A.setDeviceName("A板");
         A.setDeviceCnt(A.getVmsList().size());
         A.setFaultCnt(A.getVmsList().stream().filter(x -> x.getDeviceStatus() == 0).count());
         ret.add(A);
 
+        F.setId(2);
         F.setDeviceName("F板");
         F.setDeviceCnt(F.getVmsList().size());
         F.setFaultCnt(F.getVmsList().stream().filter(x -> x.getDeviceStatus() == 0).count());
         ret.add(F);
 
+        S.setId(3);
         S.setDeviceName("小板");
         S.setDeviceCnt(S.getVmsList().size());
         S.setFaultCnt(S.getVmsList().stream().filter(x -> x.getDeviceStatus() == 0).count());
         ret.add(S);
 
+        X.setId(4);
         X.setDeviceName("限速板");
         X.setDeviceCnt(X.getVmsList().size());
         X.setFaultCnt(X.getVmsList().stream().filter(x -> x.getDeviceStatus() == 0).count());
