@@ -16,6 +16,17 @@ import java.util.Map;
  */
 public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
 
+    @Select("SELECT " +
+            "COUNT(ID) " +
+            "FROM " +
+            "TBL_BUILD_MANAGE " +
+            "WHERE 1=1 " +
+            "AND REPLACE(REPLACE(START_PILE_NUM,'K',''),'+','') <= #{position} " +
+            "AND REPLACE(REPLACE(END_PILE_NUM,'K',''),'+','') >= #{position} " +
+            "AND START_TIME <= to_date(#{eventTime},'yyyy-mm-dd hh24:mi:ss') " +
+            "AND END_TIME >= to_date(#{eventTime},'yyyy-mm-dd hh24:mi:ss') " )
+    Integer checkBuildManage(@Param("eventTime") String eventTime,@Param("position") Integer position);
+
 
     @Select("SELECT " +
             "ter.ID AS \"id\", " +

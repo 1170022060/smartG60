@@ -2,6 +2,7 @@ package com.pingok.event.service.impl;
 
 import com.pingok.event.domain.TblEventRecord;
 import com.pingok.event.domain.videoEvent.*;
+import com.pingok.event.mapper.TblEventRecordMapper;
 import com.pingok.event.mapper.videoEvent.*;
 import com.pingok.event.service.IEventService;
 import com.pingok.event.service.IVideoEventService;
@@ -23,6 +24,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @author
@@ -63,6 +65,9 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
     @Autowired
     private RemoteDeviceMonitorService remoteDeviceMonitorService;
+
+    @Autowired
+    private TblEventRecordMapper tblEventRecordMapper;
 
 
     @Override
@@ -156,7 +161,6 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
     @Override
     public void vehicleEvent(TblEventVehicleEvent tblEventVehicleEvent) {
-
         String imageUrl = null;
         if (StringUtils.isNotNull(tblEventVehicleEvent.getSzImg())) {
             MultipartFile multipartFile = ImageUtils.base64ToMultipartFile(tblEventVehicleEvent.getSzImg());
@@ -178,13 +182,21 @@ public class VideoEventServiceImpl implements IVideoEventService {
             eventVehicleEvent.setId(remoteIdProducerService.nextId());
             tblEventVehicleEventMapper.insert(eventVehicleEvent);
 
-
-
-            TblDeviceInfo info = null;
+            String pileNo = null;
+            Integer position = 0;
             R<TblDeviceInfo> r = remoteDeviceMonitorService.selectByDeviceId(eventVehicleEvent.getSzSourceCode());
             if (r.getCode() == R.SUCCESS && r.getData() != null) {
-                info = r.getData();
+                pileNo = r.getData().getPileNo();
+                position = Integer.parseInt(Pattern.compile("[^0-9]").matcher(pileNo).replaceAll("").trim());
             }
+
+            if (eventVehicleEvent.getUiEventType() == 20) {
+                Integer co = tblEventRecordMapper.checkBuildManage(DateUtils.dateTime(new Date(eventVehicleEvent.getUbiTime()), DateUtils.YYYY_MM_DD_HH_MM_SS), position);
+                if (co != null && co > 0) {
+                    return;
+                }
+            }
+
             TblEventRecord eventRecord = new TblEventRecord();
             eventRecord.setEventType(eventVehicleEvent.getUiEventType().toString());
             eventRecord.setVehClass(eventVehicleEvent.getUiVehicleTypeDetail());
@@ -196,7 +208,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             eventRecord.setCreateTime(DateUtils.getNowDate());
             eventRecord.setSzSourceCode(eventVehicleEvent.getSzSourceCode());
             eventRecord.setStatus(0);
-            eventRecord.setPileNo(info != null ? info.getPileNo() : null);
+            eventRecord.setPileNo(pileNo);
             eventRecord.setDeviceType(eventVehicleEvent.getUiDeviceType());
             if (eventVehicleEvent.getUbiSourceId() != null) {
                 Object o = tblEventVehicleEventMapper.findByDeviceId(eventVehicleEvent.getSzSourceCode());
