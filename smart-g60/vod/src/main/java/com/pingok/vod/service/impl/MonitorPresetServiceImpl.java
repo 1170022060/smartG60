@@ -17,10 +17,15 @@ import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import lombok.extern.slf4j.Slf4j;
+import org.bytedeco.javacpp.avcodec;
+import org.bytedeco.javacv.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,6 +45,68 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
     private RemoteIdProducerService remoteIdProducerService;
     @Autowired
     private IDeviceInfoService iDeviceInfoService;
+
+    @Override
+    public void downloadVod(HttpServletResponse response,  String url) {
+        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(url);
+        FFmpegFrameRecorder recorder = null;
+        File outFile = null;
+        try {
+            grabber.start();
+            Frame frame = grabber.grabFrame();
+            if (frame != null) {
+                String filePath = "/root/vod/" + DateUtils.getNowTimestampLong() + ".flv";
+                outFile = new File(filePath);
+                if (!outFile.isFile()) {
+                    try {
+                        outFile.createNewFile();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+                // 流媒体输出地址，分辨率（长，高），是否录制音频（0:不录制/1:录制）
+                recorder = new FFmpegFrameRecorder(filePath, 1080, 1440, 1);
+                recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);// 直播流格式
+                recorder.setFormat("flv");// 录制的视频格式
+                recorder.setFrameRate(25);// 帧数
+                //百度翻译的比特率，默认400000，但是我400000贼模糊，调成800000比较合适
+                recorder.setVideoBitrate(800000);
+                recorder.start();
+                while ((frame != null)) {
+                    recorder.record(frame);// 录制
+                    frame = grabber.grabFrame();// 获取下一帧
+                }
+                recorder.record(frame);
+                // 停止录制
+                recorder.stop();
+                grabber.stop();
+            }
+        } catch (FrameGrabber.Exception e) {
+            e.printStackTrace();
+        } catch (FrameRecorder.Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != grabber) {
+                try {
+                    grabber.stop();
+                } catch (FrameGrabber.Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (recorder != null) {
+                try {
+                    recorder.stop();
+                } catch (FrameRecorder.Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (outFile != null) {
+//                outFile.delete();
+            }
+        }
+    }
+
 
     @Override
     public JSONArray getCameraStatus() {
@@ -301,7 +368,7 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
                     liveUrl.put("id", cameraId);
                     liveUrl.put("url", reqBody.getString("live_flv_url"));
                     liveUrls.add(liveUrl);
-                    ptzControl(cameraId,"gotopreset","4");
+                    ptzControl(cameraId, "gotopreset", "4");
                 } else {
                     log.error("设备编号为：" + cameraId + " 的相机开始实时视频失败，错误：" + req.getJSONObject("ret_header").getString("msg"));
                 }

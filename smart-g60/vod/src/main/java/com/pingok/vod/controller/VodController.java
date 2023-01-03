@@ -6,14 +6,15 @@ import com.pingok.vod.domain.TblMonitorPreset;
 import com.pingok.vod.service.IDeviceHeartbeatService;
 import com.pingok.vod.service.IDeviceInfoService;
 import com.pingok.vod.service.IMonitorPresetService;
+import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
-import com.ruoyi.common.log.annotation.Log;
-import com.ruoyi.common.log.enums.BusinessType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 视频 信息操作处理
@@ -31,6 +32,15 @@ public class VodController extends BaseController {
     private IMonitorPresetService iMonitorPresetService;
     @Autowired
     private IDeviceHeartbeatService iDeviceHeartbeatService;
+
+    @GetMapping("/downloadVod")
+    public AjaxResult downloadVod(HttpServletResponse response, String url) {
+        if (StringUtils.isEmpty(url)) {
+            return AjaxResult.error("url不能为空");
+        }
+        iMonitorPresetService.downloadVod(response, url);
+        return AjaxResult.success();
+    }
 
     @PostMapping("/heartbeat")
     public AjaxResult heartbeat() {
