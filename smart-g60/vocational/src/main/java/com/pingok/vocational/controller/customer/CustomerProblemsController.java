@@ -46,7 +46,7 @@ public class CustomerProblemsController extends BaseController {
     @GetMapping(value="/info")
     public TableDataInfo info(CustomerProblemsVo customerProblemsVo){
         startPage();
-        List<CustomerProblemsEx> info = customerProblemsService.selectCustomerProblems(customerProblemsVo);
+        List<Map> info = customerProblemsService.selectInfo(customerProblemsVo);
         return getDataTable(info);
     }
 

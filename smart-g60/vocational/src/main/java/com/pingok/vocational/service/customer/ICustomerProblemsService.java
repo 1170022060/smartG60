@@ -25,7 +25,13 @@ public interface ICustomerProblemsService {
     public TblCustomerProblems selectCustomerProblemsById(Long Id);
 
     /**
-     * 通过处理人ID、起止时间查询客户投诉与咨询记录
+     * 分页查询
+     * @return
+     */
+    List<Map> selectInfo(CustomerProblemsVo customerProblemsVo);
+
+    /**
+     * 导出时查询
      *
      * @return 客户投诉与咨询记录
      */

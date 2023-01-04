@@ -35,6 +35,11 @@ public class CustomerProblemsServiceImpl implements ICustomerProblemsService {
     }
 
     @Override
+    public List<Map> selectInfo(CustomerProblemsVo customerProblemsVo) {
+        return tblCustomerProblemsMapper.selectInfo(customerProblemsVo);
+    }
+
+    @Override
     public List<CustomerProblemsEx> selectCustomerProblems(CustomerProblemsVo customerProblemsVo) {
         return tblCustomerProblemsMapper.selectCustomerProblems(customerProblemsVo);
     }
