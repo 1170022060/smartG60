@@ -27,6 +27,16 @@ public class TransSummaryServiceImpl implements ITransSummaryService {
     }
 
     @Override
+    public List<Map> selectEnTransSummary(Date enStartTime, Date enEndTime, Date enWorkDate, String enStationId, String passId, String enGid, Integer enPassType, Integer enShift, String enVehPlate, String enCardId) {
+        return tblTransSummaryMapper.selectEnTransSummary(enStartTime,  enEndTime,  enWorkDate,  enStationId,  passId,  enGid,  enPassType,  enShift,  enVehPlate,  enCardId);
+    }
+
+    @Override
+    public List<Map> selectExTransSummary(String passId, Date exStartTime, Date exEndTime, Date exWorkDate, String exStationId, String exGid, Integer exPassType, Integer exShift, String exVehPlate, String exCardId, Integer payWay) {
+        return tblTransSummaryMapper.selectExTransSummary(passId, exStartTime,  exEndTime,  exWorkDate,  exStationId,  exGid,  exPassType,  exShift,  exVehPlate,  exCardId,  payWay);
+    }
+
+    @Override
     public List<TransSummaryVo> selectTransSummaryList(SummaryVo summaryVo) {
         return tblTransSummaryMapper.selectTransSummaryList(summaryVo);
     }

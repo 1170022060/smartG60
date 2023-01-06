@@ -28,6 +28,16 @@ public class LprSummaryServiceImpl implements ILprSummaryService {
     }
 
     @Override
+    public List<Map> selectEnLprTrans(Date enStartTime, Date enEndTime, String enStationId, Integer enLaneType, String enVehPlate) {
+        return tblLprSummaryMapper.selectEnLprTrans(enStartTime, enEndTime, enStationId, enLaneType, enVehPlate);
+    }
+
+    @Override
+    public List<Map> selectExLprTrans(Date exStartTime, Date exEndTime, String exStationId, Integer exLaneType, String exVehPlate) {
+        return tblLprSummaryMapper.selectExLprTrans(exStartTime, exEndTime, exStationId, exLaneType, exVehPlate);
+    }
+
+    @Override
     public List<LprSummaryVo> selectLprTransList(SummaryVo summaryVo) {
         return tblLprSummaryMapper.selectLprTransList(summaryVo);
     }

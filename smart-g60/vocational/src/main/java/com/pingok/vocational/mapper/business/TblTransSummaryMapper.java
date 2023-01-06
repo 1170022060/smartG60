@@ -138,6 +138,135 @@ public interface TblTransSummaryMapper {
                                  @Param("payWay") Integer payWay);
 
     @Select({"<script>" +
+            "select a.PASS_ID as \"passId\" , \n" +
+            "a.GID as \"enGid\" , \n" +
+            "to_char(a.TRANS_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"enTransTime\" , \n" +
+            "to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"enWorkDate\" , \n" +
+            "b.DICT_LABEL as \"enPassType\" , \n" +
+            "c.STATION_NAME as \"enStation\" , \n" +
+            "d.LANE_NAME as \"enLaneHex\" , \n" +
+            "e.DICT_LABEL as \"enShift\" , \n" +
+            "f.DICT_LABEL as \"enVehClass\" , \n" +
+            "g.DICT_LABEL as \"enVehStatus\" , \n" +
+            "trim(a.VEH_PLATE) as \"enVehPlate\" , \n" +
+            "h.DICT_LABEL as \"enVehColor\" , \n" +
+            "case a.PASS_TYPE when 5 then ETC_CARD_ID when 6 then CPC_CARD_ID end as \"enCardId\" from EN_TRANS_SELECT a \n" +
+            "left join SYS_DICT_DATA b on b.DICT_VALUE=to_char(a.PASS_TYPE) and b.DICT_TYPE='pass_type' \n" +
+            "left join TBL_BASE_STATION_INFO c on UPPER(c.STATION_HEX)=UPPER(SUBSTR(a.LANE_HEX, 1, 8)) \n" +
+            "left join TBL_LANE_INFO d on UPPER(d.LANE_HEX)=UPPER(a.LANE_HEX) \n" +
+            "left join SYS_DICT_DATA e on e.DICT_VALUE=to_char(a.SHIFT) and e.DICT_TYPE='shift' \n" +
+            "left join SYS_DICT_DATA f on f.DICT_VALUE=a.VEH_CLASS and f.DICT_TYPE='veh_class' \n" +
+            "left join SYS_DICT_DATA g on g.DICT_VALUE=a.VEH_STATUS and g.DICT_TYPE='veh_status' \n" +
+            "left join SYS_DICT_DATA h on h.DICT_VALUE=a.VEH_COLOR and h.DICT_TYPE='veh_color' " +
+            "where 1=1 " +
+            "<when test='enStartTime != null'> " +
+            "and a.TRANS_TIME &gt;= #{enStartTime} " +
+            "</when>"+
+            "<when test='enEndTime != null'> " +
+            "and a.TRANS_TIME &lt;= #{enEndTime} " +
+            "</when>" +
+            "<when test='enWorkDate != null'> " +
+            "and a.WORK_DATE = #{enWorkDate} " +
+            "</when>" +
+            "<when test='enStationId != null'> " +
+            "and SUBSTR(a.LANE_HEX, 1, 8)= CONCAT('3101',#{enStationId}) " +
+            "</when>"+
+            "<when test='passId != null'> " +
+            "and a.PASS_ID= #{passId} " +
+            "</when>"+
+            "<when test='enGid != null'> " +
+            "and a.GID= #{enGid} " +
+            "</when>"+
+            "<when test='enPassType != null'> " +
+            "and a.PASS_TYPE= #{enPassType} " +
+            "</when>"+
+            "<when test='enShift != null'> " +
+            "and a.SHIFT= #{enShift} " +
+            "</when>"+
+            "<when test='enVehPlate != null'> " +
+            "and trim(a.VEH_PLATE) like CONCAT(CONCAT('%',#{enVehPlate}),'%') " +
+            "</when>"+
+            "<when test='enCardId != null'> " +
+            "and a.ETC_CARD_ID= #{enCardId} or a.CPC_CARD_ID= #{enCardId}" +
+            "</when>"+
+            "</script>"})
+    List<Map> selectEnTransSummary(@Param("enStartTime") Date enStartTime, @Param("enEndTime") Date enEndTime,
+                                 @Param("enWorkDate") Date enWorkDate,@Param("enStationId") String enStationId,
+                                 @Param("passId") String passId,@Param("enGid") String enGid,
+                                 @Param("enPassType") Integer enPassType,@Param("enShift") Integer enShift,
+                                 @Param("enVehPlate") String enVehPlate,@Param("enCardId") String enCardId);
+
+    @Select({"<script>" +
+            "select a.PASS_ID as \"passId\",\n" +
+            "a.GID as \"exGid\" , \n" +
+            "to_char(a.TRANS_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"exTransTime\" ,\n" +
+            "to_char(a.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"exWorkDate\" , \n" +
+            "c.STATION_NAME as \"exStation\" , \n" +
+            "d.LANE_NAME as \"exLaneHex\" , \n" +
+            "e.DICT_LABEL as \"exShift\" , \n" +
+            "a.TOLL_FEE as \"tollFee\" , \n" +
+            "a.TOLL_FEE-a.TOLL_FEE95 as \"discountFee\" , \n" +
+            "i.DICT_LABEL as \"payWay\" , \n" +
+            "b.DICT_LABEL as \"exPassType\" , \n" +
+            "f.DICT_LABEL as \"exVehClass\" , \n" +
+            "g.DICT_LABEL as \"exVehStatus\" , \n" +
+            "trim(a.VEH_PLATE) as \"exVehPlate\" , \n" +
+            "h.DICT_LABEL as \"exVehColor\" , \n" +
+            "j.DICT_LABEL as \"feeType\" , \n" +
+            "case a.PASS_TYPE when 5 then ETC_CARD_ID when 6 then CPC_CARD_ID end as \"exCardId\" , \n" +
+            "a.AMOUNT as \"amount\" from EX_TRANS_SELECT a \n" +
+            "left join SYS_DICT_DATA b on b.DICT_VALUE=to_char(a.PASS_TYPE) and b.DICT_TYPE='pass_type' \n" +
+            "left join TBL_BASE_STATION_INFO c on UPPER(c.STATION_HEX)=UPPER(SUBSTR(a.LANE_HEX, 1, 8)) \n" +
+            "left join TBL_LANE_INFO d on UPPER(d.LANE_HEX)=UPPER(a.LANE_HEX) \n" +
+            "left join SYS_DICT_DATA e on e.DICT_VALUE=to_char(a.SHIFT) and e.DICT_TYPE='shift' \n" +
+            "left join SYS_DICT_DATA f on f.DICT_VALUE=a.VEH_CLASS and f.DICT_TYPE='veh_class' \n" +
+            "left join SYS_DICT_DATA g on g.DICT_VALUE=a.VEH_STATUS and g.DICT_TYPE='veh_status' \n" +
+            "left join SYS_DICT_DATA h on h.DICT_VALUE=a.VEH_COLOR and h.DICT_TYPE='veh_color' \n" +
+            "left join SYS_DICT_DATA i on i.DICT_VALUE=to_char(a.PAY_WAY) and i.DICT_TYPE='pay_way' \n" +
+            "left join SYS_DICT_DATA j on j.DICT_VALUE=a.FEE_TYPE and j.DICT_TYPE='fee_type' " +
+            "where 1=1 " +
+            "<when test='passId != null'> " +
+            "and a.PASS_ID= #{passId} " +
+            "</when>"+
+            "<when test='exStartTime != null'> " +
+            "and a.TRANS_TIME &gt;= #{exStartTime} " +
+            "</when>"+
+            "<when test='exEndTime != null'> " +
+            "and a.TRANS_TIME &lt;= #{exEndTime} " +
+            "</when>" +
+            "<when test='exWorkDate != null'> " +
+            "and a.WORK_DATE = #{exWorkDate} " +
+            "</when>" +
+            "<when test='exStationId != null'> " +
+            "and SUBSTR(a.LANE_HEX, 1, 8)= CONCAT('3101',#{exStationId}) " +
+            "</when>"+
+            "<when test='exGid != null'> " +
+            "and a.GID= #{exGid} " +
+            "</when>"+
+            "<when test='exPassType != null'> " +
+            "and a.PASS_TYPE= #{exPassType} " +
+            "</when>"+
+            "<when test='exShift != null'> " +
+            "and a.SHIFT= #{exShift} " +
+            "</when>"+
+            "<when test='exVehPlate != null'> " +
+            "and trim(a.VEH_PLATE) like CONCAT(CONCAT('%',#{exVehPlate}),'%')  " +
+            "</when>"+
+            "<when test='exCardId != null'> " +
+            "and a.ETC_CARD_ID= #{exCardId} or a.CPC_CARD_ID= #{exCardId} " +
+            "</when>"+
+            "<when test='payWay != null'> " +
+            "and a.PAY_WAY= #{payWay} " +
+            "</when>"+
+            "</script>"})
+    List<Map> selectExTransSummary(@Param("passId") String passId,@Param("exStartTime") Date exStartTime,
+                                   @Param("exEndTime") Date exEndTime,@Param("exWorkDate") Date exWorkDate,
+                                   @Param("exStationId") String exStationId,@Param("exGid") String exGid,
+                                   @Param("exPassType") Integer exPassType,@Param("exShift") Integer exShift,
+                                 @Param("exVehPlate") String exVehPlate,@Param("exCardId") String exCardId,
+                                 @Param("payWay") Integer payWay);
+
+    @Select({"<script>" +
             "select a.PASS_ID as \"passId\" , " +
             "a.EN_GID as \"enGid\" , " +
             "to_char(a.EN_TRANS_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"enTransTime\" , " +
