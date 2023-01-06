@@ -29,10 +29,10 @@ public class TransSummaryController extends BaseController {
     @Autowired
     private ITransSummaryService transSummaryService;
 
-    @RequiresPermissions("vocational:transSummary:info")
-    @Log(title = "流水汇总-分页查询", businessType = BusinessType.OTHER)
-    @GetMapping("/info")
-    public TableDataInfo info(@RequestParam(name = "enStartTime",required = false) Date enStartTime,
+//    @RequiresPermissions("vocational:transSummary:info")
+    @Log(title = "入口流水汇总-分页查询", businessType = BusinessType.OTHER)
+    @GetMapping("/enInfo")
+    public TableDataInfo enInfo(@RequestParam(name = "enStartTime",required = false) Date enStartTime,
                               @RequestParam(name = "enEndTime",required = false) Date enEndTime,
                               @RequestParam(name = "enWorkDate",required = false) Date enWorkDate,
                               @RequestParam(name = "enStationId",required = false) String enStationId,
@@ -41,7 +41,17 @@ public class TransSummaryController extends BaseController {
                               @RequestParam(name = "enPassType",required = false) Integer enPassType,
                               @RequestParam(name = "enShift",required = false) Integer enShift,
                               @RequestParam(name = "enVehPlate",required = false) String enVehPlate,
-                              @RequestParam(name = "enCardId",required = false) String enCardId,
+                              @RequestParam(name = "enCardId",required = false) String enCardId)
+    {
+        startPage();
+        List<Map> info = transSummaryService.selectEnTransSummary(enStartTime,  enEndTime,  enWorkDate,  enStationId, passId, enGid,  enPassType,  enShift,  enVehPlate,  enCardId);
+        return getDataTable(info);
+    }
+
+//    @RequiresPermissions("vocational:transSummary:info")
+    @Log(title = "出口流水汇总-分页查询", businessType = BusinessType.OTHER)
+    @GetMapping("/exInfo")
+    public TableDataInfo exInfo(@RequestParam(name = "passId",required = false) String passId,
                               @RequestParam(name = "exStartTime",required = false) Date exStartTime,
                               @RequestParam(name = "exEndTime",required = false) Date exEndTime,
                               @RequestParam(name = "exWorkDate",required = false) Date exWorkDate,
@@ -54,7 +64,7 @@ public class TransSummaryController extends BaseController {
                               @RequestParam(name = "payWay",required = false) Integer payWay)
     {
         startPage();
-        List<Map> info = transSummaryService.selectTransSummary(enStartTime,  enEndTime,  enWorkDate,  enStationId, passId, enGid,  enPassType,  enShift,  enVehPlate,  enCardId,  exStartTime,  exEndTime,  exWorkDate,  exStationId,  exGid,  exPassType,  exShift,  exVehPlate,  exCardId,  payWay);
+        List<Map> info = transSummaryService.selectExTransSummary(passId, exStartTime,  exEndTime,  exWorkDate,  exStationId,  exGid,  exPassType,  exShift,  exVehPlate,  exCardId,  payWay);
         return getDataTable(info);
     }
 

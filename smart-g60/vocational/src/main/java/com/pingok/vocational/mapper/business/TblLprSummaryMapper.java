@@ -72,6 +72,66 @@ public interface TblLprSummaryMapper {
                              @Param("exLaneType") Integer exLaneType, @Param("exVehPlate") String exVehPlate);
 
     @Select({"<script>" +
+            "select to_char(a.TRANS_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"enTransTime\" ," +
+            "a.TRANS_NUMBER as \"enTransNumber\" ," +
+            "c.LANE_NAME as \"enLaneGb\" ," +
+            "trim(a.VEH_PLATE) as \"enVehPlate\" ," +
+            "d.DICT_LABEL as \"enVehColor\"  from EN_LPR_SELECT a " +
+            "left join TBL_BASE_STATION_INFO b on b.STATION_GB=SUBSTR(a.LANE_GB, 1, 14) " +
+            "left join TBL_LANE_INFO c on c.LANE_GB=a.LANE_GB " +
+            "left join SYS_DICT_DATA d on d.DICT_VALUE=a.VEH_COLOR and d.DICT_TYPE='veh_color' " +
+            "where 1=1 " +
+            "<when test='enStartTime != null'> " +
+            "and a.TRANS_TIME &gt;= #{enStartTime} " +
+            "</when>"+
+            "<when test='enEndTime != null'> " +
+            "and a.TRANS_TIME &lt;= #{enEndTime} " +
+            "</when>" +
+            "<when test='enStationId != null'> " +
+            "and b.STATION_ID= #{enStationId} " +
+            "</when>"+
+            "<when test='enLaneType != null'> " +
+            "and c.LANE_TYPE= #{enLaneType} " +
+            "</when>"+
+            "<when test='enVehPlate != null'> " +
+            "and trim(a.VEH_PLATE) like CONCAT(CONCAT('%',#{enVehPlate}),'%')   " +
+            "</when>"+
+            "</script>"})
+    List<Map> selectEnLprTrans(@Param("enStartTime") Date enStartTime, @Param("enEndTime") Date enEndTime,
+                               @Param("enStationId") String enStationId, @Param("enLaneType") Integer enLaneType,
+                               @Param("enVehPlate") String enVehPlate);
+
+    @Select({"<script>" +
+            "select to_char(a.TRANS_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"exTransTime\" ," +
+            "a.TRANS_NUMBER as \"exTransNumber\" ," +
+            "c.LANE_NAME as \"exLaneGb\" ," +
+            "trim(a.VEH_PLATE) as \"exVehPlate\" ," +
+            "d.DICT_LABEL as \"exVehColor\"  from EX_LPR_SELECT a " +
+            "left join TBL_BASE_STATION_INFO b on b.STATION_GB=SUBSTR(a.LANE_GB, 1, 14) " +
+            "left join TBL_LANE_INFO c on c.LANE_GB=a.LANE_GB " +
+            "left join SYS_DICT_DATA d on d.DICT_VALUE=a.VEH_COLOR and d.DICT_TYPE='veh_color' " +
+            "where 1=1 " +
+            "<when test='exStartTime != null'> " +
+            "and a.TRANS_TIME &gt;= #{exStartTime} " +
+            "</when>"+
+            "<when test='exEndTime != null'> " +
+            "and a.TRANS_TIME &lt;= #{exEndTime} " +
+            "</when>" +
+            "<when test='exStationId != null'> " +
+            "and b.STATION_ID= #{exStationId} " +
+            "</when>"+
+            "<when test='exLaneType != null'> " +
+            "and c.LANE_TYPE= #{exLaneType} " +
+            "</when>"+
+            "<when test='exVehPlate != null'> " +
+            "and trim(a.VEH_PLATE) like CONCAT(CONCAT('%',#{exVehPlate}),'%') " +
+            "</when>"+
+            "</script>"})
+    List<Map> selectExLprTrans(@Param("exStartTime") Date exStartTime, @Param("exEndTime") Date exEndTime,
+                               @Param("exStationId") String exStationId, @Param("exLaneType") Integer exLaneType,
+                               @Param("exVehPlate") String exVehPlate);
+
+    @Select({"<script>" +
             "select to_char(a.EN_TRANS_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"enTransTime\" ," +
             "a.EN_TRANS_NUMBER as \"enTransNumber\" ," +
             "d.LANE_NAME as \"enLaneGb\" ," +

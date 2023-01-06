@@ -27,23 +27,32 @@ import java.util.Map;
 public class LprSummaryController extends BaseController {
     @Autowired
     private ILprSummaryService lprSummaryService;
-
-    @RequiresPermissions("vocational:lprSummary:info")
-    @Log(title = "车道牌识-分页查询", businessType = BusinessType.OTHER)
-    @GetMapping("/info")
-    public TableDataInfo info(@RequestParam(name = "enStartTime",required = false) Date enStartTime,
+//
+//    @RequiresPermissions("vocational:lprSummary:info")
+    @Log(title = "入口车道牌识-分页查询", businessType = BusinessType.OTHER)
+    @GetMapping("/enInfo")
+    public TableDataInfo enInfo(@RequestParam(name = "enStartTime",required = false) Date enStartTime,
                               @RequestParam(name = "enEndTime",required = false) Date enEndTime,
                               @RequestParam(name = "enStationId",required = false) String enStationId,
                               @RequestParam(name = "enLaneType",required = false) Integer enLaneType,
-                              @RequestParam(name = "enVehPlate",required = false) String enVehPlate,
-                              @RequestParam(name = "exStartTime",required = false) Date exStartTime,
+                              @RequestParam(name = "enVehPlate",required = false) String enVehPlate)
+    {
+        startPage();
+        List<Map> info = lprSummaryService.selectEnLprTrans(enStartTime, enEndTime, enStationId, enLaneType, enVehPlate);
+        return getDataTable(info);
+    }
+//
+//    @RequiresPermissions("vocational:lprSummary:info")
+    @Log(title = "出口车道牌识-分页查询", businessType = BusinessType.OTHER)
+    @GetMapping("/exInfo")
+    public TableDataInfo exInfo(@RequestParam(name = "exStartTime",required = false) Date exStartTime,
                               @RequestParam(name = "exEndTime",required = false) Date exEndTime,
                               @RequestParam(name = "exStationId",required = false) String exStationId,
                               @RequestParam(name = "exLaneType",required = false) Integer exLaneType,
                               @RequestParam(name = "exVehPlate",required = false) String exVehPlate)
     {
         startPage();
-        List<Map> info = lprSummaryService.selectLprTrans(enStartTime, enEndTime, enStationId, enLaneType, enVehPlate, exStartTime, exEndTime, exStationId, exLaneType, exVehPlate);
+        List<Map> info = lprSummaryService.selectExLprTrans(exStartTime, exEndTime, exStationId, exLaneType, exVehPlate);
         return getDataTable(info);
     }
 
