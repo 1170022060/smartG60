@@ -1,6 +1,7 @@
 package com.pingok.monitor.service.pilotService.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.monitor.domain.device.TblDeviceStatus;
 import com.pingok.monitor.mapper.device.TblDeviceStatusMapper;
@@ -56,5 +57,30 @@ public class PilotLightServiceImpl implements IPilotLightService {
     @Override
     public List<Map> visibilityTotal(Date startTime, Date endTime) {
         return pilotLightMapper.visibilityTotal(startTime,endTime);
+    }
+
+    @Override
+    public JSONArray visibilityTrend(Date startTime, Date endTime) {
+        List<Map> listXD = pilotLightMapper.visibilityTrendXD(startTime,endTime);
+        List<Map> listDZ = pilotLightMapper.visibilityTrendDZ(startTime,endTime);
+        JSONArray result = new JSONArray();
+        JSONObject obj;
+        for (Map m : listXD) {
+            if (m.containsKey("statusDetails") && StringUtils.isNotNull(m.get("statusDetails"))) {
+                obj = JSON.parseObject(String.valueOf(m.get("statusDetails")));
+                m.put("visibility",obj.getInteger("currentVisibility"));
+                m.remove("statusDetails");
+            }
+        }
+        for (Map m : listDZ) {
+            if (m.containsKey("statusDetails") && StringUtils.isNotNull(m.get("statusDetails"))) {
+                obj = JSON.parseObject(String.valueOf(m.get("statusDetails")));
+                m.put("visibility",obj.getInteger("currentVisibility"));
+                m.remove("statusDetails");
+            }
+        }
+        result.add(0,listXD);
+        result.add(1,listDZ);
+        return result;
     }
 }

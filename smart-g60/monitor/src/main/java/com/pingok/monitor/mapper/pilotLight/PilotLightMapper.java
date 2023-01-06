@@ -40,4 +40,31 @@ public interface PilotLightMapper {
             "</script>"})
     List<Map> visibilityTotal(@Param("startTime")Date startTime,@Param("endTime")Date endTime);
 
+    @Select({"<script>" +
+            "SELECT to_char(TIME,'yyyy-MM-dd HH24:mi:ss') as \"time\",STATUS_DETAILS as \"statusDetails\" " +
+            " FROM TBL_DEVICE_STATUS_LOG " +
+            "WHERE DEVICE_ID =10938 AND STATUS IS NULL " +
+            "<when test='startTime != null'> " +
+            "and TIME &gt;= #{startTime} " +
+            "</when> " +
+            "<when test='endTime != null'> " +
+            "and TIME &lt;= #{endTime} " +
+            "</when> " +
+            "order by TIME " +
+            "</script>"})
+    List<Map> visibilityTrendXD(@Param("startTime")Date startTime,@Param("endTime")Date endTime);
+
+    @Select({"<script>" +
+            "SELECT to_char(TIME,'yyyy-MM-dd HH24:mi:ss') as \"time\",STATUS_DETAILS as \"statusDetails\" " +
+            " FROM TBL_DEVICE_STATUS_LOG " +
+            "WHERE DEVICE_ID =10939 AND STATUS IS NULL " +
+            "<when test='startTime != null'> " +
+            "and TIME &gt;= #{startTime} " +
+            "</when> " +
+            "<when test='endTime != null'> " +
+            "and TIME &lt;= #{endTime} " +
+            "</when> " +
+            "order by TIME " +
+            "</script>"})
+    List<Map> visibilityTrendDZ(@Param("startTime")Date startTime,@Param("endTime")Date endTime);
 }

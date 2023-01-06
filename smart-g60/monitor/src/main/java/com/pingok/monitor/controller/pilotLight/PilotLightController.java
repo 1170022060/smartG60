@@ -67,4 +67,9 @@ public class PilotLightController extends BaseController {
     public AjaxResult total(Date startTime,Date endTime){
         return AjaxResult.success(iPilotLightService.visibilityTotal(startTime,endTime));
     }
+
+    @GetMapping("/trend")
+    public AjaxResult trend(Date startTime,Date endTime){
+        return AjaxResult.success(iPilotLightService.visibilityTrend(startTime,endTime));
+    }
 }
