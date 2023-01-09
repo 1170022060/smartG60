@@ -33,7 +33,6 @@ public class GreenController extends BaseController {
         return AjaxResult.success();
     }
 
-    @Transactional
     @PostMapping("/greenDownload")
     public AjaxResult greenDownload()
     {

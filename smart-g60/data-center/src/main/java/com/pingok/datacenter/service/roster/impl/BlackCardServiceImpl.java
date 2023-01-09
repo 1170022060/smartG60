@@ -87,7 +87,6 @@ public class BlackCardServiceImpl implements IBlackCardService {
     }
 
     @Override
-    @Transactional
     public void increment() {
         String versionNow=versionMapper.selectVersion("TBL_BLACK_CARD_VERSION");
         String version = DateUtils.getTimeMinute(DateUtils.getBeforeMillisEndWithMinute0or5(5,DateUtils.getNowDate()));

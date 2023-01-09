@@ -183,7 +183,6 @@ public class GreenServiceImpl implements IGreenService {
         delFolder(resourcePath);
     }
 
-    @Transactional
     public void insertGreen(List<GreenVo> list, String version) {
         TblGreenVersion greenVersion;
 

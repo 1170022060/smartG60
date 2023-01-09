@@ -40,7 +40,6 @@ public class EpidemicController extends BaseController {
         return AjaxResult.success();
     }
 
-    @Transactional
     @PostMapping("/epidemicDownload")
     public AjaxResult epidemicDownload()
     {
@@ -48,7 +47,6 @@ public class EpidemicController extends BaseController {
         return AjaxResult.success();
     }
 
-    @Transactional
     @PostMapping("/prefixDownload")
     public AjaxResult prefixDownload()
     {
