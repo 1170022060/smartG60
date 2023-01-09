@@ -261,6 +261,7 @@ public class EventController extends BaseController {
             case 36:
             case 40:
             case 41:
+            case 10031:
                 iVideoEventService.relieveEvent(tblEventVehicleEvent);
                 break;
             default:
