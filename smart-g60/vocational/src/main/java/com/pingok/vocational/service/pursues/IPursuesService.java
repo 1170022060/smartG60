@@ -20,7 +20,7 @@ public interface IPursuesService {
      * @param endTime 结束时间
      * @return 追讨名单
      */
-    List<Map> selectPursuesList(Date startTime, Date endTime);
+    List<Map> selectPursuesList(Date startTime, Date endTime,String vehPlate);
 
     /**
      * 导入追讨名单
