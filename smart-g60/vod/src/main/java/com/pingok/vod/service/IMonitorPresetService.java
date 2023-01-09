@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.vod.domain.TblMonitorPreset;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -13,6 +14,8 @@ import java.util.List;
  * @author qiumin
  */
 public interface IMonitorPresetService {
+
+    void downloadVod(HttpServletResponse response, String url);
 
     JSONArray getCameraStatus();
 
