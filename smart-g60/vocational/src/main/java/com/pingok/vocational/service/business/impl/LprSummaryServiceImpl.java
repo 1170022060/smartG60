@@ -4,6 +4,7 @@ import com.pingok.vocational.domain.business.vo.LprSummaryVo;
 import com.pingok.vocational.domain.business.vo.SummaryVo;
 import com.pingok.vocational.mapper.business.TblLprSummaryMapper;
 import com.pingok.vocational.service.business.ILprSummaryService;
+import com.ruoyi.common.core.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +30,12 @@ public class LprSummaryServiceImpl implements ILprSummaryService {
 
     @Override
     public List<Map> selectEnLprTrans(Date enStartTime, Date enEndTime, String enStationId, Integer enLaneType, String enVehPlate) {
-        return tblLprSummaryMapper.selectEnLprTrans(enStartTime, enEndTime, enStationId, enLaneType, enVehPlate);
+        return tblLprSummaryMapper.selectEnLprTrans(DateUtils.getTimeDay(enStartTime).substring(0,4),enStartTime, enEndTime, enStationId, enLaneType, enVehPlate);
     }
 
     @Override
     public List<Map> selectExLprTrans(Date exStartTime, Date exEndTime, String exStationId, Integer exLaneType, String exVehPlate) {
-        return tblLprSummaryMapper.selectExLprTrans(exStartTime, exEndTime, exStationId, exLaneType, exVehPlate);
+        return tblLprSummaryMapper.selectExLprTrans(DateUtils.getTimeDay(exStartTime).substring(0,4),exStartTime, exEndTime, exStationId, exLaneType, exVehPlate);
     }
 
     @Override

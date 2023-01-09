@@ -76,7 +76,7 @@ public interface TblLprSummaryMapper {
             "a.TRANS_NUMBER as \"enTransNumber\" ," +
             "c.LANE_NAME as \"enLaneGb\" ," +
             "trim(a.VEH_PLATE) as \"enVehPlate\" ," +
-            "d.DICT_LABEL as \"enVehColor\"  from EN_LPR_SELECT a " +
+            "d.DICT_LABEL as \"enVehColor\"  from TBL_EN_LPR_TRANS_${year} a " +
             "left join TBL_BASE_STATION_INFO b on b.STATION_GB=SUBSTR(a.LANE_GB, 1, 14) " +
             "left join TBL_LANE_INFO c on c.LANE_GB=a.LANE_GB " +
             "left join SYS_DICT_DATA d on d.DICT_VALUE=a.VEH_COLOR and d.DICT_TYPE='veh_color' " +
@@ -97,7 +97,7 @@ public interface TblLprSummaryMapper {
             "and trim(a.VEH_PLATE) like CONCAT(CONCAT('%',#{enVehPlate}),'%')   " +
             "</when>"+
             "</script>"})
-    List<Map> selectEnLprTrans(@Param("enStartTime") Date enStartTime, @Param("enEndTime") Date enEndTime,
+    List<Map> selectEnLprTrans(@Param("year") String year,@Param("enStartTime") Date enStartTime, @Param("enEndTime") Date enEndTime,
                                @Param("enStationId") String enStationId, @Param("enLaneType") Integer enLaneType,
                                @Param("enVehPlate") String enVehPlate);
 
@@ -106,7 +106,7 @@ public interface TblLprSummaryMapper {
             "a.TRANS_NUMBER as \"exTransNumber\" ," +
             "c.LANE_NAME as \"exLaneGb\" ," +
             "trim(a.VEH_PLATE) as \"exVehPlate\" ," +
-            "d.DICT_LABEL as \"exVehColor\"  from EX_LPR_SELECT a " +
+            "d.DICT_LABEL as \"exVehColor\"  from TBL_EX_LPR_TRANS_${year} a " +
             "left join TBL_BASE_STATION_INFO b on b.STATION_GB=SUBSTR(a.LANE_GB, 1, 14) " +
             "left join TBL_LANE_INFO c on c.LANE_GB=a.LANE_GB " +
             "left join SYS_DICT_DATA d on d.DICT_VALUE=a.VEH_COLOR and d.DICT_TYPE='veh_color' " +
@@ -127,7 +127,7 @@ public interface TblLprSummaryMapper {
             "and trim(a.VEH_PLATE) like CONCAT(CONCAT('%',#{exVehPlate}),'%') " +
             "</when>"+
             "</script>"})
-    List<Map> selectExLprTrans(@Param("exStartTime") Date exStartTime, @Param("exEndTime") Date exEndTime,
+    List<Map> selectExLprTrans(@Param("year") String year,@Param("exStartTime") Date exStartTime, @Param("exEndTime") Date exEndTime,
                                @Param("exStationId") String exStationId, @Param("exLaneType") Integer exLaneType,
                                @Param("exVehPlate") String exVehPlate);
 
