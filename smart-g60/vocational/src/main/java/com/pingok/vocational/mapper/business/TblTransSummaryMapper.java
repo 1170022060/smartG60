@@ -17,115 +17,233 @@ import java.util.Map;
 public interface TblTransSummaryMapper {
 
     @Select({"<script>" +
-            "select a.PASS_ID as \"passId\" , " +
-            "a.EN_GID as \"enGid\" , " +
-            "to_char(a.EN_TRANS_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"enTransTime\" , " +
-            "to_char(a.EN_WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"enWorkDate\" , " +
-            "b.DICT_LABEL as \"enPassType\" , " +
-            "d.STATION_NAME as \"enStation\" , " +
-            "f.LANE_NAME as \"enLaneHex\" , " +
-            "h.DICT_LABEL as \"enShift\" , " +
-            "j.DICT_LABEL as \"enVehClass\" , " +
-            "k.DICT_LABEL as \"enVehStatus\" , " +
-            "a.EN_VEH_PLATE as \"enVehPlate\" , " +
-            "l.DICT_LABEL as \"enVehColor\" , " +
-            "a.EN_CARD_ID as \"enCardId\" , " +
-            "a.EX_GID as \"exGid\" , " +
-            "to_char(a.EX_TRANS_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"exTransTime\" ," +
-            "to_char(a.EX_WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"exWorkDate\" , " +
-            "e.STATION_NAME as \"exStation\" , " +
-            "g.LANE_NAME as \"exLaneHex\" , " +
-            "i.DICT_LABEL as \"exShift\" , " +
-            "a.TOLL_FEE as \"tollFee\" , " +
-            "a.TOLL_FEE-a.TOLL_FEE95 as \"discountFee\" , " +
-            "p.DICT_LABEL as \"payWay\" , " +
-            "c.DICT_LABEL as \"exPassType\" , " +
-            "m.DICT_LABEL as \"exVehClass\" , " +
-            "n.DICT_LABEL as \"exVehStatus\" , " +
-            "a.EX_VEH_PLATE as \"exVehPlate\" , " +
-            "o.DICT_LABEL as \"exVehColor\" , " +
-            "q.DICT_LABEL as \"feeType\" , " +
-            "a.EX_CARD_ID as \"exCardId\" , " +
-            "a.AMOUNT as \"amount\" from TBL_TRANS_SUMMARY a " +
-            "left join SYS_DICT_DATA b on b.DICT_VALUE=to_char(a.EN_PASS_TYPE) and b.DICT_TYPE='pass_type' " +
-            "left join SYS_DICT_DATA c on c.DICT_VALUE=to_char(a.EX_PASS_TYPE) and c.DICT_TYPE='pass_type' " +
-            "left join TBL_BASE_STATION_INFO d on UPPER(d.STATION_HEX)=UPPER(SUBSTR(a.EN_LANE_HEX, 1, 8)) " +
-            "left join TBL_BASE_STATION_INFO e on UPPER(e.STATION_HEX)=UPPER(SUBSTR(a.EX_LANE_HEX, 1, 8)) " +
-            "left join TBL_LANE_INFO f on UPPER(f.LANE_HEX)=UPPER(a.EN_LANE_HEX) " +
-            "left join TBL_LANE_INFO g on UPPER(g.LANE_HEX)=UPPER(a.EX_LANE_HEX) " +
-            "left join SYS_DICT_DATA h on h.DICT_VALUE=to_char(a.EN_SHIFT) and h.DICT_TYPE='shift' " +
-            "left join SYS_DICT_DATA i on i.DICT_VALUE=to_char(a.EX_SHIFT) and i.DICT_TYPE='shift' " +
-            "left join SYS_DICT_DATA j on j.DICT_VALUE=a.EN_VEH_CLASS and j.DICT_TYPE='veh_class' " +
-            "left join SYS_DICT_DATA k on k.DICT_VALUE=a.EN_VEH_STATUS and k.DICT_TYPE='veh_status' " +
-            "left join SYS_DICT_DATA l on l.DICT_VALUE=a.EN_VEH_COLOR and l.DICT_TYPE='veh_color' " +
-            "left join SYS_DICT_DATA m on m.DICT_VALUE=a.EX_VEH_CLASS and m.DICT_TYPE='veh_class' " +
-            "left join SYS_DICT_DATA n on n.DICT_VALUE=a.EX_VEH_STATUS and n.DICT_TYPE='veh_status' " +
-            "left join SYS_DICT_DATA o on o.DICT_VALUE=a.EX_VEH_COLOR and o.DICT_TYPE='veh_color' " +
-            "left join SYS_DICT_DATA p on p.DICT_VALUE=to_char(a.PAY_WAY) and p.DICT_TYPE='pay_way' " +
-            "left join SYS_DICT_DATA q on q.DICT_VALUE=a.FEE_TYPE and q.DICT_TYPE='fee_type' " +
+            "select en.PASS_ID as \"passId\" , \n" +
+            "en.GID as \"enGid\" , \n" +
+            "to_char(en.TRANS_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"enTransTime\" , \n" +
+            "to_char(en.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"enWorkDate\" , \n" +
+            "b.DICT_LABEL as \"enPassType\" , \n" +
+            "d.STATION_NAME as \"enStation\" , \n" +
+            "f.LANE_NAME as \"enLaneHex\" , \n" +
+            "h.DICT_LABEL as \"enShift\" , \n" +
+            "j.DICT_LABEL as \"enVehClass\" , \n" +
+            "k.DICT_LABEL as \"enVehStatus\" , \n" +
+            "trim(en.VEH_PLATE) as \"enVehPlate\" , \n" +
+            "l.DICT_LABEL as \"enVehColor\" , \n" +
+            "case en.PASS_TYPE when 5 then enep.ETC_CARD_ID when 6 then enmp.CPC_CARD_ID end as \"enCardId\" , " +
+            "ex.GID as \"exGid\" , \n" +
+            "to_char(ex.TRANS_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"exTransTime\" ,\n" +
+            "to_char(ex.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"exWorkDate\" , \n" +
+            "e.STATION_NAME as \"exStation\" , \n" +
+            "g.LANE_NAME as \"exLaneHex\" , \n" +
+            "i.DICT_LABEL as \"exShift\" , \n" +
+            "ex.TOLL_FEE as \"tollFee\" , \n" +
+            "ex.TOLL_FEE-ex.TOLL_FEE95 as \"discountFee\" , \n" +
+            "p.DICT_LABEL as \"payWay\" , \n" +
+            "c.DICT_LABEL as \"exPassType\" , \n" +
+            "m.DICT_LABEL as \"exVehClass\" , \n" +
+            "n.DICT_LABEL as \"exVehStatus\" , \n" +
+            "trim(ex.VEH_PLATE) as \"exVehPlate\" , \n" +
+            "o.DICT_LABEL as \"exVehColor\" , \n" +
+            "q.DICT_LABEL as \"feeType\" , \n" +
+            "case ex.PASS_TYPE when 5 then exep.ETC_CARD_ID when 6 then exmp.CPC_CARD_ID end as \"exCardId\" , \n" +
+            "ex.AMOUNT as \"amount\" from TBL_EN_TRANS_${year} en \n" +
+            "left join TBL_EX_TRANS_${year} ex on en.PASS_ID=ex.PASS_ID\n" +
+            "left join TBL_EN_MTC_PASS_${year} enmp on en.RECORD_ID=enmp.RECORD_ID\n" +
+            "left join TBL_EN_ETC_PASS_${year} enep on en.RECORD_ID=enep.RECORD_ID\n" +
+            "left join TBL_EX_MTC_PASS_${year} exmp on ex.RECORD_ID=exmp.RECORD_ID\n" +
+            "left join TBL_EX_ETC_PASS_${year} exep on ex.RECORD_ID=exep.RECORD_ID " +
+            "left join SYS_DICT_DATA b on b.DICT_VALUE=to_char(en.PASS_TYPE) and b.DICT_TYPE='pass_type' \n" +
+            "left join SYS_DICT_DATA c on c.DICT_VALUE=to_char(ex.PASS_TYPE) and c.DICT_TYPE='pass_type' \n" +
+            "left join TBL_BASE_STATION_INFO d on UPPER(d.STATION_HEX)=UPPER(SUBSTR(en.LANE_HEX, 1, 8)) \n" +
+            "left join TBL_BASE_STATION_INFO e on UPPER(e.STATION_HEX)=UPPER(SUBSTR(ex.LANE_HEX, 1, 8)) \n" +
+            "left join TBL_LANE_INFO f on UPPER(f.LANE_HEX)=UPPER(en.LANE_HEX) \n" +
+            "left join TBL_LANE_INFO g on UPPER(g.LANE_HEX)=UPPER(ex.LANE_HEX) \n" +
+            "left join SYS_DICT_DATA h on h.DICT_VALUE=to_char(en.SHIFT) and h.DICT_TYPE='shift' \n" +
+            "left join SYS_DICT_DATA i on i.DICT_VALUE=to_char(ex.SHIFT) and i.DICT_TYPE='shift' \n" +
+            "left join SYS_DICT_DATA j on j.DICT_VALUE=en.VEH_CLASS and j.DICT_TYPE='veh_class' \n" +
+            "left join SYS_DICT_DATA k on k.DICT_VALUE=en.VEH_STATUS and k.DICT_TYPE='veh_status' \n" +
+            "left join SYS_DICT_DATA l on l.DICT_VALUE=en.VEH_COLOR and l.DICT_TYPE='veh_color' \n" +
+            "left join SYS_DICT_DATA m on m.DICT_VALUE=ex.VEH_CLASS and m.DICT_TYPE='veh_class' \n" +
+            "left join SYS_DICT_DATA n on n.DICT_VALUE=ex.VEH_STATUS and n.DICT_TYPE='veh_status' \n" +
+            "left join SYS_DICT_DATA o on o.DICT_VALUE=ex.VEH_COLOR and o.DICT_TYPE='veh_color' \n" +
+            "left join SYS_DICT_DATA p on p.DICT_VALUE=to_char(ex.PAY_WAY) and p.DICT_TYPE='pay_way' \n" +
+            "left join SYS_DICT_DATA q on q.DICT_VALUE=ex.FEE_TYPE and q.DICT_TYPE='fee_type' \n" +
             "where 1=1 " +
             "<when test='enStartTime != null'> " +
-            "and a.EN_TRANS_TIME &gt;= #{enStartTime} " +
+            "and en.TRANS_TIME &gt;= #{enStartTime} " +
             "</when>"+
             "<when test='enEndTime != null'> " +
-            "and a.EN_TRANS_TIME &lt;= #{enEndTime} " +
+            "and en.TRANS_TIME &lt;= #{enEndTime} " +
             "</when>" +
             "<when test='enWorkDate != null'> " +
-            "and a.EN_WORK_DATE = #{enWorkDate} " +
+            "and en.WORK_DATE = #{enWorkDate} " +
             "</when>" +
             "<when test='enStationId != null'> " +
-            "and SUBSTR(a.EN_LANE_HEX, 1, 8)= CONCAT('3101',#{enStationId}) " +
+            "and SUBSTR(en.LANE_HEX, 1, 8)= CONCAT('3101',#{enStationId}) " +
             "</when>"+
             "<when test='passId != null'> " +
-            "and a.PASS_ID= #{passId} " +
+            "and en.PASS_ID= #{passId} " +
             "</when>"+
             "<when test='enGid != null'> " +
-            "and a.EN_GID= #{enGid} " +
+            "and en.GID= #{enGid} " +
             "</when>"+
             "<when test='enPassType != null'> " +
-            "and a.EN_PASS_TYPE= #{enPassType} " +
+            "and en.PASS_TYPE= #{enPassType} " +
             "</when>"+
             "<when test='enShift != null'> " +
-            "and a.EN_SHIFT= #{enShift} " +
+            "and en.SHIFT= #{enShift} " +
             "</when>"+
             "<when test='enVehPlate != null'> " +
-            "and a.EN_VEH_PLATE= #{enVehPlate} " +
+            "and trim(en.VEH_PLATE) like CONCAT(CONCAT('%',#{enVehPlate}),'%') " +
             "</when>"+
             "<when test='enCardId != null'> " +
-            "and a.EN_CARD_ID= #{enCardId} " +
+            "and enep.ETC_CARD_ID= #{enCardId} or enmp.CPC_CARD_ID= #{enCardId}" +
             "</when>"+
             "<when test='exStartTime != null'> " +
-            "and a.EX_TRANS_TIME &gt;= #{exStartTime} " +
+            "and ex.TRANS_TIME &gt;= #{exStartTime} " +
             "</when>"+
             "<when test='exEndTime != null'> " +
-            "and a.EX_TRANS_TIME &lt;= #{exEndTime} " +
+            "and ex.TRANS_TIME &lt;= #{exEndTime} " +
             "</when>" +
             "<when test='exWorkDate != null'> " +
-            "and a.EX_WORK_DATE = #{exWorkDate} " +
+            "and ex.WORK_DATE = #{exWorkDate} " +
             "</when>" +
             "<when test='exStationId != null'> " +
-            "and SUBSTR(a.EX_LANE_HEX, 1, 8)= CONCAT('3101',#{exStationId}) " +
+            "and SUBSTR(ex.LANE_HEX, 1, 8)= CONCAT('3101',#{exStationId}) " +
             "</when>"+
             "<when test='exGid != null'> " +
-            "and a.EX_GID= #{exGid} " +
+            "and ex.GID= #{exGid} " +
             "</when>"+
             "<when test='exPassType != null'> " +
-            "and a.EX_PASS_TYPE= #{exPassType} " +
+            "and ex.PASS_TYPE= #{exPassType} " +
             "</when>"+
             "<when test='exShift != null'> " +
-            "and a.EX_SHIFT= #{exShift} " +
+            "and ex.SHIFT= #{exShift} " +
             "</when>"+
             "<when test='exVehPlate != null'> " +
-            "and a.EX_VEH_PLATE= #{exVehPlate} " +
+            "and trim(ex.VEH_PLATE) like CONCAT(CONCAT('%',#{exVehPlate}),'%') " +
             "</when>"+
             "<when test='exCardId != null'> " +
-            "and a.EX_CARD_ID= #{exCardId} " +
+            "and exep.ETC_CARD_ID= #{exCardId} or exmp.CPC_CARD_ID= #{exCardId}" +
             "</when>"+
             "<when test='payWay != null'> " +
-            "and a.PAY_WAY= #{payWay} " +
+            "and ex.PAY_WAY= #{payWay} " +
+            "</when>"+
+            "union " +
+            "select ex.PASS_ID as \"passId\" , \n" +
+            "en.GID as \"enGid\" , \n" +
+            "to_char(en.TRANS_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"enTransTime\" , \n" +
+            "to_char(en.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"enWorkDate\" , \n" +
+            "b.DICT_LABEL as \"enPassType\" , \n" +
+            "d.STATION_NAME as \"enStation\" , \n" +
+            "f.LANE_NAME as \"enLaneHex\" , \n" +
+            "h.DICT_LABEL as \"enShift\" , \n" +
+            "j.DICT_LABEL as \"enVehClass\" , \n" +
+            "k.DICT_LABEL as \"enVehStatus\" , \n" +
+            "trim(en.VEH_PLATE) as \"enVehPlate\" , \n" +
+            "l.DICT_LABEL as \"enVehColor\" , \n" +
+            "case en.PASS_TYPE when 5 then enep.ETC_CARD_ID when 6 then enmp.CPC_CARD_ID end as \"enCardId\" , " +
+            "ex.GID as \"exGid\" , \n" +
+            "to_char(ex.TRANS_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"exTransTime\" ,\n" +
+            "to_char(ex.WORK_DATE, 'yyyy-mm-dd hh24:mi:ss') as \"exWorkDate\" , \n" +
+            "e.STATION_NAME as \"exStation\" , \n" +
+            "g.LANE_NAME as \"exLaneHex\" , \n" +
+            "i.DICT_LABEL as \"exShift\" , \n" +
+            "ex.TOLL_FEE as \"tollFee\" , \n" +
+            "ex.TOLL_FEE-ex.TOLL_FEE95 as \"discountFee\" , \n" +
+            "p.DICT_LABEL as \"payWay\" , \n" +
+            "c.DICT_LABEL as \"exPassType\" , \n" +
+            "m.DICT_LABEL as \"exVehClass\" , \n" +
+            "n.DICT_LABEL as \"exVehStatus\" , \n" +
+            "trim(ex.VEH_PLATE) as \"exVehPlate\" , \n" +
+            "o.DICT_LABEL as \"exVehColor\" , \n" +
+            "q.DICT_LABEL as \"feeType\" , \n" +
+            "case ex.PASS_TYPE when 5 then exep.ETC_CARD_ID when 6 then exmp.CPC_CARD_ID end as \"exCardId\" , \n" +
+            "ex.AMOUNT as \"amount\" from TBL_EX_TRANS_${year} ex \n" +
+            "left join TBL_EN_TRANS_${year} en on en.PASS_ID=ex.PASS_ID\n" +
+            "left join TBL_EN_MTC_PASS_${year} enmp on en.RECORD_ID=enmp.RECORD_ID\n" +
+            "left join TBL_EN_ETC_PASS_${year} enep on en.RECORD_ID=enep.RECORD_ID\n" +
+            "left join TBL_EX_MTC_PASS_${year} exmp on ex.RECORD_ID=exmp.RECORD_ID\n" +
+            "left join TBL_EX_ETC_PASS_${year} exep on ex.RECORD_ID=exep.RECORD_ID " +
+            "left join SYS_DICT_DATA b on b.DICT_VALUE=to_char(en.PASS_TYPE) and b.DICT_TYPE='pass_type' \n" +
+            "left join SYS_DICT_DATA c on c.DICT_VALUE=to_char(ex.PASS_TYPE) and c.DICT_TYPE='pass_type' \n" +
+            "left join TBL_BASE_STATION_INFO d on UPPER(d.STATION_HEX)=UPPER(SUBSTR(en.LANE_HEX, 1, 8)) \n" +
+            "left join TBL_BASE_STATION_INFO e on UPPER(e.STATION_HEX)=UPPER(SUBSTR(ex.LANE_HEX, 1, 8)) \n" +
+            "left join TBL_LANE_INFO f on UPPER(f.LANE_HEX)=UPPER(en.LANE_HEX) \n" +
+            "left join TBL_LANE_INFO g on UPPER(g.LANE_HEX)=UPPER(ex.LANE_HEX) \n" +
+            "left join SYS_DICT_DATA h on h.DICT_VALUE=to_char(en.SHIFT) and h.DICT_TYPE='shift' \n" +
+            "left join SYS_DICT_DATA i on i.DICT_VALUE=to_char(ex.SHIFT) and i.DICT_TYPE='shift' \n" +
+            "left join SYS_DICT_DATA j on j.DICT_VALUE=en.VEH_CLASS and j.DICT_TYPE='veh_class' \n" +
+            "left join SYS_DICT_DATA k on k.DICT_VALUE=en.VEH_STATUS and k.DICT_TYPE='veh_status' \n" +
+            "left join SYS_DICT_DATA l on l.DICT_VALUE=en.VEH_COLOR and l.DICT_TYPE='veh_color' \n" +
+            "left join SYS_DICT_DATA m on m.DICT_VALUE=ex.VEH_CLASS and m.DICT_TYPE='veh_class' \n" +
+            "left join SYS_DICT_DATA n on n.DICT_VALUE=ex.VEH_STATUS and n.DICT_TYPE='veh_status' \n" +
+            "left join SYS_DICT_DATA o on o.DICT_VALUE=ex.VEH_COLOR and o.DICT_TYPE='veh_color' \n" +
+            "left join SYS_DICT_DATA p on p.DICT_VALUE=to_char(ex.PAY_WAY) and p.DICT_TYPE='pay_way' \n" +
+            "left join SYS_DICT_DATA q on q.DICT_VALUE=ex.FEE_TYPE and q.DICT_TYPE='fee_type' " +
+            "where 1=1 " +
+            "<when test='enStartTime != null'> " +
+            "and en.TRANS_TIME &gt;= #{enStartTime} " +
+            "</when>"+
+            "<when test='enEndTime != null'> " +
+            "and en.TRANS_TIME &lt;= #{enEndTime} " +
+            "</when>" +
+            "<when test='enWorkDate != null'> " +
+            "and en.WORK_DATE = #{enWorkDate} " +
+            "</when>" +
+            "<when test='enStationId != null'> " +
+            "and SUBSTR(en.LANE_HEX, 1, 8)= CONCAT('3101',#{enStationId}) " +
+            "</when>"+
+            "<when test='passId != null'> " +
+            "and en.PASS_ID= #{passId} " +
+            "</when>"+
+            "<when test='enGid != null'> " +
+            "and en.GID= #{enGid} " +
+            "</when>"+
+            "<when test='enPassType != null'> " +
+            "and en.PASS_TYPE= #{enPassType} " +
+            "</when>"+
+            "<when test='enShift != null'> " +
+            "and en.SHIFT= #{enShift} " +
+            "</when>"+
+            "<when test='enVehPlate != null'> " +
+            "and trim(en.VEH_PLATE) like CONCAT(CONCAT('%',#{enVehPlate}),'%') " +
+            "</when>"+
+            "<when test='enCardId != null'> " +
+            "and enep.ETC_CARD_ID= #{enCardId} or enmp.CPC_CARD_ID= #{enCardId}" +
+            "</when>"+
+            "<when test='exStartTime != null'> " +
+            "and ex.TRANS_TIME &gt;= #{exStartTime} " +
+            "</when>"+
+            "<when test='exEndTime != null'> " +
+            "and ex.TRANS_TIME &lt;= #{exEndTime} " +
+            "</when>" +
+            "<when test='exWorkDate != null'> " +
+            "and ex.WORK_DATE = #{exWorkDate} " +
+            "</when>" +
+            "<when test='exStationId != null'> " +
+            "and SUBSTR(ex.LANE_HEX, 1, 8)= CONCAT('3101',#{exStationId}) " +
+            "</when>"+
+            "<when test='exGid != null'> " +
+            "and ex.GID= #{exGid} " +
+            "</when>"+
+            "<when test='exPassType != null'> " +
+            "and ex.PASS_TYPE= #{exPassType} " +
+            "</when>"+
+            "<when test='exShift != null'> " +
+            "and ex.SHIFT= #{exShift} " +
+            "</when>"+
+            "<when test='exVehPlate != null'> " +
+            "and trim(ex.VEH_PLATE) like CONCAT(CONCAT('%',#{exVehPlate}),'%') " +
+            "</when>"+
+            "<when test='exCardId != null'> " +
+            "and exep.ETC_CARD_ID= #{exCardId} or exmp.CPC_CARD_ID= #{exCardId}" +
+            "</when>"+
+            "<when test='payWay != null'> " +
+            "and ex.PAY_WAY= #{payWay} " +
             "</when>"+
             "</script>"})
-    List<Map> selectTransSummary(@Param("enStartTime") Date enStartTime, @Param("enEndTime") Date enEndTime,
+    List<Map> selectTransSummary(@Param("year") String year,@Param("enStartTime") Date enStartTime, @Param("enEndTime") Date enEndTime,
                                  @Param("enWorkDate") Date enWorkDate,@Param("enStationId") String enStationId,
                                  @Param("passId") String passId,@Param("enGid") String enGid,
                                  @Param("enPassType") Integer enPassType,@Param("enShift") Integer enShift,

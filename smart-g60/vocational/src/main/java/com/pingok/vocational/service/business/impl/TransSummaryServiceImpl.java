@@ -4,6 +4,7 @@ import com.pingok.vocational.domain.business.vo.SummaryVo;
 import com.pingok.vocational.domain.business.vo.TransSummaryVo;
 import com.pingok.vocational.mapper.business.TblTransSummaryMapper;
 import com.pingok.vocational.service.business.ITransSummaryService;
+import com.ruoyi.common.core.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class TransSummaryServiceImpl implements ITransSummaryService {
 
     @Override
     public List<Map> selectTransSummary(Date enStartTime, Date enEndTime, Date enWorkDate, String enStationId, String passId, String enGid, Integer enPassType, Integer enShift, String enVehPlate, String enCardId, Date exStartTime, Date exEndTime, Date exWorkDate, String exStationId, String exGid, Integer exPassType, Integer exShift, String exVehPlate, String exCardId, Integer payWay) {
-        return tblTransSummaryMapper.selectTransSummary(enStartTime,  enEndTime,  enWorkDate,  enStationId,  passId,  enGid,  enPassType,  enShift,  enVehPlate,  enCardId,  exStartTime,  exEndTime,  exWorkDate,  exStationId,  exGid,  exPassType,  exShift,  exVehPlate,  exCardId,  payWay);
+        return tblTransSummaryMapper.selectTransSummary(DateUtils.getTimeDay(enStartTime).substring(0,4),enStartTime,  enEndTime,  enWorkDate,  enStationId,  passId,  enGid,  enPassType,  enShift,  enVehPlate,  enCardId,  exStartTime,  exEndTime,  exWorkDate,  exStationId,  exGid,  exPassType,  exShift,  exVehPlate,  exCardId,  payWay);
     }
 
     @Override
