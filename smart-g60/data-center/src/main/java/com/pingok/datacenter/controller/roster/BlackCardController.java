@@ -33,7 +33,6 @@ public class BlackCardController extends BaseController {
         return AjaxResult.success();
     }
 
-    @Transactional
     @PostMapping("/blackIncr")
     public AjaxResult blackIncr()
     {

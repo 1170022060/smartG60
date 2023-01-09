@@ -33,7 +33,6 @@ public class RecoveryController extends BaseController {
         return AjaxResult.success();
     }
 
-    @Transactional
     @PostMapping("/recoveryIncr")
     public AjaxResult recoveryIncr()
     {
@@ -48,7 +47,6 @@ public class RecoveryController extends BaseController {
         return AjaxResult.success();
     }
 
-    @Transactional
     @PostMapping("/unzipRecoveryAll")
     public AjaxResult unzipRecoveryAll(@Validated @RequestBody String version)
     {
