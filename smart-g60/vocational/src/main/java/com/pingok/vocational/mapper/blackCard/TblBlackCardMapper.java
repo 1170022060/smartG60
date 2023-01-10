@@ -27,7 +27,8 @@ public interface TblBlackCardMapper extends CommonRepository<TblBlackCard> {
             "where 1=1" +
             "<when test='cardId != null'> " +
             " and a.CARD_ID like '%' || #{cardId} || '%' " +
-            "</when>"+
+            "</when>" +
+            " order by a.CREATION_TIME desc"+
             "</script>"})
     List<Map> selectList(@Param("cardId") String cardId);
 }

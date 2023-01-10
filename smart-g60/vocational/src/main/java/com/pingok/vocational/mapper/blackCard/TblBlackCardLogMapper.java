@@ -24,10 +24,11 @@ public interface TblBlackCardLogMapper extends CommonRepository<TblBlackCardLog>
             "<when test='mediaType == 2'> " +
             "left join SYS_DICT_DATA c on c.DICT_VALUE = to_char(a.TYPE) and c.DICT_TYPE = 'blackcard_cpc_type' " +
             "</when>" +
-            "where 1=1 and a.MEDIA_TYPE = #{mediaType}" +
+            "where 1=1 " +
             "<when test='mediaId != null'> " +
             " and a.CARD_ID like CONCAT(#{mediaId}, '%') " +
             "</when>" +
+            " order by a.CREATION_TIME desc" +
             "</script>"})
     List<Map> selectByMedia(@Param("mediaId") String mediaId, @Param("mediaType") Integer mediaType);
 }
