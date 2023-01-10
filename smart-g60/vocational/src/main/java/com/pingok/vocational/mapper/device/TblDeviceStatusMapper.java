@@ -17,12 +17,15 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
 
 
     @Select("<script>" +
+            "select * from ( " +
             "SELECT " +
             "tdi.ID as \"id\", " +
-            "tfi.FIELD_NAME as \"fieldName\", " +
+            "tfi.FIELD_NAME as \"fieldName\"," +
+            "tfi.FIELD_NUM as fieldNum, " +
             "tdi.DEVICE_NAME as \"deviceName\", " +
             "tdi.DEVICE_ID as \"deviceId\", " +
-            "sdd.DICT_LABEL as \"deviceType\", " +
+            "sdd.DICT_LABEL as \"deviceType\"," +
+            "tdi.DEVICE_TYPE as \"type\", " +
             "tdi.FIX_POSITION as \"fixPosition\", " +
             "nvl(tds.STATUS,0) as \"status\", " +
             "nvl(tds.STATUS_DESC,'未知') as \"statusDesc\", " +
@@ -33,14 +36,23 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "LEFT JOIN TBL_DEVICE_STATUS tds ON tds.DEVICE_ID = tdi.ID  " +
             "LEFT JOIN SYS_DICT_DATA sdd on sdd.DICT_VALUE=to_char(tdi.DEVICE_TYPE) and sdd.DICT_TYPE='device_type' " +
             "where tfi.FIELD_NAME like '%枫泾服务区%' and tfi.TYPE=4 " +
+            "UNION ALL " +
+            "SELECT sti.ID as id,case sti.FIELD_ID WHEN 3940 then '枫泾服务区南区' else '枫泾服务区北区' END as fieldName," +
+            "case sti.FIELD_ID WHEN 3940 then 'fjfwqnq' else 'fjfwqbq' END as fieldNum," +
+            "sti.SER_NAME as deviceName,null as deviceId,sdd.DICT_LABEL as deviceType,13 as \"type\"," +
+            "null as fixPosition,sti.STATUS as status," +
+            "sti.STATUS_DESC as statusDesc,null as statusDetails " +
+            "FROM TBL_SMART_TOILET_INFO sti " +
+            "LEFT JOIN SYS_DICT_DATA sdd on sdd.DICT_VALUE=13 and sdd.DICT_TYPE='device_type' )a " +
+            "where 1=1 " +
             "<when test='fieldNum != null'> " +
-            "and tfi.FIELD_NUM = #{fieldNum} " +
+            "and a.\"fieldNum\" = #{fieldNum} " +
             "</when>" +
             "<when test='deviceType != null'> " +
-            "and tdi.DEVICE_TYPE = #{deviceType} " +
+            "and a.\"type\" = #{deviceType} " +
             "</when>" +
             "<when test='status != null'> " +
-            "and nvl(tds.STATUS,0) = #{status} " +
+            "and nvl(a.\"status\",0) = #{status} " +
             "</when>"+
             "</script>")
     List<Map> serviceDevice(@Param("fieldNum") String fieldNum, @Param("deviceType") Integer deviceType, @Param("status") Integer status);
@@ -133,7 +145,12 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             " from TBL_DEVICE_INFO a " +
             " LEFT JOIN TBL_DEVICE_STATUS b on a.ID = b.DEVICE_ID " +
             " LEFT JOIN  TBL_FIELD_INFO tfi on tfi.ID = a.FIELD_BELONG " +
-            "where tfi.FIELD_NAME like '%枫泾服务区%' and tfi.TYPE=4 " +
+            "where tfi.FIELD_NAME like '%枫泾服务区%' and tfi.TYPE=4" +
+            "UNION ALL " +
+            "SELECT sti.ID as \"id\",sti.SER_NAME as \"deviceName\",13 as \"deviceType\"," +
+            "sti.STATUS as \"deviceStatus\",sti.UPDATE_TIME as \"statusTime\"," +
+            "sti.STATUS_DESC as \"statusDesc\",null as \"statusDetails\" " +
+            "FROM TBL_SMART_TOILET_INFO sti " +
             "</script>")
     List<Map> getDeviceStatusDesc();
 }
