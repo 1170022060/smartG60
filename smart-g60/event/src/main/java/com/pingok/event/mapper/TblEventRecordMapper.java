@@ -79,8 +79,8 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "SELECT " +
             "ter.ID AS \"id\", " +
             "sdd.DICT_LABEL AS \"eventType\"," +
-            "ter.EVENT_LEVEL as eventLevel," +
-            "ter.REMARK as remark, " +
+            "ter.EVENT_LEVEL as \"eventLevel\"," +
+            "ter.REMARK as \"remark\", " +
             "ter.PILE_NO AS \"locationInterval\", " +
             "sdd1.DICT_LABEL AS \"vehClass\", " +
             "ter.VEH_PLATE AS \"vehPlate\", " +
