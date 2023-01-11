@@ -62,13 +62,20 @@ public interface TblEmergencySuppliesMapper extends CommonRepository<TblEmergenc
             "</script>"})
     List<Map> selectEmergencySupplies(@Param("suppliesType") Integer suppliesType,@Param("suppliesName") String suppliesName, @Param("vehPlate") String vehPlate, @Param("expertName") String expertName, @Param("status") Integer status);
 
-    @Select("select a.ID as \"id\" , " +
-            "case SUPPLIES_TYPE when 1 Then a.SUPPLIES_NAME ||'_'|| b.FIELD_NAME when 2 then a.VEH_PLATE ||'_'|| cast(c.DICT_LABEL as varchar2(20)) ||'车牌' when 3 then a.EXPERT_NAME ||'_'|| a.EXPERT_PHONE end as \"suppliesName\" " +
+    @Select("SELECT * FROM ( " +
+            "select a.ID as \"id\" , " +
+            "a.SUPPLIES_TYPE as \"suppliesType\"," +
+            "a.STATUS as \"status\"," +
+            "case SUPPLIES_TYPE when 1 Then a.SUPPLIES_NAME ||'_'|| b.FIELD_NAME when 2 then a.VEH_PLATE ||'_'|| cast(c.DICT_LABEL as varchar2(20)) " +
+            "||'车牌' when 3 then a.EXPERT_NAME ||'_'|| a.EXPERT_PHONE end as \"suppliesName\" " +
             "from TBL_EMERGENCY_SUPPLIES a " +
             "left join TBL_FIELD_INFO b on a.FIELD_BELONG=b.ID " +
             "left join  SYS_DICT_DATA c on c.DICT_VALUE=a.VEH_COLOR and c.DICT_TYPE='veh_color' " +
-            "where a.SUPPLIES_TYPE= #{suppliesType} " +
-            "and a.STATUS = 1")
+            "UNION ALL " +
+            "SELECT ID as \"id\",4 as \"suppliesType\",STATUS as \"status\"," +
+            "GROUP_NAME as \"suppliesName\" FROM TBL_EMERGENCY_GROUP )tab " +
+            "where tab.\"suppliesType\" = #{suppliesType} " +
+            "and tab.\"status\" = 1")
     List<Map> selectEmergencyName(@Param("suppliesType") Integer suppliesType);
 
     @Select("select * from TBL_EMERGENCY_SUPPLIES where SUPPLIES_NAME= #{suppliesName} and FIELD_BELONG= #{fieldBelong} and SUPPLIES_TYPE=1 and rownum = 1")
