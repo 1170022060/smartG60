@@ -7,6 +7,7 @@ import com.pingok.vocational.domain.device.TblDeviceInfo;
 import com.pingok.vocational.domain.device.TblGantryInfo;
 import com.pingok.vocational.domain.emergency.TblEventPaln;
 import com.pingok.vocational.domain.event.TblEventRecord;
+import com.pingok.vocational.mapper.emergency.TblEmergencyGroupMapper;
 import com.pingok.vocational.mapper.emergency.TblEventPalnMapper;
 import com.pingok.vocational.mapper.event.TblEventRecordMapper;
 import com.pingok.vocational.service.device.IGantryInfoService;
@@ -25,9 +26,7 @@ import org.springframework.data.geo.GeoResults;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -53,6 +52,8 @@ public class EventPalnServiceImpl implements IEventPalnService {
     @Autowired
     private IGantryInfoService iGantryInfoService;
 
+    @Autowired
+    private TblEmergencyGroupMapper tblEmergencyGroupMapper;
 
     @Override
     public JSONArray deviceList(Long eventId, Long planId, Integer type) {
@@ -328,9 +329,62 @@ public class EventPalnServiceImpl implements IEventPalnService {
 
     @Override
     public List<Map> selectPlanGroup(Integer suppliesType) {
-        if (suppliesType == 4){
-            return tblEventPalnMapper.selectGroup();
-        }else{
+        if (suppliesType == 4) {
+            List<Map> groupArr = tblEventPalnMapper.selectGroup();
+
+            List<Map> userArr = tblEmergencyGroupMapper.selectDeptUser();
+            for (int i = 0; i < groupArr.size(); i++) {
+                Iterator groupIter = groupArr.get(i).keySet().iterator();
+                HashMap<String, String> map = (HashMap<String, String>) groupArr.get(i);
+                while (groupIter.hasNext()) {
+                    String groupArrKey = (String) groupIter.next();
+                    String str = groupArr.get(i).get(groupArrKey).toString().replace("[", "").replace("]", "");
+                    String[] strArr = str.split(",");
+                    for (int n = 0; n < userArr.size(); n++) {
+                        Iterator userIter = userArr.get(n).keySet().iterator();
+                        while (userIter.hasNext()) {
+                            String userArrKey = (String) userIter.next();
+                            String userArrValue = userArr.get(n).get(userArrKey).toString();
+                            if (groupArrKey.equals("groupLeader")) {
+                                for (int j = 0; j < strArr.length; j++) {
+                                    if (userArrKey.equals("userId")) {
+                                        String temp = strArr[j];
+                                        if (userArrValue.equals(temp)) {
+                                            strArr[j] = (String) userArr.get(n).get("userName");
+                                        }
+                                    }
+                                }
+                                map.put("groupLeader", Arrays.toString(strArr).replace("[", "").replace("]", ""));
+                            }
+                            if (groupArrKey.equals("groupLeaderDep")) {
+                                for (int j = 0; j < strArr.length; j++) {
+                                    if (userArrKey.equals("userId")) {
+                                        String temp = strArr[j];
+                                        if (userArrValue.equals(temp)) {
+                                            strArr[j] = (String) userArr.get(n).get("userName");
+                                        }
+                                    }
+                                }
+                                map.put("groupLeaderDep", Arrays.toString(strArr).replace("[", "").replace("]", ""));
+                            }
+                            if (groupArrKey.equals("groupMembers")) {
+                                for (int j = 0; j < strArr.length; j++) {
+                                    if (userArrKey.equals("userId")) {
+                                        String temp = strArr[j];
+                                        if (userArrValue.equals(temp)) {
+                                            strArr[j] = (String) userArr.get(n).get("userName");
+                                        }
+                                    }
+                                }
+                                map.put("groupMembers", Arrays.toString(strArr).replace("[", "").replace("]", ""));
+                            }
+                        }
+                    }
+                }
+                groupArr.set(i, map);
+            }
+            return groupArr;
+        } else {
             return null;
         }
     }
