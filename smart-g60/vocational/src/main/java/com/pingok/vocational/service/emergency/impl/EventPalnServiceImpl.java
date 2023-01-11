@@ -325,4 +325,13 @@ public class EventPalnServiceImpl implements IEventPalnService {
         }
         return tblEventPalnMapper.updateByPrimaryKey(tblEventPaln);
     }
+
+    @Override
+    public List<Map> selectPlanGroup(Integer suppliesType) {
+        if (suppliesType == 4){
+            return tblEventPalnMapper.selectGroup();
+        }else{
+            return null;
+        }
+    }
 }

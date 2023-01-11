@@ -74,4 +74,11 @@ public interface IEventPalnService {
      */
     int update(TblEventPaln tblEventPaln);
 
+    /**
+     * 选择应急小组时查询应急小组信息
+     * @param suppliesType
+     * @return
+     */
+    List<Map> selectPlanGroup(Integer suppliesType);
+
 }

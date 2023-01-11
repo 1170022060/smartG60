@@ -97,4 +97,9 @@ public class EventPalnController extends BaseController {
         }
         return toAjax(iEventPalnService.update(tblEventPaln));
     }
+
+    @GetMapping("/selectGroup")
+    public AjaxResult getGroup(@RequestParam(name = "suppliesType") Integer suppliesType){
+        return AjaxResult.success(iEventPalnService.selectPlanGroup(suppliesType));
+    }
 }
