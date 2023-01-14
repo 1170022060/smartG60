@@ -30,6 +30,11 @@ public class TblPersonnelHealth implements java.io.Serializable {
     /** 姓名 */
     private String name;
 
+    /**
+     * 服务区
+     */
+    private Long serviceId;
+
     /** 区域 */
     private Long fieldId;
 
@@ -37,11 +42,11 @@ public class TblPersonnelHealth implements java.io.Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date transDate;
 
-    /** 核酸(小时) */
-    private Integer nucleicAcid;
+    /** 健康状态正常人数 */
+    private Integer normalNum;
 
-    /** 体温 */
-    private Integer temperature;
+    /** 健康状态异常人数 */
+    private Integer abnormalNum;
 
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

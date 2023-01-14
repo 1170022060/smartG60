@@ -31,9 +31,7 @@ public class OilPriceServiceImpl implements IOilPriceService {
 
     @Override
     public TblOilPrice selectOilPrice(Date date) {
-        Example example = new Example(TblOilPrice.class);
-        example.createCriteria().andEqualTo("transDate", date);
-        return tblOilPriceMapper.selectOneByExample(example);
+        return tblOilPriceMapper.checkDateUnique(date);
     }
 
     @Override

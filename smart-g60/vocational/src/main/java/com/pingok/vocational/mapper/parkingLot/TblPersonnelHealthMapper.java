@@ -18,16 +18,19 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
 
     @Select({"<script>" +
             "select tph.ID as \"id\", to_char(tph.TRANS_DATE, 'yyyy-mm-dd') as \"transDate\"," +
-            "tfi.FIELD_NAME as \"fieldName\", " +
-            "tph.NAME as \"name\", " +
-            "tph.NUCLEIC_ACID as \"nucleicAcid\"," +
+            "tfi.FIELD_NAME as \"serviceName\", " +
+            "t.FIELD_NAME as \"fieldName\", " +
+            "NVL(tph.NORMAL_NUM,0) as \"normalNum\"," +
+            "NVL(tph.ABNORMAL_NUM,0) as \"abnormalNum\"," +
+            "NVL(round(100*tph.NORMAL_NUM/SUM(tph.NORMAL_NUM+tph.ABNORMAL_NUM)),0) as normalRateA," +
+            "NVL(100-round(100*tph.NORMAL_NUM/SUM(tph.NORMAL_NUM+tph.ABNORMAL_NUM)),0) as abnormalRateA,"+
             "to_char(tph.CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\"," +
             "to_char(tph.UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
             "case when tph.CREATE_USER_ID is null then null else b.NICK_NAME end as \"createUserName\"," +
             "case when tph.UPDATE_USER_ID is null then null else c.NICK_NAME end as \"updateUserName\"," +
-            "tph.TEMPERATURE as \"temperature\" " +
             "from TBL_PERSONNEL_HEALTH tph " +
             "left join TBL_FIELD_INFO tfi on tfi.ID=tph.FIELD_ID " +
+            "left join TBL_FIELD_INFO t on t.ID=tph.SERVICE_ID " +
             "left join  SYS_USER b on tph.CREATE_USER_ID=b.USER_ID " +
             "left join  SYS_USER c on tph.UPDATE_USER_ID=c.USER_ID " +
             "where 1=1 " +
@@ -86,17 +89,12 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
             "</script>"})
     List<Map> selectHealthStatistics(@Param("type") Integer type, @Param("fieldId") Long fieldId, @Param("date") Date date);
 
-    @Select("select " +
-            "count(1) as \"count\", " +
-            "NVL(sum(case when NUCLEIC_ACID <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.nucleicAcid') then 1 else 0 end),0) as \"normalA\", " +
-            "NVL(sum(case when NUCLEIC_ACID <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.nucleicAcid') then 0 else 1 end),0) as \"abnormalA\", " +
-            "NVL(round(100*sum(case when NUCLEIC_ACID <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.nucleicAcid') then 1 else 0 end)/count(1)),0)  as \"normalRateA\", " +
-            "NVL((100-round(100*sum(case when NUCLEIC_ACID <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.nucleicAcid') then 1 else 0 end)/count(1))),0)  as \"abnormalRateA\", " +
-            "NVL(sum(case when TEMPERATURE <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.temperature') then 1 else 0 end),0) as \"normalT\", " +
-            "NVL(sum(case when TEMPERATURE <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.temperature') then 0 else 1 end),0) as \"abnormalT\", " +
-            "NVL(round(100*sum(case when TEMPERATURE <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.temperature') then 1 else 0 end)/count(1)),0)  \"normalRateT\", " +
-            "NVL((100-round(100*sum(case when TEMPERATURE <=(SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.temperature') then 1 else 0 end)/count(1))),0)  \"abnormalRateT\"  " +
-            "from TBL_PERSONNEL_HEALTH " +
+    @Select("SELECT " +
+            "sum(NORMAL_NUM+ABNORMAL_NUM) as count," +
+            "NVL(NORMAL_NUM,0)as normalNum,NVL(ABNORMAL_NUM,0)as abnormalNum," +
+            "NVL(round(100*NORMAL_NUM/SUM(NORMAL_NUM+ABNORMAL_NUM)),0) as normalRateA," +
+            "NVL(100-round(100*NORMAL_NUM/SUM(NORMAL_NUM+ABNORMAL_NUM)),0) as abnormalRateA " +
+            "FROM TBL_PERSONNEL_HEALTH GROUP BY NORMAL_NUM,ABNORMAL_NUM " +
             "where TRANS_DATE= #{date} ")
     List<Map> selectHealthMonitor(@Param("date") Date date);
 

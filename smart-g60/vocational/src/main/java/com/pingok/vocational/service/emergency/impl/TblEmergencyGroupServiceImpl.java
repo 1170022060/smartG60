@@ -8,6 +8,7 @@ import com.ruoyi.common.core.constant.UserConstants;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,7 +85,7 @@ public class TblEmergencyGroupServiceImpl implements TblEmergencyGroupService {
     }
 
     @Override
-    public List<Map> selectDeptUser() {
-        return tblEmergencyGroupMapper.selectDeptUser();
+    public List<Map> selectDeptUser(Integer deptId) {
+        return tblEmergencyGroupMapper.selectDeptUser(deptId);
     }
 }

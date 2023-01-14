@@ -1,5 +1,6 @@
 package com.pingok.vocational.service.field;
 
+import com.pingok.vocational.domain.device.vo.TreeSelect;
 import com.pingok.vocational.domain.field.TblFieldInfo;
 import com.pingok.vocational.domain.field.vo.FieldVo;
 import org.apache.ibatis.annotations.Param;
@@ -77,4 +78,23 @@ public interface TblFieldInfoService {
 
     List<Map> selectServiceName();
 
+    /**
+     * 查询所有场地管理信息
+     * @return
+     */
+    List<TblFieldInfo> selectAll();
+
+    /**
+     * 构建场地信息树形结构
+     * @param fieldInfo
+     * @return
+     */
+    List<TblFieldInfo> buildTreeMenu(List<TblFieldInfo> fieldInfo);
+
+    /**
+     * 得到场地信息下拉数据
+     * @param menu
+     * @return
+     */
+    List<TreeSelect> fieldTreeMenu(List<TblFieldInfo> menu);
 }
