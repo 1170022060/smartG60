@@ -94,8 +94,9 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
             "NVL(NORMAL_NUM,0)as \"normalNum\",NVL(ABNORMAL_NUM,0)as \"abnormalNum\"," +
             "NVL(round(100*NORMAL_NUM/SUM(NORMAL_NUM+ABNORMAL_NUM)),0) as \"normalRateA\"," +
             "NVL(100-round(100*NORMAL_NUM/SUM(NORMAL_NUM+ABNORMAL_NUM)),0) as \"abnormalRateA\" " +
-            "FROM TBL_PERSONNEL_HEALTH GROUP BY NORMAL_NUM,ABNORMAL_NUM " +
-            "where TRANS_DATE= #{date} ")
+            "FROM TBL_PERSONNEL_HEALTH " +
+            "where TRANS_DATE= #{date}" +
+            "GROUP BY NORMAL_NUM,ABNORMAL_NUM ")
     List<Map> selectHealthMonitor(@Param("date") Date date);
 
 }
