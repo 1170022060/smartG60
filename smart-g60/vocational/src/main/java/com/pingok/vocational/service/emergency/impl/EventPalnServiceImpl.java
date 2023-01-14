@@ -332,7 +332,7 @@ public class EventPalnServiceImpl implements IEventPalnService {
         if (suppliesType == 4) {
             List<Map> groupArr = tblEventPalnMapper.selectGroup();
 
-            List<Map> userArr = tblEmergencyGroupMapper.selectDeptUser();
+            List<Map> userArr = tblEmergencyGroupMapper.selectAllDeptUser();
             for (int i = 0; i < groupArr.size(); i++) {
                 Iterator groupIter = groupArr.get(i).keySet().iterator();
                 HashMap<String, String> map = (HashMap<String, String>) groupArr.get(i);

@@ -47,6 +47,10 @@ public interface TblEmergencyGroupMapper extends CommonRepository<TblEmergencyGr
 
     @Select("select USER_ID as \"userId\",NICK_NAME as \"userName\" from  SYS_USER a " +
             "order by NICK_NAME ")
-    List<Map> selectDeptUser();
+    List<Map> selectAllDeptUser();
 
+    @Select("select USER_ID as \"userId\",NICK_NAME as \"userName\" from  SYS_USER a " +
+            "LEFT JOIN SYS_DEPT bm on bm.DEPT_ID = a.DEPT_ID WHERE a.DEPT_ID = #{deptId} " +
+            "order by NICK_NAME ")
+    List<Map> selectDeptUser(@Param("deptId") Integer deptId);
 }

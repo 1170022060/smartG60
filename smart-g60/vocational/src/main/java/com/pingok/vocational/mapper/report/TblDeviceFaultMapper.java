@@ -25,10 +25,10 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "count( tdf.ID ) AS \"num\"  " +
             "FROM " +
             "TBL_DEVICE_FAULT tdf " +
-            "JOIN TBL_DEVICE_INFO tdi ON tdf.DEVICE_ID = tdi.ID " +
+            "JOIN (SELECT * FROM TBL_DEVICE_INFO WHERE FIELD_BELONG NOT IN (3940,3941) OR FIELD_BELONG IS NULL) tdi ON tdf.DEVICE_ID = tdi.ID " +
             "JOIN SYS_DICT_DATA sdd ON sdd.DICT_VALUE = tdi.DEVICE_TYPE  " +
             "WHERE " +
-            "tdf.STATUS IN ( 0, 1 ) AND FIELD_BELONG NOT IN (3940,3941) " +
+            "tdf.STATUS IN ( 0, 1 ) " +
             "AND sdd.DICT_TYPE = 'device_type'  " +
             "GROUP BY " +
             "sdd.DICT_LABEL" +

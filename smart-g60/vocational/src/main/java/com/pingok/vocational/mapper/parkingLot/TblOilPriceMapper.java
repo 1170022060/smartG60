@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * TBL_OIL_PRICE 数据层
@@ -14,6 +15,7 @@ import java.util.Date;
  */
 public interface TblOilPriceMapper extends CommonRepository<TblOilPrice> {
 
-    @Select("select * from TBL_OIL_PRICE where TRANS_DATE= #{transDate} and rownum = 1")
+    @Select("select * from (select * from TBL_OIL_PRICE order by CREATE_TIME desc) where rownum = 1")
     TblOilPrice checkDateUnique(@Param("transDate") Date transDate);
+
 }

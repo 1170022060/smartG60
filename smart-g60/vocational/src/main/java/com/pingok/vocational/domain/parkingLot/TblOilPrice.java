@@ -32,16 +32,16 @@ public class TblOilPrice implements java.io.Serializable {
     private Date transDate;
 
     /** 92汽油价格 */
-    private Integer price92;
+    private Float price92;
 
     /** 95汽油价格 */
-    private Integer price95;
+    private Float price95;
 
     /** 98汽油价格 */
-    private Integer price98;
+    private Float price98;
 
     /** 0汽油价格 */
-    private Integer price0;
+    private Float price0;
 
     /** 创建时间 */
     @Excel(name = "创建时间")
