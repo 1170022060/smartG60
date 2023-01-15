@@ -72,7 +72,7 @@ public class PersonnelHealthController extends BaseController {
         return AjaxResult.success(info);
     }
 
-//    @RequiresPermissions("vocational:personnelHealth:add")
+    @RequiresPermissions("vocational:personnelHealth:add")
     @Log(title = "人员健康信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody JSONObject personnelHealth)

@@ -27,9 +27,6 @@ public class TblPersonnelHealth implements java.io.Serializable {
     @Id
     private Long id;
 
-    /** 姓名 */
-    private String name;
-
     /**
      * 服务区
      */
