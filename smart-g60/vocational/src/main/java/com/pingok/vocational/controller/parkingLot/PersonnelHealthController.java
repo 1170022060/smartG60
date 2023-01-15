@@ -1,5 +1,6 @@
 package com.pingok.vocational.controller.parkingLot;
 
+import com.alibaba.fastjson.JSONObject;
 import com.pingok.vocational.domain.parkingLot.TblPersonnelHealth;
 import com.pingok.vocational.service.parkingLot.IPersonnelHealthService;
 import com.ruoyi.common.core.web.controller.BaseController;
@@ -38,10 +39,10 @@ public class PersonnelHealthController extends BaseController {
 
     @Log(title = "人员健康信息管理-分页查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/info")
-    public TableDataInfo info(@RequestParam(name = "name",required = false) String name, @RequestParam(name = "fieldId",required = false) Long fieldId, @RequestParam(name = "date",required = false) Date date)
+    public TableDataInfo info(@RequestParam(name = "serviceId",required = false) Long serviceId, @RequestParam(name = "fieldId",required = false) Long fieldId, @RequestParam(name = "date",required = false) Date date)
     {
         startPage();
-        List<Map> info = iPersonnelHealthService.selectPersonnelHealth(name, fieldId, date);
+        List<Map> info = iPersonnelHealthService.selectPersonnelHealth(serviceId, fieldId, date);
         return getDataTable(info);
     }
 
@@ -59,15 +60,24 @@ public class PersonnelHealthController extends BaseController {
     public AjaxResult monitor(@RequestParam(name = "date") Date date)
     {
         List<Map> info = iPersonnelHealthService.selectHealthMonitor(date);
+        if (info.size() == 0){
+            JSONObject data = new JSONObject();
+            data.put("count",0);
+            data.put("normalNum",0);
+            data.put("abnormalNum",0);
+            data.put("normalRateA",0);
+            data.put("abnormalRateA",0);
+            info.add(data);
+        }
         return AjaxResult.success(info);
     }
 
-    @RequiresPermissions("vocational:personnelHealth:add")
+//    @RequiresPermissions("vocational:personnelHealth:add")
     @Log(title = "人员健康信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody TblPersonnelHealth tblPersonnelHealth)
+    public AjaxResult add(@Validated @RequestBody JSONObject personnelHealth)
     {
-        return toAjax(iPersonnelHealthService.insertPersonnelHealth(tblPersonnelHealth));
+        return AjaxResult.success(iPersonnelHealthService.insertPersonnelHealth(personnelHealth)) ;
     }
 
     @RequiresPermissions("vocational:personnelHealth:edit")
