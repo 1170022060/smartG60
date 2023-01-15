@@ -19,7 +19,8 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
     @Select({"<script>" +
             "select tph.ID as \"id\", to_char(tph.TRANS_DATE, 'yyyy-mm-dd') as \"transDate\"," +
             "tfi.FIELD_NAME as \"serviceName\", " +
-            "t.FIELD_NAME as \"fieldName\", " +
+            "t.FIELD_NAME as \"fieldName\"," +
+            "tph.SERVICE_ID as \"serviceId\", " +
             "NVL(tph.NORMAL_NUM,0) as \"normalNum\"," +
             "NVL(tph.ABNORMAL_NUM,0) as \"abnormalNum\"," +
             "NVL(round(100*tph.NORMAL_NUM/SUM(tph.NORMAL_NUM+tph.ABNORMAL_NUM)),0) as \"normalRateA\"," +
