@@ -44,7 +44,7 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
             "<when test='date != null'> " +
             "and tph.TRANS_DATE= #{date} " +
             "</when>" +
-            "GROUP BY tph.ID,tfi.FIELD_NAME,t.FIELD_NAME,tph.NORMAL_NUM,tph.TRANS_DATE,tph.CREATE_TIME,tph.UPDATE_TIME," +
+            "GROUP BY tph.ID,tfi.FIELD_NAME,t.FIELD_NAME,tph.SERVICE_ID,tph.NORMAL_NUM,tph.TRANS_DATE,tph.CREATE_TIME,tph.UPDATE_TIME," +
             "tph.ABNORMAL_NUM,tph.CREATE_USER_ID,tph.UPDATE_USER_ID,b.NICK_NAME,c.NICK_NAME"+
             "</script>"})
     List<Map> selectPersonnelHealth(@Param("serviceId") Long serviceId, @Param("fieldId") Long fieldId, @Param("date") Date date);
