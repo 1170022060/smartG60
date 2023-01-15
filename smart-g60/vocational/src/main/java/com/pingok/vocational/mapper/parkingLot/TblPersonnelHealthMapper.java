@@ -29,8 +29,8 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
             "case when tph.CREATE_USER_ID is null then null else b.NICK_NAME end as \"createUserName\"," +
             "case when tph.UPDATE_USER_ID is null then null else c.NICK_NAME end as \"updateUserName\" " +
             "from TBL_PERSONNEL_HEALTH tph " +
-            "left join TBL_FIELD_INFO tfi on tfi.ID=tph.FIELD_ID " +
-            "left join TBL_FIELD_INFO t on t.ID=tph.SERVICE_ID " +
+            "left join TBL_FIELD_INFO tfi on tfi.ID=tph.SERVICE_ID " +
+            "left join TBL_FIELD_INFO t on t.ID=tph.FIELD_ID " +
             "left join  SYS_USER b on tph.CREATE_USER_ID=b.USER_ID " +
             "left join  SYS_USER c on tph.UPDATE_USER_ID=c.USER_ID " +
             "where 1=1 " +
