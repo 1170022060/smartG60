@@ -62,4 +62,10 @@ public interface TblFieldInfoMapper extends CommonRepository<TblFieldInfo> {
 
     @Select("select ID as \"id\",FIELD_NAME as \"fieldName\" from TBL_FIELD_INFO where TYPE= #{type} and STATUS=1 order by FIELD_NAME")
     List<Map> selectFieldName(@Param("type") Integer type);
+
+    @Select("select ID as \"id\",FIELD_NAME as \"fieldName\" from TBL_FIELD_INFO where ID in (3940,3941) and STATUS=1 order by FIELD_NAME")
+    List<Map> selectServiceField();
+
+    @Select("select ID as \"id\",FIELD_NAME as \"fieldName\" from TBL_FIELD_INFO where PARENT_ID=#{id} and STATUS=1 order by FIELD_NAME")
+    List<Map> getChildrenField(@Param("id")Long id);
 }

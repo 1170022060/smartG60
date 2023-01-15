@@ -163,4 +163,14 @@ public class TblFieldInfoServiceImpl implements TblFieldInfoService {
         List<TblFieldInfo> categoryTrees = buildTreeMenu(menu);
         return categoryTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
+
+    @Override
+    public List<Map> selectServiceField() {
+        return tblFieldInfoMapper.selectServiceField();
+    }
+
+    @Override
+    public List<Map> getChildrenField(Long id) {
+        return tblFieldInfoMapper.getChildrenField(id);
+    }
 }
