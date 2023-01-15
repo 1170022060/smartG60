@@ -28,7 +28,7 @@ public interface TblFieldInfoMapper extends CommonRepository<TblFieldInfo> {
             "to_char(a.CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\"," +
             "to_char(a.UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
             "case when a.CREATE_USER_ID is null then null else c.NICK_NAME end as \"createUserName\"," +
-            "case when a.UPDATE_USER_ID is null then null else d.NICK_NAME end as \"updateUserName\" from TBL_FIELD_INFO a" +
+            "case when a.UPDATE_USER_ID is null then null else d.NICK_NAME end as \"updateUserName\" from TBL_FIELD_INFO a " +
             "left join TBL_FIELD_INFO tfi on tfi.ID=a.PARENT_ID " +
             "left join TBL_BASE_STATION_INFO b on UPPER(b.STATION_HEX)=UPPER(CONCAT('3101',a.STATION_BELONG)) " +
             "left join  SYS_USER c on a.CREATE_USER_ID=c.USER_ID " +
