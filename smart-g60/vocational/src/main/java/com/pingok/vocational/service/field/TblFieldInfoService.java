@@ -97,4 +97,17 @@ public interface TblFieldInfoService {
      * @return
      */
     List<TreeSelect> fieldTreeMenu(List<TblFieldInfo> menu);
+
+    /**
+     * 获取服务区场地
+     * @return
+     */
+    List<Map> selectServiceField();
+
+    /**
+     * 获取服务区子集场地
+     * @param id
+     * @return
+     */
+    List<Map> getChildrenField(Long id);
 }
