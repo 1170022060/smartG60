@@ -1,5 +1,6 @@
 package com.pingok.vocational.service.parkingLot.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.vocational.domain.parkingLot.TblPersonnelHealth;
 import com.pingok.vocational.mapper.parkingLot.TblPersonnelHealthMapper;
@@ -10,6 +11,7 @@ import com.ruoyi.system.api.RemoteIdProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -50,10 +52,17 @@ public class PersonnelHealthServiceImpl implements IPersonnelHealthService {
     @Override
     public AjaxResult insertPersonnelHealth(JSONObject personnelHealth) {
         TblPersonnelHealth tblPersonnelHealth;
-        for (int i=0;i<personnelHealth.getJSONArray("healthInfo").size();i++){
+        JSONArray arr=personnelHealth.getJSONArray("healthInfo");
+        JSONObject obj;
+        for (int i=0;i<arr.size();i++){
+            obj=arr.getJSONObject(i);
             tblPersonnelHealth = new TblPersonnelHealth();
             tblPersonnelHealth.setId(remoteIdProducerService.nextId());
-            tblPersonnelHealth.setServiceId((Long) personnelHealth.get("serviceId"));
+            tblPersonnelHealth.setServiceId(personnelHealth.getLong("serviceId"));
+            tblPersonnelHealth.setTransDate(personnelHealth.getDate("transDate"));
+            tblPersonnelHealth.setFieldId(obj.getLong("fieldId"));
+            tblPersonnelHealth.setAbnormalNum(obj.getInteger("normalNum"));
+            tblPersonnelHealth.setNormalNum(obj.getInteger("abnormalNum"));
             tblPersonnelHealth.setCreateTime(new Date());
             tblPersonnelHealth.setCreateUserId(SecurityUtils.getUserId());
             tblPersonnelHealthMapper.insert(tblPersonnelHealth);
@@ -65,6 +74,6 @@ public class PersonnelHealthServiceImpl implements IPersonnelHealthService {
     public int updatePersonnelHealth(TblPersonnelHealth tblPersonnelHealth) {
         tblPersonnelHealth.setUpdateTime(new Date());
         tblPersonnelHealth.setUpdateUserId(SecurityUtils.getUserId());
-        return tblPersonnelHealthMapper.updateByPrimaryKey(tblPersonnelHealth);
+        return tblPersonnelHealthMapper.updateByPrimaryKeySelective(tblPersonnelHealth);
     }
 }
