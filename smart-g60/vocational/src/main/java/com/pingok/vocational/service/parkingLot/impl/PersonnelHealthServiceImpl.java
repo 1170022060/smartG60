@@ -1,9 +1,10 @@
 package com.pingok.vocational.service.parkingLot.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.pingok.vocational.domain.parkingLot.TblPersonnelHealth;
 import com.pingok.vocational.mapper.parkingLot.TblPersonnelHealthMapper;
 import com.pingok.vocational.service.parkingLot.IPersonnelHealthService;
-import com.ruoyi.common.core.utils.PinYinUtil;
+import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,8 @@ public class PersonnelHealthServiceImpl implements IPersonnelHealthService {
     }
 
     @Override
-    public List<Map> selectPersonnelHealth(String name, Long fieldId, Date date) {
-        return tblPersonnelHealthMapper.selectPersonnelHealth(name,fieldId,date);
+    public List<Map> selectPersonnelHealth(Long serviceId, Long fieldId, Date date) {
+        return tblPersonnelHealthMapper.selectPersonnelHealth(serviceId,fieldId,date);
     }
 
     @Override
@@ -47,11 +48,17 @@ public class PersonnelHealthServiceImpl implements IPersonnelHealthService {
     }
 
     @Override
-    public int insertPersonnelHealth(TblPersonnelHealth tblPersonnelHealth) {
-        tblPersonnelHealth.setId(remoteIdProducerService.nextId());
-        tblPersonnelHealth.setCreateTime(new Date());
-        tblPersonnelHealth.setCreateUserId(SecurityUtils.getUserId());
-        return tblPersonnelHealthMapper.insert(tblPersonnelHealth);
+    public AjaxResult insertPersonnelHealth(JSONObject personnelHealth) {
+        TblPersonnelHealth tblPersonnelHealth;
+        for (int i=0;i<personnelHealth.getJSONArray("healthInfo").size();i++){
+            tblPersonnelHealth = new TblPersonnelHealth();
+            tblPersonnelHealth.setId(remoteIdProducerService.nextId());
+            tblPersonnelHealth.setServiceId((Long) personnelHealth.get("serviceId"));
+            tblPersonnelHealth.setCreateTime(new Date());
+            tblPersonnelHealth.setCreateUserId(SecurityUtils.getUserId());
+            tblPersonnelHealthMapper.insert(tblPersonnelHealth);
+        }
+        return null;
     }
 
     @Override

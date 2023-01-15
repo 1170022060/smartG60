@@ -22,29 +22,31 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
             "t.FIELD_NAME as \"fieldName\", " +
             "NVL(tph.NORMAL_NUM,0) as \"normalNum\"," +
             "NVL(tph.ABNORMAL_NUM,0) as \"abnormalNum\"," +
-            "NVL(round(100*tph.NORMAL_NUM/SUM(tph.NORMAL_NUM+tph.ABNORMAL_NUM)),0) as normalRateA," +
-            "NVL(100-round(100*tph.NORMAL_NUM/SUM(tph.NORMAL_NUM+tph.ABNORMAL_NUM)),0) as abnormalRateA,"+
+            "NVL(round(100*tph.NORMAL_NUM/SUM(tph.NORMAL_NUM+tph.ABNORMAL_NUM)),0) as \"normalRateA\"," +
+            "NVL(100-round(100*tph.NORMAL_NUM/SUM(tph.NORMAL_NUM+tph.ABNORMAL_NUM)),0) as \"abnormalRateA\","+
             "to_char(tph.CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\"," +
             "to_char(tph.UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
             "case when tph.CREATE_USER_ID is null then null else b.NICK_NAME end as \"createUserName\"," +
-            "case when tph.UPDATE_USER_ID is null then null else c.NICK_NAME end as \"updateUserName\"," +
+            "case when tph.UPDATE_USER_ID is null then null else c.NICK_NAME end as \"updateUserName\" " +
             "from TBL_PERSONNEL_HEALTH tph " +
             "left join TBL_FIELD_INFO tfi on tfi.ID=tph.FIELD_ID " +
             "left join TBL_FIELD_INFO t on t.ID=tph.SERVICE_ID " +
             "left join  SYS_USER b on tph.CREATE_USER_ID=b.USER_ID " +
             "left join  SYS_USER c on tph.UPDATE_USER_ID=c.USER_ID " +
             "where 1=1 " +
-            "<when test='name != null'> " +
-            "and tph.NAME like CONCAT(CONCAT('%',#{name}),'%') " +
+            "<when test='serviceId != null'> " +
+            "and tph.SERVICE_ID = #{serviceId} " +
             "</when>"+
             "<when test='fieldId != null'> " +
             "and tph.FIELD_ID = #{fieldId}  " +
             "</when>"+
             "<when test='date != null'> " +
             "and tph.TRANS_DATE= #{date} " +
-            "</when>"+
+            "</when>" +
+            "GROUP BY tph.ID,tfi.FIELD_NAME,t.FIELD_NAME,tph.NORMAL_NUM,tph.TRANS_DATE,tph.CREATE_TIME,tph.UPDATE_TIME," +
+            "tph.ABNORMAL_NUM,tph.CREATE_USER_ID,tph.UPDATE_USER_ID,b.NICK_NAME,c.NICK_NAME"+
             "</script>"})
-    List<Map> selectPersonnelHealth(@Param("name") String name, @Param("fieldId") Long fieldId, @Param("date") Date date);
+    List<Map> selectPersonnelHealth(@Param("serviceId") Long serviceId, @Param("fieldId") Long fieldId, @Param("date") Date date);
 
     @Select({"<script>" +
             "select to_char(tph.TRANS_DATE, 'yyyy-mm-dd') as \"date\", " +
@@ -90,7 +92,7 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
     List<Map> selectHealthStatistics(@Param("type") Integer type, @Param("fieldId") Long fieldId, @Param("date") Date date);
 
     @Select("SELECT " +
-            "sum(NORMAL_NUM+ABNORMAL_NUM) as \"count\"," +
+            "NVL(sum(NORMAL_NUM+ABNORMAL_NUM),0) as \"count\"," +
             "NVL(NORMAL_NUM,0)as \"normalNum\",NVL(ABNORMAL_NUM,0)as \"abnormalNum\"," +
             "NVL(round(100*NORMAL_NUM/SUM(NORMAL_NUM+ABNORMAL_NUM)),0) as \"normalRateA\"," +
             "NVL(100-round(100*NORMAL_NUM/SUM(NORMAL_NUM+ABNORMAL_NUM)),0) as \"abnormalRateA\" " +
