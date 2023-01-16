@@ -95,8 +95,8 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
     @Select("SELECT " +
             "NVL(sum(NORMAL_NUM+ABNORMAL_NUM),0) as \"count\"," +
             "NVL(NORMAL_NUM,0)as \"normalNum\",NVL(ABNORMAL_NUM,0)as \"abnormalNum\"," +
-            "NVL(round(100*NORMAL_NUM/decode(SUM(NORMAL_NUM+ABNORMAL_NUM),0,1,SUM(NORMAL_NUM+ABNORMAL_NUM),0,1)),0) as \"normalRateA\"," +
-            "NVL(100-round(100*NORMAL_NUM/decode(SUM(NORMAL_NUM+ABNORMAL_NUM),0,1,SUM(NORMAL_NUM+ABNORMAL_NUM)),0) as \"abnormalRateA\" " +
+            "NVL(round(100*NORMAL_NUM/decode(SUM(NORMAL_NUM+ABNORMAL_NUM),0,1,SUM(NORMAL_NUM+ABNORMAL_NUM))),0) as \"normalRateA\"," +
+            "NVL(100-round(100*NORMAL_NUM/decode(SUM(NORMAL_NUM+ABNORMAL_NUM),0,1,SUM(NORMAL_NUM+ABNORMAL_NUM))),0) as \"abnormalRateA\" " +
             "FROM TBL_PERSONNEL_HEALTH " +
             "where TRANS_DATE= #{date}" +
             "GROUP BY NORMAL_NUM,ABNORMAL_NUM ")
