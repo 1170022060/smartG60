@@ -23,8 +23,8 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
             "tph.SERVICE_ID as \"serviceId\", " +
             "NVL(tph.NORMAL_NUM,0) as \"normalNum\"," +
             "NVL(tph.ABNORMAL_NUM,0) as \"abnormalNum\"," +
-            "NVL(round(100*tph.NORMAL_NUM/SUM(tph.NORMAL_NUM+tph.ABNORMAL_NUM)),0) as \"normalRateA\"," +
-            "NVL(100-round(100*tph.NORMAL_NUM/SUM(tph.NORMAL_NUM+tph.ABNORMAL_NUM)),0) as \"abnormalRateA\","+
+            "NVL(round(100*tph.NORMAL_NUM/decode(SUM(tph.NORMAL_NUM+tph.ABNORMAL_NUM),0,1,SUM(tph.NORMAL_NUM+tph.ABNORMAL_NUM))),0) as \"normalRateA\"," +
+            "NVL(100-round(100*tph.NORMAL_NUM/decode(SUM(tph.NORMAL_NUM+tph.ABNORMAL_NUM),0,1,SUM(tph.NORMAL_NUM+tph.ABNORMAL_NUM))),0) as \"abnormalRateA\","+
             "to_char(tph.CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\"," +
             "to_char(tph.UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
             "case when tph.CREATE_USER_ID is null then null else b.NICK_NAME end as \"createUserName\"," +
@@ -95,8 +95,8 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
     @Select("SELECT " +
             "NVL(sum(NORMAL_NUM+ABNORMAL_NUM),0) as \"count\"," +
             "NVL(NORMAL_NUM,0)as \"normalNum\",NVL(ABNORMAL_NUM,0)as \"abnormalNum\"," +
-            "NVL(round(100*NORMAL_NUM/SUM(NORMAL_NUM+ABNORMAL_NUM)),0) as \"normalRateA\"," +
-            "NVL(100-round(100*NORMAL_NUM/SUM(NORMAL_NUM+ABNORMAL_NUM)),0) as \"abnormalRateA\" " +
+            "NVL(round(100*NORMAL_NUM/decode(SUM(NORMAL_NUM+ABNORMAL_NUM),0,1,SUM(NORMAL_NUM+ABNORMAL_NUM))),0) as \"normalRateA\"," +
+            "NVL(100-round(100*NORMAL_NUM/decode(SUM(NORMAL_NUM+ABNORMAL_NUM),0,1,SUM(NORMAL_NUM+ABNORMAL_NUM))),0) as \"abnormalRateA\" " +
             "FROM TBL_PERSONNEL_HEALTH " +
             "where TRANS_DATE= #{date}" +
             "GROUP BY NORMAL_NUM,ABNORMAL_NUM ")
