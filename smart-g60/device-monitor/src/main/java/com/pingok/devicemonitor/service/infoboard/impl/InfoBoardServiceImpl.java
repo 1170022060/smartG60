@@ -54,6 +54,7 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
             record = new TblReleaseRecord();
             record.setDeviceId(pubInfo.getJSONArray("devInfo").getJSONObject(i).getString("devId"));
             record.setPublishContent(pubInfo.getJSONArray("data").toJSONString());
+            record.setModel(pubInfo.getInteger("model"));
             record.setStatus(0);
             record.setPresetTime(DateUtils.getNowDate());
             record.setId(remoteIdProducerService.nextId());

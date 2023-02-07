@@ -147,7 +147,7 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             "b.STATUS_DESC as \"statusDesc\", b.STATUS_DETAILS as \"statusDetails\", " +
             "c.INFO_TYPE as \"infoType\", c.TYPEFACE as \"typeFace\", c.TYPEFACE_SIZE as \"typeFaceSize\", " +
             "c.COLOR as \"color\", c.PICTURE_TYPE as \"pictureType\", c.RECENT_5 as \"recent5\", " +
-            "c.PUBLISH_CONTENT as \"publishContent\", " +
+            "c.PUBLISH_CONTENT as \"publishContent\",c.MODEL as \"model\", " +
             "a.CAMERA_ID as \"cameraId\" " +
             " from TBL_DEVICE_INFO a " +
             " LEFT JOIN TBL_DEVICE_STATUS b on a.ID = b.DEVICE_ID " +

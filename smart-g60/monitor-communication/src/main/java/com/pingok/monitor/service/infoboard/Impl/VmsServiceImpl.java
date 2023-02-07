@@ -46,7 +46,8 @@ public class VmsServiceImpl implements IVmsService {
     @Autowired
     private ISocketService iSocketService;
 
-    static String[] A7pngFileName = { "0","120","110","100","90","80","70","65","60","55","50","45","40","35","30","25","20","叉","上箭头","右上箭头","左上箭头" };
+
+    static String[] A7pngFileName = {"0", "120", "110", "100", "90", "80", "70", "65", "60", "55", "50", "45", "40", "35", "30", "25", "20", "叉", "上箭头", "右上箭头", "左上箭头"};
 
     @Override
     public JSONObject publish(String pubInfo) {
@@ -57,6 +58,7 @@ public class VmsServiceImpl implements IVmsService {
 //        JSONArray devInfoList = jo.getJSONArray("devInfo");
         List<DevInfo> devInfoList = JSON.parseArray(JSONObject.toJSONString(jo.get("devInfo")), DevInfo.class);
         JSONArray dataList = jo.getJSONArray("data");
+        int model = jo.getInteger("model");
         List<List<VmsPubInfo>> pubList = new ArrayList<>();
         for (int i = 0; i < dataList.size(); ++i) {
             List<VmsPubInfo> vmsInfoList = JSON.parseArray(JSONObject.toJSONString(dataList.get(i)), VmsPubInfo.class);
@@ -68,7 +70,7 @@ public class VmsServiceImpl implements IVmsService {
         JSONObject result = new JSONObject();
         result.put("pubContent", JSON.toJSONString(dataList));
         JSONArray jaResult = new JSONArray();
-        String playlst = genPlaylst2(devInfoList, pubList);
+        String playlst = getPublishModel(model, devInfoList, pubList);
         for (int i = 0; i < devInfoList.size(); ++i) {
             DevInfo dev = devInfoList.get(i);
             switch (dev.getProtocol()) {
@@ -429,8 +431,8 @@ public class VmsServiceImpl implements IVmsService {
                             regionHeight -= picSize;
                             winY += picSize;
                         }
-                        if(!StringUtils.isEmpty(edit.getContent())) {
-                            if(winNum > 0) pref = "windows" + winNum + "_";
+                        if (!StringUtils.isEmpty(edit.getContent())) {
+                            if (winNum > 0) pref = "windows" + winNum + "_";
                             playlstItem.append("windows" + winNum + "_x=" + winX + newline);
                             playlstItem.append("windows" + winNum + "_y=" + winY + newline);
                             playlstItem.append("windows" + winNum + "_w=" + regionWidth + newline);
@@ -442,25 +444,25 @@ public class VmsServiceImpl implements IVmsService {
                             String[] splitText = edit.getContent().split("<br>");
                             xPos = yPos = 0;
                             int fontSize = Integer.parseInt(edit.getTextSize());
-                            if(splitText.length > 0) {
+                            if (splitText.length > 0) {
                                 String splitTemp = splitText[0];
-                                for(int idx = 1; idx < splitText.length; ++idx) {
-                                    if(splitTemp.length() > splitText[idx].length()) splitTemp = splitText[idx];
+                                for (int idx = 1; idx < splitText.length; ++idx) {
+                                    if (splitTemp.length() > splitText[idx].length()) splitTemp = splitText[idx];
                                 }
                                 int textXLen = splitTemp.length() * fontSize;
                                 int textYLen = splitText.length * fontSize;
-                                if(textXLen > regionWidth) {
+                                if (textXLen > regionWidth) {
                                     xPos = 0;
                                 } else {
                                     xPos = (regionWidth - textXLen) / 2;
                                 }
-                                if(textYLen > regionHeight) {
+                                if (textYLen > regionHeight) {
                                     yPos = 0;
                                 } else {
                                     yPos = (regionHeight - textYLen) / 2;
                                 }
                             }
-                            String xy = String.format("%03d%03d", xPos,yPos);
+                            String xy = String.format("%03d%03d", xPos, yPos);
                             String text = edit.getContent().replace("<br>", "\\n");
                             playlstItem.append("\\C" + xy);
                             playlstItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, edit.getTypeface()) + fontSize + fontSize);
@@ -483,29 +485,526 @@ public class VmsServiceImpl implements IVmsService {
         return playlst;
     }
 
+    private String getPublishModel(int model, List<DevInfo> devInfoList, List<List<VmsPubInfo>> pubList) {
+        String playlst = "";
+        if (devInfoList.size() > 0) {
+            DevInfo dev = devInfoList.get(0);
+            int W = dev.getWidth();
+            int H = dev.getHeight();
+            int lineSize = 16;
+            int picSize = 48;
+            int rgW = (W - lineSize * 3) / 4;
+            String nl = System.getProperty("line.separator"); //换行
+            String pref = "";
+            StringBuilder wndItem = new StringBuilder();
+            if (dev.getProtocol().equals(InfoBoardConfig.SANSI_PLIST_MULTI)) {
+                switch (model) { //+0x30
+                    case 1: {//单行文字模式
+                        PlaylstWndInfo wndText = new PlaylstWndInfo();
+                        wndText.setWinX(0);
+                        wndText.setWinY(0);
+                        wndText.setWinW(W);
+                        wndText.setWinH(H);
+                        List<VmsPubInfo> editList = pubList.get(0);
+
+                        wndItem.append("[playlist]" + nl);
+                        wndItem.append("nwindows=" + 1 + nl);
+                        wndItem.append("windows0" + "_x=" + wndText.getWinX() + nl);
+                        wndItem.append("windows0" + "_y=" + wndText.getWinY() + nl);
+                        wndItem.append("windows0" + "_w=" + wndText.getWinW() + nl);
+                        wndItem.append("windows0" + "_h=" + wndText.getWinH() + nl);
+                        wndItem.append(pref + "item_no=" + editList.size() + nl);
+                        for (int i = 0; i < editList.size(); i++) {
+                            int fontSize = Integer.parseInt(editList.get(0).getTextSize());
+                            String text = editList.get(0).getContent().replace("<br>", "\\n");
+                            wndItem.append(pref + "item" + i + "=500,1,0,");
+                            wndItem.append("\\C000000");
+                            wndItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, editList.get(0).getTypeface()) + fontSize + fontSize);
+                            wndItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, editList.get(0).getTextColor()) + text);
+                        }
+                        playlst = wndItem.toString();
+                        break;
+                    }
+                    case 2: {//单行左图右文模式
+                        List<VmsPubInfo> List = pubList.get(0);
+                        wndItem.append("[playlist]" + nl);
+                        wndItem.append("nwindows=" + 1 + nl);
+                        wndItem.append("windows0" + "_x=" + 0 + nl);
+                        wndItem.append("windows0" + "_y=" + 0 + nl);
+                        wndItem.append("windows0" + "_w=" + W + nl);
+                        wndItem.append("windows0" + "_h=" + H + nl);
+                        wndItem.append(pref + "item_no=" + List.size() + nl);
+
+                        for (int j = 0; j < List.size(); j++) {
+                            wndItem.append(pref + "item" + j + "=500,1,0,");
+                            String picXy = String.format("%03d%03d", 90, (H - 96) / 2);
+                            wndItem.append("\\C" + picXy);
+                            wndItem.append("\\P" + List.get(j).getPicId());
+                            //text <br>替换为\n
+                            String[] splitText = List.get(j).getContent().split("<br>");
+                            //计算文字的xy坐标，x按最长文字算，y按行数
+                            int xPos = 0, yPos = 0;
+                            int fontSize = Integer.parseInt(List.get(j).getTextSize());
+                            if (splitText.length > 0) {
+                                String splitTemp = splitText[0];
+                                for (int idx = 1; idx < splitText.length; ++idx) {
+                                    if (splitTemp.length() > splitText[idx].length()) splitTemp = splitText[idx];
+                                }
+                                int textXLen = splitTemp.length() * fontSize;
+                                int textYLen = splitText.length * fontSize;
+                                if (textXLen > W) {
+                                    xPos = 0;
+                                } else {
+                                    xPos = (W - textXLen) / 2;
+                                }
+                                if (textYLen > H) {
+                                    yPos = 0;
+                                } else {
+                                    yPos = (H - textYLen) / 2;
+                                }
+                            }
+                            String xy = String.format("%03d%03d", xPos, yPos);
+                            String text = List.get(j).getContent().replace("<br>", "\\n");
+                            wndItem.append("\\C" + xy);
+                            wndItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, List.get(j).getTypeface()) + fontSize + fontSize);
+                            wndItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, List.get(j).getTextColor()) + text);
+                            wndItem.append(nl);
+                        }
+                        playlst = wndItem.toString();
+                        break;
+                    }
+                    case 3: {//双行文字分车道模式
+                        wndItem.append("[playlist]" + nl);
+                        int num = pubList.size() + 3;
+                        wndItem.append("nwindows=" + num + nl);
+
+                        for (int i = 0; i < pubList.size(); i++) {
+                            int winX1 = rgW * i + lineSize * i, winX2 = rgW * (i + 1) + lineSize * i, winW = rgW;
+                            List<VmsPubInfo> textList = pubList.get(i);
+
+                            if (i > 0) pref = "windows" + i * 2 + "_";
+
+                            wndItem.append("windows" + i * 2 + "_x=" + winX1 + nl);
+                            wndItem.append("windows" + i * 2 + "_y=" + 0 + nl);
+                            wndItem.append("windows" + i * 2 + "_w=" + winW + nl);
+                            wndItem.append("windows" + i * 2 + "_h=" + H + nl);
+                            wndItem.append(pref + "item_no=" + textList.size() + nl);
+                            for (int j = 0; j < textList.size(); j++) {
+                                wndItem.append(pref + "item" + j + "=500,1,0,");
+                                //text <br>替换为\n
+                                String[] splitText = textList.get(j).getContent().split("<br>");
+                                //计算文字的xy坐标，x按最长文字算，y按行数
+                                int xPos = 0, yPos = 0;
+                                int fontSize = Integer.parseInt(textList.get(j).getTextSize());
+                                if (splitText.length > 0) {
+                                    String splitTemp = splitText[0];
+                                    for (int idx = 1; idx < splitText.length; ++idx) {
+                                        if (splitTemp.length() > splitText[idx].length()) splitTemp = splitText[idx];
+                                    }
+                                    int textXLen = splitTemp.length() * fontSize;
+                                    int textYLen = splitText.length * fontSize;
+                                    if (textXLen > winW) {
+                                        xPos = 0;
+                                    } else {
+                                        xPos = (winW - textXLen) / 2;
+                                    }
+                                    if (textYLen > H) {
+                                        yPos = 0;
+                                    } else {
+                                        yPos = (H - textYLen) / 2;
+                                    }
+                                }
+                                String xy = String.format("%03d%03d", xPos, yPos);
+                                String text = textList.get(j).getContent().replace("<br>", "\\n");
+                                wndItem.append("\\C" + xy);
+                                wndItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(j).getTypeface()) + fontSize + fontSize);
+                                wndItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(j).getTextColor()) + text);
+                                wndItem.append(nl);
+                            }
+                            wndItem.append(nl + nl);
+
+                            if (i != 3) {
+                                int n = i * 2 + 1;
+                                pref = "windows" + n + "_";
+                                if (i != 2) {
+                                    wndItem.append("windows" + n + "_x=" + winX2 + nl);
+                                    wndItem.append("windows" + n + "_y=" + 0 + nl);
+                                    wndItem.append("windows" + n + "_w=" + lineSize + nl);
+                                    wndItem.append("windows" + n + "_h=" + H + nl);
+                                    wndItem.append(pref + "item_no=" + 1 + nl);
+                                    wndItem.append(pref + "item" + 0 + "=500,1,0,");
+                                    wndItem.append("\\C" + String.format("%03d%03d", 0, 0));
+                                    wndItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, "虚线"));
+                                    wndItem.append(nl + nl);
+                                } else {
+                                    wndItem.append("windows" + n + "_x=" + winX2 + nl);
+                                    wndItem.append("windows" + n + "_y=" + 0 + nl);
+                                    wndItem.append("windows" + n + "_w=" + lineSize + nl);
+                                    wndItem.append("windows" + n + "_h=" + H + nl);
+                                    wndItem.append(pref + "item_no=" + 1 + nl);
+                                    wndItem.append(pref + "item" + 0 + "=500,1,0,");
+                                    wndItem.append("\\C" + String.format("%03d%03d", 0, 0));
+                                    wndItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, "实线"));
+                                    wndItem.append(nl + nl);
+                                }
+                            }
+
+                        }
+                        playlst = wndItem.toString();
+                        break;
+                    }
+                    case 4: {//整行文字分车道图标模式
+                        wndItem.append("[playlist]" + nl);
+                        wndItem.append("nwindows=" + 8 + nl);
+
+                        for (int i = 0; i < pubList.size(); i++) {
+                            int winX1 = rgW * i + lineSize * i, winX2 = rgW * (i + 1) + lineSize * i, winW = rgW,winH=H-picSize;
+                            List<VmsPubInfo> textList = pubList.get(i);
+
+                            if (i>0) pref = "windows" + i + "_";
+                            int m = i * 2 +1;
+
+                            String[] splitText = null;
+                            int fontSize = 48;
+                            for (int j = 0; j < textList.size(); j++) {
+                                if(textList.get(j).getContent().length()>0){
+                                    wndItem.append("windows" + 0  + "_x=" + winX1 + nl);
+                                    wndItem.append("windows" + 0 + "_y=" + 0 + nl);
+                                    wndItem.append("windows" + 0 + "_w=" + W + nl);
+                                    wndItem.append("windows" + 0 + "_h=" + winH + nl);
+                                    wndItem.append(pref + "item_no=" + textList.size() + nl);
+                                    wndItem.append(pref + "item" + j + "=500,1,0,");
+
+                                    //text <br>替换为\n
+                                    splitText = textList.get(j).getContent().split("<br>");
+                                    //计算文字的xy坐标，x按最长文字算，y按行数
+                                    int xPos = 0, yPos = 0;
+                                    fontSize = Integer.parseInt(textList.get(j).getTextSize());
+                                    if (splitText.length > 0) {
+                                        String splitTemp = splitText[0];
+                                        for (int idx = 1; idx < splitText.length; ++idx) {
+                                            if (splitTemp.length() > splitText[idx].length()) splitTemp = splitText[idx];
+                                        }
+                                        int textXLen = splitTemp.length() * fontSize;
+                                        int textYLen = splitText.length * fontSize;
+                                        if (textXLen > winW) {
+                                            xPos = 0;
+                                        } else {
+                                            xPos = (W - textXLen) / 2;
+                                        }
+                                        if (textYLen > H) {
+                                            yPos = 0;
+                                        } else {
+                                            yPos = (H-picSize - textYLen) / 2;
+                                        }
+                                    }
+                                    String xy = String.format("%03d%03d", xPos, yPos);
+                                    String text = textList.get(j).getContent().replace("<br>", "\\n");
+                                    wndItem.append("\\C" + xy);
+                                    wndItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(j).getTypeface()) + fontSize + fontSize);
+                                    wndItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(j).getTextColor()) + text);
+                                    wndItem.append(nl+nl);
+                                }
+                            }
+                            wndItem.append("windows" + m + "_x=" + winX1 + nl);
+                            int winY = H - fontSize;
+                            wndItem.append("windows" + m + "_y=" + winY + nl);
+                            wndItem.append("windows" + m + "_w=" + winW + nl);
+                            pref = "windows" + m + "_";
+                            wndItem.append("windows" + m + "_h=" + picSize + nl);
+                            wndItem.append(pref + "item_no=" + 1 + nl);
+                            wndItem.append(pref + "item" + 0 + "=500,1,0,");
+                            String xyPic = String.format("%03d%03d", (rgW - picSize) / 2, 0);
+                            wndItem.append("\\C" + xyPic);
+                            wndItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(0).getPicId()));
+                            wndItem.append(nl+nl);
+
+                            if (i != 3) {
+                                int nn = i * 2+2;
+                                pref = "windows" + nn + "_";
+                                if (i != 2) {
+                                    wndItem.append("windows" + nn + "_x=" + winX2 + nl);
+                                    wndItem.append("windows" + nn + "_y=" + winY + nl);
+                                    wndItem.append("windows" + nn + "_w=" + lineSize + nl);
+                                    wndItem.append("windows" + nn + "_h=" + picSize + nl);
+                                    wndItem.append(pref + "item_no=" + 1 + nl);
+                                    wndItem.append(pref + "item" + 0 + "=500,1,0,");
+                                    wndItem.append("\\C" + String.format("%03d%03d", 0, 0));
+                                    wndItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, "虚线"));
+                                    wndItem.append(nl + nl);
+                                } else {
+                                    wndItem.append("windows" + nn + "_x=" + winX2 + nl);
+                                    wndItem.append("windows" + nn + "_y=" + winY + nl);
+                                    wndItem.append("windows" + nn + "_w=" + lineSize + nl);
+                                    wndItem.append("windows" + nn + "_h=" + picSize + nl);
+                                    wndItem.append(pref + "item_no=" + 1 + nl);
+                                    wndItem.append(pref + "item" + 0 + "=500,1,0,");
+                                    wndItem.append("\\C" + String.format("%03d%03d", 0, 0));
+                                    wndItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, "实线"));
+                                    wndItem.append(nl + nl);
+                                }
+                            }
+                        }
+                        playlst = wndItem.toString();
+                        break;
+                    }
+                    case 5: {//分车道文字图标上下模式
+                        wndItem.append("[playlist]" + nl);
+                        int num = pubList.size() * 2 + 3;
+                        wndItem.append("nwindows=" + num + nl);
+                        for (int i = 0; i < pubList.size(); i++) {
+                            int winX1 = rgW * i + lineSize * i, winX2 = rgW * (i + 1) + lineSize * i, winW = rgW, winH = H - picSize;
+                            List<VmsPubInfo> txList = pubList.get(i);
+
+                            int n = i * 2 + i;
+                            int m = i * 2 + i + 1;
+                            if (i > 0) pref = "windows" + n + "_";
+
+                            wndItem.append("windows" + n + "_x=" + winX1 + nl);
+                            wndItem.append("windows" + n + "_y=" + 0 + nl);
+                            wndItem.append("windows" + n + "_w=" + winW + nl);
+                            wndItem.append("windows" + n + "_h=" + winH + nl);
+                            wndItem.append(pref + "item_no=" + txList.size() + nl);
+                            String[] splitText = null;
+                            int fontSize = 0;
+                            for (int j = 0; j < txList.size(); j++) {
+                                wndItem.append(pref + "item" + j + "=500,1,0,");
+                                //text <br>替换为\n
+                                splitText = txList.get(j).getContent().split("<br>");
+                                //计算文字的xy坐标，x按最长文字算，y按行数
+                                int xPos = 0, yPos = 0;
+                                fontSize = Integer.parseInt(txList.get(j).getTextSize());
+                                if (splitText.length > 0) {
+                                    String splitTemp = splitText[0];
+                                    for (int idx = 1; idx < splitText.length; ++idx) {
+                                        if (splitTemp.length() > splitText[idx].length()) splitTemp = splitText[idx];
+                                    }
+                                    int textXLen = splitTemp.length() * fontSize;
+                                    int textYLen = splitText.length * fontSize;
+                                    if (textXLen > winW) {
+                                        xPos = 0;
+                                    } else {
+                                        xPos = (winW - textXLen) / 2;
+                                    }
+                                    if (textYLen > H) {
+                                        yPos = 0;
+                                    } else {
+                                        yPos = (H - picSize - textYLen) / 2;
+                                    }
+                                }
+                                String xy = String.format("%03d%03d", xPos, yPos);
+                                String text = txList.get(j).getContent().replace("<br>", "\\n");
+                                wndItem.append("\\C" + xy);
+                                wndItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, txList.get(j).getTypeface()) + fontSize + fontSize);
+                                wndItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, txList.get(j).getTextColor()) + text);
+                                wndItem.append(nl);
+                            }
+                            wndItem.append("windows" + m + "_x=" + winX1 + nl);
+                            int winY = H - splitText.length * fontSize;
+                            wndItem.append("windows" + m + "_y=" + winY + nl);
+                            wndItem.append("windows" + m + "_w=" + winW + nl);
+                            pref = "windows" + m + "_";
+                            wndItem.append("windows" + m + "_h=" + picSize + nl);
+                            wndItem.append(pref + "item_no=" + 1 + nl);
+                            wndItem.append(pref + "item" + 0 + "=500,1,0,");
+                            String xyPic = String.format("%03d%03d", (rgW - picSize) / 2, 0);
+                            wndItem.append("\\C" + xyPic);
+                            wndItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, txList.get(0).getPicId()));
+                            wndItem.append(nl);
+                            if (i != 3) {
+                                int nn = i * 2 + i + 2;
+                                pref = "windows" + nn + "_";
+                                if (i != 2) {
+                                    wndItem.append("windows" + nn + "_x=" + winX2 + nl);
+                                    wndItem.append("windows" + nn + "_y=" + 0 + nl);
+                                    wndItem.append("windows" + nn + "_w=" + lineSize + nl);
+                                    wndItem.append("windows" + nn + "_h=" + H + nl);
+                                    wndItem.append(pref + "item_no=" + 1 + nl);
+                                    wndItem.append(pref + "item" + 0 + "=500,1,0,");
+                                    wndItem.append("\\C" + String.format("%03d%03d", 0, 0));
+                                    wndItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, "虚线"));
+                                    wndItem.append(nl + nl);
+                                } else {
+                                    wndItem.append("windows" + nn + "_x=" + winX2 + nl);
+                                    wndItem.append("windows" + nn + "_y=" + 0 + nl);
+                                    wndItem.append("windows" + nn + "_w=" + lineSize + nl);
+                                    wndItem.append("windows" + nn + "_h=" + H + nl);
+                                    wndItem.append(pref + "item_no=" + 1 + nl);
+                                    wndItem.append(pref + "item" + 0 + "=500,1,0,");
+                                    wndItem.append("\\C" + String.format("%03d%03d", 0, 0));
+                                    wndItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, "实线"));
+                                    wndItem.append(nl + nl);
+                                }
+                            }
+                        }
+                        playlst = wndItem.toString();
+                        break;
+                    }
+                    case 6: {//分车道文字图标左右模式
+                        wndItem.append("[playlist]" + nl);
+                        wndItem.append("nwindows=" + 7 + nl);
+
+                        for (int i = 0; i < pubList.size(); i++) {
+                            int winX1 = rgW * i + lineSize * i, winX2 = rgW * (i + 1) + lineSize * i, winW = rgW;
+                            List<VmsPubInfo> textList = pubList.get(i);
+
+                            if (i > 0) pref = "windows" + i * 2 + "_";
+
+                            wndItem.append("windows" + i * 2 + "_x=" + winX1 + nl);
+                            wndItem.append("windows" + i * 2 + "_y=" + 0 + nl);
+                            wndItem.append("windows" + i * 2 + "_w=" + winW + nl);
+                            wndItem.append("windows" + i * 2 + "_h=" + H + nl);
+                            wndItem.append(pref + "item_no=" + textList.size() + nl);
+
+                            for (int j = 0; j < textList.size(); j++) {
+                                //text <br>替换为\n
+                                String[] splitText = textList.get(j).getContent().split("<br>");
+                                //计算文字的xy坐标，x按最长文字算，y按行数
+                                int xPos = 0, yPos = 0;
+                                int fontSize = Integer.parseInt(textList.get(j).getTextSize());
+                                int textXLen = 0;
+                                if (splitText.length > 0) {
+                                    String splitTemp = splitText[0];
+                                    for (int idx = 1; idx < splitText.length; ++idx) {
+                                        if (splitTemp.length() > splitText[idx].length()) splitTemp = splitText[idx];
+                                    }
+                                    textXLen = splitTemp.length() * fontSize;
+                                    int textYLen = splitText.length * fontSize;
+                                    if (textXLen > W) {
+                                        xPos = 0;
+                                    } else {
+                                        xPos = (winW - 96 - textXLen) / 2 + 96;
+                                    }
+                                    if (textYLen > H) {
+                                        yPos = 0;
+                                    } else {
+                                        yPos = (H - textYLen) / 2;
+                                    }
+                                }
+                                wndItem.append(pref + "item" + j + "=500,1,0,");
+                                String picXy = String.format("%03d%03d", (winW - 96 - textXLen) / 2, (H - 96) / 2);
+                                wndItem.append("\\C" + picXy);
+                                wndItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(j).getPicId()));
+                                String xy = String.format("%03d%03d", xPos, yPos);
+                                String text = textList.get(j).getContent().replace("<br>", "\\n");
+                                wndItem.append("\\C" + xy);
+                                wndItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(j).getTypeface()) + fontSize + fontSize);
+                                wndItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(j).getTextColor()) + text);
+                                wndItem.append(nl);
+                            }
+                            wndItem.append(nl + nl);
+
+                            if (i != 3) {
+                                int n = i * 2 + 1;
+                                pref = "windows" + n + "_";
+                                if (i != 2) {
+                                    wndItem.append("windows" + n + "_x=" + winX2 + nl);
+                                    wndItem.append("windows" + n + "_y=" + 0 + nl);
+                                    wndItem.append("windows" + n + "_w=" + lineSize + nl);
+                                    wndItem.append("windows" + n + "_h=" + H + nl);
+                                    wndItem.append(pref + "item_no=" + 1 + nl);
+                                    wndItem.append(pref + "item" + 0 + "=500,1,0,");
+                                    wndItem.append("\\C" + String.format("%03d%03d", 0, 0));
+                                    wndItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, "虚线"));
+                                    wndItem.append(nl + nl);
+                                } else {
+                                    wndItem.append("windows" + n + "_x=" + winX2 + nl);
+                                    wndItem.append("windows" + n + "_y=" + 0 + nl);
+                                    wndItem.append("windows" + n + "_w=" + lineSize + nl);
+                                    wndItem.append("windows" + n + "_h=" + H + nl);
+                                    wndItem.append(pref + "item_no=" + 1 + nl);
+                                    wndItem.append(pref + "item" + 0 + "=500,1,0,");
+                                    wndItem.append("\\C" + String.format("%03d%03d", 0, 0));
+                                    wndItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, "实线"));
+                                    wndItem.append(nl + nl);
+                                }
+                            }
+
+                        }
+
+
+                        playlst = wndItem.toString();
+                        break;
+                    }
+                    case 7: {//分车道单图标模式
+                        wndItem.append("[playlist]" + nl);
+                        int num = pubList.size() + 3;
+                        wndItem.append("nwindows=" + num + nl);
+                        for (int i = 0; i < pubList.size(); i++) {
+                            int winX1 = rgW * i + lineSize * i, winX2 = rgW * (i + 1) + lineSize * i, winW = rgW;
+                            List<VmsPubInfo> picList = pubList.get(i);
+
+                            if (i > 0) pref = "windows" + i * 2 + "_";
+
+                            wndItem.append("windows" + i * 2 + "_x=" + winX1 + nl);
+                            wndItem.append("windows" + i * 2 + "_y=" + 0 + nl);
+                            wndItem.append("windows" + i * 2 + "_w=" + winW + nl);
+                            wndItem.append("windows" + i * 2 + "_h=" + H + nl);
+                            wndItem.append(pref + "item_no=" + 1 + nl);
+                            wndItem.append(pref + "item" + 0 + "=500,1,0,");
+                            String xyPic = String.format("%03d%03d", (rgW - 96) / 2, 0);
+                            wndItem.append("\\C" + xyPic);
+                            wndItem.append(get96Pic(InfoBoardConfig.SANSI_PLIST_MULTI, picList.get(0).getPicId()));
+                            wndItem.append(nl + nl);
+                            if (i != 3) {
+                                int n = i * 2 + 1;
+                                pref = "windows" + n + "_";
+                                if (i != 2) {
+                                    wndItem.append("windows" + n + "_x=" + winX2 + nl);
+                                    wndItem.append("windows" + n + "_y=" + 0 + nl);
+                                    wndItem.append("windows" + n + "_w=" + lineSize + nl);
+                                    wndItem.append("windows" + n + "_h=" + H + nl);
+                                    wndItem.append(pref + "item_no=" + 1 + nl);
+                                    wndItem.append(pref + "item" + 0 + "=500,1,0,");
+                                    wndItem.append("\\C" + String.format("%03d%03d", 0, 0));
+                                    wndItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, "虚线"));
+                                    wndItem.append(nl + nl);
+                                } else {
+                                    wndItem.append("windows" + n + "_x=" + winX2 + nl);
+                                    wndItem.append("windows" + n + "_y=" + 0 + nl);
+                                    wndItem.append("windows" + n + "_w=" + lineSize + nl);
+                                    wndItem.append("windows" + n + "_h=" + H + nl);
+                                    wndItem.append(pref + "item_no=" + 1 + nl);
+                                    wndItem.append(pref + "item" + 0 + "=500,1,0,");
+                                    wndItem.append("\\C" + String.format("%03d%03d", 0, 0));
+                                    wndItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, "实线"));
+                                    wndItem.append(nl + nl);
+                                }
+                            }
+                        }
+                        playlst = wndItem.toString();
+                        break;
+                    }
+                }
+            }
+        }
+        return playlst;
+    }
+
     // 生成playlst 版本2
     private String genPlaylst2(List<DevInfo> devInfoList, List<List<VmsPubInfo>> pubList) {
 
         String playlst = "";
-        if(devInfoList.size() > 0) {
+        if (devInfoList.size() > 0) {
             DevInfo dev = devInfoList.get(0);
             String nl = System.getProperty("line.separator"); //换行
             if (dev.getProtocol().equals(InfoBoardConfig.SANSI_PLIST_MULTI)) {
                 //窗口列表
                 int rgNum = pubList.size(); //区域数
-                List<PlaylstWndInfo> wndList = new ArrayList<>(rgNum * 2);
-                for(int cnt = 0; cnt < rgNum * 2; ++cnt) wndList.add(new PlaylstWndInfo());
+                List<PlaylstWndInfo> wndList = new ArrayList<>(rgNum * 2 + 3);
+                for (int cnt = 0; cnt < rgNum * 2 + 3; ++cnt) wndList.add(new PlaylstWndInfo());
 //                List<PlaylstWndInfo> wndList = Arrays.asList(new PlaylstWndInfo[rgNum * 2]);
 
-
+                int lineSize = 16;
                 //区域宽高 (regionNum - 1) * 8 是间隔
-                int rgW = dev.getWidth() / rgNum;
+                int rgW = (dev.getWidth() - lineSize * 3) / rgNum;
                 int picSize = 48;
+
 
                 for (int i = 0; i < rgNum; ++i) {
                     int rgH = dev.getHeight();
                     //窗口坐标、宽高
-                    int winX = rgW * i, winY = 0, winW = rgW, winH = 0;
+                    int winX = rgW * i + lineSize * i, winY = 0, winW = rgW, winH = 0;
                     List<VmsPubInfo> editList = pubList.get(i);
                     boolean bPic = false;
                     boolean bText = false;
@@ -517,23 +1016,47 @@ public class VmsServiceImpl implements IVmsService {
                         bPic = bPic || hasPic;
                         bText = bText || hasText;
 
-                        if(hasPic) {
-                            PlaylstWndInfo wndPic = wndList.get(i*2);
-                            wndPic.setWinX(winX);
-                            wndPic.setWinY(winY);
-                            wndPic.setWinW(winW);
-                            wndPic.setWinH(picSize);
-                            wndPic.setType(0);
-                            wndPic.getItems().add(edit);
-                        }
-                        if(hasText) {
-                            PlaylstWndInfo wndText = wndList.get(i*2 + 1);
+                        if (hasText) {
+                            PlaylstWndInfo wndText = wndList.get(i * 2 + i);
                             wndText.setWinX(winX);
-                            wndText.setWinY(bPic ? winY + picSize : winY);
+                            wndText.setWinY(winY);
                             wndText.setWinW(winW);
                             wndText.setWinH(bPic ? rgH - picSize : rgH);
                             wndText.setType(1);
                             wndText.getItems().add(edit);
+                        }
+
+                        if (hasPic) {
+                            PlaylstWndInfo wndPic = wndList.get(i * 2 + 1 + i);
+                            wndPic.setWinX(winX);
+                            wndPic.setWinY(bText ? rgH - picSize : winY);
+                            wndPic.setWinW(winW);
+                            wndPic.setWinH(picSize);
+                            wndPic.setType(0);
+                            wndPic.getItems().add(edit);
+                            if (rgNum > 1) {
+                                if (i != 2) {
+                                    PlaylstWndInfo wndDash = wndList.get(i * 2 + 2 + i);
+                                    wndDash.setWinX(winW);
+                                    wndDash.setWinY(winY);
+                                    wndDash.setWinW(lineSize);
+                                    wndDash.setWinH(rgH);
+                                    wndDash.setType(0);
+                                    VmsPubInfo dash = new VmsPubInfo();
+                                    dash.setPicId("z04");
+                                    wndDash.getItems().add(dash);
+                                } else {
+                                    PlaylstWndInfo wndSolid = wndList.get(i * 2 + 2 + i);
+                                    wndSolid.setWinX(winW);
+                                    wndSolid.setWinY(winY);
+                                    wndSolid.setWinW(lineSize);
+                                    wndSolid.setWinH(rgH);
+                                    wndSolid.setType(0);
+                                    VmsPubInfo solid = new VmsPubInfo();
+                                    solid.setPicId("z05");
+                                    wndSolid.getItems().add(solid);
+                                }
+                            }
                         }
                     }
                 }
@@ -541,7 +1064,7 @@ public class VmsServiceImpl implements IVmsService {
                 Iterator<PlaylstWndInfo> iter = wndList.iterator();
                 while (iter.hasNext()) {
                     PlaylstWndInfo wnd = iter.next();
-                    if(wnd.getItems().size() == 0) {
+                    if (wnd.getItems().size() == 0) {
                         iter.remove();
                     }
                 }
@@ -552,50 +1075,49 @@ public class VmsServiceImpl implements IVmsService {
                 playlstAll.append("nwindows=" + wndList.size() + nl);
 
                 String pref = "";
-                for(int n = 0; n < wndList.size(); ++n) {
+                for (int n = 0; n < wndList.size(); ++n) {
+
                     StringBuilder wndItem = new StringBuilder();
                     PlaylstWndInfo wndInfo = wndList.get(n);
-                    if(n > 0) pref = "windows" + n + "_";
+                    if (n > 0) pref = "windows" + n + "_";
                     wndItem.append("windows" + n + "_x=" + wndInfo.getWinX() + nl);
                     wndItem.append("windows" + n + "_y=" + wndInfo.getWinY() + nl);
                     wndItem.append("windows" + n + "_w=" + wndInfo.getWinW() + nl);
                     wndItem.append("windows" + n + "_h=" + wndInfo.getWinH() + nl);
                     wndItem.append(pref + "item_no=" + wndInfo.getItems().size() + nl);
-                    for(int m = 0; m < wndInfo.getItems().size(); ++m) {
+                    for (int m = 0; m < wndInfo.getItems().size(); ++m) {
                         StringBuilder playlstItem = new StringBuilder();
                         VmsPubInfo pubInfo = wndInfo.getItems().get(m);
                         playlstItem.append(pref + "item" + m + "=500,1,0,");
-                        if(wndInfo.getType() == 0) { //图片
+                        if (wndInfo.getType() == 0) { //图片
                             String xyPic = String.format("%03d%03d", (wndInfo.getWinW() - picSize) / 2, 0);
                             playlstItem.append("\\C" + xyPic);
                             playlstItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, pubInfo.getPicId()));
-                        }
-                        else
-                        {
+                        } else {
                             //text <br>替换为\n
                             String[] splitText = pubInfo.getContent().split("<br>");
                             //计算文字的xy坐标，x按最长文字算，y按行数
                             int xPos = 0, yPos = 0;
                             int fontSize = Integer.parseInt(pubInfo.getTextSize());
-                            if(splitText.length > 0) {
+                            if (splitText.length > 0) {
                                 String splitTemp = splitText[0];
-                                for(int idx = 1; idx < splitText.length; ++idx) {
-                                    if(splitTemp.length() > splitText[idx].length()) splitTemp = splitText[idx];
+                                for (int idx = 1; idx < splitText.length; ++idx) {
+                                    if (splitTemp.length() > splitText[idx].length()) splitTemp = splitText[idx];
                                 }
                                 int textXLen = splitTemp.length() * fontSize;
                                 int textYLen = splitText.length * fontSize;
-                                if(textXLen > wndInfo.getWinW()) {
+                                if (textXLen > wndInfo.getWinW()) {
                                     xPos = 0;
                                 } else {
                                     xPos = (wndInfo.getWinW() - textXLen) / 2;
                                 }
-                                if(textYLen > wndInfo.getWinH()) {
+                                if (textYLen > wndInfo.getWinH()) {
                                     yPos = 0;
                                 } else {
                                     yPos = (wndInfo.getWinH() - textYLen) / 2;
                                 }
                             }
-                            String xy = String.format("%03d%03d", xPos,yPos);
+                            String xy = String.format("%03d%03d", xPos, yPos);
                             String text = pubInfo.getContent().replace("<br>", "\\n");
                             playlstItem.append("\\C" + xy);
                             playlstItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, pubInfo.getTypeface()) + fontSize + fontSize);
@@ -654,7 +1176,7 @@ public class VmsServiceImpl implements IVmsService {
 //        byte[] crc2 = ByteUtils.GetCrc(ret.Skip(1).Take(pos - 1).ToArray());
 //        byte[] crcCheck = Arrays.copyOfRange(ret, 1, ret.length - 1);
 //        byte[] crc2 = ByteUtils.GetCrc(crcCheck, crcCheck.length);
-        byte[] crcBytes = new byte[ret.length-4];
+        byte[] crcBytes = new byte[ret.length - 4];
         System.arraycopy(ret, 1, crcBytes, 0, crcBytes.length);
         byte[] crc2 = ByteUtils.GetCrc(crcBytes, crcBytes.length);
         System.out.println("长度：" + crc2.length + "，发送报文：" + ByteUtils.bytes2hex(crc2));
@@ -688,7 +1210,7 @@ public class VmsServiceImpl implements IVmsService {
                     fontCode = "33";
                     break;
             }
-        } else if(protocol == InfoBoardConfig.SANSI_PLIST_MULTI) {
+        } else if (protocol == InfoBoardConfig.SANSI_PLIST_MULTI) {
             switch (font) {
                 case "黑体":
                     fontCode = "h";
@@ -756,7 +1278,7 @@ public class VmsServiceImpl implements IVmsService {
                     fontColorCode = "22";
                     break;
             }
-        } else if(protocol == InfoBoardConfig.SANSI_PLIST_MULTI) {
+        } else if (protocol == InfoBoardConfig.SANSI_PLIST_MULTI) {
             switch (fontColor) {
                 case "红":
                     fontColorCode = "255000000000";
@@ -830,29 +1352,107 @@ public class VmsServiceImpl implements IVmsService {
                     picCode = "56";
                     break;
             }
-        } else if(protocol == InfoBoardConfig.SANSI_PLIST_MULTI) {
+        } else if (protocol == InfoBoardConfig.SANSI_PLIST_MULTI) {
             switch (picId) {
-                case "叉": picCode = "\\Pz00"; break;
-                case "上箭头": picCode = "\\Pz01"; break;
-                case "右上箭头": picCode = "\\Pz02"; break;
-                case "左上箭头": picCode = "\\Pz03"; break;
-                case "120": picCode = "\\P120"; break;
-                case "110": picCode = "\\P110"; break;
-                case "100": picCode = "\\P100"; break;
-                case "90": picCode = "\\P90"; break;
-                case "80": picCode = "\\P80"; break;
-                case "70": picCode = "\\P70"; break;
-                case "65": picCode = "\\P65"; break;
-                case "60": picCode = "\\P60"; break;
-                case "55": picCode = "\\P55"; break;
-                case "50": picCode = "\\P50"; break;
-                case "45": picCode = "\\P45"; break;
-                case "40": picCode = "\\P40"; break;
-                case "35": picCode = "\\P35"; break;
-                case "30": picCode = "\\P30"; break;
-                case "25": picCode = "\\P25"; break;
-                case "20": picCode = "\\P20"; break;
-                default: picCode = "\\B"+picId;
+                case "叉":
+                    picCode = "\\Pz00";
+                    break;
+                case "上箭头":
+                    picCode = "\\Pz01";
+                    break;
+                case "右上箭头":
+                    picCode = "\\Pz02";
+                    break;
+                case "左上箭头":
+                    picCode = "\\Pz03";
+                    break;
+                case "虚线":
+                    picCode = "\\Pz04";
+                    break;
+                case "实线":
+                    picCode = "\\Pz05";
+                    break;
+                case "120":
+                    picCode = "\\P120";
+                    break;
+                case "110":
+                    picCode = "\\P110";
+                    break;
+                case "100":
+                    picCode = "\\P100";
+                    break;
+                case "90":
+                    picCode = "\\P90";
+                    break;
+                case "80":
+                    picCode = "\\P80";
+                    break;
+                case "70":
+                    picCode = "\\P70";
+                    break;
+                case "65":
+                    picCode = "\\P65";
+                    break;
+                case "60":
+                    picCode = "\\P60";
+                    break;
+                case "55":
+                    picCode = "\\P55";
+                    break;
+                case "50":
+                    picCode = "\\P50";
+                    break;
+                case "45":
+                    picCode = "\\P45";
+                    break;
+                case "40":
+                    picCode = "\\P40";
+                    break;
+                case "35":
+                    picCode = "\\P35";
+                    break;
+                case "30":
+                    picCode = "\\P30";
+                    break;
+                case "25":
+                    picCode = "\\P25";
+                    break;
+                case "20":
+                    picCode = "\\P20";
+                    break;
+                default:
+                    picCode = "\\B" + picId;
+            }
+        }
+        return picCode;
+    }
+
+    //96像素图片转换
+    private String get96Pic(String protocol, String picId) {
+        String picCode = ""; //限速80
+        if (protocol == InfoBoardConfig.SANSI_PLIST_MULTI) {
+            switch (picId) {
+                case "35":
+                    picCode = "\\Ba10";
+                    break;
+                case "40":
+                    picCode = "\\Ba05";
+                    break;
+                case "60":
+                    picCode = "\\Ba06";
+                    break;
+                case "80":
+                    picCode = "\\Ba07";
+                    break;
+                case "100":
+                    picCode = "\\Ba08";
+                    break;
+                case "110":
+                    picCode = "\\Ba21";
+                    break;
+                case "120":
+                    picCode = "\\Ba09";
+                    break;
             }
         }
         return picCode;

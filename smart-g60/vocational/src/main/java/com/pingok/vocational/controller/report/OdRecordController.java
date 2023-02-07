@@ -51,7 +51,7 @@ public class OdRecordController extends BaseController {
         util.exportExcel(response,list, "车辆OD统计记录(分站)");
     }
 
-    @RequiresPermissions("vocational:od:infoClass")
+//    @RequiresPermissions("vocational:od:infoClass")
     @Log(title = "车辆OD统计记录(分车型)-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/infoClass")
     public TableDataInfo infoClass(@RequestParam(name = "vehClass",required = false) Integer vehClass, @RequestParam(name = "startDate",required = false) Date startDate, @RequestParam(name = "endDate",required = false) Date endDate, @RequestParam(name = "hour",required = false) Integer hour)
