@@ -42,7 +42,7 @@ public interface TblOdRecordMapper {
             "<when test='hour != null'> " +
             "and a.HOUR= #{hour} " +
             "</when>"+
-            "group by a.WORK_DATE,a.HOUR,b.STATION_NAME,a.VEH_CLASS order by a.WORK_DATE,b.STATION_NAME,a.HOUR,a.VEH_CLASS " +
+            "group by a.WORK_DATE,a.HOUR,sdd.DICT_LABEL,a.VEH_CLASS,b.STATION_NAME order by a.WORK_DATE,b.STATION_NAME,a.HOUR,a.VEH_CLASS " +
             "</script>"})
     List<Map> selectOdRecordBySta(@Param("stationId") String stationId, @Param("startDate") Date startDate, @Param("endDate")  Date endDate, @Param("hour")  Integer hour);
 
