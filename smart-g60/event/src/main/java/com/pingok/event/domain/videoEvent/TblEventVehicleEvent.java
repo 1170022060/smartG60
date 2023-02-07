@@ -56,7 +56,7 @@ public class TblEventVehicleEvent implements Serializable {
     private String szSourceCode;//相机ID
     private String uiTrackId;
     private Integer uiDeviceType;
-
+    private Long ubiPtzShortId;//关联云台相机编号，不存在时为空
     @Transient
     private String video;
 }

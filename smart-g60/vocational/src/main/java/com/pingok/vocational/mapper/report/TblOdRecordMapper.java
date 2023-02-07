@@ -23,9 +23,12 @@ public interface TblOdRecordMapper {
             "select  " +
             "to_char(a.WORK_DATE, 'yyyy-mm-dd') as \"workDate\" ," +
             "a.HOUR as \"hour\"," +
+            "sdd.DICT_LABEL AS \"vehClass\", " +
             "b.STATION_NAME as \"stationId\"," +
             "sum(a.FLOW) as \"flow\" from TBL_OD_RECORD a " +
             "left join TBL_BASE_STATION_INFO b on UPPER(b.STATION_HEX)=UPPER(CONCAT('3101',a.STATION_ID)) " +
+            "JOIN  SYS_DICT_DATA sdd ON sdd.DICT_VALUE = a.VEH_CLASS  " +
+            "AND sdd.DICT_TYPE = 'veh_class' " +
             "where 1=1 " +
             "<when test='startDate != null'> " +
             " and a.WORK_DATE &gt;= #{startDate} " +

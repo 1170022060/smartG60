@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * @author qiumin
  */
-public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
+public interface TblEventRecordMapper<Map> extends CommonRepository<TblEventRecord> {
 
     @Select("SELECT " +
             "COUNT(ID) " +
@@ -60,6 +60,7 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "'未填报'  " +
             "END AS \"isFill\", " +
             "tdi.PILE_NO AS \"pileNo\", " +
+            "ter.UBI_PTZ_SHORT_ID as \"cameraId\", " +
             "tdi.DEVICE_ID AS \"deviceId\" " +
             "FROM " +
             "TBL_EVENT_RECORD ter " +

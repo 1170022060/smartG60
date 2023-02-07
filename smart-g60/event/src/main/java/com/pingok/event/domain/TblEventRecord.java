@@ -155,4 +155,6 @@ public class TblEventRecord implements Serializable {
     @Transient
     private List<TblEventHandle> eventHandle;
 
+    private Long ubiPtzShortId;
+
 }
