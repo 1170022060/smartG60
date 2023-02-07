@@ -75,4 +75,6 @@ public class TblReleaseRecord implements Serializable {
 
     /** 发布内容 */
     private String publishContent;
+
+    private Integer model;
 }

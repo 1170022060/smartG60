@@ -61,4 +61,6 @@ public class VmsInfoByType {
     private String publishContent;
 
     private String cameraId;
+
+    private Integer model;
 }
