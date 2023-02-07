@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * @author qiumin
  */
-public interface TblEventRecordMapper<Map> extends CommonRepository<TblEventRecord> {
+public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
 
     @Select("SELECT " +
             "COUNT(ID) " +
