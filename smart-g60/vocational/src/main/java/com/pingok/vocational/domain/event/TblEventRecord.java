@@ -163,6 +163,8 @@ public class TblEventRecord implements Serializable {
      */
     private Integer deviceType;
 
+    private Long ubiPtzShortId;
+
     public Integer getDeviceType() {
         return deviceType;
     }
@@ -399,5 +401,13 @@ public class TblEventRecord implements Serializable {
 
     public void setDirection(String direction) {
         this.direction = direction;
+    }
+
+    public Long getUbiPtzShortId() {
+        return ubiPtzShortId;
+    }
+
+    public void setUbiPtzShortId(Long ubiPtzShortId) {
+        this.ubiPtzShortId = ubiPtzShortId;
     }
 }
