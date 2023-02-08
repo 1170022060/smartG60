@@ -182,9 +182,11 @@ public class Consumer {
         if (message.isPresent()) {
             log.info("infoBoardPublish 消费了： Topic:" + topic + ",Message:" + message.get());
             try {
+                log.info("------------------开始发布情报板信息------------------");
                 JSONObject result = iVmsService.publish(message.get().toString());
                 //通知
                 iVmsService.notifyResult(result);
+                log.info("------------------情报板信息发布成功------------------");
                 ack.acknowledge();
             } catch (Exception e) {
                 log.error("infoBoardPublish消费者，Topic" + topic + ",Message:" + message.get() + "处理失败。错误信息：" + e.getMessage());
