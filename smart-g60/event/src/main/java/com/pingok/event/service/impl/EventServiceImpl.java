@@ -205,8 +205,6 @@ public class EventServiceImpl implements IEventService {
         if (tblEventRecord == null) {
             throw new SecurityException("id为：" + id + ",事件信息不存在");
         }
-        tblEventRecord.setIsFill(1);
-        tblEventRecordMapper.updateByPrimaryKeySelective(tblEventRecord);
         JSONObject plan;
         TblEventHandle tblEventHandle;
         tblEventHandle = new TblEventHandle();
@@ -392,8 +390,17 @@ public class EventServiceImpl implements IEventService {
                     autoNaviMapRecord.setLocs(JSON.toJSONString(Arrays.asList(Arrays.asList(tblEventRecord.getPileNo()))));
                     autoNaviMapRecord.setStartDate(tblEventRecord.getEventTime());
                     autoNaviMapRecord.setEventDesc(tblEventRecord.getRemark());
-                    autoNaviMapRecord.setDirection(tblEventRecord.getDirection());
-                    System.out.println(autoNaviMapRecord);
+                    switch (tblEventRecord.getDirection()){
+                        case "1":
+                            autoNaviMapRecord.setDirection("上行");
+                            break;
+                        case "2":
+                            autoNaviMapRecord.setDirection("下行");
+                            break;
+                        case "3":
+                            autoNaviMapRecord.setDirection("双向");
+                            break;
+                    }
                     r = remoteAmapService.eventPublish(autoNaviMapRecord);
                     if (r != null) {
                         if (r.getCode() == R.SUCCESS) {
@@ -410,16 +417,26 @@ public class EventServiceImpl implements IEventService {
                     TblBaiDuMapRecord baiDuMapRecord = new TblBaiDuMapRecord();
                     baiDuMapRecord.setId(id);
                     baiDuMapRecord.setEventType(plan.getInteger("baiduType"));
-                    baiDuMapRecord.setEventId("shlq_"+tblEventRecord.getEventId());
+                    baiDuMapRecord.setEventId(tblEventRecord.getEventId().toString());
                     baiDuMapRecord.setEventLevel(1);
                     baiDuMapRecord.setTraffic(0);
-                    baiDuMapRecord.setDirection(tblEventRecord.getDirection());
+                    switch (tblEventRecord.getDirection()){
+                        case "1":
+                            baiDuMapRecord.setDirection("上行");
+                            break;
+                        case "2":
+                            baiDuMapRecord.setDirection("下行");
+                            break;
+                        case "3":
+                            baiDuMapRecord.setDirection("双向");
+                            break;
+                    }
                     baiDuMapRecord.setStartTime(DateUtils.getDateShortTimestamp(tblEventRecord.getEventTime()).intValue());
                     baiDuMapRecord.setEndTime(DateUtils.getDateShortTimestamp(DateUtils.getPreTime(tblEventRecord.getEventTime(), 60)).intValue());
                     baiDuMapRecord.setContent(tblEventRecord.getRemark());
                     baiDuMapRecord.setLocation(tblEventRecord.getLocationInterval().replace("[","").replace("]",""));
                     baiDuMapRecord.setLocationType(1);
-                    System.out.println(baiDuMapRecord);
+                    System.out.println(JSON.toJSONString(baiDuMapRecord));
 
                     r = remoteBaiDuService.eventPublish(baiDuMapRecord);
                     if (r != null) {

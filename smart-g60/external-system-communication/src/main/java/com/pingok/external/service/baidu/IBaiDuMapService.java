@@ -10,10 +10,10 @@ public interface IBaiDuMapService {
      */
     void eventPublish(TblBaiDuMapRecord tblBaiDuMapRecord);
 
-    /**
-     * 事件解除
-     *
-     * @param id
-     */
-    void eventRelieve(Long id);
+//    /**
+//     * 事件解除
+//     *
+//     * @param id
+//     */
+//    void eventRelieve(Long id);
 }
