@@ -77,7 +77,12 @@ public class EventServiceImpl implements IEventService {
         example.createCriteria().andEqualTo("eventType", eventType)
                 .andEqualTo("pileNo",pileNo)
                 .andIn("status", status);
-        return tblEventRecordMapper.selectByExample(example).get(0);
+        List<TblEventRecord> list = tblEventRecordMapper.selectByExample(example);
+        if(list!=null && list.size()>0){
+            return list.get(0);
+        }else {
+            return null;
+        }
     }
 
     @Override
