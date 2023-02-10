@@ -25,6 +25,7 @@
         <module>external-system-communication</module>
         <module>radar-camera-mix</module>
         <module>gis</module>
+        <module>monitor-external-system</module>
     </modules>
 
     <artifactId>smart-g60</artifactId>
