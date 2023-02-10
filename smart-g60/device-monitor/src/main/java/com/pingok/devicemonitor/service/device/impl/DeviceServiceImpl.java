@@ -146,7 +146,7 @@ public class DeviceServiceImpl implements IDeviceService {
 
         KafkaEnum kafkaEnum;
         TblDeviceInfo info = tblDeviceInfoMapper.selectByPrimaryKey(deviceStatus.getDeviceId());
-        if(StringUtils.isNotNull(info) && (info.getDeviceType() == 11 || info.getDeviceType() == 12)){
+        if(info !=null && info.getDeviceType()!=null && (info.getDeviceType() == 11 || info.getDeviceType() == 12)){
             kafkaEnum = new KafkaEnum();
             kafkaEnum.setTopIc(KafkaTopIc.GIS_UPDATE_STATUS);
             JSONObject data = new JSONObject();

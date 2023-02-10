@@ -174,15 +174,25 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
     @Override
     public void sensorData(JSONObject sensorData) {
         log.info("智慧厕所系统上报数据-----" + sensorData.toJSONString());
+        TblSmartToiletInfo toiletInfo;
+        TblSmartToiletHealth healthInfo;
         ToiletSensorInfo toiletData = JSON.parseObject(JSON.toJSONString(sensorData), ToiletSensorInfo.class);
         if (toiletData != null) {
             ToiletSensorData sensor = toiletData.getSensor();
             // 1,查询传感器信息；2，存储健康状态（上报数据）；3，存储占用情况、报警状态
-            TblSmartToiletInfo toiletInfo = getToiletInfoBySernum(toiletData.getSer_num());
-            if (toiletInfo != null) {
-                TblSmartToiletHealth healthInfo = getHealthInfoBySerid(toiletInfo.getId());
-                switch (sensor.getType()) {
-                    case "idtk": {
+            if (sensor.getType().equals("cubicle")) {
+                List<ToiletSensorData_cubicle> cubicles = sensor.getCubicles();
+                toiletInfo = getToiletInfoByserNumAndSerType(toiletData.getSer_num(), cubicles.get(0).getGender());
+                for (ToiletSensorData_cubicle c : cubicles) {
+                    updateCubicleInfo(toiletInfo.getId(), c);
+                }
+                updateToiletInfoSurplus(toiletInfo.getId());
+            } else {
+                toiletInfo = getToiletInfoByserNumAndSerType(toiletData.getSer_num(), sensor.getIndex());
+                if (toiletInfo != null) {
+                    healthInfo = getHealthInfoBySerid(toiletInfo.getId());
+                    switch (sensor.getType()) {
+                        case "idtk": {
 //                        toiletInfo.setRateIn(sensor.getIdtk().getRate_in());
 //                        toiletInfo.setRateOut(sensor.getIdtk().getRate_out());
 //                        if (2 == sensor.getIdtk().getFocus()) {
@@ -191,84 +201,75 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
 //                        }
 //                        toiletInfo.setUpdateTime(DateTime.now());
 //                        tblSmartToiletInfoMapper.updateByPrimaryKey(toiletInfo);
-                        break;
-                    }
-                    case "nh3": {
-                        healthInfo.setNh3(sensor.getNh3());
-                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
-                        break;
-                    }
-                    case "h2s": {
-                        healthInfo.setH2s(sensor.getH2s());
-                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
-                        break;
-                    }
-                    case "hum": {
-                        healthInfo.setHum(sensor.getHum());
-                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
-                        break;
-                    }
-                    case "temp": {
-                        healthInfo.setTemp(sensor.getTemp());
-                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
-                        break;
-                    }
-                    case "co2": {
-                        healthInfo.setCo2(sensor.getCo2());
-                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
-                        break;
-                    }
-                    case "pm25": {
-                        healthInfo.setPm25(sensor.getPm25());
-                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
-                        break;
-                    }
-                    case "voc": {
-                        healthInfo.setVoc(sensor.getVoc());
-                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
-                        break;
-                    }
-                    case "cubicle": {
-                        List<ToiletSensorData_cubicle> cubicles = sensor.getCubicles();
-                        int count = (int) cubicles.stream().filter(q -> q.getStatus() == 0).count();
-                        toiletInfo.setSurplus(count);
-                        for (ToiletSensorData_cubicle c : cubicles) {
-                            updateCubicleInfo(toiletInfo.getId(), c);
+                            break;
                         }
-                        updateToiletInfoSurplus(toiletInfo.getId());
-                        break;
+                        case "nh3": {
+                            healthInfo.setNh3(sensor.getNh3());
+                            tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
+                            break;
+                        }
+                        case "h2s": {
+                            healthInfo.setH2s(sensor.getH2s());
+                            tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
+                            break;
+                        }
+                        case "hum": {
+                            healthInfo.setHum(sensor.getHum());
+                            tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
+                            break;
+                        }
+                        case "temp": {
+                            healthInfo.setTemp(sensor.getTemp());
+                            tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
+                            break;
+                        }
+                        case "co2": {
+                            healthInfo.setCo2(sensor.getCo2());
+                            tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
+                            break;
+                        }
+                        case "pm25": {
+                            healthInfo.setPm25(sensor.getPm25());
+                            tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
+                            break;
+                        }
+                        case "voc": {
+                            healthInfo.setVoc(sensor.getVoc());
+                            tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
+                            break;
+                        }
+                        case "alarm": {
+                            break;
+                        }
+                        case "smk_alarm": {
+                            healthInfo.setSmkAlarm(sensor.getSmk_alarm().getStatus());
+                            tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
+                            break;
+                        }
+                        case "wm": {
+                            healthInfo.setWm(sensor.getWm().getValue());
+                            tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
+                            break;
+                        }
+                        case "em": {
+                            healthInfo.setEm(sensor.getEm().getValue());
+                            tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
+                            break;
+                        }
+                        case "pm": {
+                            healthInfo.setPm(sensor.getPm().getValue());
+                            tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
+                            break;
+                        }
+                        case "evl": {
+                            healthInfo.setEvl(JSON.toJSONString(sensor.getEvl()));
+                            tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
+                            break;
+                        }
                     }
-                    case "alarm": {
-                        break;
-                    }
-                    case "smk_alarm": {
-                        healthInfo.setSmkAlarm(sensor.getSmk_alarm().getStatus());
-                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
-                        break;
-                    }
-                    case "wm": {
-                        healthInfo.setWm(sensor.getWm().getValue());
-                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
-                        break;
-                    }
-                    case "em": {
-                        healthInfo.setEm(sensor.getEm().getValue());
-                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
-                        break;
-                    }
-                    case "pm": {
-                        healthInfo.setPm(sensor.getPm().getValue());
-                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
-                        break;
-                    }
-                    case "evl": {
-                        healthInfo.setEvl(JSON.toJSONString(sensor.getEvl()));
-                        tblSmartToiletHealthMapper.updateByPrimaryKey(healthInfo);
-                        break;
-                    }
+                } else {
+                    log.error("未匹配到厕所序列号：" + toiletData.getSer_num()+"传感器编号:"+sensor.getIndex()+"类型:"+sensor.getType());
                 }
-            } else {
-                log.error("未匹配到厕所序列号：" + toiletData.getSer_num());
             }
         } else {
             throw new ServiceException("厕所传感器报文解析异常");
@@ -296,13 +297,15 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
      * @param serNum 厕所序列号
      * @return 厕所信息
      */
-    private TblSmartToiletInfo getToiletInfoBySernum(String serNum) {
+    private TblSmartToiletInfo getToiletInfoByserNumAndSerType(String serNum, Integer serType) {
         Example example = new Example(TblSmartToiletInfo.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("serNum", serNum);
+        criteria.andEqualTo("serType", serType);
         TblSmartToiletInfo tblSmartToiletInfo = tblSmartToiletInfoMapper.selectOneByExample(example);
         return tblSmartToiletInfo;
     }
+
 
     /**
      * 根据厕所ID查询厕所健康状态
