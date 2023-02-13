@@ -42,4 +42,34 @@ public class primaryController {
         return AjaxResult.success();
     }
 
+    @PostMapping("/getStationLLInfo")
+    public AjaxResult getStationLLInfo(@RequestBody JSONArray result){
+        iPrimaryService.getStationLLInfo(result);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/getOLFlowAndRate")
+    public AjaxResult getOLFlowAndRate(@RequestBody JSONArray result){
+        iPrimaryService.getOLFlowAndRate(result);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/getOLWeightAndRate")
+    public AjaxResult getOLWeightAndRate(@RequestBody JSONArray result){
+        iPrimaryService.getOLWeightAndRate(result);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/getTotalWeightOver100")
+    public AjaxResult getTotalWeightOver100(@RequestBody JSONArray result){
+        iPrimaryService.getTotalWeightOver100(result);
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/getLargeTransportInfo")
+    public AjaxResult getLargeTransportInfo(@RequestBody JSONArray result){
+        iPrimaryService.getLargeTransportInfo(result);
+        return AjaxResult.success();
+    }
+
 }

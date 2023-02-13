@@ -32,8 +32,11 @@ public class TblOlWeightandrateInfo implements Serializable {
     /** 超限 0-5t 流量 */
     private Long overLoadTonflow0to5;
 
+    /** 超限 5-10t 流量*/
+    private Long overloadtonflow5to10;
+
     /** 超限 10-30t 流量 */
-    private Long overLoadTonflow0to30;
+    private Long overLoadTonflow10to30;
 
     /** 超限 30-55t 流量 */
     private Long overLoadTonflow30to55;

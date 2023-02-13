@@ -30,6 +30,6 @@ public class TblTotalWeightOver100Info implements Serializable {
     private String stationName;
 
     /** 审核后超 限流量 */
-    private String raviewFlowList;
+    private String reviewFlowList;
 
 }
