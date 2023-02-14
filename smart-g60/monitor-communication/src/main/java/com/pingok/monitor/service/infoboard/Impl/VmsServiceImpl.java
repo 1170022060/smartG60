@@ -515,12 +515,37 @@ public class VmsServiceImpl implements IVmsService {
                         wndItem.append("windows0" + "_h=" + wndText.getWinH() + nl);
                         wndItem.append(pref + "item_no=" + editList.size() + nl);
                         for (int i = 0; i < editList.size(); i++) {
-                            int fontSize = Integer.parseInt(editList.get(0).getTextSize());
-                            String text = editList.get(0).getContent().replace("<br>", "\\n");
+                            int fontSize = Integer.parseInt(editList.get(i).getTextSize());
+                            String text = editList.get(i).getContent().replace("<br>", "\\n");
                             wndItem.append(pref + "item" + i + "=500,1,0,");
-                            wndItem.append("\\C000000");
-                            wndItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, editList.get(0).getTypeface()) + fontSize + fontSize);
-                            wndItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, editList.get(0).getTextColor()) + text);
+
+                            //text <br>替换为\n
+                            String[] splitText = editList.get(i).getContent().split("<br>");
+                            //计算文字的xy坐标，x按最长文字算，y按行数
+                            int xPos = 0, yPos = 0;
+                            if (splitText.length > 0) {
+                                String splitTemp = splitText[0];
+                                for (int idx = 1; idx < splitText.length; ++idx) {
+                                    if (splitTemp.length() > splitText[idx].length()) splitTemp = splitText[idx];
+                                }
+                                int textXLen = splitTemp.length() * fontSize;
+                                int textYLen = splitText.length * fontSize;
+                                if (textXLen > W) {
+                                    xPos = 0;
+                                } else {
+                                    xPos = (W - textXLen) / 2;
+                                }
+                                if (textYLen > H) {
+                                    yPos = 0;
+                                } else {
+                                    yPos = (H - textYLen) / 2;
+                                }
+                            }
+                            String xy = String.format("%03d%03d", xPos, yPos);
+                            wndItem.append("\\C" + xy);
+                            wndItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, editList.get(i).getTypeface()) + fontSize + fontSize);
+                            wndItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, editList.get(i).getTextColor()) + text);
+                            wndItem.append(nl);
                         }
                         playlst = wndItem.toString();
                         break;
