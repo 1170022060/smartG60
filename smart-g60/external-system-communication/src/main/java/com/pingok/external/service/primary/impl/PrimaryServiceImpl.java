@@ -179,14 +179,7 @@ public class PrimaryServiceImpl implements IPrimaryService {
             JSONObject obj = result.getJSONObject(i);
 
             TblOlFlowInfo OLFlowInfo = new TblOlFlowInfo();
-            Example example = new Example(TblOlFlowInfo.class);
-            example.createCriteria().andEqualTo("nodeId", obj.getString("nodeId"));
-            boolean isExsit = true;
-            if (tblOlFlowMapper.selectOneByExample(example) == null){
-                OLFlowInfo = new TblOlFlowInfo();
-                OLFlowInfo.setId(remoteIdProducerService.nextId());
-                isExsit = false;
-            }
+            OLFlowInfo.setId(remoteIdProducerService.nextId());
             OLFlowInfo.setStatdate(obj.getDate("statdate"));
             OLFlowInfo.setNodeName(obj.getString("nodeName"));
             OLFlowInfo.setNodeId(obj.getString("nodeId"));
@@ -196,10 +189,7 @@ public class PrimaryServiceImpl implements IPrimaryService {
             OLFlowInfo.setInterceptFlow(obj.getLong("interceptFlow"));
             OLFlowInfo.setSecondReviewFlow(obj.getLong("secondReviewFlow"));
             OLFlowInfo.setSecondReviewRate(obj.getLong("secondReviewRate"));
-
-            if (isExsit) tblOlFlowMapper.updateByPrimaryKey(OLFlowInfo);
-            else tblOlFlowMapper.insert(OLFlowInfo);
-
+            tblOlFlowMapper.insert(OLFlowInfo);
         }
     }
 
