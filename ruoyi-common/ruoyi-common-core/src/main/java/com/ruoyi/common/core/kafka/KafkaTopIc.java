@@ -46,4 +46,6 @@ public class KafkaTopIc {
     public final static String OPT_WORK_INFO = "optWorkInfo";
 
     public final static String CHARGE_SIGNAL_GANTRY_V2X = "chargeSignalGantryV2x";
+
+    public final static String PRIMARY_VEHICLE_GET_DATA = "primaryVehicleGetData";
 }

@@ -38,4 +38,6 @@ public class KafkaGroup {
     public final static String CHARGE_SIGNAL_SWITCH_STATUS_GROUP = "chargeSignalSwitchStatusGroup";
 
     public final static String CHARGE_SIGNAL_FIREWALL_STATUS_GROUP = "chargeSignalFirewallStatusGroup";
+
+    public final static String PRIMARY_VEHICLE_GET_DATA_GROUP = "primaryVehicleGetDataGroup";
 }
