@@ -23,6 +23,11 @@ public interface IPrimaryService {
     void getOWInfo(JSONArray result);
 
     /**
+     * 开始发起kafka消息
+     */
+    void collect();
+
+    /**
      * 超限流量分布数据
      * @param result
      */

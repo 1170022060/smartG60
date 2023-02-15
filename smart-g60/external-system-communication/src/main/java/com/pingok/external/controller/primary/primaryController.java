@@ -6,10 +6,7 @@ import com.pingok.external.service.primary.IPrimaryService;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
@@ -33,6 +30,13 @@ public class primaryController {
     @PostMapping("/getOWInfo")
     public AjaxResult getOWInfo(@RequestBody JSONArray result){
         iPrimaryService.getOWInfo(result);
+        return AjaxResult.success();
+    }
+
+    @GetMapping
+    public AjaxResult collect() {
+//        开始发起kafka消息
+        iPrimaryService.collect();
         return AjaxResult.success();
     }
 
