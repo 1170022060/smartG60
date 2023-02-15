@@ -180,7 +180,7 @@ public class PrimaryServiceImpl implements IPrimaryService {
 
             TblOlFlowInfo OLFlowInfo = new TblOlFlowInfo();
             Example example = new Example(TblOlFlowInfo.class);
-            example.createCriteria().andEqualTo("nodeId", obj.getLong("nodeId"));
+            example.createCriteria().andEqualTo("nodeId", obj.getString("nodeId"));
             boolean isExsit = true;
             if (tblOlFlowMapper.selectOneByExample(example) == null){
                 OLFlowInfo = new TblOlFlowInfo();
