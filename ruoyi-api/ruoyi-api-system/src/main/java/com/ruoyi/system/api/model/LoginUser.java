@@ -3,6 +3,7 @@ package com.ruoyi.system.api.model;
 import java.io.Serializable;
 import java.util.Set;
 import com.ruoyi.system.api.domain.SysUser;
+import com.ruoyi.system.api.domain.internet.InternetUser;
 
 /**
  * 用户信息
@@ -57,6 +58,8 @@ public class LoginUser implements Serializable
      * 用户信息
      */
     private SysUser sysUser;
+
+    private InternetUser internetUser;
 
     public String getToken()
     {
@@ -146,5 +149,13 @@ public class LoginUser implements Serializable
     public void setSysUser(SysUser sysUser)
     {
         this.sysUser = sysUser;
+    }
+
+    public InternetUser getInternetUser() {
+        return internetUser;
+    }
+
+    public void setInternetUser(InternetUser internetUser) {
+        this.internetUser = internetUser;
     }
 }
