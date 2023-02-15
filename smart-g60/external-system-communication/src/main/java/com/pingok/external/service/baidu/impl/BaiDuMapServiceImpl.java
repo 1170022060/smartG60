@@ -85,7 +85,7 @@ public class BaiDuMapServiceImpl implements IBaiDuMapService {
                 if (ret.containsKey("status") && ret.getString("status").equals("0")) {
                     if (ret.getJSONObject("result").getInteger("toBusStatus") == 0) {
                         tblBaiDuMapRecord.setUpdateTime(DateUtils.getNowDate());
-                        tblBaiDuMapRecord.setBaiduEventId(ret.getJSONObject("result").getLong("baiduEventId"));
+                        tblBaiDuMapRecord.setBaiduEventId(ret.getJSONObject("result").getString("baiduEventId"));
                     } else {
                         tblBaiDuMapRecord.setOnlineFlag(2);
                         tblBaiDuMapRecord.setUpdateTime(DateUtils.getNowDate());

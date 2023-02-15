@@ -187,6 +187,6 @@ public class TblBaiDuMapRecord implements Serializable {
     /**
      * 百度事件ID
      */
-    private Long baiduEventId;
+    private String baiduEventId;
 
 }
