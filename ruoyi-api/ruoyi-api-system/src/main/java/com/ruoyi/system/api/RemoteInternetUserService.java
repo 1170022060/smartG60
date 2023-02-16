@@ -8,10 +8,7 @@ import com.ruoyi.system.api.domain.internet.InternetUser;
 import com.ruoyi.system.api.factory.RemoteIntegerUserFallbackFactory;
 import com.ruoyi.system.api.model.LoginUser;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 第三方系统授权服务
@@ -22,6 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface RemoteInternetUserService {
 
 
-    @PostMapping("/internetUser/selectByUserName")
+    @GetMapping("/internetUser/selectByUserName")
     R<LoginUser> selectByUserName(@RequestParam(value = "userName") String userName, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
 }

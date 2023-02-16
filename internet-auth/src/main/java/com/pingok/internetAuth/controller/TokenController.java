@@ -40,7 +40,7 @@ public class TokenController
         // 用户登录
         LoginUser userInfo = sysLoginService.login(form.getAppKey(), form.getAppSecret());
         // 获取登录token
-        return R.ok(tokenService.createToken(userInfo));
+        return R.ok(tokenService.createTokenInternet(userInfo));
     }
 
     @DeleteMapping("cancellation")

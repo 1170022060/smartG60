@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.common.utils.MD5Utils;
 import com.pingok.external.config.BeiDouConfig;
-import com.pingok.external.domain.gps.TblMaintainCarGps;
 import com.pingok.external.domain.gps.TblMaintainCarGpsLog;
 import com.pingok.external.mapper.gps.TblMaintainCarGpsLogMapper;
 import com.pingok.external.mapper.gps.TblMaintainCarGpsMapper;
@@ -15,9 +14,9 @@ import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
+import com.ruoyi.system.api.domain.gps.TblMaintainCarGps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 

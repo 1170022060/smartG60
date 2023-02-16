@@ -32,6 +32,7 @@ public class InternetLogininforServiceImpl implements IInternetLogininforService
     public int insertLogininfor(InternetLogininfor logininfor) {
         logininfor.setInfoId(remoteIdProducerService.nextId());
         logininfor.setCreateTime(DateUtils.getNowDate());
+        logininfor.setAccessTime(DateUtils.getNowDate());
         logininfor.setCreateBy(SecurityUtils.getUsername());
         return logininforMapper.insert(logininfor);
     }

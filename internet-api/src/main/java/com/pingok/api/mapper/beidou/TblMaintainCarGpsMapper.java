@@ -1,4 +1,4 @@
-package com.pingok.external.mapper.gps;
+package com.pingok.api.mapper.beidou;
 
 import com.ruoyi.common.core.mapper.CommonRepository;
 import com.ruoyi.system.api.domain.gps.TblMaintainCarGps;
