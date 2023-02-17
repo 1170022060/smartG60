@@ -25,7 +25,7 @@ public class TblOwInfo implements Serializable {
     private Long id;
 
     /** 数据唯一标识 */
-    private Long uniqueId;
+    private String uniqueId;
 
     /** 治超站或高速收费站名称 */
     private String siteName;
@@ -37,13 +37,13 @@ public class TblOwInfo implements Serializable {
     private String equipCode;
 
     /** 检测时间 */
-    private Date checkTime;
+    private Integer checkTime;
 
     /** 车辆号牌 */
     private String vehicleNo;
 
     /** 车牌颜色 */
-    private Long plateColor;
+    private Integer plateColor;
 
     /** 车型代码 */
     private String vehicleAxlesType;
