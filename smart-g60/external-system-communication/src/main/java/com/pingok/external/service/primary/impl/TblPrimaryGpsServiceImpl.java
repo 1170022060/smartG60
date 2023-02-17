@@ -2,7 +2,9 @@ package com.pingok.external.service.primary.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.external.domain.primary.TblPrimaryGpsInfo;
+import com.pingok.external.domain.primary.TblPrimaryGpsInfoLog;
 import com.pingok.external.domain.primary.TblVehicleTrailInfo;
+import com.pingok.external.mapper.primary.TblPrimaryGpsLogMapper;
 import com.pingok.external.mapper.primary.TblPrimaryGpsMapper;
 import com.pingok.external.service.primary.ITblPrimaryGpsService;
 import com.ruoyi.common.core.utils.StringUtils;
@@ -23,6 +25,8 @@ public class TblPrimaryGpsServiceImpl implements ITblPrimaryGpsService {
 
     @Autowired
     private TblPrimaryGpsMapper tblPrimaryGpsMapper;
+    @Autowired
+    private TblPrimaryGpsLogMapper tblPrimaryGpsLogMapper;
 
 
     @Override
@@ -36,17 +40,30 @@ public class TblPrimaryGpsServiceImpl implements ITblPrimaryGpsService {
                 primaryGps.setId(remoteIdProducerService.nextId());
                 isExsit = false;
             }
-            primaryGps.setLicense(result.getString("license"));
-            primaryGps.setColor(result.getString("color"));
-            primaryGps.setLon(result.getLong("lon"));
-            primaryGps.setLat(result.getLong("lat"));
-            primaryGps.setTime(result.getDate("time"));
-            primaryGps.setSpeed(result.getLong("speed"));
-            primaryGps.setDirection(result.getLong("direction"));
-            primaryGps.setAltitude(result.getLong("altitude"));
-            primaryGps.setAcc(result.getInteger("acc"));
+        primaryGps.setLicense(result.getString("license"));
+        primaryGps.setColor(result.getString("color"));
+        primaryGps.setLon(result.getLong("lon"));
+        primaryGps.setLat(result.getLong("lat"));
+        primaryGps.setTime(result.getDate("time"));
+        primaryGps.setSpeed(result.getLong("speed"));
+        primaryGps.setDirection(result.getLong("direction"));
+        primaryGps.setAltitude(result.getLong("altitude"));
+        primaryGps.setAcc(result.getInteger("acc"));
 
-            if (isExsit) tblPrimaryGpsMapper.updateByPrimaryKey(primaryGps);
-            else tblPrimaryGpsMapper.insert(primaryGps);
+        if (isExsit) tblPrimaryGpsMapper.updateByPrimaryKey(primaryGps);
+        else tblPrimaryGpsMapper.insert(primaryGps);
+
+        TblPrimaryGpsInfoLog primaryGpsLog = new TblPrimaryGpsInfoLog();
+        primaryGpsLog.setId(remoteIdProducerService.nextId());
+        primaryGpsLog.setLicense(result.getString("license"));
+        primaryGpsLog.setColor(result.getString("color"));
+        primaryGpsLog.setLon(result.getLong("lon"));
+        primaryGpsLog.setLat(result.getLong("lat"));
+        primaryGpsLog.setTime(result.getDate("time"));
+        primaryGpsLog.setSpeed(result.getLong("speed"));
+        primaryGpsLog.setDirection(result.getLong("direction"));
+        primaryGpsLog.setAltitude(result.getLong("altitude"));
+        primaryGpsLog.setAcc(result.getInteger("acc"));
+        tblPrimaryGpsLogMapper.insert(primaryGpsLog);
     }
 }
