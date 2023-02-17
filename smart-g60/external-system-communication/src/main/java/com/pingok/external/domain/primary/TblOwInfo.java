@@ -37,7 +37,7 @@ public class TblOwInfo implements Serializable {
     private String equipCode;
 
     /** 检测时间 */
-    private Integer checkTime;
+    private String checkTime;
 
     /** 车辆号牌 */
     private String vehicleNo;
