@@ -152,7 +152,7 @@ public class Consumer {
                 Object msg = message.get();
                 JSONObject jo = JSONObject.parseObject(String.valueOf(msg));
                 iPrimaryGpsService.getPrimaryGps(jo);
-                ack.acknowledge();
+//                ack.acknowledge();
             } catch (Exception e) {
                 log.error("primaryGpsCollect 消费者，Topic" + topic + ",Message:" + message.get() + "处理失败。错误信息：" + e.getMessage());
             }
@@ -167,7 +167,7 @@ public class Consumer {
                 Object msg = message.get();
                 JSONObject jo = JSONObject.parseObject(String.valueOf(msg));
                 iOwService.getOwInfo(jo);
-                ack.acknowledge();
+//                ack.acknowledge();
             } catch (Exception e) {
                 log.error("OwCollect 消费者，Topic" + topic + ",Message:" + message.get() + "处理失败。错误信息：" + e.getMessage());
             }
