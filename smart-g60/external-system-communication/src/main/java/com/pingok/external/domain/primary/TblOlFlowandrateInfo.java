@@ -4,6 +4,7 @@ import lombok.Data;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 超限流量、超限率时间对比信息表(TBL_OL_FLOWANDRATE_INFO)
@@ -26,10 +27,17 @@ public class TblOlFlowandrateInfo implements Serializable {
     /** 站点名称(收费广 场) */
     private String name;
 
+    /** 站id */
+    private String nodeId;
+
     /** 超限流量 24 小时 分布 */
     private String data;
 
     /** 超限率 24 小时分 布 */
     private String rate;
+
+    /** 日期 */
+    private String time;
+
 
 }

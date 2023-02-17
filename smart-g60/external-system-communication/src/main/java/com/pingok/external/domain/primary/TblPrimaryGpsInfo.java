@@ -1,4 +1,5 @@
 package com.pingok.external.domain.primary;
+import io.swagger.models.auth.In;
 import lombok.Data;
 
 import javax.persistence.Id;
@@ -28,7 +29,7 @@ public class TblPrimaryGpsInfo implements Serializable {
     private String license;
 
     /** 车牌颜色 */
-    private Long color;
+    private Integer color;
 
     /** 原始经度 */
     private Long lon;
@@ -49,6 +50,6 @@ public class TblPrimaryGpsInfo implements Serializable {
     private Long altitude;
 
     /** acc状态,0关 1开 */
-    private Long acc;
+    private Integer acc;
 
 }
