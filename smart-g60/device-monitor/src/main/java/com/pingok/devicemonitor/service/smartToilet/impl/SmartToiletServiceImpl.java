@@ -182,11 +182,11 @@ public class SmartToiletServiceImpl implements ISmartToiletService {
             // 1,查询传感器信息；2，存储健康状态（上报数据）；3，存储占用情况、报警状态
             if (sensor.getType().equals("cubicle")) {
                 List<ToiletSensorData_cubicle> cubicles = sensor.getCubicles();
-                toiletInfo = getToiletInfoByserNumAndSerType(toiletData.getSer_num(), cubicles.get(0).getGender());
                 for (ToiletSensorData_cubicle c : cubicles) {
+                    toiletInfo = getToiletInfoByserNumAndSerType(toiletData.getSer_num(), c.getGender());
                     updateCubicleInfo(toiletInfo.getId(), c);
+                    updateToiletInfoSurplus(toiletInfo.getId());
                 }
-                updateToiletInfoSurplus(toiletInfo.getId());
             } else {
                 toiletInfo = getToiletInfoByserNumAndSerType(toiletData.getSer_num(), sensor.getIndex());
                 if (toiletInfo != null) {
