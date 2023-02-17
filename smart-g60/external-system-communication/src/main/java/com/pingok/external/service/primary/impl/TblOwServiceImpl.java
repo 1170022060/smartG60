@@ -27,7 +27,7 @@ public class TblOwServiceImpl implements ITblOwService {
         OWInfo.setSiteName(obj.getString("siteName"));
         OWInfo.setSiteCode(obj.getString("siteCode"));
         OWInfo.setEquipCode(obj.getString("equipCode"));
-        OWInfo.setCheckTime(obj.getInteger("checkTime"));
+        OWInfo.setCheckTime(obj.getString("checkTime"));
         OWInfo.setVehicleNo(obj.getString("vehicleNo"));
         OWInfo.setPlateColor(obj.getInteger("plateColor"));
         OWInfo.setVehicleAxlesType(obj.getString("vehicleAxlesType"));
