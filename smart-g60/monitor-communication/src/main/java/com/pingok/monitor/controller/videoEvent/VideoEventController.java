@@ -41,7 +41,7 @@ public class VideoEventController extends BaseController {
     @PostMapping
     public AjaxResult videoEvent(@RequestParam String type, @RequestBody JSONObject object) {
         String data = new String(Base64.getDecoder().decode(object.getString("data")));
-        log.info("type----" + type);
+        log.info("type----" + type + "-----data----" + data);
         switch (type) {
 //            case "FLUX":
 //                TblEventFlux tblEventFlux = JSON.parseObject(data, TblEventFlux.class);
