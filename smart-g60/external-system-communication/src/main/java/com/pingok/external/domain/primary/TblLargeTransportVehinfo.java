@@ -22,7 +22,7 @@ public class TblLargeTransportVehinfo implements Serializable {
 
     /** id */
     @Id
-    private Long id;
+    private String id;
 
     /** mainId */
     private String mainId;

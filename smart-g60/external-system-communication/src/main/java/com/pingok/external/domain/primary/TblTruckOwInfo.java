@@ -1,4 +1,5 @@
 package com.pingok.external.domain.primary;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.Id;
@@ -25,10 +26,10 @@ public class TblTruckOwInfo implements Serializable {
     private Long id;
 
     /** 统计日期 */
-    private Date statdate;
+    private String statDate;
 
     /** 日期小时 */
-    private Date statdateHour;
+    private String statDateHour;
 
     /** 站点名称 */
     private String nodeName;
@@ -37,6 +38,6 @@ public class TblTruckOwInfo implements Serializable {
     private String nodeId;
 
     /** 合计车祸总量 */
-    private Long sumTaotalWeight;
+    private Long sumTotalWeight;
 
 }

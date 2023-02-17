@@ -47,5 +47,21 @@ public class KafkaTopIc {
 
     public final static String CHARGE_SIGNAL_GANTRY_V2X = "chargeSignalGantryV2x";
 
-    public final static String PRIMARY_VEHICLE_GET_DATA = "primaryVehicleGetData";
+    public final static String PRIMARY_VEHICLE_OLFLOW = "primaryVehicleOLFlow";
+
+    public final static String PRIMARY_VEHICLE_TRUCKOW = "primaryVehicleTruckOW";
+
+    public final static String PRIMARY_VEHICLE_STATIONLL = "primaryVehicleStationLL";
+
+    public final static String PRIMARY_VEHICLE_OLFLOW_AND_RATE = "primaryVehicleOlFlowAndRate";
+
+    public final static String PRIMARY_VEHICLE_OLWEIGHT_AND_RATE = "primaryVehicleOlWeightAndRate";
+
+    public final static String PRIMARY_VEHICLE_WEIGHT_OVER100 = "primaryVehicleWeightOver100";
+
+    public final static String PRIMARY_VEHICLE_LARGE_TRANSPORT = "primaryVehicleLargeTransport";
+
+    public final static String G60 = "g60";
+
+    public final static String G60_OVER_VEHICLE = "g60_over_vehicle";
 }

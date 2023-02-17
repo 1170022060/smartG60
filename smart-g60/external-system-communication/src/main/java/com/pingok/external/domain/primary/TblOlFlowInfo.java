@@ -1,4 +1,5 @@
 package com.pingok.external.domain.primary;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.Id;
@@ -26,7 +27,8 @@ public class TblOlFlowInfo implements Serializable {
     private Long id;
 
     /** 统计日期 */
-    private Date statdate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private String statDate;
 
     /** 站点名称(收费广 场) */
     private String nodeName;

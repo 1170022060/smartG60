@@ -23,6 +23,9 @@ public class TblOlWeightandrateInfo implements Serializable {
     @Id
     private Long id;
 
+    /** 站Id */
+    private String nodeId;
+
     /** 超限总量 */
     private Long overLoadFlow;
 
