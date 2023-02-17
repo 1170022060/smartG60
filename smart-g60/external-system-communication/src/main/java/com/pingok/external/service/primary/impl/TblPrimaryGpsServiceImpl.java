@@ -37,7 +37,7 @@ public class TblPrimaryGpsServiceImpl implements ITblPrimaryGpsService {
                 isExsit = false;
             }
             primaryGps.setLicense(result.getString("license"));
-            primaryGps.setColor(result.getInteger("color"));
+            primaryGps.setColor(result.getString("color"));
             primaryGps.setLon(result.getLong("lon"));
             primaryGps.setLat(result.getLong("lat"));
             primaryGps.setTime(result.getDate("time"));

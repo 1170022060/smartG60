@@ -29,7 +29,7 @@ public class TblPrimaryGpsInfo implements Serializable {
     private String license;
 
     /** 车牌颜色 */
-    private Integer color;
+    private String color;
 
     /** 原始经度 */
     private Long lon;
