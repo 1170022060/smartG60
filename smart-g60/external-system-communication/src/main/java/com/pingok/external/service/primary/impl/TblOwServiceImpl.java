@@ -23,13 +23,13 @@ public class TblOwServiceImpl implements ITblOwService {
         TblOwInfo OWInfo = new TblOwInfo();
 
         OWInfo.setId(remoteIdProducerService.nextId());
-        OWInfo.setUniqueId(obj.getLong("uniqueId"));
+        OWInfo.setUniqueId(obj.getString("uniqueId"));
         OWInfo.setSiteName(obj.getString("siteName"));
         OWInfo.setSiteCode(obj.getString("siteCode"));
         OWInfo.setEquipCode(obj.getString("equipCode"));
-        OWInfo.setCheckTime(obj.getDate("checkTime"));
+        OWInfo.setCheckTime(obj.getInteger("checkTime"));
         OWInfo.setVehicleNo(obj.getString("vehicleNo"));
-        OWInfo.setPlateColor(obj.getLong("plateColor"));
+        OWInfo.setPlateColor(obj.getInteger("plateColor"));
         OWInfo.setVehicleAxlesType(obj.getString("vehicleAxlesType"));
         OWInfo.setTotal(obj.getLong("total"));
         OWInfo.setAxles(obj.getLong("axles"));
