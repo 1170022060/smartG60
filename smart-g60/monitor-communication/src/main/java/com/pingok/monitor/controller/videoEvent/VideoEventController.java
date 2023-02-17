@@ -41,7 +41,6 @@ public class VideoEventController extends BaseController {
     @PostMapping
     public AjaxResult videoEvent(@RequestParam String type, @RequestBody JSONObject object) {
         String data = new String(Base64.getDecoder().decode(object.getString("data")));
-        log.info("type----" + type + "-----data----" + data);
         switch (type) {
 //            case "FLUX":
 //                TblEventFlux tblEventFlux = JSON.parseObject(data, TblEventFlux.class);
@@ -50,6 +49,7 @@ public class VideoEventController extends BaseController {
 //                break;
             case "PLATE_INFO":
                 TblEventPlateInfo tblEventPlateInfo = JSON.parseObject(data, TblEventPlateInfo.class);
+                log.info("PLATE_INFO-----"+tblEventPlateInfo.getSzText()+"------"+tblEventPlateInfo.getSzSourceCode());
                 if (StringUtils.isCarNo(tblEventPlateInfo.getSzText())) {
                     iVideoEventService.plateInfo(tblEventPlateInfo);
                     iVideoEventService.updatePlateInfo(tblEventPlateInfo);
@@ -57,6 +57,7 @@ public class VideoEventController extends BaseController {
                 break;
             case "VEHICLE_EVENT":
                 TblEventVehicleEvent tblEventVehicleEvent = JSON.parseObject(data, TblEventVehicleEvent.class);
+                log.info("VEHICLE_EVENT-----"+tblEventVehicleEvent.getUiEventType());
                 List<Integer> list = Arrays.asList(5, 6, 14, 15, 17, 10016, 37);
                 if (!list.contains(tblEventVehicleEvent.getUiEventType())) {
                     iVideoEventService.vehicleEvent(tblEventVehicleEvent);
