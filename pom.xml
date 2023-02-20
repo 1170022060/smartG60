@@ -252,6 +252,8 @@
         <module>station-roster</module>
         <module>gantry</module>
         <module>gateway-internet</module>
+        <module>internet-auth</module>
+        <module>internet-api</module>
     </modules>
     <packaging>pom</packaging>
 

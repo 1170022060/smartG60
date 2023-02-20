@@ -1,4 +1,4 @@
-package com.pingok.external.domain.gps;
+package com.ruoyi.system.api.domain.gps;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -6,7 +6,6 @@ import lombok.Data;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
