@@ -80,16 +80,29 @@ public class TblOlWeightAndRateServiceImpl implements ITblOlWeightAndRateService
                 isExsit = false;
             }
             OLWeightInfo.setNodeId(obj.getString("nodeId"));
-            OLWeightInfo.setOverLoadFlow(obj.getLong("overLoadFlow"));
-            OLWeightInfo.setTotalFlow(obj.getLong("totalFlow"));
-            OLWeightInfo.setOverLoadTonflow0to5(obj.getLong("overLoadTonflow0to5"));
+            OLWeightInfo.setOverLoadFlow(obj.getLong("overloadflow"));
+            OLWeightInfo.setTotalFlow(obj.getLong("totalflow"));
+            OLWeightInfo.setOverLoadTonflow0to5(obj.getLong("overloadtonflow0to5"));
             OLWeightInfo.setOverloadtonflow5to10(obj.getLong("overloadtonflow5to10"));
-            OLWeightInfo.setOverLoadTonflow10to30(obj.getLong("overLoadTonflow10to30"));
-            OLWeightInfo.setOverLoadTonflow30to55(obj.getLong("overLoadTonflow30to55"));
-            OLWeightInfo.setOverLoadTonflow55to100(obj.getLong("overLoadTonflow55to100"));
-            OLWeightInfo.setOverLoadTonflow100(obj.getLong("overLoadTonflow100"));
-            OLWeightInfo.setOverLoadTonrate0to50(obj.getLong("overLoadTonrate0to50"));
-            OLWeightInfo.setOverLoadTonerate50(obj.getLong("overLoadTonerate50"));
+            OLWeightInfo.setOverLoadTonflow10to30(obj.getLong("overloadtonflow10to30"));
+            OLWeightInfo.setOverLoadTonflow30to55(obj.getLong("overloadtonflow30to55"));
+            OLWeightInfo.setOverLoadTonflow55to100(obj.getLong("overloadtonflow55to100"));
+            OLWeightInfo.setOverLoadTonflow100(obj.getLong("overloadtonflow100"));
+            OLWeightInfo.setOverLoadTonrate0to50(obj.getLong("overloadtonrate0to50"));
+            OLWeightInfo.setOverLoadTonerate50(obj.getLong("overloadtonrate50"));
+
+            Date dBefore = new Date();
+            Date dToday = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dToday);//把当前时间赋给日历
+            calendar.add(Calendar.DAY_OF_MONTH, -1);  //设置为前一天
+            dBefore = calendar.getTime();   //得到前一天的时间
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); //设置时间格式
+            String startDate = sdf.format(dBefore);    //格式化前一天
+            String endDate = sdf.format(dToday);    //格式化当天
+
+            OLWeightInfo.setStartDate(startDate);
+            OLWeightInfo.setEndDate(endDate);
 
             if (isExsit) tblOlWeightAndRateMapper.updateByPrimaryKey(OLWeightInfo);
             else tblOlWeightAndRateMapper.insert(OLWeightInfo);

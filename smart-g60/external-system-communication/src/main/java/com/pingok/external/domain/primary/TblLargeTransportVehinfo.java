@@ -22,7 +22,9 @@ public class TblLargeTransportVehinfo implements Serializable {
 
     /** id */
     @Id
-    private String id;
+    private Long id;
+
+    private String listId;
 
     /** mainId */
     private String mainId;
@@ -52,7 +54,7 @@ public class TblLargeTransportVehinfo implements Serializable {
     private String goodsWeight;
 
     /** 车身长度 */
-    private String bodyLenght;
+    private String bodyLength;
 
     /** 车身宽度 */
     private String bodyWidth;
@@ -62,6 +64,9 @@ public class TblLargeTransportVehinfo implements Serializable {
 
     /** axleLoadDist */
     private String axleLoadDist;
+
+    /** dateStart */
+    private String dateStart;
 
     /** dateEnd */
     private String dateEnd;

@@ -11,7 +11,7 @@ public interface ITblTotalWeightOver100Service {
     void collect();
 
     /**
-     * 超限流量分布数据
+     * 按治超站统计车货总重大于 100 吨超限量数据
      * @param result
      */
     void getTotalWeightOver100(JSONArray result);

@@ -28,4 +28,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.ruoyi.system.api.factory.RemoteArtemisFallbackFactory,\
   com.ruoyi.system.api.factory.RemoteWeatherFallbackFactory,\
   com.ruoyi.system.api.factory.RemoteIntegerLogFallbackFactory,\
-  com.ruoyi.system.api.factory.RemoteIntegerUserFallbackFactory
+  com.ruoyi.system.api.factory.RemoteIntegerUserFallbackFactory,\
+  com.ruoyi.system.api.factory.RemotePrimaryFallbackFactory
