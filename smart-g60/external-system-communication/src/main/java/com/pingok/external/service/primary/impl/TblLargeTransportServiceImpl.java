@@ -42,7 +42,7 @@ public class TblLargeTransportServiceImpl implements ITblLargeTransportService {
             kafkaEnum.setData(JSON.toJSONString(params));
             remoteKafkaService.send(kafkaEnum);
         } catch (Exception e) {
-            log.error("超限流量、超限率时间对比数据获取异常：" + e.getMessage());
+            log.error("申请大件运输车辆信息数据获取异常：" + e.getMessage());
             ret = -1;
         }
     }
@@ -53,21 +53,22 @@ public class TblLargeTransportServiceImpl implements ITblLargeTransportService {
             JSONObject obj = result.getJSONObject(i);
 
             TblLargeTransportVehinfo LargeTransportInfo = new TblLargeTransportVehinfo();
-
-            LargeTransportInfo.setId(obj.getString("Id"));
+            LargeTransportInfo.setId(remoteIdProducerService.nextId());
+            LargeTransportInfo.setListId(obj.getString("id"));
             LargeTransportInfo.setMainId(obj.getString("mainId"));
-            LargeTransportInfo.setRecordNo(obj.getString("recordNo"));
+            LargeTransportInfo.setRecordNo(obj.getString("recordno"));
             LargeTransportInfo.setCertNo(obj.getString("certNo"));
             LargeTransportInfo.setTransportUnit(obj.getString("transportUnit"));
-            LargeTransportInfo.setVehicleLicense(obj.getString("vehicleLicense"));
+            LargeTransportInfo.setVehicleLicense(obj.getString("vehiclelicense"));
             LargeTransportInfo.setVehicleType(obj.getString("vehicleType"));
             LargeTransportInfo.setVehicleWeight(obj.getString("vehicleWeight"));
             LargeTransportInfo.setGoodsName(obj.getString("goodsName"));
             LargeTransportInfo.setGoodsWeight(obj.getString("goodsWeight"));
-            LargeTransportInfo.setBodyLenght(obj.getString("bodyLenght"));
+            LargeTransportInfo.setBodyLength(obj.getString("bodyLength"));
             LargeTransportInfo.setBodyWidth(obj.getString("bodyWidth"));
             LargeTransportInfo.setBodyHeight(obj.getString("bodyHeight"));
             LargeTransportInfo.setAxleLoadDist(obj.getString("axleLoadDist"));
+            LargeTransportInfo.setDateStart(obj.getString("dateStart"));
             LargeTransportInfo.setDateEnd(obj.getString("dateEnd"));
             LargeTransportInfo.setRoute(obj.getString("route"));
             LargeTransportInfo.setCertificatUnit(obj.getString("certificatUnit"));

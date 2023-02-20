@@ -56,4 +56,8 @@ public class TblOlWeightandrateInfo implements Serializable {
     /** 超限率 50%以上流量 */
     private Long overLoadTonerate50;
 
+    private String startDate;
+
+    private String endDate;
+
 }
