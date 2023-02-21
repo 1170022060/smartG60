@@ -562,7 +562,7 @@ public class VmsServiceImpl implements IVmsService {
 
                         for (int j = 0; j < List.size(); j++) {
                             wndItem.append(pref + "item" + j + "=500,1,0,");
-                            String picXy = String.format("%03d%03d", 90, (H - 96) / 2);
+                            String picXy = String.format("%03d%03d", 20, (H - 96) / 2);
                             wndItem.append("\\C" + picXy);
                             wndItem.append("\\P" + List.get(j).getPicId());
                             //text <br>替换为\n
@@ -683,17 +683,17 @@ public class VmsServiceImpl implements IVmsService {
                         wndItem.append("nwindows=" + 8 + nl);
 
                         for (int i = 0; i < pubList.size(); i++) {
-                            int winX1 = rgW * i + lineSize * i, winX2 = rgW * (i + 1) + lineSize * i, winW = rgW,winH=H-picSize;
+                            int winX1 = rgW * i + lineSize * i, winX2 = rgW * (i + 1) + lineSize * i, winW = rgW, winH = H - picSize;
                             List<VmsPubInfo> textList = pubList.get(i);
 
-                            if (i>0) pref = "windows" + i + "_";
-                            int m = i * 2 +1;
+                            if (i > 0) pref = "windows" + i + "_";
+                            int m = i * 2 + 1;
 
                             String[] splitText = null;
                             int fontSize = 48;
                             for (int j = 0; j < textList.size(); j++) {
-                                if(textList.get(j).getContent().length()>0){
-                                    wndItem.append("windows" + 0  + "_x=" + winX1 + nl);
+                                if (textList.get(0).getContent().length() > 0) {
+                                    wndItem.append("windows" + 0 + "_x=" + winX1 + nl);
                                     wndItem.append("windows" + 0 + "_y=" + 0 + nl);
                                     wndItem.append("windows" + 0 + "_w=" + W + nl);
                                     wndItem.append("windows" + 0 + "_h=" + winH + nl);
@@ -701,18 +701,19 @@ public class VmsServiceImpl implements IVmsService {
                                     wndItem.append(pref + "item" + j + "=500,1,0,");
 
                                     //text <br>替换为\n
-                                    splitText = textList.get(j).getContent().split("<br>");
+                                    splitText = textList.get(0).getContent().split("<br>");
                                     //计算文字的xy坐标，x按最长文字算，y按行数
                                     int xPos = 0, yPos = 0;
-                                    fontSize = Integer.parseInt(textList.get(j).getTextSize());
+                                    fontSize = Integer.parseInt(textList.get(0).getTextSize());
                                     if (splitText.length > 0) {
                                         String splitTemp = splitText[0];
                                         for (int idx = 1; idx < splitText.length; ++idx) {
-                                            if (splitTemp.length() > splitText[idx].length()) splitTemp = splitText[idx];
+                                            if (splitTemp.length() > splitText[idx].length())
+                                                splitTemp = splitText[idx];
                                         }
                                         int textXLen = splitTemp.length() * fontSize;
                                         int textYLen = splitText.length * fontSize;
-                                        if (textXLen > winW) {
+                                        if (textXLen > W) {
                                             xPos = 0;
                                         } else {
                                             xPos = (W - textXLen) / 2;
@@ -720,15 +721,15 @@ public class VmsServiceImpl implements IVmsService {
                                         if (textYLen > H) {
                                             yPos = 0;
                                         } else {
-                                            yPos = (H-picSize - textYLen) / 2;
+                                            yPos = (H - picSize - textYLen) / 2;
                                         }
                                     }
                                     String xy = String.format("%03d%03d", xPos, yPos);
-                                    String text = textList.get(j).getContent().replace("<br>", "\\n");
+                                    String text = textList.get(0).getContent().replace("<br>", "\\n");
                                     wndItem.append("\\C" + xy);
-                                    wndItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(j).getTypeface()) + fontSize + fontSize);
-                                    wndItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(j).getTextColor()) + text);
-                                    wndItem.append(nl+nl);
+                                    wndItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(0).getTypeface()) + fontSize + fontSize);
+                                    wndItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(0).getTextColor()) + text);
+                                    wndItem.append(nl + nl);
                                 }
                             }
                             wndItem.append("windows" + m + "_x=" + winX1 + nl);
@@ -742,10 +743,10 @@ public class VmsServiceImpl implements IVmsService {
                             String xyPic = String.format("%03d%03d", (rgW - picSize) / 2, 0);
                             wndItem.append("\\C" + xyPic);
                             wndItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(0).getPicId()));
-                            wndItem.append(nl+nl);
+                            wndItem.append(nl + nl);
 
                             if (i != 3) {
-                                int nn = i * 2+2;
+                                int nn = i * 2 + 2;
                                 pref = "windows" + nn + "_";
                                 if (i != 2) {
                                     wndItem.append("windows" + nn + "_x=" + winX2 + nl);
@@ -907,9 +908,9 @@ public class VmsServiceImpl implements IVmsService {
                                     }
                                 }
                                 wndItem.append(pref + "item" + j + "=500,1,0,");
-                                String picXy = String.format("%03d%03d", (winW - 96 - textXLen) / 2, (H - 96) / 2);
+                                String picXy = String.format("%03d%03d", (winW - 96 - textXLen) / 2 - 5, (H - 96) / 2);
                                 wndItem.append("\\C" + picXy);
-                                wndItem.append(picCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(j).getPicId()));
+                                wndItem.append(get96Pic(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(j).getPicId()));
                                 String xy = String.format("%03d%03d", xPos, yPos);
                                 String text = textList.get(j).getContent().replace("<br>", "\\n");
                                 wndItem.append("\\C" + xy);
@@ -1477,6 +1478,15 @@ public class VmsServiceImpl implements IVmsService {
                     break;
                 case "120":
                     picCode = "\\Ba09";
+                    break;
+                case "013":
+                    picCode = "\\Bz25";
+                    break;
+                case "014":
+                    picCode = "\\Bz26";
+                    break;
+                case "060":
+                    picCode = "\\Ba00";
                     break;
             }
         }

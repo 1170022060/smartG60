@@ -86,7 +86,7 @@ public class InfoBoardServiceImpl implements IInfoBoardService {
                 if(dev.getInteger("ret")>=0){
                     status = 1;
                     record.setStatus(status);
-                    record.setPublishContent(pubContent);
+//                    record.setPublishContent(pubContent);
                     tblReleaseRecordMapper.updateByPrimaryKey(record);
                 }
                 //通知前端（websocket）
