@@ -691,47 +691,47 @@ public class VmsServiceImpl implements IVmsService {
 
                             String[] splitText = null;
                             int fontSize = 48;
-                            for (int j = 0; j < textList.size(); j++) {
-                                if (textList.get(0).getContent().length() > 0) {
-                                    wndItem.append("windows" + 0 + "_x=" + winX1 + nl);
-                                    wndItem.append("windows" + 0 + "_y=" + 0 + nl);
-                                    wndItem.append("windows" + 0 + "_w=" + W + nl);
-                                    wndItem.append("windows" + 0 + "_h=" + winH + nl);
-                                    wndItem.append(pref + "item_no=" + textList.size() + nl);
-                                    wndItem.append(pref + "item" + j + "=500,1,0,");
+//                            for (int j = 0; j < textList.size(); j++) {
+                            if (i == 0 && textList.get(0).getContent().length() > 0) {
+                                wndItem.append("windows" + 0 + "_x=" + winX1 + nl);
+                                wndItem.append("windows" + 0 + "_y=" + 0 + nl);
+                                wndItem.append("windows" + 0 + "_w=" + W + nl);
+                                wndItem.append("windows" + 0 + "_h=" + winH + nl);
+                                wndItem.append(pref + "item_no=" + textList.size() + nl);
+                                wndItem.append(pref + "item" + 0 + "=500,1,0,");
 
-                                    //text <br>替换为\n
-                                    splitText = textList.get(0).getContent().split("<br>");
-                                    //计算文字的xy坐标，x按最长文字算，y按行数
-                                    int xPos = 0, yPos = 0;
-                                    fontSize = Integer.parseInt(textList.get(0).getTextSize());
-                                    if (splitText.length > 0) {
-                                        String splitTemp = splitText[0];
-                                        for (int idx = 1; idx < splitText.length; ++idx) {
-                                            if (splitTemp.length() > splitText[idx].length())
-                                                splitTemp = splitText[idx];
-                                        }
-                                        int textXLen = splitTemp.length() * fontSize;
-                                        int textYLen = splitText.length * fontSize;
-                                        if (textXLen > W) {
-                                            xPos = 0;
-                                        } else {
-                                            xPos = (W - textXLen) / 2;
-                                        }
-                                        if (textYLen > H) {
-                                            yPos = 0;
-                                        } else {
-                                            yPos = (H - picSize - textYLen) / 2;
-                                        }
+                                //text <br>替换为\n
+                                splitText = textList.get(0).getContent().split("<br>");
+                                //计算文字的xy坐标，x按最长文字算，y按行数
+                                int xPos = 0, yPos = 0;
+                                fontSize = Integer.parseInt(textList.get(0).getTextSize());
+                                if (splitText.length > 0) {
+                                    String splitTemp = splitText[0];
+                                    for (int idx = 1; idx < splitText.length; ++idx) {
+                                        if (splitTemp.length() > splitText[idx].length())
+                                            splitTemp = splitText[idx];
                                     }
-                                    String xy = String.format("%03d%03d", xPos, yPos);
-                                    String text = textList.get(0).getContent().replace("<br>", "\\n");
-                                    wndItem.append("\\C" + xy);
-                                    wndItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(0).getTypeface()) + fontSize + fontSize);
-                                    wndItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(0).getTextColor()) + text);
-                                    wndItem.append(nl + nl);
+                                    int textXLen = splitTemp.length() * fontSize;
+                                    int textYLen = splitText.length * fontSize;
+                                    if (textXLen > W) {
+                                        xPos = 0;
+                                    } else {
+                                        xPos = (W - textXLen) / 2;
+                                    }
+                                    if (textYLen > H) {
+                                        yPos = 0;
+                                    } else {
+                                        yPos = (H - picSize - textYLen) / 2;
+                                    }
                                 }
+                                String xy = String.format("%03d%03d", xPos, yPos);
+                                String text = textList.get(0).getContent().replace("<br>", "\\n");
+                                wndItem.append("\\C" + xy);
+                                wndItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(0).getTypeface()) + fontSize + fontSize);
+                                wndItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, textList.get(0).getTextColor()) + text);
+                                wndItem.append(nl + nl);
                             }
+//                            }
                             wndItem.append("windows" + m + "_x=" + winX1 + nl);
                             int winY = H - fontSize;
                             wndItem.append("windows" + m + "_y=" + winY + nl);
