@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface WeatherMapper {
     @Select("SELECT " +
-            "WEATHER || '，气温：' || TEMP || '℃（最高：' || TEMPHIGH || '℃|最低：' || TEMPLOW || '℃），' || WINDDIRECT || WINDPOWER || '，空气质量：' || QUALITY as \"weather\" " +
+            "WEATHER || ' 温度 '  || TEMPHIGH || '-' || TEMPLOW || '℃ 湿度 ' || HUMIDITY || '%'  as \"weather\" " +
             "FROM " +
             "TBL_WEATHER2  " +
             "WHERE " +
