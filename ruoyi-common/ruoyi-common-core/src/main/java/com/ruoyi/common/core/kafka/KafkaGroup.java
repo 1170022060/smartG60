@@ -39,5 +39,21 @@ public class KafkaGroup {
 
     public final static String CHARGE_SIGNAL_FIREWALL_STATUS_GROUP = "chargeSignalFirewallStatusGroup";
 
-    public final static String PRIMARY_VEHICLE_GET_DATA_GROUP = "primaryVehicleGetDataGroup";
+    public final static String PRIMARY_VEHICLE_OLFLOW_GROUP = "primaryVehicleOLFlowGroup";
+
+    public final static String PRIMARY_VEHICLE_TRUCKOW_GROUP = "primaryVehicleTruckOWGroup";
+
+    public final static String PRIMARY_VEHICLE_STATIONLL_GROUP = "primaryVehicleStationLLGroup";
+
+    public final static String PRIMARY_VEHICLE_OLFLOW_AND_RATE_GROUP = "primaryVehicleOlFlowAndRateGroup";
+
+    public final static String PRIMARY_VEHICLE_OLWEIGHT_AND_RATE_GROUP = "primaryVehicleOlWeightAndRateGroup";
+
+    public final static String PRIMARY_VEHICLE_WEIGHT_OVER100_GROUP = "primaryVehicleWeightOver100Group";
+
+    public final static String PRIMARY_VEHICLE_LARGE_TRANSPORT_GROUP = "primaryVehicleLargeTransportGroup";
+
+    public final static String G60_GROUP = "g60Group";
+
+    public final static String G60_OVER_VEHICLE_GROUP = "g60_OverVehicleGroup";
 }

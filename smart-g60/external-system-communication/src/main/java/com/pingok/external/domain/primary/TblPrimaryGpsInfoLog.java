@@ -1,5 +1,4 @@
 package com.pingok.external.domain.primary;
-import io.swagger.models.auth.In;
 import lombok.Data;
 
 import javax.persistence.Id;
@@ -14,8 +13,8 @@ import java.util.Date;
  * @version 1.0.0 2023-02-13
  */
 @Data
-@Table(name = "TBL_PRIMARY_GPS_INFO")
-public class TblPrimaryGpsInfo implements Serializable {
+@Table(name = "TBL_PRIMARY_GPS_INFO_LOG")
+public class TblPrimaryGpsInfoLog implements Serializable {
     /** 版本号 */
     private static final long serialVersionUID = -1850775880408983003L;
 

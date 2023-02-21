@@ -1,7 +1,7 @@
-package com.pingok.external.mapper.primary;
+package com.ruoyi.monitorExternalSystem.mapper;
 
-import com.pingok.external.domain.primary.TblStationLLInfo;
 import com.ruoyi.common.core.mapper.CommonRepository;
+import com.ruoyi.monitorExternalSystem.domain.TblStationLLInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 

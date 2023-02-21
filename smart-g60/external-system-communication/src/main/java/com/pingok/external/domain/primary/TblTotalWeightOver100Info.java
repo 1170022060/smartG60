@@ -32,4 +32,10 @@ public class TblTotalWeightOver100Info implements Serializable {
     /** 审核后超 限流量 */
     private String reviewFlowList;
 
+    /** 站ID */
+    private String nodeId;
+
+    /** 日期 */
+    private String time;
+
 }
