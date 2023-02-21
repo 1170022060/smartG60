@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.external.domain.primary.TblLargeTransportVehinfo;
+import com.pingok.external.domain.primary.TblStationLLInfo;
 import com.pingok.external.mapper.primary.TblLargeTransportMapper;
 import com.pingok.external.service.primary.ITblLargeTransportService;
 import com.ruoyi.common.core.kafka.KafkaTopIc;
+import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import com.ruoyi.system.api.RemoteKafkaService;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
@@ -52,8 +54,15 @@ public class TblLargeTransportServiceImpl implements ITblLargeTransportService {
         for (int i = 0; i < result.size(); ++i) {
             JSONObject obj = result.getJSONObject(i);
 
-            TblLargeTransportVehinfo LargeTransportInfo = new TblLargeTransportVehinfo();
-            LargeTransportInfo.setId(remoteIdProducerService.nextId());
+            Example example = new Example(TblLargeTransportVehinfo.class);
+            example.createCriteria().andEqualTo("listId", obj.getString("id"));
+            TblLargeTransportVehinfo LargeTransportInfo = tblLargeTransportMapper.selectOneByExample(example);
+            boolean isExsit = true;
+            if (StringUtils.isNull(LargeTransportInfo)){
+                LargeTransportInfo = new TblLargeTransportVehinfo();
+                LargeTransportInfo.setId(remoteIdProducerService.nextId());
+                isExsit = false;
+            }
             LargeTransportInfo.setListId(obj.getString("id"));
             LargeTransportInfo.setMainId(obj.getString("mainId"));
             LargeTransportInfo.setRecordNo(obj.getString("recordno"));
@@ -81,7 +90,9 @@ public class TblLargeTransportServiceImpl implements ITblLargeTransportService {
             LargeTransportInfo.setLoadWeight(obj.getString("loadWeight"));
             LargeTransportInfo.setUnionKey(obj.getString("unionKey"));
 
-            tblLargeTransportMapper.insert(LargeTransportInfo);
+            if (isExsit) tblLargeTransportMapper.updateByPrimaryKey(LargeTransportInfo);
+            else tblLargeTransportMapper.insert(LargeTransportInfo);;
+
         }
     }
 }
