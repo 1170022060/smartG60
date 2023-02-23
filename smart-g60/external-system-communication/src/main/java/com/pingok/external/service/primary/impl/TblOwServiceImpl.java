@@ -31,12 +31,12 @@ public class TblOwServiceImpl implements ITblOwService {
         OWInfo.setVehicleNo(obj.getString("vehicleNo"));
         OWInfo.setPlateColor(obj.getInteger("plateColor"));
         OWInfo.setVehicleAxlesType(obj.getString("vehicleAxlesType"));
-        OWInfo.setTotal(obj.getLong("total"));
+        OWInfo.setTotal(obj.getBigDecimal("total"));
         OWInfo.setAxles(obj.getLong("axles"));
-        OWInfo.setSpeed(obj.getLong("speed"));
-        OWInfo.setLimitWeight(obj.getLong("limitWeight"));
-        OWInfo.setOverWeight(obj.getLong("overWeight"));
-        OWInfo.setOverRate(obj.getLong("overRate"));
+        OWInfo.setSpeed(obj.getBigDecimal("speed"));
+        OWInfo.setLimitWeight(obj.getBigDecimal("limitWeight"));
+        OWInfo.setOverWeight(obj.getBigDecimal("overWeight"));
+        OWInfo.setOverRate(obj.getBigDecimal("overRate"));
         OWInfo.setFlowStatus(obj.getInteger("flowStatus"));
         OWInfo.setPlatePic(obj.getString("platePic"));
         OWInfo.setFirstHeaderPic(obj.getString("firstHeaderPic"));

@@ -86,7 +86,7 @@ public class TblLargeTransportServiceImpl implements ITblLargeTransportService {
             LargeTransportInfo.setFzDate(obj.getString("fzDate"));
             LargeTransportInfo.setCreateTime(obj.getDate("createTime"));
             LargeTransportInfo.setUpdateTime(obj.getDate("updateTime"));
-            LargeTransportInfo.setIsValid(obj.getLong("isValid"));
+            LargeTransportInfo.setIsValid(obj.getBigDecimal("isValid"));
             LargeTransportInfo.setLoadWeight(obj.getString("loadWeight"));
             LargeTransportInfo.setUnionKey(obj.getString("unionKey"));
 

@@ -4,6 +4,7 @@ import lombok.Data;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -49,22 +50,22 @@ public class TblOwInfo implements Serializable {
     private String vehicleAxlesType;
 
     /** 车货总质量 */
-    private Long total;
+    private BigDecimal total;
 
     /** 车辆轴数 */
     private Long axles;
 
     /** 入口车速 */
-    private Long speed;
+    private BigDecimal speed;
 
     /** 最大允许总质量 */
-    private Long limitWeight;
+    private BigDecimal limitWeight;
 
     /** 超限量 */
-    private Long overWeight;
+    private BigDecimal overWeight;
 
     /** 超限超载率 */
-    private Long overRate;
+    private BigDecimal overRate;
 
     /** 流转状态(1 未处置 2 立案 3 不予立案 4 结案) */
     private Integer flowStatus;

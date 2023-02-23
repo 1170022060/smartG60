@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -43,7 +44,7 @@ public class TblOlFlowInfo implements Serializable {
     private Long overLoadFlow;
 
     /** 超限率 */
-    private Long rate;
+    private BigDecimal rate;
 
     /** 劝返数 */
     private Long interceptFlow;
@@ -52,6 +53,6 @@ public class TblOlFlowInfo implements Serializable {
     private Long secondReviewFlow;
 
     /** 审核后超限率 （ 三审） */
-    private Long secondReviewRate;
+    private BigDecimal secondReviewRate;
 
 }

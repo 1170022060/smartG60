@@ -72,10 +72,10 @@ public class TblOLFlowServiceImpl implements ITblOLFlowService {
             OLFlowInfo.setNodeId(obj.getString("nodeId"));
             OLFlowInfo.setTotalFlow(obj.getLong("totalFlow"));
             OLFlowInfo.setOverLoadFlow(obj.getLong("overLoadFlow"));
-            OLFlowInfo.setRate(obj.getLong("rate"));
+            OLFlowInfo.setRate(obj.getBigDecimal("rate"));
             OLFlowInfo.setInterceptFlow(obj.getLong("interceptFlow"));
             OLFlowInfo.setSecondReviewFlow(obj.getLong("secondReviewFlow"));
-            OLFlowInfo.setSecondReviewRate(obj.getLong("secondReviewRate"));
+            OLFlowInfo.setSecondReviewRate(obj.getBigDecimal("secondReviewRate"));
             tblOlFlowMapper.insert(OLFlowInfo);
         }
     }

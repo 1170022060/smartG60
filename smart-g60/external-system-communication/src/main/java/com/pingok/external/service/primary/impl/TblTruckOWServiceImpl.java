@@ -58,7 +58,7 @@ public class TblTruckOWServiceImpl implements ITblTruckOWService {
             truckOwInfo.setStatDateHour(obj.getString("statDateHour"));
             truckOwInfo.setNodeName(obj.getString("nodeName"));
             truckOwInfo.setNodeId(obj.getString("nodeId"));
-            truckOwInfo.setSumTotalWeight(obj.getLong("sumTotalWeight"));
+            truckOwInfo.setSumTotalWeight(obj.getBigDecimal("sumTotalWeight"));
 
             tblTruckOWInfoMapper.insert(truckOwInfo);
 
