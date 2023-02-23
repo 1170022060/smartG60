@@ -68,13 +68,13 @@ public class TblOwInfo implements Serializable {
     private BigDecimal overRate;
 
     /** 流转状态(1 未处置 2 立案 3 不予立案 4 结案) */
-    private Integer flowStatus;
+    private Integer flowStaus;
 
     /** 车牌图片 */
     private String platePic;
 
     /** 前抓拍 */
-    private String firstHeaderPic;
+    private String firstheaderPic;
 
     /** 正侧抓拍 */
     private String degree45Pic;
