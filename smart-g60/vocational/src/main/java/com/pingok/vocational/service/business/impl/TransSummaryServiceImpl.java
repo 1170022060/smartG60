@@ -41,4 +41,15 @@ public class TransSummaryServiceImpl implements ITransSummaryService {
     public List<TransSummaryVo> selectTransSummaryList(SummaryVo summaryVo) {
         return tblTransSummaryMapper.selectTransSummaryList(summaryVo);
     }
+
+    @Override
+    public List<Map> selectTransactionFlow(Date enStartTime, Date enEndTime, String enStationId,
+                                           String passId, String enGid, Integer enPassType,
+                                           String enVehPlate, String enCardId, Date exStartTime, Date exEndTime,
+                                           String exStationId, String exGid, Integer exPassType,
+                                           String exVehPlate, String exCardId, Integer payWay) {
+        return tblTransSummaryMapper.selectTransactionFlow(DateUtils.getTimeDay(enStartTime).substring(0,4),enStartTime,  enEndTime, enStationId,  passId,
+                enGid,  enPassType,  enVehPlate,  enCardId,  exStartTime,
+                exEndTime,  exStationId,  exGid,  exPassType, exVehPlate,  exCardId,  payWay);
+    }
 }

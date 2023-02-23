@@ -67,4 +67,28 @@ public class TransSummaryController extends BaseController {
         ExcelUtil<TransSummaryVo> util = new ExcelUtil<TransSummaryVo>(TransSummaryVo.class);
         util.exportExcel(response,list, "流水汇总");
     }
+
+    @GetMapping("/getTransactionFlow")
+    public TableDataInfo getTransactionFlow(@RequestParam(name = "enStartTime",required = false) Date enStartTime,
+                                            @RequestParam(name = "enEndTime",required = false) Date enEndTime,
+                                            @RequestParam(name = "enStationId",required = false) String enStationId,
+                                            @RequestParam(name = "passId",required = false) String passId,
+                                            @RequestParam(name = "enGid",required = false) String enGid,
+                                            @RequestParam(name = "enPassType",required = false) Integer enPassType,
+                                            @RequestParam(name = "enVehPlate",required = false) String enVehPlate,
+                                            @RequestParam(name = "enCardId",required = false) String enCardId,
+                                            @RequestParam(name = "exStartTime",required = false) Date exStartTime,
+                                            @RequestParam(name = "exEndTime",required = false) Date exEndTime,
+                                            @RequestParam(name = "exStationId",required = false) String exStationId,
+                                            @RequestParam(name = "exGid",required = false) String exGid,
+                                            @RequestParam(name = "exPassType",required = false) Integer exPassType,
+                                            @RequestParam(name = "exVehPlate",required = false) String exVehPlate,
+                                            @RequestParam(name = "exCardId",required = false) String exCardId,
+                                            @RequestParam(name = "payWay",required = false) Integer payWay){
+        startPage();
+        List<Map> info = transSummaryService.selectTransactionFlow(enStartTime,  enEndTime,  enStationId, passId, enGid,
+                enPassType, enVehPlate,  enCardId, exStartTime,  exEndTime,
+                exStationId,  exGid,  exPassType,  exVehPlate,  exCardId,  payWay);
+        return getDataTable(info);
+    }
 }
