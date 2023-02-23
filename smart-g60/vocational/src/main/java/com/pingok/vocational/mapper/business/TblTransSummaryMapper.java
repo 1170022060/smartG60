@@ -555,7 +555,7 @@ public interface TblTransSummaryMapper {
             "LEFT JOIN SYS_DICT_DATA d on d.DICT_VALUE=SUBSTR(exEtc.VEHICLE_ID, INSTR(exEtc.VEHICLE_ID, '_')+1,LENGTH(exEtc.VEHICLE_ID)) and d.DICT_TYPE='veh_color' " +
             "left join SYS_DICT_DATA e on e.DICT_VALUE=exEtc.TRANS_PAY_TYPE and e.DICT_TYPE='pay_way' " +
             "LEFT JOIN TBL_BASE_STATION_INFO f on f.STATION_NAME = exEtc.EX_TOLL_STATION_NAME " +
-            "LEFT JOIN SYS_DICT_DATA g on g.DICT_VALUE=exCpc.EXIT_FEE_TYPE and g.DICT_TYPE='fee_type' " +
+            "LEFT JOIN SYS_DICT_DATA g on g.DICT_VALUE=exEtc.EXIT_FEE_TYPE and g.DICT_TYPE='fee_type' " +
             "UNION ALL " +
             "SELECT " +
             "exCpc.PASS_ID as \"passIDEx\", " +
