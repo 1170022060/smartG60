@@ -1,12 +1,11 @@
 package com.pingok.vocational.service.primaryCar.impl;
 
-import com.pingok.vocational.mapper.primaryCar.TblPrimaryVehInfoMapper;
-import com.pingok.vocational.mapper.primaryCar.TblVehicleTrailInfoMapper;
-import com.pingok.vocational.mapper.primaryCar.TblWayBillInfoMapper;
+import com.pingok.vocational.mapper.primaryCar.*;
 import com.pingok.vocational.service.primaryCar.IPrimaryCarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +21,12 @@ public class primaryCarServiceImpl implements IPrimaryCarService {
     private TblVehicleTrailInfoMapper tblVehicleTrailInfoMapper;
     @Autowired
     private TblWayBillInfoMapper tblWayBillInfoMapper;
+    @Autowired
+    private TblPrimaryGpsInfoMapper tblPrimaryGpsInfoMapper;
+    @Autowired
+    private TblPrimaryGpsInfoLogMapper tblPrimaryGpsInfoLogMapper;
+    @Autowired
+    private TblOwInfoMapper tblOwInfoMapper;
 
     @Override
     public List<Map> getPrimaryVehInfo(String vehPlate) {
@@ -36,5 +41,20 @@ public class primaryCarServiceImpl implements IPrimaryCarService {
     @Override
     public List<Map> getWayBillInfo(String vehPlate) {
         return tblWayBillInfoMapper.getWayBillInfo(vehPlate);
+    }
+
+    @Override
+    public List<Map> selectPrimaryGpsInfo(String vehPlate) {
+        return tblPrimaryGpsInfoMapper.selectPrimaryGpsInfo(vehPlate);
+    }
+
+    @Override
+    public List<Map> getVehGpsList(String vehPlate) {
+        return tblPrimaryGpsInfoLogMapper.getVehGpsList(vehPlate);
+    }
+
+    @Override
+    public List<Map> selectOwInfo(String vehPlate, Date checkStartTime, Date checkEndTime) {
+        return tblOwInfoMapper.selectOwInfo(vehPlate,checkStartTime,checkEndTime);
     }
 }
