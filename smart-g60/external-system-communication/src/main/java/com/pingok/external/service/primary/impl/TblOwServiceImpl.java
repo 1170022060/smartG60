@@ -37,9 +37,9 @@ public class TblOwServiceImpl implements ITblOwService {
         OWInfo.setLimitWeight(obj.getBigDecimal("limitWeight"));
         OWInfo.setOverWeight(obj.getBigDecimal("overWeight"));
         OWInfo.setOverRate(obj.getBigDecimal("overRate"));
-        OWInfo.setFlowStatus(obj.getInteger("flowStatus"));
+        OWInfo.setFlowStaus(obj.getInteger("flowStaus"));
         OWInfo.setPlatePic(obj.getString("platePic"));
-        OWInfo.setFirstHeaderPic(obj.getString("firstHeaderPic"));
+        OWInfo.setFirstheaderPic(obj.getString("firstheaderPic"));
         OWInfo.setDegree45Pic(obj.getString("degree45Pic"));
         OWInfo.setSidePic(obj.getString("sidePic"));
         OWInfo.setVideo(obj.getString("video"));
