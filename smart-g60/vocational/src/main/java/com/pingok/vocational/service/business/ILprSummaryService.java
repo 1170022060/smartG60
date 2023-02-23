@@ -61,4 +61,26 @@ public interface ILprSummaryService {
      * @return 车道牌识
      */
     List<LprSummaryVo> selectLprTransList(SummaryVo summaryVo);
+
+    /**
+     * 入口牌识流水
+     * @param enStartTime
+     * @param enEndTime
+     * @param enStationId
+     * @param enLaneType
+     * @param enVehPlate
+     * @return
+     */
+    List<Map> selectLprInfoEn(Date enStartTime,Date enEndTime, String enStationId, Integer enLaneType, String enVehPlate);
+
+    /**
+     * 出口牌识流水
+     * @param exStartTime
+     * @param exEndTime
+     * @param exStationId
+     * @param exLaneType
+     * @param exVehPlate
+     * @return
+     */
+    List<Map> selectLprInfoEx(Date exStartTime, Date exEndTime, String exStationId, Integer exLaneType, String exVehPlate);
 }

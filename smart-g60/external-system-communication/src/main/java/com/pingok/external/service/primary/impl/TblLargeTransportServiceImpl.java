@@ -91,7 +91,7 @@ public class TblLargeTransportServiceImpl implements ITblLargeTransportService {
             LargeTransportInfo.setUnionKey(obj.getString("unionKey"));
 
             if (isExsit) tblLargeTransportMapper.updateByPrimaryKey(LargeTransportInfo);
-            else tblLargeTransportMapper.insert(LargeTransportInfo);;
+            else tblLargeTransportMapper.insert(LargeTransportInfo);
 
         }
     }

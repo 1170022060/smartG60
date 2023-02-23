@@ -66,4 +66,26 @@ public class LprSummaryController extends BaseController {
         ExcelUtil<LprSummaryVo> util = new ExcelUtil<LprSummaryVo>(LprSummaryVo.class);
         util.exportExcel(response,list, "车道牌识");
     }
+
+    @GetMapping("/getLprInfoEn")
+    public TableDataInfo getLprInfoEn(@RequestParam(name = "enStartTime",required = false) Date enStartTime,
+                                      @RequestParam(name = "enEndTime",required = false) Date enEndTime,
+                                      @RequestParam(name = "enStationId",required = false) String enStationId,
+                                      @RequestParam(name = "enLaneType",required = false) Integer enLaneType,
+                                      @RequestParam(name = "enVehPlate",required = false) String enVehPlate){
+        startPage();
+        List<Map> info = lprSummaryService.selectLprInfoEn(enStartTime, enEndTime, enStationId, enLaneType, enVehPlate);
+        return getDataTable(info);
+    }
+
+    @GetMapping("/getLprInfoEx")
+    public TableDataInfo getLprInfoEx(@RequestParam(name = "exStartTime",required = false) Date exStartTime,
+                                      @RequestParam(name = "exEndTime",required = false) Date exEndTime,
+                                      @RequestParam(name = "exStationId",required = false) String exStationId,
+                                      @RequestParam(name = "exLaneType",required = false) Integer exLaneType,
+                                      @RequestParam(name = "exVehPlate",required = false) String exVehPlate){
+        startPage();
+        List<Map> info = lprSummaryService.selectLprInfoEx(exStartTime, exEndTime, exStationId, exLaneType, exVehPlate);
+        return getDataTable(info);
+    }
 }

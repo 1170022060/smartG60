@@ -104,4 +104,32 @@ public interface ITransSummaryService {
      * @return 流水汇总信息
      */
     List<TransSummaryVo> selectTransSummaryList(SummaryVo summaryVo);
+
+    /**
+     * 出入口收费流水查询
+     * @param enStartTime
+     * @param enEndTime
+     * @param enStationId
+     * @param passId
+     * @param enGid
+     * @param enPassType
+     * @param enVehPlate
+     * @param enCardId
+     * @param exStartTime
+     * @param exEndTime
+     * @param exStationId
+     * @param exGid
+     * @param exPassType
+     * @param exVehPlate
+     * @param exCardId
+     * @param payWay
+     * @return
+     */
+    List<Map> selectTransactionFlow(Date enStartTime, Date enEndTime, String enStationId,
+                                    String passId, String enGid, Integer enPassType,
+                                    String enVehPlate, String enCardId,
+                                    Date exStartTime, Date exEndTime,
+                                    String exStationId, String exGid,
+                                    Integer exPassType, String exVehPlate, String exCardId,
+                                    Integer payWay);
 }
