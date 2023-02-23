@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -32,22 +33,22 @@ public class TblPrimaryGpsInfo implements Serializable {
     private String color;
 
     /** 原始经度 */
-    private Long lon;
+    private BigDecimal lon;
 
     /** 原始纬度 */
-    private Long lat;
+    private BigDecimal lat;
 
     /** gps时间 */
     private Date time;
 
     /** gps速度 */
-    private Long speed;
+    private BigDecimal speed;
 
     /** 方向 */
     private Long direction;
 
     /** 高度（海拔） */
-    private Long altitude;
+    private BigDecimal altitude;
 
     /** acc状态,0关 1开 */
     private Integer acc;

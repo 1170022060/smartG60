@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -38,6 +39,6 @@ public class TblTruckOwInfo implements Serializable {
     private String nodeId;
 
     /** 合计车祸总量 */
-    private Long sumTotalWeight;
+    private BigDecimal sumTotalWeight;
 
 }

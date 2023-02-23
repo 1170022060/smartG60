@@ -4,6 +4,7 @@ import lombok.Data;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -93,7 +94,7 @@ public class TblLargeTransportVehinfo implements Serializable {
     private Date updateTime;
 
     /** isValid */
-    private Long isValid;
+    private BigDecimal isValid;
 
     /** loadWeight */
     private String loadWeight;

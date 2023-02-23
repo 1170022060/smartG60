@@ -76,8 +76,8 @@ public class TblStationLLServiceImpl implements ITblStationLLService {
 
             stationInfo.setNodeName(obj.getString("nodeName"));
             stationInfo.setNodeId(obj.getString("nodeId"));
-            stationInfo.setLatitude(obj.getLong("latitude"));
-            stationInfo.setLongitude(obj.getLong("longitude"));
+            stationInfo.setLatitude(obj.getBigDecimal("latitude"));
+            stationInfo.setLongitude(obj.getBigDecimal("longitude"));
             stationInfo.setNodeType(obj.getInteger("nodeType"));
 
             if (isExsit) tblStationLLInfoMapper.updateByPrimaryKey(stationInfo);
