@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+
 /**
  * @author lal
  */
@@ -31,7 +33,7 @@ public class primaryCarController extends BaseController {
         return getDataTable(iPrimaryCarService.getPrimaryVehInfo(vehPlate));
     }
 
-//    @RequiresPermissions("vocational:primaryCar:vehTrail")
+    @RequiresPermissions("vocational:primaryCar:vehTrail")
     @Log(title = "车辆轨迹查询",businessType = BusinessType.OTHER)
     @GetMapping("/getVehTrail")
     public AjaxResult getVehTrail(@RequestParam(name = "vehPlate") String vehPlate){
@@ -43,5 +45,26 @@ public class primaryCarController extends BaseController {
     public TableDataInfo getWayBillInfo(@RequestParam(name = "vehPlate") String vehPlate){
         startPage();
         return getDataTable(iPrimaryCarService.getWayBillInfo(vehPlate));
+    }
+
+    @GetMapping("/getPrimaryGps")
+    public TableDataInfo getPrimaryGps(@RequestParam(name = "vehPlate",required = false) String vehPlate){
+        startPage();
+        return getDataTable(iPrimaryCarService.selectPrimaryGpsInfo(vehPlate));
+    }
+
+    @RequiresPermissions("vocational:primaryCar:vehGps")
+    @Log(title = "车辆GPS轨迹查询",businessType = BusinessType.OTHER)
+    @GetMapping("/getVehGpsList")
+    public AjaxResult getVehGpsList(@RequestParam(name = "vehPlate") String vehPlate){
+        return AjaxResult.success(iPrimaryCarService.getVehGpsList(vehPlate));
+    }
+
+    @GetMapping("/getOwInfo")
+    public TableDataInfo getOwInfo(@RequestParam(name = "vehPlate",required = false) String vehPlate,
+                                   @RequestParam(name = "checkStartTime",required = false) Date checkStartTime,
+                                   @RequestParam(name = "checkEndTime",required = false) Date checkEndTime){
+        startPage();
+        return getDataTable(iPrimaryCarService.selectOwInfo(vehPlate,checkStartTime,checkEndTime));
     }
 }
