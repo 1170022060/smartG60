@@ -556,6 +556,31 @@ public interface TblTransSummaryMapper {
             "left join SYS_DICT_DATA e on e.DICT_VALUE=exEtc.TRANS_PAY_TYPE and e.DICT_TYPE='pay_way' " +
             "LEFT JOIN TBL_BASE_STATION_INFO f on f.STATION_NAME = exEtc.EX_TOLL_STATION_NAME " +
             "LEFT JOIN SYS_DICT_DATA g on g.DICT_VALUE=exEtc.EXIT_FEE_TYPE and g.DICT_TYPE='fee_type' " +
+            "where 1=1 " +
+            "<when test='exStartTime != null'> " +
+            "and exEtc.EX_TIME &gt;= #{exStartTime} " +
+            "</when>"+
+            "<when test='exEndTime != null'> " +
+            "and exEtc.EX_TIME &lt;= #{exEndTime} " +
+            "</when>" +
+            "<when test='exStationId != null'> " +
+            "and f.STATION_ID= CONCAT('3101',#{exStationId}) " +
+            "</when>"+
+            "<when test='exGid != null'> " +
+            "and exEtc.ID= #{exGid} " +
+            "</when>"+
+            "<when test='exPassType != null'> " +
+            "and exEtc.MEDIA_TYPE= #{exPassType} " +
+            "</when>"+
+            "<when test='exVehPlate != null'> " +
+            "and SUBSTR(exEtc.VEHICLE_ID, 1, INSTR(exEtc.VEHICLE_ID, '_')-1) like CONCAT(CONCAT('%',#{exVehPlate}),'%') " +
+            "</when>"+
+            "<when test='exCardId != null'> " +
+            "and exEtc.CARD_ID= #{exCardId}" +
+            "</when>"+
+            "<when test='payWay != null'> " +
+            "and exEtc.TRANS_PAY_TYPE= #{payWay} " +
+            "</when>"+
             "UNION ALL " +
             "SELECT " +
             "exCpc.PASS_ID as \"passIDEx\", " +
@@ -582,6 +607,31 @@ public interface TblTransSummaryMapper {
             "left join SYS_DICT_DATA e on e.DICT_VALUE=exCpc.TRANS_PAY_TYPE and e.DICT_TYPE='pay_way' " +
             "LEFT JOIN TBL_BASE_STATION_INFO f on f.STATION_NAME = exCpc.EX_TOLL_STATION_NAME " +
             "LEFT JOIN SYS_DICT_DATA g on g.DICT_VALUE=exCpc.EXIT_FEE_TYPE and g.DICT_TYPE='fee_type' " +
+            "where 1=1 " +
+            "<when test='exStartTime != null'> " +
+            "and exCpc.EX_TIME &gt;= #{exStartTime} " +
+            "</when>"+
+            "<when test='exEndTime != null'> " +
+            "and exCpc.EX_TIME &lt;= #{exEndTime} " +
+            "</when>" +
+            "<when test='exStationId != null'> " +
+            "and f.STATION_ID= CONCAT('3101',#{exStationId}) " +
+            "</when>"+
+            "<when test='exGid != null'> " +
+            "and exCpc.ID= #{exGid} " +
+            "</when>"+
+            "<when test='exPassType != null'> " +
+            "and exCpc.MEDIA_TYPE= #{exPassType} " +
+            "</when>"+
+            "<when test='exVehPlate != null'> " +
+            "and SUBSTR(exCpc.VEHICLE_ID, 1, INSTR(exCpc.VEHICLE_ID, '_')-1) like CONCAT(CONCAT('%',#{exVehPlate}),'%') " +
+            "</when>"+
+            "<when test='exCardId != null'> " +
+            "and exCpc.CARD_ID= #{exCardId}" +
+            "</when>"+
+            "<when test='payWay != null'> " +
+            "and exCpc.TRANS_PAY_TYPE= #{payWay} " +
+            "</when>"+
             ") ex on ex.\"passIDEx\" = en.PASS_ID " +
             "where 1=1 " +
             "<when test='enStartTime != null'> " +
@@ -607,30 +657,6 @@ public interface TblTransSummaryMapper {
             "</when>"+
             "<when test='enCardId != null'> " +
             "and en.CARD_ID= #{enCardId}" +
-            "</when>"+
-            "<when test='exStartTime != null'> " +
-            "and ex.\"exTransTime\" &gt;= #{exStartTime} " +
-            "</when>"+
-            "<when test='exEndTime != null'> " +
-            "and ex.\"exTransTime\" &lt;= #{exEndTime} " +
-            "</when>" +
-            "<when test='exStationId != null'> " +
-            "and ex.\"stationId\"= CONCAT('3101',#{exStationId}) " +
-            "</when>"+
-            "<when test='exGid != null'> " +
-            "and ex.\"exGid\"= #{exGid} " +
-            "</when>"+
-            "<when test='exPassType != null'> " +
-            "and ex.\"exPassType\"= #{exPassType} " +
-            "</when>"+
-            "<when test='exVehPlate != null'> " +
-            "and ex.\"exVehPlate\" like CONCAT(CONCAT('%',#{exVehPlate}),'%') " +
-            "</when>"+
-            "<when test='exCardId != null'> " +
-            "and ex.\"exCardId\"= #{exCardId}" +
-            "</when>"+
-            "<when test='payWay != null'> " +
-            "and ex.\"payWay\"= #{payWay} " +
             "</when>"+
             "</script>"})
     List<Map> selectTransactionFlow(@Param("year") String year,@Param("enStartTime") Date enStartTime, @Param("enEndTime") Date enEndTime,
