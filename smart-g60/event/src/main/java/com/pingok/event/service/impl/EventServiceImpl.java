@@ -22,6 +22,7 @@ import com.ruoyi.system.api.domain.amap.TblAutoNaviMapRecord;
 import com.ruoyi.system.api.domain.baidu.TblBaiDuMapRecord;
 import com.ruoyi.system.api.domain.device.TblDeviceInfo;
 import com.ruoyi.system.api.domain.emergency.TblEmergencySupplies;
+import com.ruoyi.system.api.domain.gantry.TblGantryEventRelease;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import com.ruoyi.system.api.domain.release.TblReleasePreset;
 import io.swagger.models.auth.In;
@@ -342,6 +343,7 @@ public class EventServiceImpl implements IEventService {
                     }
                     break;
                 case 6://ETC门架车路协同推送
+                    TblGantryEventRelease tblGantryEventRelease = new TblGantryEventRelease();
                     break;
                 case 7://超视距诱导灯推送
                     content = "超视距诱导模式推送：";

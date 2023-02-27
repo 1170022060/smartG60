@@ -2,6 +2,7 @@ package com.pingok.datacenter.service.roster.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.datacenter.config.CenterConfig;
 import com.pingok.datacenter.domain.roster.green.*;
 import com.pingok.datacenter.domain.roster.green.vo.GreenVo;
 import com.pingok.datacenter.domain.roster.vo.VersionVo;
@@ -51,14 +52,6 @@ public class GreenServiceImpl implements IGreenService {
     @Autowired
     private VersionMapper versionMapper;
 
-    @Value("${center.host}")
-    private String host;
-
-    @Value("${center.stationGB}")
-    private String stationGB;
-
-    @Value("${center.greenPath}")
-    private String greenPath;
 
     @Override
     public void green(JSONObject obj) {
@@ -92,7 +85,7 @@ public class GreenServiceImpl implements IGreenService {
                 e.printStackTrace();
             }
         }
-        String url= host + "/api/lane-service/appointment-all-list";
+        String url= CenterConfig.HOST + "/api/lane-service/appointment-all-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo=new VersionVo();
         versionVo.setVersion(version);
@@ -100,7 +93,7 @@ public class GreenServiceImpl implements IGreenService {
         RequestBody requestBody =  RequestBody.create(MediaType.parse("application/json"),jsonStr);
         final Request request = new Request.Builder()
                 .url(url)
-                .addHeader("AuthCode",stationGB)
+                .addHeader("AuthCode",CenterConfig.STATIONGB)
                 .addHeader("Json-Md5",backMD5(jsonStr))
                 .post(requestBody)
                 .build();
@@ -112,11 +105,11 @@ public class GreenServiceImpl implements IGreenService {
             if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version +"Green"+ ".zip";
-                File file=new File(greenPath);
+                File file=new File(CenterConfig.GREENPATH);
                 if(!file.exists()){
                     file.mkdirs();
                 }
-                String pathName=greenPath+"/"+fileName;
+                String pathName=CenterConfig.GREENPATH+"/"+fileName;
                 file  = new File(pathName);
                 if(!file.exists()){
                     file.createNewFile();
@@ -125,7 +118,7 @@ public class GreenServiceImpl implements IGreenService {
                 fos.write(bytes,0,bytes.length);
                 fos.flush();
                 fos.close();
-                unzipGreen(pathName,greenPath,version);
+                unzipGreen(pathName,CenterConfig.GREENPATH,version);
             }
         }
         catch (Exception e){

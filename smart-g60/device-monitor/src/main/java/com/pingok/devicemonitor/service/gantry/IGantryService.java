@@ -1,7 +1,7 @@
 package com.pingok.devicemonitor.service.gantry;
 
 import com.pingok.devicemonitor.domain.gantry.TblGantryStatus;
-import com.pingok.devicemonitor.domain.gantry.TblGantryEventRelease;
+import com.ruoyi.system.api.domain.gantry.TblGantryEventRelease;
 
 public interface IGantryService {
 

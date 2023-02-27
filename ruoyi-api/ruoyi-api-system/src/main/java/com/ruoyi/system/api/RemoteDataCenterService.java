@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,10 @@ import java.util.Map;
  */
 @FeignClient(contextId = "remoteDataCenterService", value = ServiceNameConstants.DATA_CENTER_SERVICE, fallbackFactory = RemoteDataCenterFallbackFactory.class)
 public interface RemoteDataCenterService {
+
+    @PostMapping("/provincialCenters")
+    R getData(@RequestParam(value = "name") String name, @RequestParam(value = "dateTimeNow") Date dateTimeNow);
+
 
     /**
      * 闯关分拣

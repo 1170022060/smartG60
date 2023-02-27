@@ -2,6 +2,7 @@ package com.pingok.datacenter.service.roster.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.datacenter.config.CenterConfig;
 import com.pingok.datacenter.domain.roster.rate.TblRate;
 import com.pingok.datacenter.domain.roster.rate.TblRateProv;
 import com.pingok.datacenter.domain.roster.rate.TblRateVersion;
@@ -57,11 +58,6 @@ public class RateServiceImpl implements IRateService {
     @Autowired
     private VersionMapper versionMapper;
 
-    @Value("${center.host}")
-    private String host;
-
-    @Value("${center.ratePath}")
-    private String ratePath;
 
     @Override
     public void rate(JSONObject obj) {
@@ -92,7 +88,7 @@ public class RateServiceImpl implements IRateService {
         List<String> stringList= tblRateMapper.selectStationGB();
         for (String stationGB:stringList)
         {
-            String url = host + "/api/lane-service/all-road-fee";
+            String url = CenterConfig.HOST + "/api/lane-service/all-road-fee";
             OkHttpClient client = new OkHttpClient();
             VersionGbVo versionGbVo = new VersionGbVo();
             versionGbVo.setVersion(version);
@@ -113,11 +109,11 @@ public class RateServiceImpl implements IRateService {
                 if(bytes.length>0 && response.code()==200)
                 {
                     String fileName = version + ".zip";
-                    File file = new File(ratePath);
+                    File file = new File(CenterConfig.RATEPATH);
                     if (!file.exists()) {
                         file.mkdir();
                     }
-                    String pathName = ratePath + "/" + fileName;
+                    String pathName = CenterConfig.RATEPATH + "/" + fileName;
                     file = new File(pathName);
                     if (!file.exists()) {
                         file.createNewFile();
@@ -126,9 +122,9 @@ public class RateServiceImpl implements IRateService {
                     fos.write(bytes, 0, bytes.length);
                     fos.flush();
                     fos.close();
-                    RateVersionVo rateVersionVo=unzip(pathName, ratePath);
+                    RateVersionVo rateVersionVo=unzip(pathName, CenterConfig.RATEPATH);
                     Long versionId=insertVersion(rateVersionVo);
-                    unzipInside(pathName, ratePath,versionId);
+                    unzipInside(pathName, CenterConfig.RATEPATH,versionId);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -2,6 +2,7 @@ package com.pingok.datacenter.service.roster.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.datacenter.config.CenterConfig;
 import com.pingok.datacenter.domain.roster.blackcard.TblBlackCardVersion;
 import com.pingok.datacenter.domain.roster.blackcard.vo.BlackVo;
 import com.pingok.datacenter.domain.roster.epidemic.*;
@@ -55,18 +56,8 @@ public class EpidemicServiceImpl implements IEpidemicService {
     private RemoteIdProducerService remoteIdProducerService;
     @Autowired
     private VersionMapper versionMapper;
+    
 
-    @Value("${center.host}")
-    private String host;
-
-    @Value("${center.stationGB}")
-    private String stationGB;
-
-    @Value("${center.epidemicPath}")
-    private String epidemicPath;
-
-    @Value("${center.prefixPath}")
-    private String prefixPath;
 
     @Override
     public void epidemic(JSONObject obj) {
@@ -117,7 +108,7 @@ public class EpidemicServiceImpl implements IEpidemicService {
                 e.printStackTrace();
             }
         }
-        String url = host + "/api/lane-service/epidemic-area-list";
+        String url = CenterConfig.HOST + "/api/lane-service/epidemic-area-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo = new VersionVo();
         versionVo.setVersion(version);
@@ -125,7 +116,7 @@ public class EpidemicServiceImpl implements IEpidemicService {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonStr);
         final Request request = new Request.Builder()
                 .url(url)
-                .addHeader("AuthCode", stationGB)
+                .addHeader("AuthCode", CenterConfig.STATIONGB)
                 .addHeader("Json-Md5", backMD5(jsonStr))
                 .post(requestBody)
                 .build();
@@ -137,11 +128,11 @@ public class EpidemicServiceImpl implements IEpidemicService {
             if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version + ".zip";
-                File file = new File(epidemicPath);
+                File file = new File(CenterConfig.EPIDEMICPATH);
                 if (!file.exists()) {
                     file.mkdir();
                 }
-                String pathName = epidemicPath + "/" + fileName;
+                String pathName = CenterConfig.EPIDEMICPATH + "/" + fileName;
                 file = new File(pathName);
                 if (!file.exists()) {
                     file.createNewFile();
@@ -150,7 +141,7 @@ public class EpidemicServiceImpl implements IEpidemicService {
                 fos.write(bytes, 0, bytes.length);
                 fos.flush();
                 fos.close();
-                unzipEpidemic(pathName,prefixPath,version);
+                unzipEpidemic(pathName,CenterConfig.PREFIXPATH,version);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -171,7 +162,7 @@ public class EpidemicServiceImpl implements IEpidemicService {
                 e.printStackTrace();
             }
         }
-        String url = host + "/api/lane-service/epidemic-prefix-list";
+        String url = CenterConfig.HOST + "/api/lane-service/epidemic-prefix-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo = new VersionVo();
         versionVo.setVersion(version);
@@ -179,7 +170,7 @@ public class EpidemicServiceImpl implements IEpidemicService {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonStr);
         final Request request = new Request.Builder()
                 .url(url)
-                .addHeader("AuthCode", stationGB)
+                .addHeader("AuthCode", CenterConfig.STATIONGB)
                 .addHeader("Json-Md5", backMD5(jsonStr))
                 .post(requestBody)
                 .build();
@@ -191,11 +182,11 @@ public class EpidemicServiceImpl implements IEpidemicService {
             if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version + ".zip";
-                File file = new File(prefixPath);
+                File file = new File(CenterConfig.PREFIXPATH);
                 if (!file.exists()) {
                     file.mkdir();
                 }
-                String pathName = prefixPath + "/" + fileName;
+                String pathName = CenterConfig.PREFIXPATH + "/" + fileName;
                 file = new File(pathName);
                 if (!file.exists()) {
                     file.createNewFile();
@@ -204,7 +195,7 @@ public class EpidemicServiceImpl implements IEpidemicService {
                 fos.write(bytes, 0, bytes.length);
                 fos.flush();
                 fos.close();
-                unzipPrefix(pathName,prefixPath,version);
+                unzipPrefix(pathName,CenterConfig.PREFIXPATH,version);
             }
         } catch (Exception e) {
             e.printStackTrace();
