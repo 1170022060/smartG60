@@ -2,6 +2,7 @@ package com.pingok.datacenter.service.roster.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.datacenter.config.CenterConfig;
 import com.pingok.datacenter.domain.roster.rescue.TblRescueListRecord;
 import com.pingok.datacenter.domain.roster.rescue.TblRescueListRecordLog;
 import com.pingok.datacenter.domain.roster.rescue.TblRescueVersion;
@@ -56,14 +57,6 @@ public class RescueServiceImpl implements IRescueService {
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
 
-    @Value("${center.host}")
-    private String host;
-
-    @Value("${center.stationGB}")
-    private String stationGB;
-
-    @Value("${center.rescuePath}")
-    private String rescuePath;
 
     @Override
     public void rescue(JSONObject obj) {
@@ -97,7 +90,7 @@ public class RescueServiceImpl implements IRescueService {
                 e.printStackTrace();
             }
         }
-        String url=host+"/api/lane-service/emerg-incr-list";
+        String url= CenterConfig.HOST+"/api/lane-service/emerg-incr-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo=new VersionVo();
         versionVo.setVersion(version);
@@ -105,7 +98,7 @@ public class RescueServiceImpl implements IRescueService {
         RequestBody requestBody =  RequestBody.create(MediaType.parse("application/json"),jsonStr);
         final Request request = new Request.Builder()
                 .url(url)
-                .addHeader("AuthCode",stationGB)
+                .addHeader("AuthCode",CenterConfig.STATIONGB)
                 .addHeader("Json-Md5",backMD5(jsonStr))
                 .post(requestBody)
                 .build();
@@ -117,11 +110,11 @@ public class RescueServiceImpl implements IRescueService {
             if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version + ".zip";
-                File file=new File(rescuePath);
+                File file=new File(CenterConfig.RESCUEPATH);
                 if(!file.exists()){
                     file.mkdirs();
                 }
-                String pathName=rescuePath+"/"+fileName;
+                String pathName=CenterConfig.RESCUEPATH+"/"+fileName;
                 file  = new File(pathName);
                 if(!file.exists()){
                     file.createNewFile();
@@ -130,7 +123,7 @@ public class RescueServiceImpl implements IRescueService {
                 fos.write(bytes,0,bytes.length);
                 fos.flush();
                 fos.close();
-                unzipIncr(pathName,rescuePath,version);
+                unzipIncr(pathName,CenterConfig.RESCUEPATH,version);
             }
         }
         catch (Exception e){
@@ -140,7 +133,7 @@ public class RescueServiceImpl implements IRescueService {
 
     @Override
     public void all(String version) {
-        String url=host+"/api/lane-service/emerg-all-list";
+        String url=CenterConfig.HOST+"/api/lane-service/emerg-all-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo=new VersionVo();
         versionVo.setVersion(version);
@@ -148,7 +141,7 @@ public class RescueServiceImpl implements IRescueService {
         RequestBody requestBody =  RequestBody.create(MediaType.parse("application/json"),jsonStr);
         final Request request = new Request.Builder()
                 .url(url)
-                .addHeader("AuthCode",stationGB)
+                .addHeader("AuthCode",CenterConfig.STATIONGB)
                 .addHeader("Json-Md5",backMD5(jsonStr))
                 .post(requestBody)
                 .build();
@@ -160,11 +153,11 @@ public class RescueServiceImpl implements IRescueService {
             if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version + ".zip";
-                File file=new File(rescuePath+"_all");
+                File file=new File(CenterConfig.RESCUEPATH+"_all");
                 if(!file.exists()){
                     file.mkdirs();
                 }
-                String pathName=rescuePath+"_all"+"/"+fileName;
+                String pathName=CenterConfig.RESCUEPATH+"_all"+"/"+fileName;
                 file  = new File(pathName);
                 if(!file.exists()){
                     file.createNewFile();
@@ -182,7 +175,7 @@ public class RescueServiceImpl implements IRescueService {
 
     @Override
     public void unzipAll(String version) {
-        String resourcePath = rescuePath+"_all";
+        String resourcePath = CenterConfig.RESCUEPATH+"_all";
         ZipFile zp=null;//要遍历的路径
         File files = new File(resourcePath);		//获取其file对象
         String[] fileNameLists = files.list();	//遍历path下的文件和目录，放在File数组中

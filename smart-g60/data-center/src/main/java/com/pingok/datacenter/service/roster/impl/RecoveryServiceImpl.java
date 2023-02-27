@@ -2,6 +2,7 @@ package com.pingok.datacenter.service.roster.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.datacenter.config.CenterConfig;
 import com.pingok.datacenter.domain.roster.recovery.TblRecoveryListRecord;
 import com.pingok.datacenter.domain.roster.recovery.TblRecoveryListRecordLog;
 import com.pingok.datacenter.domain.roster.recovery.TblRecoveryStationUsed;
@@ -20,7 +21,6 @@ import com.ruoyi.common.core.utils.bean.BeanUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -56,14 +56,6 @@ public class RecoveryServiceImpl implements IRecoveryService {
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
 
-    @Value("${center.host}")
-    private String host;
-
-    @Value("${center.stationGB}")
-    private String stationGB;
-
-    @Value("${center.recoveryPath}")
-    private String recoveryPath;
 
     @Override
     public void recovery(JSONObject obj) {
@@ -85,146 +77,139 @@ public class RecoveryServiceImpl implements IRecoveryService {
 
     @Override
     public void increment() {
-        String versionNow=versionMapper.selectVersion("TBL_RECOVERY_VERSION");
-        String version = DateUtils.getTimeMinute(DateUtils.getBeforeMillisEndWithMinute0or5(5,DateUtils.getNowDate()));
-        if(StringUtils.isNotNull(versionNow) && (versionNow.equals(version)))
-        {
+        String versionNow = versionMapper.selectVersion("TBL_RECOVERY_VERSION");
+        String version = DateUtils.getTimeMinute(DateUtils.getBeforeMillisEndWithMinute0or5(5, DateUtils.getNowDate()));
+        if (StringUtils.isNotNull(versionNow) && (versionNow.equals(version))) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
             try {
                 // 注意格式需要与上面一致，不然会出现异常
-                version=DateUtils.getTimeMinute(DateUtils.getPreTime(sdf.parse(versionNow) ,5));
+                version = DateUtils.getTimeMinute(DateUtils.getPreTime(sdf.parse(versionNow), 5));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        String url=host+"/api/lane-service/vehicleblack-incr-list";
+        String url = CenterConfig.HOST + "/api/lane-service/vehicleblack-incr-list";
         OkHttpClient client = new OkHttpClient();
-        VersionVo versionVo=new VersionVo();
+        VersionVo versionVo = new VersionVo();
         versionVo.setVersion(version);
         String jsonStr = JSON.toJSONString(versionVo);
-        RequestBody requestBody =  RequestBody.create(MediaType.parse("application/json"),jsonStr);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonStr);
         final Request request = new Request.Builder()
                 .url(url)
-                .addHeader("AuthCode",stationGB)
-                .addHeader("Json-Md5",backMD5(jsonStr))
+                .addHeader("AuthCode", CenterConfig.STATIONGB)
+                .addHeader("Json-Md5", backMD5(jsonStr))
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
 
-        try{
+        try {
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            if(bytes.length>0 && response.code()==200)
-            {
+            if (bytes.length > 0 && response.code() == 200) {
                 String fileName = version + ".zip";
-                File file=new File(recoveryPath);
-                if(!file.exists()){
+                File file = new File(CenterConfig.RECOVERYPATH);
+                if (!file.exists()) {
                     file.mkdirs();
                 }
-                String pathName=recoveryPath+"/"+fileName;
-                file  = new File(pathName);
-                if(!file.exists()){
+                String pathName = CenterConfig.RECOVERYPATH + "/" + fileName;
+                file = new File(pathName);
+                if (!file.exists()) {
                     file.createNewFile();
                 }
                 FileOutputStream fos = new FileOutputStream(file);
-                fos.write(bytes,0,bytes.length);
+                fos.write(bytes, 0, bytes.length);
                 fos.flush();
                 fos.close();
-                unzipIncr(pathName,recoveryPath,version);
+                unzipIncr(pathName, CenterConfig.RECOVERYPATH, version);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void all(String version) {
-        String url=host+"/api/lane-service/vehicleblack-all-list";
+        String url = CenterConfig.HOST + "/api/lane-service/vehicleblack-all-list";
         OkHttpClient client = new OkHttpClient();
-        VersionVo versionVo=new VersionVo();
+        VersionVo versionVo = new VersionVo();
         versionVo.setVersion(version);
         String jsonStr = JSON.toJSONString(versionVo);
-        RequestBody requestBody =  RequestBody.create(MediaType.parse("application/json"),jsonStr);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonStr);
         final Request request = new Request.Builder()
                 .url(url)
-                .addHeader("AuthCode",stationGB)
-                .addHeader("Json-Md5",backMD5(jsonStr))
+                .addHeader("AuthCode", CenterConfig.STATIONGB)
+                .addHeader("Json-Md5", backMD5(jsonStr))
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
 
-        try{
+        try {
             Response response = call.execute();
             byte[] bytes = response.body().bytes();
-            if(bytes.length>0 && response.code()==200)
-            {
+            if (bytes.length > 0 && response.code() == 200) {
                 String fileName = version + ".zip";
-                File file=new File(recoveryPath+"_all");
-                if(!file.exists()){
+                File file = new File(CenterConfig.RECOVERYPATH + "_all");
+                if (!file.exists()) {
                     file.mkdirs();
                 }
-                String pathName=recoveryPath+"_all"+"/"+fileName;
-                file  = new File(pathName);
-                if(!file.exists()){
+                String pathName = CenterConfig.RECOVERYPATH + "_all" + "/" + fileName;
+                file = new File(pathName);
+                if (!file.exists()) {
                     file.createNewFile();
                 }
                 FileOutputStream fos = new FileOutputStream(file);
-                fos.write(bytes,0,bytes.length);
+                fos.write(bytes, 0, bytes.length);
                 fos.flush();
                 fos.close();
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void unzipIncr(String zipPath,String resourcePath,String version){
+    public void unzipIncr(String zipPath, String resourcePath, String version) {
         //判断生成目录是否生成，如果没有就创建
-        File pathFile=new File(resourcePath);
-        if(!pathFile.exists()){
+        File pathFile = new File(resourcePath);
+        if (!pathFile.exists()) {
             pathFile.mkdirs();
         }
-        ZipFile zp=null;
-        try{
+        ZipFile zp = null;
+        try {
             //指定编码，否则压缩包里面不能有中文目录
-            zp=new ZipFile(zipPath, Charset.forName("gbk"));
+            zp = new ZipFile(zipPath, Charset.forName("gbk"));
             //遍历里面的文件及文件夹
-            Enumeration entries=zp.entries();
-            while(entries.hasMoreElements()){
-                ZipEntry entry= (ZipEntry) entries.nextElement();
-                String zipEntryName=entry.getName();
-                InputStream in=zp.getInputStream(entry);
-                String outpath=(resourcePath+"/"+zipEntryName).replace("/",File.separator);
+            Enumeration entries = zp.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = (ZipEntry) entries.nextElement();
+                String zipEntryName = entry.getName();
+                InputStream in = zp.getInputStream(entry);
+                String outpath = (resourcePath + "/" + zipEntryName).replace("/", File.separator);
                 //判断路径是否存在，不存在则创建文件路径
-                File file = new  File(outpath.substring(0,outpath.lastIndexOf(File.separator)));
-                if(!file.exists()){
+                File file = new File(outpath.substring(0, outpath.lastIndexOf(File.separator)));
+                if (!file.exists()) {
                     file.mkdirs();
                 }
                 //判断文件全路径是否为文件夹,如果是,不需要解压
-                if(new File(outpath).isDirectory())
+                if (new File(outpath).isDirectory())
                     continue;
-                OutputStream out=new FileOutputStream(outpath);
-                byte[] bf=new byte[2048];
+                OutputStream out = new FileOutputStream(outpath);
+                byte[] bf = new byte[2048];
                 int len;
-                while ((len=in.read(bf))>0){
-                    out.write(bf,0,len);
+                while ((len = in.read(bf)) > 0) {
+                    out.write(bf, 0, len);
                 }
                 in.close();
                 out.close();
-                if(zipEntryName.contains(".zip"))
-                {
-                    unzipIncr(outpath,resourcePath,version);
+                if (zipEntryName.contains(".zip")) {
+                    unzipIncr(outpath, resourcePath, version);
                 }
-                if(zipEntryName.contains("data.json"))
-                {
+                if (zipEntryName.contains("data.json")) {
                     List<RecoveryVo> list = jsonAnalysis(outpath);
-                    insertIncr(list,version);
+                    insertIncr(list, version);
                 }
             }
             zp.close();
-        }catch ( Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         delFolder(resourcePath);
@@ -232,23 +217,22 @@ public class RecoveryServiceImpl implements IRecoveryService {
 
     @Override
     public void unzipAll(String version) {
-        String resourcePath = recoveryPath+"_all";
-        ZipFile zp=null;//要遍历的路径
-        File files = new File(resourcePath);		//获取其file对象
-        String[] fileNameLists = files.list();	//遍历path下的文件和目录，放在File数组中
-        for(String zipName:fileNameLists){					//遍历File[]数组
-            if(zipName.equals(version + ".zip"))
-            {
+        String resourcePath = CenterConfig.RECOVERYPATH + "_all";
+        ZipFile zp = null;//要遍历的路径
+        File files = new File(resourcePath);        //获取其file对象
+        String[] fileNameLists = files.list();    //遍历path下的文件和目录，放在File数组中
+        for (String zipName : fileNameLists) {                    //遍历File[]数组
+            if (zipName.equals(version + ".zip")) {
                 try {
                     //指定编码，否则压缩包里面不能有中文目录
-                    zp = new ZipFile(resourcePath+"/"+zipName, Charset.forName("gbk"));
+                    zp = new ZipFile(resourcePath + "/" + zipName, Charset.forName("gbk"));
                     //遍历里面的文件及文件夹
                     Enumeration entries = zp.entries();
                     while (entries.hasMoreElements()) {
                         ZipEntry entry = (ZipEntry) entries.nextElement();
                         String zipEntryName = entry.getName();
                         InputStream in = zp.getInputStream(entry);
-                        String outpath = (resourcePath+"/"+ zipEntryName).replace("/", File.separator);
+                        String outpath = (resourcePath + "/" + zipEntryName).replace("/", File.separator);
                         File fileDelete = new File(outpath);
                         //判断路径是否存在，不存在则创建文件路径
                         File file = new File(outpath.substring(0, outpath.lastIndexOf(File.separator)));
@@ -268,7 +252,7 @@ public class RecoveryServiceImpl implements IRecoveryService {
                         out.close();
                         if (zipEntryName.contains(".json")) {
                             List<RecoveryVo> list = jsonAnalysis(outpath);
-                            insertAll(list,version);
+                            insertAll(list, version);
                             fileDelete.delete();
                         }
                     }
@@ -279,6 +263,7 @@ public class RecoveryServiceImpl implements IRecoveryService {
             }
         }
     }
+
     public void insertIncr(List<RecoveryVo> list, String version) {
         TblRecoveryListRecord recoveryListRecord;
         TblRecoveryListRecordLog recoveryListRecordLog;
@@ -289,7 +274,7 @@ public class RecoveryServiceImpl implements IRecoveryService {
         example.createCriteria().andEqualTo("version", version);
         recoveryVersion = tblRecoveryVersionMapper.selectOneByExample(example);
         if (StringUtils.isNull(recoveryVersion)) {
-            recoveryVersion=new TblRecoveryVersion();
+            recoveryVersion = new TblRecoveryVersion();
             recoveryVersion.setId(remoteIdProducerService.nextId());
             recoveryVersion.setVersion(version);
             tblRecoveryVersionMapper.insert(recoveryVersion);
@@ -313,7 +298,7 @@ public class RecoveryServiceImpl implements IRecoveryService {
                 recoveryListRecordLog.setId(remoteIdProducerService.nextId());
                 tblRecoveryListRecordLogMapper.insert(recoveryListRecordLog);
             } else {
-                Example example2=new Example(TblRecoveryVersion.class);
+                Example example2 = new Example(TblRecoveryVersion.class);
                 example2.createCriteria().andEqualTo("id", recoveryListRecord.getVersionId());
                 recoveryVersion2 = tblRecoveryVersionMapper.selectOneByExample(example2);
 
@@ -341,7 +326,7 @@ public class RecoveryServiceImpl implements IRecoveryService {
         example.createCriteria().andEqualTo("version", version);
         recoveryVersion = tblRecoveryVersionMapper.selectOneByExample(example);
         if (StringUtils.isNull(recoveryVersion)) {
-            recoveryVersion=new TblRecoveryVersion();
+            recoveryVersion = new TblRecoveryVersion();
             recoveryVersion.setId(remoteIdProducerService.nextId());
             recoveryVersion.setVersion(version);
             tblRecoveryVersionMapper.insert(recoveryVersion);
@@ -360,7 +345,7 @@ public class RecoveryServiceImpl implements IRecoveryService {
                 recoveryListRecord.setUpdateTime(DateUtils.getNowDate());
                 tblRecoveryListRecordMapper.insert(recoveryListRecord);
             } else {
-                Example example2=new Example(TblRecoveryVersion.class);
+                Example example2 = new Example(TblRecoveryVersion.class);
                 example2.createCriteria().andEqualTo("id", recoveryListRecord.getVersionId());
                 recoveryVersion2 = tblRecoveryVersionMapper.selectOneByExample(example2);
 
@@ -374,7 +359,7 @@ public class RecoveryServiceImpl implements IRecoveryService {
         }
     }
 
-    public static List<RecoveryVo> jsonAnalysis(String jsonPath){
+    public static List<RecoveryVo> jsonAnalysis(String jsonPath) {
 
         String jsonStr = "";
         try {

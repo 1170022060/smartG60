@@ -2,6 +2,7 @@ package com.pingok.datacenter.service.roster.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.datacenter.config.CenterConfig;
 import com.pingok.datacenter.domain.roster.blackcard.TblBlackCard;
 import com.pingok.datacenter.domain.roster.blackcard.TblBlackCardLog;
 import com.pingok.datacenter.domain.roster.blackcard.TblBlackCardStationUsed;
@@ -59,14 +60,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
     @Autowired
     private VersionMapper versionMapper;
 
-    @Value("${center.host}")
-    private String host;
-
-    @Value("${center.stationGB}")
-    private String stationGB;
-
-    @Value("${center.cardPath}")
-    private String cardPath;
+    
 
     @Override
     public void blackCard(JSONObject obj) {
@@ -100,7 +94,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
                 e.printStackTrace();
             }
         }
-        String url = host + "/api/lane-service/black-incr-list";
+        String url = CenterConfig.HOST + "/api/lane-service/black-incr-list";
         OkHttpClient client = new OkHttpClient();
         VersionVo versionVo = new VersionVo();
         versionVo.setVersion(version);
@@ -108,7 +102,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonStr);
         final Request request = new Request.Builder()
                 .url(url)
-                .addHeader("AuthCode", stationGB)
+                .addHeader("AuthCode", CenterConfig.STATIONGB)
                 .addHeader("Json-Md5", backMD5(jsonStr))
                 .post(requestBody)
                 .build();
@@ -120,11 +114,11 @@ public class BlackCardServiceImpl implements IBlackCardService {
             if(bytes.length>0 && response.code()==200)
             {
                 String fileName = version + ".zip";
-                File file = new File(cardPath);
+                File file = new File(CenterConfig.CARDPATH);
                 if (!file.exists()) {
                     file.mkdir();
                 }
-                String pathName = cardPath + "/" + fileName;
+                String pathName = CenterConfig.CARDPATH + "/" + fileName;
                 file = new File(pathName);
                 if (!file.exists()) {
                     file.createNewFile();
@@ -133,8 +127,8 @@ public class BlackCardServiceImpl implements IBlackCardService {
                 fos.write(bytes, 0, bytes.length);
                 fos.flush();
                 fos.close();
-                if (version.equals(unzip(pathName, cardPath))) {
-                    unzipInside(version, cardPath);
+                if (version.equals(unzip(pathName, CenterConfig.CARDPATH))) {
+                    unzipInside(version, CenterConfig.CARDPATH);
                 }
             }
         } catch (Exception e) {
@@ -146,7 +140,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
     public void all(String version) {
         List<String> dataList = Arrays.asList("11", "12", "13", "14", "15", "21", "22", "23", "31", "32", "33", "34", "35", "36", "37", "41", "42", "43", "44", "45", "46", "50", "51", "52", "53", "54", "61", "62", "63", "64", "65","99");
         for (String province : dataList) {
-            String url = host+"/api/lane-service/black-all-list";
+            String url = CenterConfig.HOST+"/api/lane-service/black-all-list";
             OkHttpClient client = new OkHttpClient();
             VersionAllVo versionAllVo = new VersionAllVo();
             versionAllVo.setVersion(version);
@@ -155,7 +149,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
             RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonStr);
             final Request request = new Request.Builder()
                     .url(url)
-                    .addHeader("AuthCode", stationGB)
+                    .addHeader("AuthCode", CenterConfig.STATIONGB)
                     .addHeader("Json-Md5", backMD5(jsonStr))
                     .post(requestBody)
                     .build();
@@ -167,15 +161,15 @@ public class BlackCardServiceImpl implements IBlackCardService {
                 if(bytes.length>0 && response.code()==200)
                 {
                     String fileName = version +"_" +province+ ".zip";
-                    File file = new File(cardPath+"_all");
+                    File file = new File(CenterConfig.CARDPATH+"_all");
                     if (!file.exists()) {
                         file.mkdirs();
                     }
-                    file = new File(cardPath+"_all" + "/" + province);
+                    file = new File(CenterConfig.CARDPATH+"_all" + "/" + province);
                     if (!file.exists()) {
                         file.mkdirs();
                     }
-                    String pathName = cardPath+"_all" + "/" + province + "/" + fileName;
+                    String pathName = CenterConfig.CARDPATH+"_all" + "/" + province + "/" + fileName;
                     file = new File(pathName);
                     if (!file.exists()) {
                         file.createNewFile();
@@ -197,7 +191,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
         List<String> dataList = Arrays.asList("11", "12", "13", "14", "15", "21", "22", "23", "31", "32", "33", "34", "35", "36", "37", "41", "42", "43", "44", "45", "46", "50", "51", "52", "53", "54", "61", "62", "63", "64", "65" ,"99");
         File zipFile;
         for (String province : dataList) {
-            String zipPath = cardPath+"_all" + "/" + province + "/" + version + "_" + province + ".zip";
+            String zipPath = CenterConfig.CARDPATH+"_all" + "/" + province + "/" + version + "_" + province + ".zip";
             zipFile = new File(zipPath);
             if (zipFile.exists()) {
                 try {
@@ -209,7 +203,7 @@ public class BlackCardServiceImpl implements IBlackCardService {
                         ZipEntry entry = (ZipEntry) entries.nextElement();
                         String zipEntryName = entry.getName();
                         InputStream in = zp.getInputStream(entry);
-                        String outpath = (cardPath + "_all" + "/" + province + "/" + zipEntryName).replace("/", File.separator);
+                        String outpath = (CenterConfig.CARDPATH + "_all" + "/" + province + "/" + zipEntryName).replace("/", File.separator);
                         File fileDelete = new File(outpath);
                         //判断路径是否存在，不存在则创建文件路径
                         File file = new File(outpath.substring(0, outpath.lastIndexOf(File.separator)));

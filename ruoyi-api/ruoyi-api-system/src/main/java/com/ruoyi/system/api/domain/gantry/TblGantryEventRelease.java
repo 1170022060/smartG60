@@ -1,4 +1,4 @@
-package com.pingok.devicemonitor.domain.gantry;
+package com.ruoyi.system.api.domain.gantry;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

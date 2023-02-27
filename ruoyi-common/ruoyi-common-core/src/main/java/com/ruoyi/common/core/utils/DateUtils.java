@@ -22,6 +22,8 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     public static String HH_MM_SS = "HH:mm:ss";
 
+    public static String HH_MM = "HH:mm";
+
     public static String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 
     public static String YYYYMMDDHHMM = "yyyyMMddHHmm";
@@ -33,6 +35,8 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     public static String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 
     public static String YYYY_MM_DDTHH_MM_SS = "yyyy-MM-ddTHH:mm:ss";
+
+    public static String YYYY_MM_DDTHH_MM = "yyyy-MM-ddTHH:mm";
 
     public static String YYYY_MM_DD_HH = "yyyy-MM-dd HH";
 

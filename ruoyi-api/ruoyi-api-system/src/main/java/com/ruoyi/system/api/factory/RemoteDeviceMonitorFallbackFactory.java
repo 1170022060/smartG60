@@ -4,6 +4,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.api.RemoteDeviceMonitorService;
 import com.ruoyi.system.api.domain.device.TblDeviceInfo;
 import com.ruoyi.system.api.domain.device.TblDeviceStatus;
+import com.ruoyi.system.api.domain.gantry.TblGantryEventRelease;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
@@ -23,6 +24,11 @@ public class RemoteDeviceMonitorFallbackFactory implements FallbackFactory<Remot
     public RemoteDeviceMonitorService create(Throwable throwable) {
         log.error("设备监控服务调用失败:{}", throwable.getMessage());
         return new RemoteDeviceMonitorService() {
+
+            @Override
+            public R eventProcessing(TblGantryEventRelease tblGantryEventRelease) {
+                return null;
+            }
 
             @Override
             public R marqueeText() {

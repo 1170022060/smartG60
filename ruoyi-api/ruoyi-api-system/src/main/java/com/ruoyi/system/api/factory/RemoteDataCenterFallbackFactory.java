@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,11 @@ public class RemoteDataCenterFallbackFactory implements FallbackFactory<RemoteDa
         log.error("数据中心服务调用失败:{}", throwable.getMessage());
         return new RemoteDataCenterService()
         {
+            @Override
+            public R getData(String name, Date dateTimeNow) {
+                return null;
+            }
+
             @Override
             public R rushRecord(String year, String startTime, String endTime, String twoHours) {
                 return null;
