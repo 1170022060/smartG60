@@ -32,10 +32,16 @@ public class SharEtctdResSenderServiceImpl implements ISharEnpdResSenderService 
         String year = DateUtils.dateYear();
         List<TblSharEnpdResSender> list = JSON.parseArray(jsonArray.toJSONString(), TblSharEnpdResSender.class);
         if (list != null && list.size() > 0) {
+            TblSharEnpdResSender t;
             for (TblSharEnpdResSender gtd : list) {
                 try {
                     gtd.setYear(year);
-                    tblSharEnpdResSenderMapper.add(gtd);
+                    t = tblSharEnpdResSenderMapper.findById(gtd);
+                    if(t==null){
+                        tblSharEnpdResSenderMapper.add(gtd);
+                    }else {
+                        tblSharEnpdResSenderMapper.update(gtd);
+                    }
                 } catch (Exception e) {
                     log.error(e.getMessage());
                 }

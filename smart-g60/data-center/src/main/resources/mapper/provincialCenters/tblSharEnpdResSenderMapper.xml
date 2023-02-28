@@ -52,6 +52,12 @@
         FROM TBL_SHAR_ENPD_RES_SENDER_${year} tsers
     </select>
 
+    <select id="findById" resultMap="tblSharEnpdResSenderMap">
+        SELECT
+        <include refid="allColumns" />
+        FROM TBL_SHAR_ENPD_RES_SENDER_${year} tsers WHERE tsers.ID =  #{id}
+    </select>
+
     <!-- 根据主键查询入口通行记录-省中心信息 -->
     <select id="findByIds" resultMap="tblSharEnpdResSenderMap" parameterType="list">
         SELECT

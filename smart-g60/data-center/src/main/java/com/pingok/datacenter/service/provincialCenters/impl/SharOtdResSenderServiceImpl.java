@@ -34,10 +34,16 @@ public class SharOtdResSenderServiceImpl implements ISharOtdResSenderService {
         String year = DateUtils.dateYear();
         List<TblSharOtdResSender> list = JSON.parseArray(jsonArray.toJSONString(), TblSharOtdResSender.class);
         if (list != null && list.size() > 0) {
+            TblSharOtdResSender t;
             for (TblSharOtdResSender gtd : list) {
                 try {
                     gtd.setYear(year);
-                    tblSharOtdResSenderMapper.add(gtd);
+                    t = tblSharOtdResSenderMapper.findById(gtd);
+                    if(t==null){
+                        tblSharOtdResSenderMapper.add(gtd);
+                    }else {
+                        tblSharOtdResSenderMapper.update(gtd);
+                    }
                 } catch (Exception e) {
                     log.error(e.getMessage());
                 }

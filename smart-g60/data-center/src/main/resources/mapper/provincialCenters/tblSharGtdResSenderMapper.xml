@@ -196,6 +196,12 @@
         FROM TBL_SHAR_GTD_RES_SENDER_${year} tsgrs
     </select>
 
+    <select id="findById" resultMap="tblSharGtdResSenderMap" >
+        SELECT
+        <include refid="allColumns" />
+        FROM TBL_SHAR_GTD_RES_SENDER_${year} tsgrs WHERE tsgrs.TRADE_ID = #{tradeId}
+    </select>
+
     <!-- 根据主键查询门架交易记录-省中心信息 -->
     <select id="findByIds" resultMap="tblSharGtdResSenderMap" parameterType="list">
         SELECT

@@ -34,6 +34,12 @@
         FROM TBL_SHAR_SVID_RES_SENDER_${year} tssrs
     </select>
 
+    <select id="findById" resultMap="tblSharSvidResSenderMap">
+        SELECT
+        <include refid="allColumns" />
+        FROM TBL_SHAR_SVID_RES_SENDER_${year} tssrs WHERE tssrs.ID = #{id}
+    </select>
+
     <!-- 根据主键查询收费站牌识记录-省中心信息 -->
     <select id="findByIds" resultMap="tblSharSvidResSenderMap" parameterType="list">
         SELECT

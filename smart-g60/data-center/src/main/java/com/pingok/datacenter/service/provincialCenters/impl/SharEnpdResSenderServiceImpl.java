@@ -2,6 +2,7 @@ package com.pingok.datacenter.service.provincialCenters.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.pingok.datacenter.domain.provincialCenters.TblSharEnpdResSender;
 import com.pingok.datacenter.domain.provincialCenters.TblSharEtctdResSender;
 import com.pingok.datacenter.domain.provincialCenters.TblSharGtdResSender;
 import com.pingok.datacenter.domain.provincialCenters.vo.ProvincialCentersVo;
@@ -31,10 +32,16 @@ public class SharEnpdResSenderServiceImpl implements ISharEtctdResSenderService 
         String year = DateUtils.dateYear();
         List<TblSharEtctdResSender> list = JSON.parseArray(jsonArray.toJSONString(), TblSharEtctdResSender.class);
         if (list != null && list.size() > 0) {
+            TblSharEtctdResSender t;
             for (TblSharEtctdResSender gtd : list) {
                 try {
                     gtd.setYear(year);
-                    tblSharEtctdResSenderMapper.add(gtd);
+                    t = tblSharEtctdResSenderMapper.findById(gtd);
+                    if(t==null){
+                        tblSharEtctdResSenderMapper.add(gtd);
+                    }else {
+                        tblSharEtctdResSenderMapper.update(gtd);
+                    }
                 } catch (Exception e) {
                     log.error(e.getMessage());
                 }

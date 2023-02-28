@@ -34,10 +34,16 @@ public class SharGvidResSenderServiceImpl implements ISharGvidResSenderService {
         String year = DateUtils.dateYear();
         List<TblSharGvidResSender> list = JSON.parseArray(jsonArray.toJSONString(), TblSharGvidResSender.class);
         if (list != null && list.size() > 0) {
+            TblSharGvidResSender t;
             for (TblSharGvidResSender gtd : list) {
                 try {
                     gtd.setYear(year);
-                    tblSharGvidResSenderMapper.add(gtd);
+                    t = tblSharGvidResSenderMapper.findById(gtd);
+                    if(t==null){
+                        tblSharGvidResSenderMapper.add(gtd);
+                    }else {
+                        tblSharGvidResSenderMapper.update(gtd);
+                    }
                 } catch (Exception e) {
                     log.error(e.getMessage());
                 }

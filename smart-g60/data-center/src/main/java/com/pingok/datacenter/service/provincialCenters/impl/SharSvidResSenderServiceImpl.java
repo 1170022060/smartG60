@@ -29,10 +29,16 @@ public class SharSvidResSenderServiceImpl implements ISharSvidResSenderService {
         String year = DateUtils.dateYear();
         List<TblSharSvidResSender> list = JSON.parseArray(jsonArray.toJSONString(), TblSharSvidResSender.class);
         if (list != null && list.size() > 0) {
+            TblSharSvidResSender t;
             for (TblSharSvidResSender gtd : list) {
                 try {
                     gtd.setYear(year);
-                    tblSharSvidResSenderMapper.add(gtd);
+                    t = tblSharSvidResSenderMapper.findById(gtd);
+                    if (t == null) {
+                        tblSharSvidResSenderMapper.add(gtd);
+                    } else {
+                        tblSharSvidResSenderMapper.update(gtd);
+                    }
                 } catch (Exception e) {
                     log.error(e.getMessage());
                 }

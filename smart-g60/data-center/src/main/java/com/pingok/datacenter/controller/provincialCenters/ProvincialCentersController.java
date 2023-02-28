@@ -52,19 +52,19 @@ public class ProvincialCentersController extends BaseController {
                 case "SHARE_G60ENPD_REQ_SENDER":
                     iSharEnpdResSenderService.add(jsonArray);
                     break;
-                case "SHARE_G60OTD_SENDER":
+                case "SHARE_G60OTD_REQ_SENDER":
                     iSharOtdResSenderService.add(jsonArray);
                     break;
-                case "SHARE_G60ETCTD_SENDER":
+                case "SHARE_G60ETCTD_REQ_SENDER":
                     iSharEtctdResSenderService.add(jsonArray);
                     break;
-                case "SHARE_G60SVID_SENDER":
+                case "SHARE_G60SVID_REQ_SENDER":
                     iSharSvidResSenderService.add(jsonArray);
                     break;
-                case "SHARE_G60GTD_SENDER":
+                case "SHARE_G60GTD_REQ_SENDER":
                     iSharGtdResSenderService.add(jsonArray);
                     break;
-                case "SHARE_G60GVID_SENDER":
+                case "SHARE_G60GVID_REQ_SENDER":
                     iSharGvidResSenderService.add(jsonArray);
                     break;
             }

@@ -30,10 +30,16 @@ public class SharGtdResSenderServiceImpl implements ISharGtdResSenderService {
         List<TblSharGtdResSender> list = JSON.parseArray(jsonArray.toJSONString(), TblSharGtdResSender.class);
 
         if (list != null && list.size() > 0) {
+            TblSharGtdResSender t;
             for (TblSharGtdResSender gtd : list) {
                 try {
                     gtd.setYear(year);
-                    tblSharGtdResSenderMapper.add(gtd);
+                    t = tblSharGtdResSenderMapper.findById(gtd);
+                    if(t==null){
+                        tblSharGtdResSenderMapper.add(gtd);
+                    }else {
+                        tblSharGtdResSenderMapper.update(gtd);
+                    }
                 } catch (Exception e) {
                     log.error(e.getMessage());
                 }

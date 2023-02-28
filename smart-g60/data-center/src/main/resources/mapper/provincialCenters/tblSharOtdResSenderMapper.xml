@@ -85,6 +85,12 @@
     </select>
 
     <!-- 根据主键查询出口其他交易记录-省中心信息 -->
+    <select id="findById" resultMap="tblSharOtdResSenderMap" >
+        SELECT
+        <include refid="allColumns" />
+        FROM TBL_SHAR_OTD_RES_SENDER_${year} tsors WHERE tsors.ID = #{id}
+    </select>
+
     <select id="findByIds" resultMap="tblSharOtdResSenderMap" parameterType="list">
         SELECT
             <include refid="allColumns" />

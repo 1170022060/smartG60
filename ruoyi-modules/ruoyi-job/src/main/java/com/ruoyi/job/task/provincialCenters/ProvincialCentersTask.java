@@ -29,7 +29,7 @@ public class ProvincialCentersTask {
     }
 
     public void sharOtdResSender() {
-        R r = remoteDataCenterService.getData("SHARE_G60OTD_SENDER", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,DateUtils.getPreTime(DateUtils.getNowDate(),-1)));
+        R r = remoteDataCenterService.getData("SHARE_G60OTD_REQ_SENDER", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,DateUtils.getPreTime(DateUtils.getNowDate(),-1)));
         if (r.getCode() == R.SUCCESS) {
             log.info("sharOtdResSender定时任务执行成功");
         } else {
@@ -38,7 +38,7 @@ public class ProvincialCentersTask {
     }
 
     public void sharEtctdResSender() {
-        R r = remoteDataCenterService.getData("SHARE_G60ETCTD_SENDER", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,DateUtils.getPreTime(DateUtils.getNowDate(),-1)));
+        R r = remoteDataCenterService.getData("SHARE_G60ETCTD_REQ_SENDER", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,DateUtils.getPreTime(DateUtils.getNowDate(),-1)));
         if (r.getCode() == R.SUCCESS) {
             log.info("sharEtctdResSender定时任务执行成功");
         } else {
@@ -47,7 +47,7 @@ public class ProvincialCentersTask {
     }
 
     public void sharSvidResSender() {
-        R r = remoteDataCenterService.getData("SHARE_G60SVID_SENDER", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,DateUtils.getPreTime(DateUtils.getNowDate(),-1)));
+        R r = remoteDataCenterService.getData("SHARE_G60SVID_REQ_SENDER", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,DateUtils.getPreTime(DateUtils.getNowDate(),-1)));
         if (r.getCode() == R.SUCCESS) {
             log.info("sharSvidResSender定时任务执行成功");
         } else {
@@ -56,7 +56,7 @@ public class ProvincialCentersTask {
     }
 
     public void sharGtdResSender() {
-        R r = remoteDataCenterService.getData("SHARE_G60GTD_SENDER", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,DateUtils.getPreTime(DateUtils.getNowDate(),-1)));
+        R r = remoteDataCenterService.getData("SHARE_G60GTD_REQ_SENDER", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,DateUtils.getPreTime(DateUtils.getNowDate(),-1)));
         if (r.getCode() == R.SUCCESS) {
             log.info("sharGtdResSender定时任务执行成功");
         } else {
@@ -65,7 +65,7 @@ public class ProvincialCentersTask {
     }
 
     public void sharGvidResSender() {
-        R r = remoteDataCenterService.getData("SHARE_G60GVID_SENDER", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,DateUtils.getPreTime(DateUtils.getNowDate(),-1)));
+        R r = remoteDataCenterService.getData("SHARE_G60GVID_REQ_SENDER", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,DateUtils.getPreTime(DateUtils.getNowDate(),-1)));
         if (r.getCode() == R.SUCCESS) {
             log.info("sharGvidResSender定时任务执行成功");
         } else {

@@ -14,6 +14,10 @@ import java.util.List;
 @Mapper
 public interface TblSharEnpdResSenderMapper {
 
+    TblSharEnpdResSender findById(TblSharEnpdResSender tblSharEnpdResSender);
+
+    int update(TblSharEnpdResSender tblSharEnpdResSender);
+
     int add(TblSharEnpdResSender tblSharEnpdResSender);
 
     int addList(ProvincialCentersVo provincialCentersVo);

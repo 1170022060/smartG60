@@ -85,6 +85,13 @@
     </select>
 
     <!-- 根据主键查询出口 ETC 交易记录-省中心信息 -->
+    <select id="findById" resultMap="tblSharEtctdResSenderMap" >
+        SELECT
+        <include refid="allColumns" />
+        FROM TBL_SHAR_ETCTD_RES_SENDER_${year} tsers WHERE tsers.ID = #{id}
+    </select>
+
+    <!-- 根据主键查询出口 ETC 交易记录-省中心信息 -->
     <select id="findByIds" resultMap="tblSharEtctdResSenderMap" parameterType="list">
         SELECT
             <include refid="allColumns" />

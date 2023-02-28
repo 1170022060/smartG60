@@ -58,6 +58,12 @@
         FROM TBL_SHAR_GVID_RES_SENDER_${year} tsgrs
     </select>
 
+    <select id="findById" resultMap="tblSharGvidResSenderMap" >
+        SELECT
+        <include refid="allColumns" />
+        FROM TBL_SHAR_GVID_RES_SENDER_${year} tsgrs WHERE tsgrs.PIC_ID = #{picId}
+    </select>
+
     <!-- 根据主键查询门架牌识记录-省中心信息 -->
     <select id="findByIds" resultMap="tblSharGvidResSenderMap" parameterType="list">
         SELECT
