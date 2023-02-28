@@ -33,8 +33,8 @@ public class ProvincialCentersServiceImpl implements IProvincialCentersService {
     @Override
     public JSONArray getData(String name, Date dateTimeNow) {
         JSONArray jsonArray = new JSONArray();
-        String dateTime = DateUtils.dateTime(dateTimeNow, DateUtils.YYYYMMDDHHMM)+"00000";
-        String reqTime = DateUtils.dateTime(dateTimeNow, DateUtils.YYYY_MM_DD) + "T" + DateUtils.dateTime(dateTimeNow, DateUtils.HH_MM)+":00";
+        String dateTime = DateUtils.dateTime(dateTimeNow, DateUtils.YYYYMMDDHHMM) + "00000";
+        String reqTime = DateUtils.dateTime(dateTimeNow, DateUtils.YYYY_MM_DD) + "T" + DateUtils.dateTime(dateTimeNow, DateUtils.HH_MM) + ":00";
         String fileName = name + "_" + dateTime + ".json";
         String filePath = "/data/file/provincialCenters/" + DateUtils.datePath() + "/";
         File file;
