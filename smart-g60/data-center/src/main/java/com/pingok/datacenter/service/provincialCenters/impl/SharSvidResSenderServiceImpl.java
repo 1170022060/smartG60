@@ -40,6 +40,7 @@ public class SharSvidResSenderServiceImpl implements ISharSvidResSenderService {
                         tblSharSvidResSenderMapper.update(gtd);
                     }
                 } catch (Exception e) {
+                    log.error(JSON.toJSONString(gtd));
                     log.error(e.getMessage());
                 }
             }

@@ -45,6 +45,7 @@ public class SharOtdResSenderServiceImpl implements ISharOtdResSenderService {
                         tblSharOtdResSenderMapper.update(gtd);
                     }
                 } catch (Exception e) {
+                    log.error(JSON.toJSONString(gtd));
                     log.error(e.getMessage());
                 }
             }

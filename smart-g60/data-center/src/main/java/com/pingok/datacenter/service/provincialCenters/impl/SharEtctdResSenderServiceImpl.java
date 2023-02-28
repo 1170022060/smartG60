@@ -43,6 +43,7 @@ public class SharEtctdResSenderServiceImpl implements ISharEnpdResSenderService 
                         tblSharEnpdResSenderMapper.update(gtd);
                     }
                 } catch (Exception e) {
+                    log.error(JSON.toJSONString(gtd));
                     log.error(e.getMessage());
                 }
             }
