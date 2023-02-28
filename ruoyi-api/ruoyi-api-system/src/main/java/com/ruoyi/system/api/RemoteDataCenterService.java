@@ -23,7 +23,7 @@ import java.util.Map;
 public interface RemoteDataCenterService {
 
     @PostMapping("/provincialCenters")
-    R getData(@RequestParam(value = "name") String name, @RequestParam(value = "dateTimeNow") Date dateTimeNow);
+    R getData(@RequestParam(value = "name") String name, @RequestParam(value = "dateTimeNow") String dateTimeNow);
 
 
     /**

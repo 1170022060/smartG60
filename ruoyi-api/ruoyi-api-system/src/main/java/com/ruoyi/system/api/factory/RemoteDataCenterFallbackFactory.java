@@ -30,7 +30,7 @@ public class RemoteDataCenterFallbackFactory implements FallbackFactory<RemoteDa
         return new RemoteDataCenterService()
         {
             @Override
-            public R getData(String name, Date dateTimeNow) {
+            public R getData(String name, String dateTimeNow) {
                 return null;
             }
 

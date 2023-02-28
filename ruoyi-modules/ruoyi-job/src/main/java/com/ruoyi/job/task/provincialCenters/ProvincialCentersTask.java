@@ -20,7 +20,7 @@ public class ProvincialCentersTask {
     private RemoteDataCenterService remoteDataCenterService;
 
     public void sharEnpdResSender() {
-        R r = remoteDataCenterService.getData("SHARE_G60ENPD_REQ_SENDER", DateUtils.getNowDate());
+        R r = remoteDataCenterService.getData("SHARE_G60ENPD_REQ_SENDER", DateUtils.getTime());
         if (r.getCode() == R.SUCCESS) {
             log.info("sharEnpdResSender定时任务执行成功");
         } else {
@@ -29,7 +29,7 @@ public class ProvincialCentersTask {
     }
 
     public void sharOtdResSender() {
-        R r = remoteDataCenterService.getData("SHARE_G60OTD_SENDER", DateUtils.getNowDate());
+        R r = remoteDataCenterService.getData("SHARE_G60OTD_SENDER", DateUtils.getTime());
         if (r.getCode() == R.SUCCESS) {
             log.info("sharOtdResSender定时任务执行成功");
         } else {
@@ -38,7 +38,7 @@ public class ProvincialCentersTask {
     }
 
     public void sharEtctdResSender() {
-        R r = remoteDataCenterService.getData("SHARE_G60ETCTD_SENDER", DateUtils.getNowDate());
+        R r = remoteDataCenterService.getData("SHARE_G60ETCTD_SENDER", DateUtils.getTime());
         if (r.getCode() == R.SUCCESS) {
             log.info("sharEtctdResSender定时任务执行成功");
         } else {
@@ -47,7 +47,7 @@ public class ProvincialCentersTask {
     }
 
     public void sharSvidResSender() {
-        R r = remoteDataCenterService.getData("SHARE_G60SVID_SENDER", DateUtils.getNowDate());
+        R r = remoteDataCenterService.getData("SHARE_G60SVID_SENDER", DateUtils.getTime());
         if (r.getCode() == R.SUCCESS) {
             log.info("sharSvidResSender定时任务执行成功");
         } else {
@@ -56,7 +56,7 @@ public class ProvincialCentersTask {
     }
 
     public void sharGtdResSender() {
-        R r = remoteDataCenterService.getData("SHARE_G60GTD_SENDER", DateUtils.getNowDate());
+        R r = remoteDataCenterService.getData("SHARE_G60GTD_SENDER", DateUtils.getTime());
         if (r.getCode() == R.SUCCESS) {
             log.info("sharGtdResSender定时任务执行成功");
         } else {
@@ -65,7 +65,7 @@ public class ProvincialCentersTask {
     }
 
     public void sharGvidResSender() {
-        R r = remoteDataCenterService.getData("SHARE_G60GVID_SENDER", DateUtils.getNowDate());
+        R r = remoteDataCenterService.getData("SHARE_G60GVID_SENDER", DateUtils.getTime());
         if (r.getCode() == R.SUCCESS) {
             log.info("sharGvidResSender定时任务执行成功");
         } else {
