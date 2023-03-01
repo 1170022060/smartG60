@@ -530,7 +530,7 @@ public interface TblTransSummaryMapper {
             "LEFT JOIN SYS_DICT_DATA vc on vc.DICT_VALUE=en.VEHICLE_CLASS and vc.DICT_TYPE='veh_status' " +
             "LEFT JOIN SYS_DICT_DATA pass on pass.DICT_VALUE=en.MEDIA_TYPE and pass.DICT_TYPE='pass_way' " +
             "LEFT JOIN SYS_DICT_DATA color on color.DICT_VALUE=SUBSTR(en.VEHICLE_ID, INSTR(en.VEHICLE_ID, '_')+1,LENGTH(en.VEHICLE_ID)) and color.DICT_TYPE='veh_color' " +
-            "LEFT JOIN ( " +
+            "RIGHT JOIN ( " +
             "SELECT " +
             "exEtc.PASS_ID as \"passIDEx\", " +
             "exEtc.ID as \"exGid\", " +
