@@ -25,11 +25,11 @@ public class BlackCardServiceImpl implements IBlackCardService {
     private TblBlackCardStationUsedMapper tblBlackCardStationUsedMapper;
 
     @Override
-    public List<Map> getNowList(String mediaId, Integer mediaType, String startDate, String endDate) {
-        if(mediaType == null) {
-            mediaType = 1;
-        }
-        return tblBlackCardMapper.selectList(mediaId, mediaType, startDate, endDate);
+    public List<Map> getNowList(String cardId) {
+//        if(mediaType == null) {
+//            mediaType = 1;
+//        }
+        return tblBlackCardMapper.selectList(cardId);
     }
 
     @Override

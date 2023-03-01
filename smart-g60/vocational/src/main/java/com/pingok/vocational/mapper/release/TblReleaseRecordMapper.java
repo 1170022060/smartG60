@@ -17,47 +17,36 @@ import java.util.Map;
 public interface TblReleaseRecordMapper extends CommonRepository<TblReleaseRecord> {
 
     @Select({"<script>" +
-            "select " +
-            "a.DEVICE_ID as \"deviceId\" ," +
-            "a.DEVICE_NAME as \"deviceName\" ," +
-            "a.PILE_NO as \"pileNo\" ," +
-            "b.DICT_LABEL as \"infoType\" , " +
-            "a.PRESET_NAME as \"presetName\" , " +
-            "a.PRESET_INFO as \"presetInfo\" , " +
-            "c.DICT_LABEL as \"typeface\" , " +
-            "d.DICT_LABEL as \"typefaceSize\" , " +
-            "e.DICT_LABEL as \"color\" , " +
-            "f.DICT_LABEL as \"pictureType\", " +
-            "to_char(a.PRESET_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"presetTime\", " +
-            "to_char(a.REVOKE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"revokeTime\", " +
-            "case when a.PRESET_USER_ID is null then null else a.PRESET_USER_ID || ':' || g.USER_NAME end as \"presetUserName\" " +
-            "from TBL_RELEASE_RECORD a " +
-            "left join  SYS_DICT_DATA b on b.DICT_VALUE=a.INFO_TYPE and b.DICT_TYPE='release_info_type' " +
-            "left join  SYS_DICT_DATA c on b.DICT_VALUE=a.TYPEFACE and c.DICT_TYPE='release_typeface' " +
-            "left join  SYS_DICT_DATA d on b.DICT_VALUE=a.TYPEFACE_SIZE and d.DICT_TYPE='release_size' " +
-            "left join  SYS_DICT_DATA e on b.DICT_VALUE=a.COLOR and e.DICT_TYPE='release_color' " +
-            "left join  SYS_DICT_DATA f on b.DICT_VALUE=a.PICTURE_TYPE and f.DICT_TYPE='release_picture_type' " +
-            "left join  SYS_USER g on a.PRESET_USER_ID=g.USER_ID " +
+            "SELECT " +
+            "trr.ID AS \"id\", " +
+            "trr.DEVICE_ID AS \"deviceId\", " +
+            "tdi.DEVICE_NAME AS \"deviceName\", " +
+            "tdi.PILE_NO AS \"pileNo\", " +
+            "TO_CHAR(trr.PRESET_TIME,'yyyy-mm-dd hh24:mi:ss') AS \"presetTime\", " +
+            "usr.NICK_NAME as \"presetUserName\", " +
+            "trr.STATUS AS \"status\", " +
+            "trr.PUBLISH_CONTENT as \"publishContent\" " +
+            "FROM " +
+            "TBL_RELEASE_RECORD trr " +
+            "JOIN TBL_DEVICE_INFO tdi ON tdi.DEVICE_ID = trr.DEVICE_ID " +
+            "LEFT JOIN SYS_USER usr ON usr.USER_ID = trr.PRESET_USER_ID " +
             "where 1=1 " +
             "<when test='startTime != null'> " +
-            " and a.PRESET_TIME &gt;= #{startTime} " +
+            " and trr.PRESET_TIME <![CDATA[>=]]> to_date(#{startTime},'yyyy-mm-dd hh24:mi:ss') " +
             "</when>"+
             "<when test='endTime != null'> " +
-            " and a.PRESET_TIME &lt;= #{endTime} " +
-            "</when>"+
-            "<when test='infoType != null'> " +
-            "and a.INFO_TYPE= #{infoType} " +
+            " and trr.PRESET_TIME <![CDATA[<=]]> to_date(#{endTime},'yyyy-mm-dd hh24:mi:ss') " +
             "</when>"+
             "<when test='deviceId != null'> " +
-            "and a.DEVICE_ID like CONCAT(CONCAT('%',#{deviceId}),'%')" +
+            "and trr.DEVICE_ID like CONCAT(CONCAT('%',#{deviceId}),'%')" +
             "</when>"+
             "<when test='deviceName != null'> " +
-            "and a.DEVICE_NAME like CONCAT(CONCAT('%',#{deviceName}),'%') " +
+            "and tdi.DEVICE_NAME like CONCAT(CONCAT('%',#{deviceName}),'%') " +
             "</when>"+
             "<when test='pileNo != null'> " +
-            "and a.PILE_NO like CONCAT(CONCAT('%',#{pileNo}),'%') " +
+            "and tdi.PILE_NO like CONCAT(CONCAT('%',#{pileNo}),'%') " +
             "</when>"+
-            "order by a.INFO_TYPE, a.PRESET_TIME" +
+            "order by trr.PRESET_TIME desc " +
             "</script>"})
-    List<Map> selectReleaseRecord(@Param("infoType") Integer infoType,@Param("deviceId") String deviceId,@Param("deviceName") String deviceName,@Param("pileNo") String pileNo, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    List<Map> selectReleaseRecord(@Param("deviceId") String deviceId,@Param("deviceName") String deviceName,@Param("pileNo") String pileNo, @Param("startTime") String startTime, @Param("endTime") String endTime);
 }

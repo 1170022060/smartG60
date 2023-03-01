@@ -4,6 +4,7 @@ import com.pingok.vocational.domain.report.vo.ReportVo;
 import com.pingok.vocational.domain.report.vo.SectionRecordVo;
 import com.pingok.vocational.mapper.report.TblSectionRecordMapper;
 import com.pingok.vocational.service.report.ISectionRecordService;
+import com.ruoyi.common.core.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +32,10 @@ public class SectionRecordServiceImpl implements ISectionRecordService {
     public List<SectionRecordVo> selectSectionRecordList(ReportVo reportVo) {
 
         return tblSectionRecordMapper.selectSectionRecordList(reportVo);
+    }
+
+    @Override
+    public List<Map> selectEnAnExFlow(String stationId, Date startDate, Date endDate, Integer direction) {
+        return tblSectionRecordMapper.selectEnAndExFlow(DateUtils.getTimeDay(startDate).substring(0,4),stationId,startDate,endDate,direction);
     }
 }

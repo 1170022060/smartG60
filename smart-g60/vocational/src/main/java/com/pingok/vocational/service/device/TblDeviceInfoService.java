@@ -13,6 +13,14 @@ import java.util.Map;
  * @author ruoyi
  */
 public interface TblDeviceInfoService {
+
+    /**
+     * 根据设备类型查询
+     * @param deviceType
+     * @return
+     */
+    List<TblDeviceInfo> selectByDeviceType(Integer deviceType);
+
     /**
      * 根据设备类目查询设备
      * @param deviceCategory 设备类目id

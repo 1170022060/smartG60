@@ -48,7 +48,7 @@ public class SoftwareUpdateServiceImpl implements ISoftwareUpdateService {
     public int updateSoftwareUpdate(TblSoftwareUpdate tblSoftwareUpdate) {
         tblSoftwareUpdate.setUpdateTime(new Date());
         tblSoftwareUpdate.setUpdateUserId(SecurityUtils.getUserId());
-        return tblSoftwareUpdateMapper.updateByPrimaryKeySelective(tblSoftwareUpdate);
+        return tblSoftwareUpdateMapper.updateByPrimaryKey(tblSoftwareUpdate);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class SoftwareUpdateServiceImpl implements ISoftwareUpdateService {
         tblSoftwareUpdate.setUpdateTime(new Date());
         tblSoftwareUpdate.setUpdateUserId(SecurityUtils.getUserId());
         tblSoftwareUpdate.setStatus(2);
-        return tblSoftwareUpdateMapper.updateByPrimaryKeySelective(tblSoftwareUpdate);
+        return tblSoftwareUpdateMapper.updateByPrimaryKey(tblSoftwareUpdate);
     }
 
     @Override
@@ -66,6 +66,6 @@ public class SoftwareUpdateServiceImpl implements ISoftwareUpdateService {
         tblSoftwareUpdate.setUpdateTime(new Date());
         tblSoftwareUpdate.setUpdateUserId(SecurityUtils.getUserId());
         tblSoftwareUpdate.setStatus(0);
-        return tblSoftwareUpdateMapper.updateByPrimaryKeySelective(tblSoftwareUpdate);
+        return tblSoftwareUpdateMapper.updateByPrimaryKey(tblSoftwareUpdate);
     }
 }

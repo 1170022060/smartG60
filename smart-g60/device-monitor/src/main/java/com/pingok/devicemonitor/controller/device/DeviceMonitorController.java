@@ -10,12 +10,15 @@ import com.pingok.devicemonitor.service.heartbeat.IHeartbeatService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.common.core.utils.DateUtils;
+import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.security.utils.DictUtils;
 import com.ruoyi.system.api.RemoteConfigService;
+import com.ruoyi.system.api.RemoteEventService;
 import com.ruoyi.system.api.RemoteKafkaService;
 import com.ruoyi.system.api.domain.SysDictData;
+import com.ruoyi.system.api.domain.event.TblEventRecord;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +45,14 @@ public class DeviceMonitorController extends BaseController {
     @Autowired
     private RemoteKafkaService remoteKafkaService;
 
+    @Autowired
+    private RemoteEventService remoteEventService;
+
+    @GetMapping("/selectBydeviceType")
+    public AjaxResult selectBydeviceType(@RequestParam(value = "deviceType") Integer deviceType) {
+        return AjaxResult.success(iDeviceService.selectBydeviceType(deviceType));
+    }
+
     @GetMapping("/selectByDeviceId")
     public AjaxResult selectByDeviceId(String deviceId) {
         return AjaxResult.success(iDeviceService.selectByDeviceId(deviceId));
@@ -50,15 +61,89 @@ public class DeviceMonitorController extends BaseController {
     @PostMapping
     public AjaxResult updateHeartbeat(@RequestBody TblDeviceStatus deviceStatus) {
         iDeviceService.updateStatus(deviceStatus);
-        if (deviceStatus.getStatus() == 0) {
-            TblDeviceFault deviceFault = new TblDeviceFault();
-            deviceFault.setDeviceId(deviceStatus.getDeviceId());
-            deviceFault.setFaultId("hardware");
-            deviceFault.setFaultDescription(deviceStatus.getStatusDesc());
-            deviceFault.setFaultTime(DateUtils.getNowDate());
-            deviceFault.setRegisterType(2);
-            deviceFault.setFaultType("remind");
-            iDeviceService.deviceFault(deviceFault);
+        TblDeviceFault deviceFault = new TblDeviceFault();
+        deviceFault.setDeviceId(deviceStatus.getDeviceId());
+        deviceFault.setFaultDescription(deviceStatus.getStatusDesc());
+        deviceFault.setFaultTime(DateUtils.getNowDate());
+        deviceFault.setRegisterType(2);
+        deviceFault.setFaultType(deviceStatus.getFaultType() != null ? deviceStatus.getFaultType() : "offLine");
+        if (deviceStatus.getStatus() != null) {
+            if (deviceStatus.getStatus() == 0) {
+                iDeviceService.deviceFault(deviceFault);
+            } else {
+                iDeviceService.updateDeviceFault(deviceFault);
+            }
+        }
+        if (StringUtils.isNotNull(deviceStatus.getStatusDetails()) && deviceStatus.getStatusDetails().startsWith("{")) {
+            JSONObject obj = JSON.parseObject(deviceStatus.getStatusDetails());
+            if (obj.containsKey("currentVisibility")) {
+                Integer currentVisibility = obj.getInteger("currentVisibility");
+                if (currentVisibility != -1) {
+                    List<SysDictData> sysDictDataList = DictUtils.getDictCache("visibility_warning");
+                    Integer level = 0;
+                    for (SysDictData s : sysDictDataList) {
+                        if (currentVisibility.intValue() < Integer.parseInt(s.getDictValue())) {
+                            if (level.intValue() < s.getDictSort().intValue()) {
+                                level = s.getDictSort().intValue();
+
+                            }
+                        }
+                    }
+                    TblDeviceInfo info = iDeviceService.info(deviceStatus.getDeviceId());
+                    TblEventRecord eventRecord;
+                    R<TblEventRecord> re = remoteEventService.selectByEventTypeAndPileNo("23", info.getPileNo());
+                    if (level > 0) {
+                        if (re.getCode() == R.SUCCESS && re.getData() != null) {
+                            eventRecord = re.getData();
+                            eventRecord.setEventTime(DateUtils.getNowDate());
+                            eventRecord.setEventType("23");
+                            eventRecord.setRemark(currentVisibility.toString());
+                            eventRecord.setDirection("双向");
+                            eventRecord.setLocationInterval(info.getGps());
+                            eventRecord.setPileNo(info != null ? info.getPileNo() : null);
+                            eventRecord.setEventLevel(level);
+                            eventRecord.setDeviceType(10);
+                            R r = remoteEventService.edit(eventRecord);
+                            if (r.getCode() == R.FAIL) {
+                                log.error("能见度预警事件更新失败");
+                            }
+
+//                            if (currentVisibility >= 1500) {
+//                                if (re.getCode() == R.SUCCESS && re.getData() != null) {
+//                                    eventRecord = re.getData();
+//                                    eventRecord.setStatus(2);
+//                                    r = remoteEventService.edit(eventRecord);
+//                                    if (r.getCode() == R.FAIL) {
+//                                        log.error("能见度预警事件更新失败");
+//                                    }
+//                                    KafkaEnum kafkaEnum = new KafkaEnum();
+//                                    kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SIGNAL_PILOTLIGHT);
+//                                    JSONObject params = new JSONObject();
+//                                    params.put("kafkaType", "commandSend");
+//                                    params.put("deviceId", info.getDeviceId());
+//                                    params.put("cmdType", 8);
+//                                    kafkaEnum.setData(JSON.toJSONString(params));
+//                                    remoteKafkaService.send(kafkaEnum);
+//                                }
+//                            }
+                        } else {
+                            eventRecord = new TblEventRecord();
+                            eventRecord.setEventTime(DateUtils.getNowDate());
+                            eventRecord.setEventType("23");
+                            eventRecord.setRemark(currentVisibility.toString());
+                            eventRecord.setDirection("双向");
+                            eventRecord.setLocationInterval(info.getGps());
+                            eventRecord.setPileNo(info != null ? info.getPileNo() : null);
+                            eventRecord.setEventLevel(level);
+                            eventRecord.setDeviceType(10);
+                            R r = remoteEventService.add(eventRecord);
+                            if (r.getCode() == R.FAIL) {
+                                log.error("能见度预警事件新增失败");
+                            }
+                        }
+                    }
+                }
+            }
         }
         return AjaxResult.success();
     }
@@ -147,13 +232,13 @@ public class DeviceMonitorController extends BaseController {
                         iDeviceService.updateStatus(deviceStatus);
                     } else {
                         deviceStatus.setStatus(0);
-                        deviceStatus.setStatusDesc("离线");
+                        deviceStatus.setStatusDesc("网络异常");
                         iDeviceService.updateStatus(deviceStatus);
 
                         deviceFault = new TblDeviceFault();
                         deviceFault.setDeviceId(d.getId());
                         deviceFault.setFaultId("offline");
-                        deviceFault.setFaultDescription("离线");
+                        deviceFault.setFaultDescription("网络异常");
                         deviceFault.setFaultTime(DateUtils.getNowDate());
                         deviceFault.setRegisterType(2);
                         deviceFault.setFaultType("warning");
@@ -313,13 +398,13 @@ public class DeviceMonitorController extends BaseController {
                         }
                     } else {
                         deviceStatus.setStatus(0);
-                        deviceStatus.setStatusDesc("离线");
+                        deviceStatus.setStatusDesc("网络异常");
                         iDeviceService.updateStatus(deviceStatus);
 
                         deviceFault = new TblDeviceFault();
                         deviceFault.setDeviceId(d.getId());
                         deviceFault.setFaultId("offline");
-                        deviceFault.setFaultDescription("离线");
+                        deviceFault.setFaultDescription("网络异常");
                         deviceFault.setFaultTime(DateUtils.getNowDate());
                         deviceFault.setRegisterType(2);
                         deviceFault.setFaultType("warning");

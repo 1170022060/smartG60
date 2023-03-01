@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
@@ -45,6 +46,18 @@ public class TblDeviceStatus implements Serializable {
     /** 状态详情 */
     @Excel(name = "状态详情")
     private String statusDetails;
+    public String getFaultType() {
+        return faultType;
+    }
+
+    public void setFaultType(String faultType) {
+        this.faultType = faultType;
+    }
+    /**
+     * 故障类型
+     */
+    @Transient
+    private String faultType;
 
     public Long getId() { return id; }
 

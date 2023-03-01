@@ -46,10 +46,10 @@ public interface TblRoadDoctorMapper {
             "and trd.P_ZHUANG_HAO like '%' || #{pZhuangHao} || '%' " +
             "</when>"+
             "<when test='startTime != null'> " +
-            "and trpi.B_TIME &gt;= #{startDate} " +
+            "and trpi.B_TIME &gt;= #{startTime} " +
             "</when>"+
             "<when test='endTime != null'> " +
-            "and trpi.B_TIME &lt;= #{endDate} " +
+            "and trpi.B_TIME &lt;= #{endTime} " +
             "</when>"+
             "ORDER BY trd.ID DESC " +
             "</script>"})

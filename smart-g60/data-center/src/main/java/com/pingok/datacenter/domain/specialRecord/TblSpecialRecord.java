@@ -71,7 +71,7 @@ public class TblSpecialRecord implements Serializable {
     /**
      * 操作员ID
      */
-    private Integer optId;
+    private Long optId;
 
     /**
      * 操作员姓名

@@ -35,7 +35,7 @@ public interface TblGantryRecordMapper {
             " and a.WORK_DATE &lt;= #{endDate} " +
             "</when>"+
             "<when test='gantryId != null'> " +
-            "and a.GANTRY_ID= #{gantryId} " +
+            "and a.GANTRY_ID like '%' || #{gantryId} || '%' " +
             "</when>"+
             "order by WORK_DATE" +
             "</script>"})
@@ -60,7 +60,7 @@ public interface TblGantryRecordMapper {
             " and a.WORK_DATE &lt;= #{endDate} " +
             "</when>"+
             "<when test='gantryId != null'> " +
-            "and a.GANTRY_ID= #{gantryId} " +
+            "and a.GANTRY_ID like '%' || #{gantryId} || '%' " +
             "</when>"+
             "order by WORK_DATE" +
             "</script>"})

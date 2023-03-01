@@ -27,6 +27,7 @@ public interface TblDeviceInfoMapper {
             "tdi.STATION_BELONG AS \"stationBelong\", " +
             "tdi.PILE_NO AS \"pileNo\", " +
             "tdi.GPS AS \"gps\", " +
+            "tdi.CAMERA_ID AS \"cameraId\", " +
             "TO_CHAR(tds.TIME, 'yyyy-mm-dd hh:mm:ss') AS \"time\", " +
             "NVL( tds.STATUS, 0 ) AS \"status\", " +
             "CASE " +
@@ -49,7 +50,7 @@ public interface TblDeviceInfoMapper {
             "trr.PRESET_USER_ID AS \"tblReleaseRecord.presetUserId\"," +
             "trr.REVOKE_USER_ID AS \"tblReleaseRecord.revokeUserId\" " +
             "FROM " +
-            "TBL_DEVICE_INFO tdi " +
+            "(SELECT * FROM TBL_DEVICE_INFO WHERE FIELD_BELONG NOT IN (3940,3941) OR FIELD_BELONG IS NULL) tdi " +
             "LEFT JOIN TBL_DEVICE_STATUS tds ON tds.DEVICE_ID = tdi.ID  " +
             "left join TBL_RELEASE_RECORD trr on trr.DEVICE_ID=tdi.DEVICE_ID and trr.ID in (select ID " +
             "  from (select t.*,                " +
@@ -57,7 +58,7 @@ public interface TblDeviceInfoMapper {
             "          from TBL_RELEASE_RECORD t) trr " +
             " where rn = 1) " +
             "WHERE " +
-            "tdi.DEVICE_TYPE =#{deviceType}")
+            "tdi.DEVICE_TYPE =#{deviceType} ")
     public List<DeviceInfoVo> selectDeviceInfo(@Param("deviceType") Integer deviceType);
 
 }

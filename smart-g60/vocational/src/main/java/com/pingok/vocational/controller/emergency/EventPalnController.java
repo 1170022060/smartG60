@@ -28,6 +28,10 @@ public class EventPalnController extends BaseController {
     @Autowired
     private IEventPalnService iEventPalnService;
 
+    @GetMapping("/deviceList")
+    public AjaxResult deviceList(Long eventId, Long planId, Integer type) {
+        return AjaxResult.success(iEventPalnService.deviceList(eventId, planId, type));
+    }
 
     /**
      * 获取应急预案列表
@@ -92,5 +96,10 @@ public class EventPalnController extends BaseController {
             return AjaxResult.error("修改应急预案'" + tblEventPaln.getPlanTitle() + "'失败，预案标题已存在");
         }
         return toAjax(iEventPalnService.update(tblEventPaln));
+    }
+
+    @GetMapping("/selectGroup")
+    public AjaxResult getGroup(@RequestParam(name = "suppliesType") Integer suppliesType){
+        return AjaxResult.success(iEventPalnService.selectPlanGroup(suppliesType));
     }
 }

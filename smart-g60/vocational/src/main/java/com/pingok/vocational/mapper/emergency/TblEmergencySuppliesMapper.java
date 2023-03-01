@@ -37,8 +37,8 @@ public interface TblEmergencySuppliesMapper extends CommonRepository<TblEmergenc
             "a.STATUS  as \"status\"," +
             "to_char(a.CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\"," +
             "to_char(a.UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
-            "case when a.CREATE_USER_ID is null then null else a.CREATE_USER_ID || ':' || d.USER_NAME end as \"createUserName\"," +
-            "case when a.UPDATE_USER_ID is null then null else a.UPDATE_USER_ID || ':' || e.USER_NAME end as \"updateUserName\" from TBL_EMERGENCY_SUPPLIES a " +
+            "case when a.CREATE_USER_ID is null then null else d.NICK_NAME end as \"createUserName\"," +
+            "case when a.UPDATE_USER_ID is null then null else e.NICK_NAME end as \"updateUserName\" from TBL_EMERGENCY_SUPPLIES a " +
             "left join  SYS_DICT_DATA b on b.DICT_VALUE=a.MANUFACTURER and b.DICT_TYPE='manufacturer' " +
             "left join TBL_FIELD_INFO c on c.ID=a.FIELD_BELONG " +
             "left join  SYS_USER d on a.CREATE_USER_ID=d.USER_ID " +
@@ -62,13 +62,20 @@ public interface TblEmergencySuppliesMapper extends CommonRepository<TblEmergenc
             "</script>"})
     List<Map> selectEmergencySupplies(@Param("suppliesType") Integer suppliesType,@Param("suppliesName") String suppliesName, @Param("vehPlate") String vehPlate, @Param("expertName") String expertName, @Param("status") Integer status);
 
-    @Select("select a.ID as \"id\" , " +
-            "case SUPPLIES_TYPE when 1 Then a.SUPPLIES_NAME ||'_'|| b.FIELD_NAME when 2 then a.VEH_PLATE ||'_'|| cast(c.DICT_LABEL as varchar2(20)) ||'车牌' when 3 then a.EXPERT_NAME ||'_'|| a.EXPERT_PHONE end as \"suppliesName\" " +
+    @Select("SELECT * FROM ( " +
+            "select a.ID as \"id\" , " +
+            "a.SUPPLIES_TYPE as \"suppliesType\"," +
+            "a.STATUS as \"status\"," +
+            "case SUPPLIES_TYPE when 1 Then a.SUPPLIES_NAME ||'_'|| b.FIELD_NAME when 2 then a.VEH_PLATE ||'_'|| cast(c.DICT_LABEL as varchar2(20)) " +
+            "||'车牌' when 3 then a.EXPERT_NAME ||'_'|| a.EXPERT_PHONE end as \"suppliesName\" " +
             "from TBL_EMERGENCY_SUPPLIES a " +
             "left join TBL_FIELD_INFO b on a.FIELD_BELONG=b.ID " +
             "left join  SYS_DICT_DATA c on c.DICT_VALUE=a.VEH_COLOR and c.DICT_TYPE='veh_color' " +
-            "where a.SUPPLIES_TYPE= #{suppliesType} " +
-            "and a.STATUS = 1")
+            "UNION ALL " +
+            "SELECT ID as \"id\",4 as \"suppliesType\",STATUS as \"status\"," +
+            "GROUP_NAME as \"suppliesName\" FROM TBL_EMERGENCY_GROUP )tab " +
+            "where tab.\"suppliesType\" = #{suppliesType} " +
+            "and tab.\"status\" = 1")
     List<Map> selectEmergencyName(@Param("suppliesType") Integer suppliesType);
 
     @Select("select * from TBL_EMERGENCY_SUPPLIES where SUPPLIES_NAME= #{suppliesName} and FIELD_BELONG= #{fieldBelong} and SUPPLIES_TYPE=1 and rownum = 1")

@@ -58,7 +58,7 @@ public class LaneInfoServiceImpl implements ILaneInfoService {
     public int updateLane(TblLaneInfo tblLaneInfo) {
         tblLaneInfo.setUpdateTime(new Date());
         tblLaneInfo.setUpdateUserId(SecurityUtils.getUserId());
-        return tblLaneInfoMapper.updateByPrimaryKeySelective(tblLaneInfo);
+        return tblLaneInfoMapper.updateByPrimaryKey(tblLaneInfo);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class LaneInfoServiceImpl implements ILaneInfoService {
         tblLaneInfo.setUpdateTime(new Date());
         tblLaneInfo.setUpdateUserId(SecurityUtils.getUserId());
         tblLaneInfo.setStatus(status);
-        return tblLaneInfoMapper.updateByPrimaryKeySelective(tblLaneInfo);
+        return tblLaneInfoMapper.updateByPrimaryKey(tblLaneInfo);
     }
 
     @Override

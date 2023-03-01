@@ -31,13 +31,15 @@ public class PursuesController extends BaseController {
     @Autowired
     private IPursuesService pursuesService;
 
-    @RequiresPermissions("vocational:pursues:info")
+//    @RequiresPermissions("vocational:pursues:info")
     @Log(title = "追讨名单-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
-    public TableDataInfo info(@RequestParam(name = "startTime",required = false) Date startTime, @RequestParam(name = "endTime",required = false) Date endTime)
+    public TableDataInfo info(@RequestParam(name = "startTime",required = false) Date startTime,
+                              @RequestParam(name = "endTime",required = false) Date endTime,
+                              @RequestParam(name = "vehPlate",required = false) String vehPlate)
     {
         startPage();
-        List<Map> info = pursuesService.selectPursuesList(startTime,endTime);
+        List<Map> info = pursuesService.selectPursuesList(startTime,endTime,vehPlate);
         return getDataTable(info);
     }
 

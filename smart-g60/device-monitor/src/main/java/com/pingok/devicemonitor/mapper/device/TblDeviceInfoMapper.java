@@ -13,4 +13,8 @@ import java.util.List;
 public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
     @Select("SELECT * FROM TBL_DEVICE_INFO where 1=1 and DEVICE_TYPE = #{deviceType} ")
     List<TblDeviceInfo> findByDeviceType(@Param("deviceType") String deviceType);
+
+    @Select("SELECT ID as \"id\", DEVICE_ID as \"deviceId\", DEVICE_IP as \"deviceIp\" " +
+            " FROM TBL_DEVICE_INFO where 1=1 and DEVICE_TYPE = 9 and FIELD_BELONG = 5 ")
+    List<TblDeviceInfo> selectVmsInfo();
 }

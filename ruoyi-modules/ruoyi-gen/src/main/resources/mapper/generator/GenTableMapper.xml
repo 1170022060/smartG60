@@ -67,10 +67,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				AND lower(table_comment) like lower(('%'||#{tableComment}||'%'))
 			</if>
 			<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-				AND to_date(create_time,'%y%m%d') &gt;= to_date(#{params.beginTime},'%y%m%d')
+				AND to_date(create_time,'yyyy-mm-dd') &gt;= to_date(#{params.beginTime},'yyyy-mm-dd')
 			</if>
 			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-				AND to_date(create_time,'%y%m%d') &lt;= to_date(#{params.endTime},'%y%m%d')
+				AND to_date(create_time,'yyyy-mm-dd') &lt;= to_date(#{params.endTime},'yyyy-mm-dd')
 			</if>
 		</where>
 	</select>
@@ -87,10 +87,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			AND lower(table_comment) like lower(('%'||#{tableComment}||'%'))
 		</if>
 		<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-			AND to_date(create_time,'%y%m%d') &gt;= to_date(#{params.beginTime},'%y%m%d')
+			AND to_date(create_time,'yyyy-mm-dd') &gt;= to_date(#{params.beginTime},'yyyy-mm-dd')
 		</if>
 		<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-			AND to_date(create_time,'%y%m%d') &lt;= to_date(#{params.endTime},'%y%m%d')
+			AND to_date(create_time,'yyyy-mm-dd') &lt;= to_date(#{params.endTime},'yyyy-mm-dd')
 		</if>
         order by create_time desc
 	</select>

@@ -32,6 +32,11 @@ public class TblEventRecord implements Serializable {
      */
     private String eventType;
 
+    /**
+     * 事件子类型
+     */
+    private String eventSubtype;
+
     @Transient
     private String eventTypeLabel;
 
@@ -108,6 +113,11 @@ public class TblEventRecord implements Serializable {
      */
     private Integer status;
 
+    /**
+     * 是否填报 0-已填报 1-未填报
+     */
+    private Integer isFill;
+
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
@@ -127,8 +137,24 @@ public class TblEventRecord implements Serializable {
     private String remark;
     /** 上行、下行、双向 */
     private String direction;
+    /** 相机ID */
+    private String szSourceCode;
+
+    /**
+     * 桩号
+     */
+    private String pileNo;
+
+    /**
+     * 检测设备类型
+     */
+    private Integer deviceType;
+
+    private String eventLevel;
 
     @Transient
-    private List<TblEventHandle> eventHandles;
+    private List<TblEventHandle> eventHandle;
+
+    private Long ubiPtzShortId;
 
 }

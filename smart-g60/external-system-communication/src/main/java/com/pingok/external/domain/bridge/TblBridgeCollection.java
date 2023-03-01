@@ -44,7 +44,7 @@ public class TblBridgeCollection implements Serializable {
     private Integer channelNum;
 
     /**
-     * 设备状况 0-在线 1-离线
+     * 设备状况 0-在线 1-网络异常
      */
     private Integer status;
 

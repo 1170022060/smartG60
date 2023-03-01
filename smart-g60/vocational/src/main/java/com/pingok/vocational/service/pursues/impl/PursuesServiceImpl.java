@@ -52,8 +52,8 @@ public class PursuesServiceImpl implements IPursuesService {
     protected Validator validator;
 
     @Override
-    public List<Map> selectPursuesList(Date startTime, Date endTime) {
-        return tblPursuesListRecordMapper.selectPursuesList(startTime, endTime);
+    public List<Map> selectPursuesList(Date startTime, Date endTime,String vehPlate) {
+        return tblPursuesListRecordMapper.selectPursuesList(startTime, endTime,vehPlate);
     }
 
     @Override

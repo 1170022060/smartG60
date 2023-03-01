@@ -6,14 +6,14 @@ public interface IBaiDuMapService {
     /**
      * 事件推送
      *
-     * @param baiDuMapRecord
+     * @param tblBaiDuMapRecord
      */
-    void eventPublish(TblBaiDuMapRecord baiDuMapRecord);
+    void eventPublish(TblBaiDuMapRecord tblBaiDuMapRecord);
 
-    /**
-     * 事件解除
-     *
-     * @param id
-     */
-    void eventRelieve(Long id);
+//    /**
+//     * 事件解除
+//     *
+//     * @param id
+//     */
+//    void eventRelieve(Long id);
 }

@@ -19,6 +19,7 @@ public interface TblFieldInfoMapper extends CommonRepository<TblFieldInfo> {
     @Select({"<script>" +
             "select a.ID as \"id\"," +
             "a.FIELD_NAME as \"fieldName\"," +
+            "tfi.FIELD_NAME as \"parentField\"," +
             "e.DICT_LABEL as \"type\"," +
             "f.DICT_LABEL as \"roadBelong\" ," +
             "b.STATION_NAME as \"stationBelong\" ," +
@@ -26,8 +27,9 @@ public interface TblFieldInfoMapper extends CommonRepository<TblFieldInfo> {
             "a.STATUS  as \"status\"," +
             "to_char(a.CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\"," +
             "to_char(a.UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
-            "case when a.CREATE_USER_ID is null then null else a.CREATE_USER_ID || ':' || c.USER_NAME end as \"createUserName\"," +
-            "case when a.UPDATE_USER_ID is null then null else a.UPDATE_USER_ID || ':' || d.USER_NAME end as \"updateUserName\" from TBL_FIELD_INFO a " +
+            "case when a.CREATE_USER_ID is null then null else c.NICK_NAME end as \"createUserName\"," +
+            "case when a.UPDATE_USER_ID is null then null else d.NICK_NAME end as \"updateUserName\" from TBL_FIELD_INFO a " +
+            "left join TBL_FIELD_INFO tfi on tfi.ID=a.PARENT_ID " +
             "left join TBL_BASE_STATION_INFO b on UPPER(b.STATION_HEX)=UPPER(CONCAT('3101',a.STATION_BELONG)) " +
             "left join  SYS_USER c on a.CREATE_USER_ID=c.USER_ID " +
             "left join  SYS_USER d on a.UPDATE_USER_ID=d.USER_ID " +
@@ -60,4 +62,10 @@ public interface TblFieldInfoMapper extends CommonRepository<TblFieldInfo> {
 
     @Select("select ID as \"id\",FIELD_NAME as \"fieldName\" from TBL_FIELD_INFO where TYPE= #{type} and STATUS=1 order by FIELD_NAME")
     List<Map> selectFieldName(@Param("type") Integer type);
+
+    @Select("select ID as \"id\",FIELD_NAME as \"fieldName\" from TBL_FIELD_INFO where ID in (3940,3941) and STATUS=1 order by FIELD_NAME")
+    List<Map> selectServiceField();
+
+    @Select("select ID as \"id\",FIELD_NAME as \"fieldName\" from TBL_FIELD_INFO where PARENT_ID=#{id} and STATUS=1 order by FIELD_NAME")
+    List<Map> getChildrenField(@Param("id")Long id);
 }

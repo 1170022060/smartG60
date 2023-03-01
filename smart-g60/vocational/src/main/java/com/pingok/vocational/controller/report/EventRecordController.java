@@ -93,4 +93,12 @@ public class EventRecordController extends BaseController {
         ExcelUtil<EventRecordClassVo> util = new ExcelUtil<EventRecordClassVo>(EventRecordClassVo.class);
         util.exportExcel(response,list, "事件统计(按车型)");
     }
+
+    @GetMapping("/getEventCountByStatus")
+    public TableDataInfo getEventCountByStatus(Integer status,Date startTime,Date endTime){
+        startPage();
+        List<Map> info = eventRecordService.selectEventRecordByStatusType(status,startTime,endTime);
+        return getDataTable(info);
+    }
+
 }

@@ -128,7 +128,7 @@ public class TblTransSummary implements Serializable {
     private String exCardId;
 
     /** 交易金额 */
-    private Long amount;
+    private Integer amount;
 
     public Long getId() {
         return id;
@@ -418,11 +418,11 @@ public class TblTransSummary implements Serializable {
         this.exCardId = exCardId;
     }
 
-    public Long getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 }

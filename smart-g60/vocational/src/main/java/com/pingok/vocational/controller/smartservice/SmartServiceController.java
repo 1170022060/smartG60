@@ -27,7 +27,7 @@ public class SmartServiceController extends BaseController {
     @Autowired
     private ISmartService smartService;
 
-    @RequiresPermissions("vocational:smartService:device")
+//    @RequiresPermissions("vocational:smartService:device")
     @Log(title = "设备监控-服务区", businessType = BusinessType.OTHER)
     @GetMapping("/device")
     public TableDataInfo service(@RequestParam(name = "fieldNum",required = false) String fieldNum, @RequestParam(name = "deviceType",required = false) Integer deviceType, @RequestParam(name = "status",required = false) Integer status) {
@@ -44,16 +44,16 @@ public class SmartServiceController extends BaseController {
         return toAjax(smartService.insertServiceFault(tblDeviceFault));
     }
 
-    @RequiresPermissions("vocational:smartService:status")
+//    @RequiresPermissions("vocational:smartService:status")
     @Log(title = "设备监控-服务区设备状态", businessType = BusinessType.OTHER)
     @GetMapping("/status")
-    public TableDataInfo serviceStatus(@RequestParam(name = "fieldNum",required = false) String fieldNum,@RequestParam(name = "deviceType",required = false) Integer deviceType, @RequestParam(name = "status",required = false) Integer status) {
+    public TableDataInfo serviceStatus(@RequestParam(name = "fieldNum",required = false) String fieldNum,@RequestParam(name = "deviceType",required = false) Integer deviceType) {
         startPage();
-        List<Map> list = smartService.serviceDeviceStatus(fieldNum,deviceType,status);
+        List<Map> list = smartService.serviceDeviceStatus(fieldNum,deviceType);
         return getDataTable(list);
     }
 
-    @RequiresPermissions("vocational:smartService:serviceFault")
+//    @RequiresPermissions("vocational:smartService:serviceFault")
     @Log(title = "设备监控-服务区设备故障", businessType = BusinessType.OTHER)
     @GetMapping("/serviceFault")
     public TableDataInfo serviceFault(@RequestParam(name = "fieldNum",required = false) String fieldNum,@RequestParam(name = "deviceType",required = false) Integer deviceType ,@RequestParam(name = "deviceId",required = false) String deviceId,@RequestParam(name = "faultId",required = false) String faultId,@RequestParam(name = "faultDescription",required = false) String faultDescription, @RequestParam(name = "status",required = false) Integer status) {
@@ -69,4 +69,12 @@ public class SmartServiceController extends BaseController {
     {
         return toAjax(smartService.insertServiceRepair(tblDeviceRepair));
     }
+
+    @Log(title = "设备监控-服务区-设备状态", businessType = BusinessType.OTHER)
+    @GetMapping("/getDeviceStatus")
+    public AjaxResult getDeviceStatusDesc()
+    {
+        return AjaxResult.success(smartService.getDeviceStatusDesc());
+    }
+
 }

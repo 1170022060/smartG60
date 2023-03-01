@@ -69,7 +69,7 @@ public class ReleasePresetServiceImpl implements IReleasePresetService {
     public int updateReleasePreset(TblReleasePreset tblReleasePreset) {
         tblReleasePreset.setUpdateTime(new Date());
         tblReleasePreset.setUpdateUserId(SecurityUtils.getUserId());
-        return tblReleasePresetMapper.updateByPrimaryKeySelective(tblReleasePreset);
+        return tblReleasePresetMapper.updateByPrimaryKey(tblReleasePreset);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ReleasePresetServiceImpl implements IReleasePresetService {
         tblReleasePreset.setUpdateTime(new Date());
         tblReleasePreset.setUpdateUserId(SecurityUtils.getUserId());
         tblReleasePreset.setStatus(status);
-        return tblReleasePresetMapper.updateByPrimaryKeySelective(tblReleasePreset);
+        return tblReleasePresetMapper.updateByPrimaryKey(tblReleasePreset);
     }
 
     @Override

@@ -24,6 +24,11 @@ public class SimulatedSortingController extends BaseController {
     @Autowired
     private ISimulatedSortingService iSimulatedSortingService;
 
+    @GetMapping("/statistics")
+    public AjaxResult statistics(String date) {
+        return AjaxResult.success(iSimulatedSortingService.statistics(date));
+    }
+
     @GetMapping("/dayStatistics")
     public TableDataInfo dayStatistics(String startTime, String endTime) {
         startPage();

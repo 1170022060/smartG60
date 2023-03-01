@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.common.utils.MD5Utils;
 import com.pingok.external.config.BeiDouConfig;
-import com.pingok.external.domain.gps.TblMaintainCarGps;
 import com.pingok.external.domain.gps.TblMaintainCarGpsLog;
 import com.pingok.external.mapper.gps.TblMaintainCarGpsLogMapper;
 import com.pingok.external.mapper.gps.TblMaintainCarGpsMapper;
@@ -15,13 +14,14 @@ import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
+import com.ruoyi.system.api.domain.gps.TblMaintainCarGps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -35,6 +35,11 @@ public class GpsServiceImpl implements IGpsService {
     private RemoteIdProducerService remoteIdProducerService;
     @Autowired
     private TblMaintainCarGpsLogMapper tblMaintainCarGpsLogMapper;
+
+    @Override
+    public List<TblMaintainCarGps> carGps() {
+        return tblMaintainCarGpsMapper.selectAll();
+    }
 
     @Override
     public void getCarsGps() {
@@ -78,6 +83,7 @@ public class GpsServiceImpl implements IGpsService {
                     }
                     maintainCarGpsLog = new TblMaintainCarGpsLog();
                     BeanUtils.copyNotNullProperties(maintainCarGps,maintainCarGpsLog);
+                    maintainCarGpsLog.setId(remoteIdProducerService.nextId());
                     maintainCarGpsLog.setCreateTime(DateUtils.getNowDate());
                     tblMaintainCarGpsLogMapper.insert(maintainCarGpsLog);
                 }

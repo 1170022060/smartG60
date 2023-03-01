@@ -53,4 +53,9 @@ public class EventRecordServiceImpl implements IEventRecordService {
     public List<EventRecordClassVo> selectEventRecordByClassList(ReportVo reportVo) {
         return tblEventRecordMapper.selectEventRecordByClassList(reportVo);
     }
+
+    @Override
+    public List<Map> selectEventRecordByStatusType(Integer status, Date startTime, Date endTime) {
+        return tblEventRecordMapper.selectEventRecordByStatusType(status,startTime,endTime);
+    }
 }

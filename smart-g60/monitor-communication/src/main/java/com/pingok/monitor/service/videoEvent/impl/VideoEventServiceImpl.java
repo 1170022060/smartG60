@@ -2,7 +2,8 @@ package com.pingok.monitor.service.videoEvent.impl;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
-import com.pingok.monitor.config.AliYunConfig;
+import com.alibaba.fastjson.JSONObject;
+import com.pingok.monitor.config.HostConfig;
 import com.pingok.monitor.domain.event.*;
 import com.pingok.monitor.mapper.event.*;
 import com.pingok.monitor.service.videoEvent.IVideoEventService;
@@ -11,12 +12,12 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -70,37 +71,39 @@ public class VideoEventServiceImpl implements IVideoEventService {
         tblEventParkingEventMapper.insert(tblEventParkingEvent);
     }
 
+
     @Override
     public void updateEventVideo(Long ubiLogicId) {
-        String url = iVideoService.getEventVideoById(ubiLogicId,2,2);
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("ubiLogicId",ubiLogicId);
-        paramMap.put("url",url);
-        try {
-            String post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/updateEventVideo",paramMap);
-            if (!StringUtils.isEmpty(post)) {
-                if (post.startsWith("{")) {
-                    R ret = JSON.parseObject(post, R.class);
-                    if (R.FAIL == ret.getCode()) {
-                        log.error(ubiLogicId + " 事件视频上传失败：" + ret.getMsg());
+        String url = iVideoService.getEventVideoById(ubiLogicId, 2, 1);
+        if (url != null) {
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("ubiLogicId", ubiLogicId);
+            paramMap.put("url", url);
+            try {
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/updateEventVideo", paramMap);
+                if (!StringUtils.isEmpty(post)) {
+                    if (post.startsWith("{")) {
+                        JSONObject ret = JSONObject.parseObject(post);
+                        if (ret.containsKey("code") && ret.getInteger("code") != 200) {
+                            log.error(ubiLogicId + " 事件视频上传失败：" + ret.getString("msg"));
+                        }
+                    } else {
+                        log.error(ubiLogicId + " 事件视频上传状态未知");
                     }
-                } else {
-                    log.error(ubiLogicId + " 事件视频上传状态未知");
                 }
+            } catch (Exception e) {
+                log.error(ubiLogicId + " 事件视频上传失败：" + e.getMessage());
             }
-        } catch (Exception e) {
-            log.error(ubiLogicId + " 事件视频上传失败：" + e.getMessage());
         }
-
     }
 
     @Async
     @Override
     public void updateFluxData(TblEventFlux tblEventFlux) {
-        int time = 1;
+        int time = 3;
         while (true) {
             try {
-                String post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/flux", JSON.toJSONString(tblEventFlux));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/flux", JSON.toJSONString(tblEventFlux));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -117,21 +120,21 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } catch (Exception e) {
                 log.error(tblEventFlux.getUbiLogicId() + " 流量统计上报失败：" + e.getMessage());
             }
-            time += 2;
+            time += 3;
+            if(time>9){
+                return;
+            }
         }
-        Example example = new Example(TblEventFlux.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("ubiLogicId", tblEventFlux.getUbiLogicId());
-        tblEventFluxMapper.deleteByExample(example);
+        tblEventFluxMapper.delete(tblEventFlux);
     }
 
     @Async
     @Override
     public void updatePlateInfo(TblEventPlateInfo tblEventPlateInfo) {
-        int time = 1;
+        int time = 3;
         while (true) {
             try {
-                String post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/plateInfo", JSON.toJSONString(tblEventPlateInfo));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/plateInfo", JSON.toJSONString(tblEventPlateInfo));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -148,22 +151,22 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } catch (Exception e) {
                 log.error(tblEventPlateInfo.getUbiLogicId() + " 过车数据上报失败：" + e.getMessage());
             }
-            time += 2;
+            time += 3;
+            if(time>9){
+                return;
+            }
         }
-        Example example = new Example(TblEventPlateInfo.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("ubiLogicId", tblEventPlateInfo.getUbiLogicId());
-        tblEventPlateInfoMapper.deleteByExample(example);
+        tblEventPlateInfoMapper.delete(tblEventPlateInfo);
     }
 
     @Async
     @Override
     public void updateVehicleEvent(TblEventVehicleEvent tblEventVehicleEvent) {
-        int time = 1;
+        int time = 3;
         String post;
         while (true) {
             try {
-                post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/vehicleEvent", JSON.toJSONString(tblEventVehicleEvent));
+                post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/vehicleEvent", JSON.toJSONString(tblEventVehicleEvent));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -180,23 +183,33 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } catch (Exception e) {
                 log.error(tblEventVehicleEvent.getUbiLogicId() + " 交通事件上报失败：" + e.getMessage());
             }
-            time += 2;
+            time += 3;
+            if(time>9){
+                return;
+            }
         }
-        Example example = new Example(TblEventVehicleEvent.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("ubiLogicId", tblEventVehicleEvent.getUbiLogicId());
-        tblEventVehicleEventMapper.deleteByExample(example);
 
-        updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
+        tblEventVehicleEventMapper.delete(tblEventVehicleEvent);
+
+        List<Integer> list = Arrays.asList(5, 6, 14, 15, 10016, 31, 32, 34, 35, 36, 40, 41, 37);
+        if (!list.contains(tblEventVehicleEvent.getUiEventType())) {
+//            try {
+//                Thread.sleep(120 * 1000);
+//                updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+            updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
+        }
     }
 
     @Async
     @Override
     public void updatePassengerFlow(TblEventPassengerFlow tblEventPassengerFlow) {
-        int time = 1;
+        int time = 3;
         while (true) {
             try {
-                String post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/passengerFlow", JSON.toJSONString(tblEventPassengerFlow));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/passengerFlow", JSON.toJSONString(tblEventPassengerFlow));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -213,21 +226,21 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } catch (Exception e) {
                 log.error(tblEventPassengerFlow.getUiType() + " 客流量上报失败：" + e.getMessage());
             }
-            time += 2;
+            time += 3;
+            if(time>9){
+                return;
+            }
         }
-        Example example = new Example(TblEventPassengerFlow.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("uiType", tblEventPassengerFlow.getUiType());
-        tblEventPassengerFlowMapper.deleteByExample(example);
+        tblEventPassengerFlowMapper.delete(tblEventPassengerFlow);
     }
 
     @Async
     @Override
     public void updateParkingEvent(TblEventParkingEvent tblEventParkingEvent) {
-        int time = 1;
+        int time = 3;
         while (true) {
             try {
-                String post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/parkingEvent", JSON.toJSONString(tblEventParkingEvent));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/parkingEvent", JSON.toJSONString(tblEventParkingEvent));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -244,12 +257,12 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } catch (Exception e) {
                 log.error(tblEventParkingEvent.getUbiLogicId() + " 货车检查事件上报失败：" + e.getMessage());
             }
-            time += 2;
+            time += 3;
+            if(time>9){
+                return;
+            }
         }
-        Example example = new Example(TblEventParkingEvent.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("ubiLogicId", tblEventParkingEvent.getUbiLogicId());
-        tblEventParkingEventMapper.deleteByExample(example);
+        tblEventParkingEventMapper.delete(tblEventParkingEvent);
     }
 
 }

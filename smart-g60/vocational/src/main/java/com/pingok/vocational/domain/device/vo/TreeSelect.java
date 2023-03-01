@@ -3,6 +3,7 @@ package com.pingok.vocational.domain.device.vo;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.pingok.vocational.domain.device.TblDeviceCategory;
+import com.pingok.vocational.domain.field.TblFieldInfo;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.system.api.domain.SysDept;
 
@@ -49,6 +50,12 @@ public class TreeSelect implements Serializable
             this.post = JSON.parseObject(tblDeviceCategory.getCategoryPost(), Long[].class);
         }
         this.children = tblDeviceCategory.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    public TreeSelect(TblFieldInfo tblFieldInfo) {
+        this.value = tblFieldInfo.getId();
+        this.label = tblFieldInfo.getFieldName();
+        this.children = tblFieldInfo.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     public Long getValue()

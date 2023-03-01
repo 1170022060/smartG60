@@ -1,22 +1,19 @@
 package com.pingok.vocational.service.report.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.github.pagehelper.util.StringUtil;
 import com.pingok.vocational.domain.report.TblDeviceFault;
+import com.pingok.vocational.domain.report.vo.DeviceFaultSearch;
 import com.pingok.vocational.domain.report.vo.DeviceFaultTypeVo;
 import com.pingok.vocational.domain.report.vo.ReportVo;
-import com.pingok.vocational.domain.report.vo.DeviceFaultSearch;
 import com.pingok.vocational.mapper.report.TblDeviceFaultMapper;
 import com.pingok.vocational.service.report.IDeviceFaultService;
 import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.DateUtils;
-import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +30,11 @@ public class DeviceFaultServiceImpl implements IDeviceFaultService {
     private TblDeviceFaultMapper tblDeviceFaultMapper;
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
+
+    @Override
+    public List<Map> faultStatistics() {
+        return tblDeviceFaultMapper.faultStatistics();
+    }
 
     @Override
     public void add(TblDeviceFault tblDeviceFault) {
@@ -58,7 +60,7 @@ public class DeviceFaultServiceImpl implements IDeviceFaultService {
     @Override
     public void relieve(Long id, String remark) {
         TblDeviceFault tblDeviceFault = tblDeviceFaultMapper.selectByPrimaryKey(id);
-        if(tblDeviceFault==null){
+        if (tblDeviceFault == null) {
             throw new ServiceException("设备id不存在");
         }
         tblDeviceFault.setRemark(remark);
@@ -71,7 +73,7 @@ public class DeviceFaultServiceImpl implements IDeviceFaultService {
     @Override
     public void confirm(Long id, String remark) {
         TblDeviceFault tblDeviceFault = tblDeviceFaultMapper.selectByPrimaryKey(id);
-        if(tblDeviceFault==null){
+        if (tblDeviceFault == null) {
             throw new ServiceException("设备id不存在");
         }
         tblDeviceFault.setRemark(remark);
@@ -83,24 +85,7 @@ public class DeviceFaultServiceImpl implements IDeviceFaultService {
 
     @Override
     public List<DeviceFaultSearch> search(String faultType, Long deviceId, String faultId, String faultDescription, Integer status) {
-        List<DeviceFaultSearch> list =tblDeviceFaultMapper.search(faultType,deviceId,faultId,faultDescription,status);
-        List<DeviceFaultSearch> list2 = new ArrayList<>();
-        Long postId =tblDeviceFaultMapper.selectPostId(SecurityUtils.getUserId());
-        for(DeviceFaultSearch Search :list)
-        {
-            String postStr=tblDeviceFaultMapper.selectPostIDs(Search.getDeviceCategory());
-            if(StringUtils.isNotNull(postStr) && postId!=null)
-            {
-                Long[] post=JSON.parseObject(postStr, Long[].class);
-                for(Long l: post){
-                    if(l.longValue()==postId.longValue())
-                    {
-                        list2.add(Search);
-                    }
-                }
-            }
-        }
-        return list2;
+        return tblDeviceFaultMapper.search(faultType, deviceId, faultId, faultDescription, status);
     }
 
     @Override
@@ -113,4 +98,18 @@ public class DeviceFaultServiceImpl implements IDeviceFaultService {
         return tblDeviceFaultMapper.selectDeviceFaultByTypeList(reportVo);
     }
 
+    @Override
+    public List<Map> selectFaultByDeviceName(String deviceName, Date startTime, Date endTime) {
+        return tblDeviceFaultMapper.selectFaultByDeviceName(deviceName,startTime,endTime);
+    }
+
+    @Override
+    public List<Map> selectFaultByDeviceType(Long deviceTypeId, Date startTime, Date endTime) {
+        return tblDeviceFaultMapper.selectFaultByDeviceType(deviceTypeId,startTime,endTime);
+    }
+
+    @Override
+    public List<Map> selectFaultByFaultType(Integer faultType, Date startTime, Date endTime) {
+        return tblDeviceFaultMapper.selectFaultByFaultType(faultType,startTime,endTime);
+    }
 }

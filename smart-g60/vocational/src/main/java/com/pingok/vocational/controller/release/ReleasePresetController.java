@@ -29,7 +29,7 @@ public class ReleasePresetController extends BaseController {
     @Autowired
     private IReleasePresetService releasePresetService;
 
-    @RequiresPermissions("vocational:releasePreset:publish")
+//    @RequiresPermissions("vocational:releasePreset:publish")
     @Log(title = "信息发布", businessType = BusinessType.OTHER)
     @PostMapping(value="/publish")
     public AjaxResult publish(@RequestBody ReleasePresetEnum releasePresetEnum)
@@ -37,7 +37,7 @@ public class ReleasePresetController extends BaseController {
         return AjaxResult.success();
     }
 
-    @RequiresPermissions("vocational:releasePreset:idInfo")
+//    @RequiresPermissions("vocational:releasePreset:idInfo")
     @Log(title = "信息发布预设信息-根据ID查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/idInfo")
     public AjaxResult idInfo(@RequestParam(name = "id") Long id)
@@ -46,7 +46,7 @@ public class ReleasePresetController extends BaseController {
         return AjaxResult.success(idInfo);
     }
 
-    @RequiresPermissions("vocational:releasePreset:info")
+//    @RequiresPermissions("vocational:releasePreset:info")
     @Log(title = "信息发布预设信息-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
     public TableDataInfo info(@RequestParam(name = "infoType",required = false) Integer infoType,@RequestParam(name = "status",required = false) Integer status,@RequestParam(name = "presetName",required = false) String presetName)
@@ -56,7 +56,7 @@ public class ReleasePresetController extends BaseController {
         return getDataTable(info);
     }
 
-    @RequiresPermissions("vocational:releasePreset:deviceInfo")
+//    @RequiresPermissions("vocational:releasePreset:deviceInfo")
     @Log(title = "信息发布预设信息-适合发送的设备信息查询", businessType = BusinessType.OTHER)
     @GetMapping("/deviceInfo")
     public TableDataInfo info(@RequestParam(name = "id") Long id)

@@ -10,11 +10,14 @@ import com.pingok.external.mapper.bridge.*;
 import com.pingok.external.service.bridge.IBridgeService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.exception.ServiceException;
+import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.bean.BeanUtils;
 import com.ruoyi.system.api.RemoteEventService;
+import com.ruoyi.system.api.RemoteKafkaService;
 import com.ruoyi.system.api.domain.event.TblEventRecord;
+import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,9 @@ public class BridgeServiceImpl implements IBridgeService {
     private TblBridgeAcquisitionMapper tblBridgeAcquisitionMapper;
     @Autowired
     private TblBridgeWarningMapper tblBridgeWarningMapper;
+
+    @Autowired
+    private RemoteKafkaService remoteKafkaService;
 
 
     @Override
@@ -131,6 +137,7 @@ public class BridgeServiceImpl implements IBridgeService {
                         TblBridgeAcquisition acquisition;
                         JSONObject object;
                         int size = array.size();
+                        int deviceStatus = 1;
                         for (int i = 0; i < size; i++) {
                             object = array.getJSONObject(i);
                             acquisition = tblBridgeAcquisitionMapper.selectByPrimaryKey(object.getLong("id"));
@@ -145,9 +152,10 @@ public class BridgeServiceImpl implements IBridgeService {
                                 tblBridgeAcquisitionMapper.updateByPrimaryKey(acquisition);
                             }
                             if (acquisition.getStatus() == 1) {
-                                bridge.setDeviceStatus(0);
+                                deviceStatus = 0;
                             }
                         }
+                        bridge.setDeviceStatus(deviceStatus);
                         tblBridgeInfoMapper.updateByPrimaryKey(bridge);
                     }
                 } else {
@@ -172,6 +180,7 @@ public class BridgeServiceImpl implements IBridgeService {
                         TblBridgeCollection collection;
                         JSONObject object;
                         int size = array.size();
+                        int deviceStatus = 1;
                         for (int i = 0; i < size; i++) {
                             object = array.getJSONObject(i);
                             collection = tblBridgeCollectionMapper.selectByPrimaryKey(object.getLong("id"));
@@ -186,10 +195,12 @@ public class BridgeServiceImpl implements IBridgeService {
                                 tblBridgeCollectionMapper.updateByPrimaryKey(collection);
                             }
                             if (collection.getStatus() == 1) {
-                                bridge.setDeviceStatus(0);
+                                deviceStatus = 0;
                             }
                         }
+                        bridge.setDeviceStatus(deviceStatus);
                         tblBridgeInfoMapper.updateByPrimaryKey(bridge);
+
                     }
                 } else {
                     throw new ServiceException("采集仪信息更新失败：" + ret.getString("msg"));

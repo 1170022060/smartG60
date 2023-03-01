@@ -19,18 +19,23 @@ public interface ViewMonitorDeviceInfoMapper extends CommonRepository<ViewMonito
     @Select("SELECT " +
             "tdi.ID AS \"id\", " +
             "tdi.DEVICE_ID AS \"deviceId\", " +
+            "tdi.CAMERA_ID AS \"cameraId\", "+
             "tdi.DEVICE_NAME AS \"deviceName\", " +
             "tdi.GPS AS \"gps\", " +
             "tdi.DEVICE_IP AS \"deviceIp\", " +
             "tds.STATUS AS \"status\", " +
+            "to_char(tds.TIME,'yyyy-MM-dd HH24:mi:ss') AS \"statusTime\", " +
             "tds.STATUS_DESC AS \"statusDesc\", " +
+            "(tdi.POS_X || '%') as \"posX\", "+
+            "(tdi.POS_Y || '%') as \"posY\", "+
+            "tdi.DEVICE_TYPE as \"deviceType\","+
             "tds.STATUS_DETAILS AS \"statusDetails\"  " +
             "FROM " +
             "TBL_DEVICE_STATUS tds " +
             "JOIN TBL_DEVICE_INFO tdi ON tdi.ID = tds.DEVICE_ID " +
             "JOIN TBL_FIELD_INFO tfi ON tfi.id = tdi.FIELD_BELONG  " +
             "WHERE " +
-            "tfi.FIELD_NUM = #{fieldNum}")
+            "tdi.FIELD_BELONG in (3940,3941)" )
     List<Map> findByFieldNum(@Param("fieldNum") String fieldNum);
 
     @Select("SELECT " +

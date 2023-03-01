@@ -28,8 +28,8 @@ public class OptInfoController extends BaseController {
     @Autowired
     private IOptInfoService optInfoService;
 
-    @RequiresPermissions("vocational:optInfo:idInfo")
-    @Log(title = "员工信息-根据ID查询", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("vocational:optInfo:idInfo")
+//    @Log(title = "员工信息-根据ID查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/idInfo")
     public AjaxResult idInfo(@RequestParam(name = "id") Long id)
     {
@@ -37,8 +37,8 @@ public class OptInfoController extends BaseController {
         return AjaxResult.success(idInfo);
     }
 
-    @RequiresPermissions("vocational:optInfo:info")
-    @Log(title = "员工信息-分页查询", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("vocational:optInfo:info")
+//    @Log(title = "员工信息-分页查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/info")
     public TableDataInfo info(@RequestParam(name = "belongStation",required = false) String belongStation, @RequestParam(name = "belongCenter",required = false) String belongCenter, @RequestParam(name = "optName",required = false) String optName, @RequestParam(name = "optId",required = false) Integer optId, @RequestParam(name = "status",required = false) Integer status)
     {
@@ -47,7 +47,7 @@ public class OptInfoController extends BaseController {
         return getDataTable(info);
     }
 
-    @RequiresPermissions("vocational:optInfo:add")
+//    @RequiresPermissions("vocational:optInfo:add")
     @Log(title = "员工信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody TblOptInfo tblOptInfo)

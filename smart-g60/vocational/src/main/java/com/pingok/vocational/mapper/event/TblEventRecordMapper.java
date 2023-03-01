@@ -59,7 +59,7 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
     List<EventRecordTypeVo> selectEventRecordByTypeList(ReportVo reportVo);
 
     @Select({"<script>" +
-            "select LOCATION_INTERVAL as \"locationInterval\"," +
+            "select a.PILE_NO as \"locationInterval\"," +
             "count(1) as \"count\" ," +
             "to_char(#{startTime}, 'yyyy-mm-dd hh24:mi:ss') || ' - ' ||to_char(#{endTime}, 'yyyy-mm-dd hh24:mi:ss') as \"time\" from TBL_EVENT_RECORD a " +
             "where 1=1 " +
@@ -70,14 +70,14 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             " and a.EVENT_TIME &lt;= #{endTime} " +
             "</when>"+
             "<when test='locationInterval != null'> " +
-            "and a.LOCATION_INTERVAL like CONCAT(CONCAT('%',#{locationInterval}),'%') " +
+            "and a.PILE_NO like CONCAT(CONCAT('%',#{locationInterval}),'%') " +
             "</when>"+
-            "group by LOCATION_INTERVAL order by LOCATION_INTERVAL" +
+            "group by a.PILE_NO order by a.PILE_NO" +
             "</script>"})
     List<Map> selectEventRecordBySite(@Param("locationInterval") String locationInterval, @Param("startTime") Date startTime, @Param("endTime")  Date endTime);
 
     @Select({"<script>" +
-            "select LOCATION_INTERVAL as \"locationInterval\"," +
+            "select a.PILE_NO as \"locationInterval\"," +
             "count(1) as \"count\" ," +
             "to_char(#{startTime}, 'yyyy-mm-dd hh24:mi:ss') || ' - ' ||to_char(#{endTime}, 'yyyy-mm-dd hh24:mi:ss') as \"time\" from TBL_EVENT_RECORD a " +
             "where 1=1 " +
@@ -88,9 +88,9 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             " and a.EVENT_TIME &lt;= #{endTime} " +
             "</when>"+
             "<when test='locationInterval != null'> " +
-            "and a.LOCATION_INTERVAL like CONCAT(CONCAT('%',#{locationInterval}),'%') " +
+            "and a.PILE_NO like CONCAT(CONCAT('%',#{locationInterval}),'%') " +
             "</when>"+
-            "group by LOCATION_INTERVAL order by LOCATION_INTERVAL" +
+            "group by a.PILE_NO order by a.PILE_NO" +
             "</script>"})
     List<EventRecordSiteVo> selectEventRecordBySiteList(ReportVo reportVo);
 
@@ -132,4 +132,25 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "</script>"})
     List<EventRecordClassVo> selectEventRecordByClassList(ReportVo reportVo);
 
+    @Select({"<script>" +
+            "SELECT " +
+            "\"count\"," +
+            "CASE when STATUS =0 then '未处置' when STATUS =1 then '处置中' " +
+            "when STATUS =2 then '已解除' when STATUS =-1 then '误报' END as \"status\", " +
+            "to_char(#{startTime}, 'yyyy-mm-dd hh24:mi:ss') || ' - ' ||to_char(#{endTime}, 'yyyy-mm-dd hh24:mi:ss') as \"time\" "+
+            "FROM ( " +
+            "SELECT COUNT(*) as \"count\",STATUS FROM TBL_EVENT_RECORD " +
+            "where 1=1 " +
+            "<when test='startTime != null'> " +
+            " and CREATE_TIME &gt;= #{startTime} " +
+            "</when>"+
+            "<when test='endTime != null'> " +
+            " and CREATE_TIME &lt;= #{endTime} " +
+            "</when>"+
+            "<when test='status != null'> " +
+            "and STATUS= #{status} " +
+            "</when>"+
+            "GROUP BY STATUS) " +
+            "</script>"})
+    List<Map> selectEventRecordByStatusType(@Param("status") Integer status, @Param("startTime") Date startTime, @Param("endTime")  Date endTime);
 }

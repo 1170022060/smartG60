@@ -3,6 +3,7 @@ package com.pingok.monitor.controller.leise;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.monitor.service.leise.ILeiseService;
 import com.pingok.monitor.service.leise.ILeiseStoreService;
+import com.pingok.monitor.service.pilotLight.IPilotLightService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import org.aspectj.weaver.loadtime.Aj;
@@ -24,8 +25,12 @@ public class LeiseController extends BaseController {
     @Autowired
     ILeiseStoreService iLeiseStoreService;
 
+    @Autowired
+    private IPilotLightService iPilotLightService;
+
     @PostMapping("/object")
     public AjaxResult handleObject(@RequestBody JSONObject objectData) {
+        iPilotLightService.updateStatus();
         iLeiseStoreService.saveObject(objectData);
         iLeiseService.handleObject(objectData);
         return AjaxResult.success();

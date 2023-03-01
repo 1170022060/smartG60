@@ -29,8 +29,8 @@ public class GantryRecordController extends BaseController {
     @Autowired
     private IGantryRecordService tblGantryRecordService;
 
-    @RequiresPermissions("vocational:gantry:info")
-    @Log(title = "门架段面记录-分页查询", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("vocational:gantry:info")
+//    @Log(title = "门架段面记录-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
     public TableDataInfo info(@RequestParam(name = "gantryId",required = false) String gantryId, @RequestParam(name = "startDate",required = false) Date startDate, @RequestParam(name = "endDate",required = false) Date endDate)
     {
@@ -49,5 +49,14 @@ public class GantryRecordController extends BaseController {
         List<GantryRecordVo> list = tblGantryRecordService.selectGantryRecordList(reportVo);
         ExcelUtil<GantryRecordVo> util = new ExcelUtil<GantryRecordVo>(GantryRecordVo.class);
         util.exportExcel(response,list, "门架段面记录");
+    }
+
+    @GetMapping("/getGantryFlow")
+    public TableDataInfo getGantryFlow(@RequestParam(name = "gantryId",required = false) String gantryId,
+                                       @RequestParam(name = "startDate",required = false) Date startDate,
+                                       @RequestParam(name = "endDate",required = false) Date endDate){
+        startPage();
+        List<Map> info = tblGantryRecordService.selectGantryFlow(gantryId,startDate,endDate);
+        return getDataTable(info);
     }
 }

@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,13 +45,42 @@ public class EventController extends BaseController {
     @Autowired
     private RemoteKafkaService remoteKafkaService;
 
+
+    @GetMapping("/selectByEventTypeAndPileNo")
+    public AjaxResult selectByEventTypeAndPileNo(@RequestParam String eventType, @RequestParam String pileNo) {
+        return AjaxResult.success(iEventService.selectByEventTypeAndPileNo(eventType, pileNo));
+    }
+
+    /**
+     * 配置事件告警列表
+     */
+    @GetMapping("/eventAlarmAll")
+    public AjaxResult eventAlarmAll() {
+        return AjaxResult.success(iEventService.eventAlarmAll());
+    }
+
+    /**
+     * 配置事件告警类型
+     */
+    @PostMapping("/eventAlarmAdd")
+    public AjaxResult eventAlarmAdd(@RequestBody List<Integer> eventTypes) {
+        iEventService.eventAlarmAdd(eventTypes);
+        return AjaxResult.success();
+    }
+
+
+    @GetMapping("/searchEvent")
+    public AjaxResult searchEvent() {
+        return AjaxResult.success(iEventService.searchEvent());
+    }
+
     /**
      * 事件误报
      */
-    @RequiresPermissions("event:eventControl:fault")
+//    @RequiresPermissions("event:eventControl:fault")
     @Log(title = "事件管理", businessType = BusinessType.UPDATE)
     @PutMapping("/fault")
-    public AjaxResult fault(@RequestParam Long id, @RequestParam String remark) {
+    public AjaxResult fault(@RequestParam Long id, @RequestParam(required = false) String remark) {
         iEventService.fault(id, remark);
         return AjaxResult.success();
     }
@@ -66,7 +97,7 @@ public class EventController extends BaseController {
         JSONObject data = new JSONObject();
         data.put("ubiLogicId", eventId);
         KafkaEnum kafkaEnum = new KafkaEnum();
-        kafkaEnum.setTopIc(KafkaTopIc.UPDATE_EVENT_VIDEO);
+        kafkaEnum.setTopIc(KafkaTopIc.MONITOR_UPDATE_EVENT_VIDEO);
         kafkaEnum.setData(data.toJSONString());
         remoteKafkaService.send(kafkaEnum);
         return AjaxResult.success("请求成功，后台正在下载，请等待");
@@ -97,7 +128,7 @@ public class EventController extends BaseController {
     /**
      * 事件解除
      */
-    @RequiresPermissions("event:eventControl:relieve")
+//    @RequiresPermissions("event:eventControl:relieve")
     @Log(title = "事件管理", businessType = BusinessType.UPDATE)
     @PutMapping("/relieve")
     public AjaxResult relieve(@RequestParam Long id) {
@@ -108,18 +139,18 @@ public class EventController extends BaseController {
     /**
      * 填报处置内容
      */
-    @RequiresPermissions("event:eventControl:handleContent")
-    @Log(title = "事件管理", businessType = BusinessType.UPDATE)
+//    @RequiresPermissions("event:eventControl:handleContent")
+    @Log(title = "填报处置内容", businessType = BusinessType.UPDATE)
     @PutMapping("/handleContent")
-    public AjaxResult handleContent(@RequestBody List<TblEventHandle> tblEventHandles) {
-        iEventService.handleContent(tblEventHandles);
+    public AjaxResult handleContent(@RequestBody TblEventHandle tblEventHandle) {
+        iEventService.handleContent(tblEventHandle);
         return AjaxResult.success();
     }
 
     /**
      * 应急处置
      */
-    @RequiresPermissions("event:eventControl:handle")
+//    @RequiresPermissions("event:eventControl:handle")
     @Log(title = "事件管理", businessType = BusinessType.UPDATE)
     @PutMapping("/handle")
     public AjaxResult handle(@RequestParam Long id, @RequestBody JSONArray eventPlan) {
@@ -130,11 +161,11 @@ public class EventController extends BaseController {
     /**
      * 事件确认
      */
-    @RequiresPermissions("event:eventControl:confirm")
-    @Log(title = "事件管理", businessType = BusinessType.UPDATE)
+//    @RequiresPermissions("event:eventControl:confirm")
+    @Log(title = "事件确认", businessType = BusinessType.UPDATE)
     @PutMapping("/confirm")
-    public AjaxResult confirm(@RequestParam Long id,@RequestParam String eventType,@RequestParam String remark,@RequestParam String direction) {
-        iEventService.confirm(id,eventType,remark,direction);
+    public AjaxResult confirm(@RequestParam Long id, @RequestParam String eventType,@RequestParam(required = false) String eventSubtype, @RequestParam String remark, @RequestParam String direction) {
+        iEventService.confirm(id, eventType,eventSubtype, remark, direction);
         return AjaxResult.success();
     }
 
@@ -146,11 +177,12 @@ public class EventController extends BaseController {
 //    @RequiresPermissions("event:eventControl:list")
 //    @Log(title = "事件管理", businessType = BusinessType.OTHER)
     @GetMapping("/list")
-    public TableDataInfo list(Integer status) {
+    public TableDataInfo list(Integer status, Date startTime,Date endTime,String eventType) {
         startPage();
-        List<Map> list = iEventService.search(status);
+        List<Map> list = iEventService.search(status,startTime,endTime,eventType);
         return getDataTable(list);
     }
+
 
     /**
      * 获取未确认、已确认事件列表
@@ -177,7 +209,7 @@ public class EventController extends BaseController {
     /**
      * 新增应
      */
-    @RequiresPermissions("event:eventControl:add")
+//    @RequiresPermissions("event:eventControl:add")
     @Log(title = "事件管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody TblEventRecord tblEventRecord) {
@@ -187,7 +219,7 @@ public class EventController extends BaseController {
     /**
      * 修改
      */
-    @RequiresPermissions("event:eventControl:edit")
+//    @RequiresPermissions("event:eventControl:edit")
     @Log(title = "事件管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody TblEventRecord tblEventRecord) {
@@ -209,6 +241,8 @@ public class EventController extends BaseController {
     @PostMapping("/plateInfo")
     public AjaxResult plateInfo(@RequestBody TblEventPlateInfo tblEventPlateInfo) {
         iVideoEventService.plateInfo(tblEventPlateInfo);
+        iVideoEventService.parkVehInfo(tblEventPlateInfo);
+        iVideoEventService.parkingStatistics(tblEventPlateInfo);
         return AjaxResult.success();
     }
 
@@ -217,7 +251,23 @@ public class EventController extends BaseController {
      */
     @PostMapping("/vehicleEvent")
     public AjaxResult vehicleEvent(@RequestBody TblEventVehicleEvent tblEventVehicleEvent) {
-        iVideoEventService.vehicleEvent(tblEventVehicleEvent);
+        log.info("事件id：" + tblEventVehicleEvent.getUbiLogicId() + "----事件类型：" + tblEventVehicleEvent.getUiEventType() + "对应TrackId：" + tblEventVehicleEvent.getUiTrackId());
+        switch (tblEventVehicleEvent.getUiEventType()) {
+            //事件解除
+            case 31:
+            case 32:
+            case 34:
+            case 35:
+            case 36:
+            case 40:
+            case 41:
+            case 10031:
+                iVideoEventService.relieveEvent(tblEventVehicleEvent);
+                break;
+            default:
+                iVideoEventService.vehicleEvent(tblEventVehicleEvent);
+                break;
+        }
         return AjaxResult.success();
     }
 
@@ -237,5 +287,18 @@ public class EventController extends BaseController {
     public AjaxResult parkingEvent(@RequestBody TblEventParkingEvent tblEventParkingEvent) {
         iVideoEventService.parkingEvent(tblEventParkingEvent);
         return AjaxResult.success();
+    }
+
+    /**
+     * 获取分上下行的已确认的交通事件
+     *
+     * @return
+     */
+    @GetMapping("/GetfilterEvent")
+    public AjaxResult getTable() {
+        Map map = new HashMap();
+        map.put("upstream", iEventService.filterUpEvent());
+        map.put("downstream", iEventService.filterDownEvent());
+        return AjaxResult.success(map);
     }
 }

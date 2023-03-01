@@ -3,6 +3,7 @@ package com.pingok.monitor.service.leise.Impl;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.monitor.config.HostConfig;
 import com.pingok.monitor.domain.leise.TblLeiseEvent;
 import com.pingok.monitor.domain.leise.TblLeiseObject;
 import com.pingok.monitor.mapper.leise.TblLeiseEventMapper;
@@ -24,9 +25,6 @@ import tk.mybatis.mapper.entity.Example;
 @Slf4j
 @Service
 public class LeiseServiceImpl implements ILeiseService {
-    @Value("${daas.host}")
-    private String host;
-//    private String host = "localhost:9307";
 
     @Autowired
     private TblLeiseObjectMapper tblLeiseObjectMapper;
@@ -82,7 +80,7 @@ public class LeiseServiceImpl implements ILeiseService {
         R ret = null;
         int[] sleep = new int[] { 1,3,6 };
         int i = 0;
-        String url = host + "/leise/" + type;
+        String url = HostConfig.DASSHOST + "/leise/" + type;
         while (i < sleep.length) {
             try {
                 post = HttpUtil.post(url, data);

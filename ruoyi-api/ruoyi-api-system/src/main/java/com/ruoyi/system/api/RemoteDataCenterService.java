@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,10 @@ import java.util.Map;
  */
 @FeignClient(contextId = "remoteDataCenterService", value = ServiceNameConstants.DATA_CENTER_SERVICE, fallbackFactory = RemoteDataCenterFallbackFactory.class)
 public interface RemoteDataCenterService {
+
+    @PostMapping("/provincialCenters")
+    R getData(@RequestParam(value = "name") String name, @RequestParam(value = "dateTimeNow") String dateTimeNow);
+
 
     /**
      * 闯关分拣
@@ -92,4 +97,53 @@ public interface RemoteDataCenterService {
      */
     @GetMapping("/gantryAlgorithm/passRecord")
     R<List<Map>> passRecord(@RequestParam(name = "gantryId",required = false) String gantryId,@RequestParam(name = "startTime",required = false) String startTime, @RequestParam(name = "endTime",required = false) String endTime);
+
+    /**
+     * 状态名单增量
+     * @return
+     */
+    @PostMapping("/blackcard/blackIncr")
+    R blackIncr();
+
+    /**
+     * 中高风险名单
+     * @return
+     */
+    @PostMapping("/epidemic/epidemicDownload")
+    R epidemicDownload();
+
+    /**
+     * 中高风险车牌前缀名单
+     * @return
+     */
+    @PostMapping("/epidemic/prefixDownload")
+    R prefixDownload();
+
+    /**
+     * 最小费率名单
+     * @return
+     */
+    @PostMapping("/rate/rateDownload")
+    R rateDownload();
+
+    /**
+     * 追缴名单增量
+     * @return
+     */
+    @PostMapping("/recovery/recoveryIncr")
+    R recoveryIncr();
+
+    /**
+     * 抢险救灾名单增量
+     * @return
+     */
+    @PostMapping("/rescue/rescueIncr")
+    R rescueIncr();
+
+    /**
+     * 绿通名单
+     * @return
+     */
+    @PostMapping("/green/greenDownload")
+    R greenDownload();
 }

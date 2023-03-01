@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * 高德服务降级处理
@@ -29,7 +30,7 @@ public class RemoteAmapFallbackFactory implements FallbackFactory<RemoteAmapServ
             }
 
             @Override
-            public R eventRelieve(Long id) {
+            public R eventRelieve(@RequestBody TblAutoNaviMapRecord autoNaviMapRecord) {
                 return null;
             }
         };

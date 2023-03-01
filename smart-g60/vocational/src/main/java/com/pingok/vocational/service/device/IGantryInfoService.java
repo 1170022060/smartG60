@@ -14,6 +14,12 @@ import java.util.Map;
 public interface IGantryInfoService {
 
     /**
+     * 查询所有门架信息
+     * @return
+     */
+    List<TblGantryInfo> selectAll();
+
+    /**
      * 根据Id查询门架设备信息
      *
      * @param Id Id

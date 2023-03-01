@@ -3,12 +3,15 @@ package com.pingok.vocational.controller.parkingLot;
 import com.pingok.vocational.service.parkingLot.IParkingLotService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
+import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.Date;
 
 /**
@@ -43,7 +46,7 @@ public class ParkingLotController extends BaseController {
 
     @Log(title = "车流统计", businessType = BusinessType.OTHER)
     @GetMapping("/statistics")
-    public AjaxResult driveAway(@RequestParam(name = "date") Date date) {
+    public AjaxResult statistics(@RequestParam(name = "date") Date date) {
         return AjaxResult.success(iParkingLotService.trafficChange(date));
     }
 
@@ -51,5 +54,50 @@ public class ParkingLotController extends BaseController {
     @GetMapping("/place")
     public AjaxResult place() {
         return AjaxResult.success(iParkingLotService.parkingPlace());
+    }
+
+    @Log(title = "客流量统计", businessType = BusinessType.OTHER)
+    @GetMapping("/passenger")
+    public AjaxResult passenger(@RequestParam(name = "date") Date date) throws ParseException {
+        return AjaxResult.success(iParkingLotService.passengerFlow(date));
+    }
+
+    @Log(title = "车位统计", businessType = BusinessType.OTHER)
+    @GetMapping("/park")
+    public AjaxResult park(@RequestParam(name = "fieldNum",required = false) String fieldNum,@RequestParam(name = "regionName",required = false) String regionName){
+        return AjaxResult.success(iParkingLotService.parkMonitor(fieldNum,regionName));
+    }
+
+    @Log(title = "超时车辆", businessType = BusinessType.OTHER)
+    @GetMapping("/overtime")
+    public TableDataInfo overtime(@RequestParam(name = "fieldNum",required = false) String fieldNum, @RequestParam(name = "regionName",required = false) String regionName){
+        startPage();
+        return getDataTable(iParkingLotService.overtimeInfo(fieldNum,regionName));
+    }
+
+    @Log(title = "车流统计(页面)", businessType = BusinessType.OTHER)
+    @GetMapping("/traffic")
+    public TableDataInfo traffic(@RequestParam(name = "fieldNum",required = false) String fieldNum, @RequestParam(name = "vehType",required = false) Integer vehType,@RequestParam(name = "startDate",required = false) Date startDate,@RequestParam(name = "endDate",required = false) Date endDate, @RequestParam(name = "statisticsType") Integer statisticsType){
+        startPage();
+        return getDataTable(iParkingLotService.traffic(fieldNum,vehType,startDate,endDate,statisticsType));
+    }
+
+    @Log(title = "车流统计(页面)-出入口总流量", businessType = BusinessType.OTHER)
+    @GetMapping("/trafficCount")
+    public AjaxResult trafficCount(@RequestParam(name = "fieldNum",required = false) String fieldNum, @RequestParam(name = "vehType",required = false) Integer vehType,@RequestParam(name = "startDate",required = false) Date startDate,@RequestParam(name = "endDate",required = false) Date endDate){
+        return AjaxResult.success(iParkingLotService.trafficCount(fieldNum,vehType,startDate,endDate));
+    }
+
+    @Log(title = "人流统计(页面)", businessType = BusinessType.OTHER)
+    @GetMapping("/humanFlow")
+    public TableDataInfo humanFlow(@RequestParam(name = "fieldNum",required = false) String fieldNum, @RequestParam(name = "areaId",required = false) Integer areaId,@RequestParam(name = "startDate",required = false) Date startDate,@RequestParam(name = "endDate",required = false) Date endDate, @RequestParam(name = "statisticsType") Integer statisticsType){
+        startPage();
+        return getDataTable(iParkingLotService.humanFlow(fieldNum,areaId,startDate,endDate,statisticsType));
+    }
+
+    @Log(title = "人流统计(页面)-总流量", businessType = BusinessType.OTHER)
+    @GetMapping("/humanFlowCount")
+    public AjaxResult humanFlowCount(@RequestParam(name = "fieldNum",required = false) String fieldNum, @RequestParam(name = "areaId",required = false) Integer areaId,@RequestParam(name = "startDate",required = false) Date startDate,@RequestParam(name = "endDate",required = false) Date endDate){
+        return AjaxResult.success(iParkingLotService.humanFlowCount(fieldNum,areaId,startDate,endDate));
     }
 }

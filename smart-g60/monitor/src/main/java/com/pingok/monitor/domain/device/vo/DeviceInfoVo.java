@@ -20,4 +20,5 @@ public class DeviceInfoVo {
     private Integer status;
     private String statusDesc;
     private TblReleaseRecord tblReleaseRecord;
+    private String cameraId;
 }

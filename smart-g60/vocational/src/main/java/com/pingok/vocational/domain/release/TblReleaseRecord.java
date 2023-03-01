@@ -75,6 +75,8 @@ public class TblReleaseRecord implements Serializable {
     @Excel(name = "撤销用户ID")
     private Long revokeUserId;
 
+    private Integer model;
+
     public Long getId()
     {
         return id;
@@ -193,6 +195,15 @@ public class TblReleaseRecord implements Serializable {
     }
 
     public void setRevokeUserId(Long revokeUserId) { this.revokeUserId = revokeUserId; }
+
+    public Integer getModel() {
+        return model;
+    }
+
+    public void setModel(Integer model) {
+        this.model = model;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -209,6 +220,7 @@ public class TblReleaseRecord implements Serializable {
                 .append("revokeTime", getRevokeTime())
                 .append("presetUserId", getPresetUserId())
                 .append("revokeUserId", getRevokeUserId())
+                .append("model", getModel())
                 .toString();
     }
 }

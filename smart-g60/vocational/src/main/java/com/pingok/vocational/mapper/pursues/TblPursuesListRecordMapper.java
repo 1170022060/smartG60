@@ -58,8 +58,11 @@ public interface TblPursuesListRecordMapper extends CommonRepository<TblPursuesL
             "<when test='endTime != null'> " +
             " and END_TIME &lt;= #{endTime} " +
             "</when>"+
+            "<when test='vehPlate != null'>" +
+            "and VEH_PLATE like '%' || #{vehPlate} || '%' " +
+            "</when> " +
             "order by END_TIME" +
             "</script>"})
-    List<Map> selectPursuesList(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    List<Map> selectPursuesList(@Param("startTime") Date startTime, @Param("endTime") Date endTime,@Param("vehPlate") String vehPlate);
 
 }
