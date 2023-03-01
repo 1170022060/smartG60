@@ -48,4 +48,14 @@ public class SectionRecordController extends BaseController {
         ExcelUtil<SectionRecordVo> util = new ExcelUtil<SectionRecordVo>(SectionRecordVo.class);
         util.exportExcel(response,list, "出入口段面记录");
     }
+
+    @GetMapping("/getEnAndExFlow")
+    public TableDataInfo getEnAndExFlow(@RequestParam(name = "stationId",required = false) String stationId,
+                                        @RequestParam(name = "startDate",required = false) Date startDate,
+                                        @RequestParam(name = "endDate",required = false) Date endDate,
+                                        @RequestParam(name = "direction",required = false) Integer direction){
+        startPage();
+        List<Map> info = tblSectionRecordService.selectEnAnExFlow(stationId,startDate,endDate,direction);
+        return getDataTable(info);
+    }
 }

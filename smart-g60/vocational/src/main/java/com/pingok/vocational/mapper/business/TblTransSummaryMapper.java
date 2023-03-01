@@ -505,7 +505,7 @@ public interface TblTransSummaryMapper {
             "lane.LANE_NAME as \"enLaneHex\", " +
             "vt.DICT_LABEL as \"enVehClass\", " +
             "vc.DICT_LABEL as \"enVehStatus\", " +
-            "SUBSTR(replace(en.VEHICLE_ID,' ',''), 1, INSTR(replace(en.VEHICLE_ID,' ',''), '_')-1) as \"enVehPlate\", " +
+            "SUBSTR(en.VEHICLE_ID, 1, INSTR(en.VEHICLE_ID, '_')-1) as \"enVehPlate\", " +
             "color.DICT_LABEL as \"enVehColor\", " +
             "en.CARD_ID as \"enCardId\", " +
             "ex.\"exGid\", " +
@@ -538,7 +538,7 @@ public interface TblTransSummaryMapper {
             "a.DICT_LABEL as \"exPassType\", " +
             "exEtc.EX_TOLL_STATION_NAME as \"exStation\", " +
             "f.STATION_ID as \"stationId\"," +
-            "SUBSTR(replace(exEtc.VEHICLE_ID,' ',''), 1, INSTR(replace(exEtc.VEHICLE_ID,' ',''), '_')-1) as \"exVehPlate\", " +
+            "SUBSTR(exEtc.VEHICLE_ID, 1, INSTR(exEtc.VEHICLE_ID, '_')-1) as \"exVehPlate\", " +
             "b.DICT_LABEL as \"exVehClass\", " +
             "c.DICT_LABEL as \"exVehStatus\", " +
             "d.DICT_LABEL as \"exVehColor\", " +
@@ -573,7 +573,7 @@ public interface TblTransSummaryMapper {
             "and exEtc.MEDIA_TYPE= #{exPassType} " +
             "</when>"+
             "<when test='exVehPlate != null'> " +
-            "and SUBSTR(replace(exEtc.VEHICLE_ID,' ',''), 1, INSTR(exEtc.VEHICLE_ID, '_')-1) like CONCAT(CONCAT('%',#{exVehPlate}),'%') " +
+            "and SUBSTR(exEtc.VEHICLE_ID, 1, INSTR(exEtc.VEHICLE_ID, '_')-1) like CONCAT(CONCAT('%',#{exVehPlate}),'%') " +
             "</when>"+
             "<when test='exCardId != null'> " +
             "and exEtc.CARD_ID= #{exCardId}" +
@@ -589,7 +589,7 @@ public interface TblTransSummaryMapper {
             "a.DICT_LABEL as \"exPassType\", " +
             "exCpc.EX_TOLL_STATION_NAME as \"exStation\", " +
             "f.STATION_ID as \"stationId\"," +
-            "SUBSTR(replace(exCpc.VEHICLE_ID,' ',''), 1, INSTR(replace(exCpc.VEHICLE_ID,' ',''), '_')-1) as \"exVehPlate\", " +
+            "SUBSTR(exCpc.VEHICLE_ID, 1, INSTR(exCpc.VEHICLE_ID, '_')-1) as \"exVehPlate\", " +
             "b.DICT_LABEL as \"exVehClass\", " +
             "c.DICT_LABEL as \"exVehStatus\", " +
             "d.DICT_LABEL as \"exVehColor\", " +
@@ -624,7 +624,7 @@ public interface TblTransSummaryMapper {
             "and exCpc.MEDIA_TYPE= #{exPassType} " +
             "</when>"+
             "<when test='exVehPlate != null'> " +
-            "and SUBSTR(replace(exCpc.VEHICLE_ID,' ',''), 1, INSTR(replace(exCpc.VEHICLE_ID, '_')-1) like CONCAT(CONCAT('%',#{exVehPlate}),'%') " +
+            "and SUBSTR(exCpc.VEHICLE_ID, 1, INSTR(exCpc.VEHICLE_ID,'_')-1) like CONCAT(CONCAT('%',#{exVehPlate}),'%') " +
             "</when>"+
             "<when test='exCardId != null'> " +
             "and exCpc.CARD_ID= #{exCardId}" +
@@ -653,7 +653,7 @@ public interface TblTransSummaryMapper {
             "and en.MEDIA_TYPE= #{enPassType} " +
             "</when>"+
             "<when test='enVehPlate != null'> " +
-            "and SUBSTR(replace(en.VEHICLE_ID,' ',''), 1, INSTR(replace(en.VEHICLE_ID,' ',''), '_')-1) like CONCAT(CONCAT('%',#{enVehPlate}),'%') " +
+            "and SUBSTR(en.VEHICLE_ID, 1, INSTR(en.VEHICLE_ID, '_')-1) like CONCAT(CONCAT('%',#{enVehPlate}),'%') " +
             "</when>"+
             "<when test='enCardId != null'> " +
             "and en.CARD_ID= #{enCardId}" +

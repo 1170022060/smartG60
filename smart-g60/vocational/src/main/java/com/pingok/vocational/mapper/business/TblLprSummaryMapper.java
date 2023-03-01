@@ -239,7 +239,7 @@ public interface TblLprSummaryMapper {
             "and lane.LANE_TYPE= #{exLaneType} " +
             "</when>"+
             "<when test='exVehPlate != null'> " +
-            "and SUBSTR(ex.VEHICLE_ID, 1, INSTR(ex.VEHICLE_ID, '_')-1 like CONCAT(CONCAT('%',#{exVehPlate}),'%') " +
+            "and SUBSTR(ex.VEHICLE_ID, 1, INSTR(ex.VEHICLE_ID, '_')-1) like CONCAT(CONCAT('%',#{exVehPlate}),'%') " +
             "</when>"+
             "</script>"})
     List<Map> selectLprInfoEx(@Param("year") String year,@Param("exStartTime") Date exStartTime, @Param("exEndTime") Date exEndTime,

@@ -32,4 +32,14 @@ public interface ISectionRecordService {
      * @return 出入口段面记录
      */
     List<SectionRecordVo> selectSectionRecordList(ReportVo reportVo);
+
+    /**
+     * 出入口断面流量统计
+     * @param stationId
+     * @param startDate
+     * @param endDate
+     * @param direction
+     * @return
+     */
+    List<Map> selectEnAnExFlow(String stationId, Date startDate, Date endDate, Integer direction);
 }
