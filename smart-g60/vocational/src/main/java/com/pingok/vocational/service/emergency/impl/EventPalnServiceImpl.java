@@ -218,27 +218,27 @@ public class EventPalnServiceImpl implements IEventPalnService {
                     jsonArray = JSONArray.parseArray(e.getPlanFunction());
                     if (!jsonArray.isEmpty()) {
                         size = jsonArray.size();
-                        for (int i = 0; i < size; i++) {
-                            if (jsonArray.getJSONObject(i).containsKey("type")) {
-                                switch (jsonArray.getJSONObject(i).getInteger("type")) {
-                                    case 4:
-                                        if (gps != null) {
-                                            jsonArray.getJSONObject(i).put("ids", getGeoIds("qbb", gps, jsonArray.getJSONObject(i).getDouble("range")));
-                                        }
-                                        break;
-                                    case 5:
-                                        if (gps != null) {
-                                            jsonArray.getJSONObject(i).put("ids", getGeoIds("xsb", gps, jsonArray.getJSONObject(i).getDouble("range")));
-                                        }
-                                        break;
-                                    case 6:
-                                        if (gps != null) {
-                                            jsonArray.getJSONObject(i).put("ids", getGeoIds("gantry", gps, jsonArray.getJSONObject(i).getDouble("range")));
-                                        }
-                                        break;
-                                }
-                            }
-                        }
+//                        for (int i = 0; i < size; i++) {
+//                            if (jsonArray.getJSONObject(i).containsKey("type")) {
+//                                switch (jsonArray.getJSONObject(i).getInteger("type")) {
+//                                    case 4:
+//                                        if (gps != null) {
+//                                            jsonArray.getJSONObject(i).put("ids", getGeoIds("qbb", gps, jsonArray.getJSONObject(i).getDouble("range")));
+//                                        }
+//                                        break;
+//                                    case 5:
+//                                        if (gps != null) {
+//                                            jsonArray.getJSONObject(i).put("ids", getGeoIds("xsb", gps, jsonArray.getJSONObject(i).getDouble("range")));
+//                                        }
+//                                        break;
+//                                    case 6:
+//                                        if (gps != null) {
+//                                            jsonArray.getJSONObject(i).put("ids", getGeoIds("gantry", gps, jsonArray.getJSONObject(i).getDouble("range")));
+//                                        }
+//                                        break;
+//                                }
+//                            }
+//                        }
                     }
                     e.setPlanFunctionList(jsonArray);
                 }
