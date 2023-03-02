@@ -27,10 +27,10 @@ public interface TblOwInfoMapper {
             "ow.LIMIT_WEIGHT as \"limitWeight\", " +
             "ow.OVER_WEIGHT as \"overWeight\", " +
             "ow.OVER_RATE as \"overRate\", " +
-            "case when ow.FLOW_STATUS=1 then '未处置' when ow.FLOW_STATUS=2 then '立案'  " +
-            "when ow.FLOW_STATUS=3 then '不予立案' when ow.FLOW_STATUS=4 then '结案' ELSE null end as flowStatus, " +
+            "case when ow.FLOW_STAUS=1 then '未处置' when ow.FLOW_STAUS=2 then '立案'  " +
+            "when ow.FLOW_STAUS=3 then '不予立案' when ow.FLOW_STAUS=4 then '结案' ELSE null end as flowStatus, " +
             "ow.PLATE_PIC as \"platePic\", " +
-            "ow.FIRST_HEADER_PIC as \"firstHeaderPic\", " +
+            "ow.FIRSTHEADER_PIC as \"firstHeaderPic\", " +
             "ow.DEGREE45_PIC as \"degree45Pic\", " +
             "ow.SIDE_PIC as \"sidePic\", " +
             "ow.VIDEO as \"video\" " +
