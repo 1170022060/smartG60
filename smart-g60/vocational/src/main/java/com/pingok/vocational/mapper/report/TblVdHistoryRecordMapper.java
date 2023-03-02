@@ -12,7 +12,6 @@ import java.util.Map;
 public interface TblVdHistoryRecordMapper {
     @Select({"<script>" +
             "SELECT  " +
-            "vd.ID as \"id\", " +
             "a.DEVICE_NAME as \"deviceName\", " +
             "a.PILE_NO as \"pileNo\", " +
             "<when test='statisticsType == 1'> " +
@@ -27,9 +26,9 @@ public interface TblVdHistoryRecordMapper {
             "<when test='statisticsType == 4'> " +
             "substr(to_char(vd.COLLECT_TIME,'yyyy-mm-dd'),1,4) AS \"time\"," +
             "</when>"+
-            "vd.VOLUME as \"totalFlow\" " +
+            "sum(vd.VOLUME) as \"totalFlow\" " +
             "FROM TBL_VD_HISTORY_RECORD vd  " +
-            "LEFT JOIN TBL_DEVICE_INFO a on a.DEVICE_ID = vd.DEVICE_ID" +
+            "LEFT JOIN TBL_DEVICE_INFO a on a.DEVICE_ID = vd.DEVICE_ID " +
             "where 1=1" +
             "<when test='deviceName != null'> " +
             " and a.DEVICE_NAME like '%' || #{deviceName} || '%' " +
