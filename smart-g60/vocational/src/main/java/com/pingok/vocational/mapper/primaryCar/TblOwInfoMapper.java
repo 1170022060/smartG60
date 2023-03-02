@@ -17,7 +17,7 @@ public interface TblOwInfoMapper {
             "ow.SITE_NAME as \"stationName\", " +
             "ow.SITE_CODE as \"stationId\", " +
             "ow.EQUIP_CODE as \"equipCode\", " +
-            "to_char(ow.CHECK_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"checkTime\", " +
+            "ow.CHECK_TIME as \"checkTime\", " +
             "ow.VEHICLE_NO as \"vehPlate\", " +
             "a.DICT_LABEL as \"vehColor\", " +
             "ow.VEHICLE_AXLES_TYPE as \"vehAxlesType\", " +
