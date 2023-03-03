@@ -26,10 +26,12 @@ import com.ruoyi.system.api.domain.gantry.TblGantryEventRelease;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import com.ruoyi.system.api.domain.release.TblReleasePreset;
 import io.swagger.models.auth.In;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -37,6 +39,7 @@ import java.util.*;
  *
  * @author ruoyi
  */
+@Slf4j
 @Service
 public class EventServiceImpl implements IEventService {
 
@@ -343,7 +346,36 @@ public class EventServiceImpl implements IEventService {
                     }
                     break;
                 case 6://ETC门架车路协同推送
+                    content = "ETC门架车路协同推送：";
                     TblGantryEventRelease tblGantryEventRelease = new TblGantryEventRelease();
+                    if (plan.containsKey("deviceIds")) {
+                        devicdIds = plan.getJSONArray("deviceIds");
+                        if (devicdIds != null && devicdIds.size() > 0) {
+                            ArrayList arr = new ArrayList();
+                            for (int j=0;j<devicdIds.size();j++){
+                                arr.add(devicdIds.getString(j));
+                            }
+                            tblGantryEventRelease.setGantryIds(arr);
+                            tblGantryEventRelease.setStakeNum(tblEventRecord.getPileNo());
+                            tblGantryEventRelease.setDirection(Integer.valueOf(tblEventRecord.getDirection()));
+                            tblGantryEventRelease.setEventType(plan.getString("eventType"));
+                            tblGantryEventRelease.setEventId(plan.getInteger("eventId"));
+                            tblGantryEventRelease.setReportBeginTime(DateUtils.getNowDate());
+                            tblGantryEventRelease.setReportEndTime(DateUtils.getPreTime(DateUtils.getNowDate(),60));
+                            tblGantryEventRelease.setEventInfo((String) tblEventRecordMapper.translateEventType(tblEventRecord.getEventType()));//填入事件类型
+                            tblGantryEventRelease.setCryptoGraphicDigest((String) tblEventRecordMapper.translateEventType(tblEventRecord.getEventType()));
+                            r = remoteDeviceMonitorService.eventProcessing(tblGantryEventRelease);
+                            if (r != null) {
+                                if (r.getCode() == R.SUCCESS) {
+                                    content += "推送成功";
+                                } else {
+                                    content += "推送失败，原因：" + r.getMsg();
+                                }
+                            } else {
+                                content += "推送失败，原因：服务无响应；";
+                            }
+                        }
+                    }
                     break;
                 case 7://超视距诱导灯推送
                     content = "超视距诱导模式推送：";
