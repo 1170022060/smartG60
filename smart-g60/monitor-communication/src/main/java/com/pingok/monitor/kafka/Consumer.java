@@ -2,6 +2,7 @@ package com.pingok.monitor.kafka;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.monitor.domain.device.TblDeviceInfo;
 import com.pingok.monitor.service.device.IStatusService;
 import com.pingok.monitor.service.infoboard.IVmsService;
 import com.pingok.monitor.service.pilotLight.IPilotLightService;
@@ -20,6 +21,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -236,9 +238,12 @@ public class Consumer {
     public void vdtCollect(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional message = Optional.ofNullable(record.value());
         if (message.isPresent()) {
+            Object msg = message.get();
+//            JSONArray ja = JSONArray.parseArray(String.valueOf(msg));
+            List<TblDeviceInfo> devList = JSONObject.parseArray(String.valueOf(msg), TblDeviceInfo.class);
             log.info("vdtCollect 消费了： Topic:" + topic + ",Message:" + message.get());
             try {
-                iVdtService.collect();
+                iVdtService.collect(devList);
                 ack.acknowledge();
             } catch (Exception e) {
                 log.error("vdtCollect 消费者，Topic" + topic + ",Message:" + message.get() + "处理失败。错误信息：" + e.getMessage());

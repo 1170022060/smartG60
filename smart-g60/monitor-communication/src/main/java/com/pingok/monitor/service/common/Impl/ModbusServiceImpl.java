@@ -56,6 +56,20 @@ public class ModbusServiceImpl implements IModbusService {
     }
 
     @Override
+    public short[] readHoldingRegisterByShort(MbsAttribute mbs) {
+        try {
+            // 03 Holding Register类型数据读取
+            ReadHoldingRegistersRequest req = new ReadHoldingRegistersRequest(mbs.getSlaveId(), mbs.getOffset(), mbs.getCount());
+            ModbusMaster master = getMaster(mbs.getHost(), mbs.getPort());
+            ReadHoldingRegistersResponse resp = (ReadHoldingRegistersResponse)master.send(req);
+            return resp.getShortData();
+        } catch (Exception e) {
+            log.error("情报板读寄存器失败：" + e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
     public int writeRegister(MbsAttribute mbs, short value) {
         int ret = 200;
         try {
