@@ -45,6 +45,7 @@ public interface TblOwInfoMapper {
             "<when test='checkEndTime != null'> " +
             "and ow.CHECK_TIME &lt;= #{checkEndTime} " +
             "</when>" +
+            "order by ow.CHECK_TIME desc " +
             "</script>"})
     List<Map> selectOwInfo(@Param("vehPlate") String vehPlate, @Param("checkStartTime") Date checkStartTime,@Param("checkEndTime") Date checkEndTime);
 }
