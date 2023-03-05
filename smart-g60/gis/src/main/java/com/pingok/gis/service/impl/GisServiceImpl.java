@@ -31,6 +31,9 @@ public class GisServiceImpl implements IGisService {
     @Autowired
     private RoadMapper roadMapper;
 
+    @Autowired
+    private RoadG60WaterPolygonMdSplitbygMapper roadG60WaterPolygonMdSplitbygMapper;
+
     @Override
     public void updateStatus(String code, Integer status, String type) {
         Example example;
@@ -77,12 +80,12 @@ public class GisServiceImpl implements IGisService {
     @Override
     public void UpdateRoadStatus(Long gisId,Integer status) {
         Example example;
-        example = new Example(Road.class);
+        example = new Example(RoadG60WaterPolygonMdSplitbyg.class);
         example.createCriteria().andEqualTo("id", gisId);
-        Road road = roadMapper.selectOneByExample(example);
+        RoadG60WaterPolygonMdSplitbyg road = roadG60WaterPolygonMdSplitbygMapper.selectOneByExample(example);
         if (StringUtils.isNotNull(road)) {
             road.setStatus(status);
-            roadMapper.updateByPrimaryKey(road);
+            roadG60WaterPolygonMdSplitbygMapper.updateByPrimaryKey(road);
         }
     }
 }
