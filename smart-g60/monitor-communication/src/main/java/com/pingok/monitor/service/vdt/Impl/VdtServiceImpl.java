@@ -52,8 +52,7 @@ public class VdtServiceImpl implements IVdtService {
         }
         //采集
         try {
-            List<VDStatus> vdRetList = new ArrayList<>();
-            String nowTime = DateUtils.dateTimeNow("yyyy-MM-dd HH:mm:ss");
+            List<TblVdHistoryRecord> vdRetList = new ArrayList<>();
             for(TblDeviceInfo dev : devList) {
                 if(false == NetUtil.ping(dev.getDeviceIp())) {
                     continue;
@@ -80,34 +79,20 @@ public class VdtServiceImpl implements IVdtService {
                         String resp = bytesToHex(bysData);
                         Console.log("车检器报文：" + resp);
 //                        解析，参照协议《第二部分 环形线圈式车辆检测器功能要求及用户层通信规程1.1.1.doc》
-                        VDStatus vdStatus = new VDStatus(dev.getDeviceId(), dev.getDirection(), dev.getPileNo());
                         int pos = 8*2; //前面要跳过8个数据
-                        vdStatus.setTime(nowTime);
+                        // 这里线圈车检器上下行是一起的，要分开
+                        if(detectorCnt > 5) {
+                            int detCnt1 = detectorCnt / 2;
+                            dev.setDirection((short)1);
+                            pos = ParseData(dev, detCnt1, carTypeCnt, bysData, pos, vdRetList);
 
-                        List<VDComplexStatus> complexStatusList = new ArrayList<>();
-                        for(int i=0; i < detectorCnt; ++i) {
-                            VDComplexStatus complexStatus = new VDComplexStatus();
-                            //车型流量
-                            Integer totalVolume = 0;
-                            for(int j=0; j < carTypeCnt; ++j) {
-//                                Integer volume = b2i(data[pos++]) * 256 + b2i(data[pos++]);
-                                Integer volume = bysData[pos++] * 256 + bysData[pos++];
-                                totalVolume += volume;
-                            }
-                            complexStatus.setTotalVolume(totalVolume);
-                            //跳过车速字节
-                            pos += (carTypeCnt + 1) / 2 * 2;
-                            complexStatus.setAvgSpeed((int)bysData[pos++]);
-                            complexStatus.setAvgOccupy((int)bysData[pos++]);
-                            complexStatus.setAvgVehTimeHeadway((int)bysData[pos++] * 256 + (int)bysData[pos++]);
-                            complexStatusList.add(complexStatus);
+                            int detCnt2 = detectorCnt - detCnt1;
+                            dev.setDirection((short)2);
+                            ParseData(dev, detCnt2, carTypeCnt, bysData, pos, vdRetList);
                         }
-                        vdStatus.setTotalVolume(complexStatusList.stream().mapToInt(x -> x.getTotalVolume()).sum());
-                        vdStatus.setAvgSpeed((int)complexStatusList.stream().mapToInt(x -> x.getAvgSpeed()).average().getAsDouble());
-                        vdStatus.setAvgOccupy((int)(complexStatusList.stream().mapToInt(x -> x.getAvgOccupy()).average().getAsDouble()));
-                        vdStatus.setAvgVehTimeHeadway((int)(complexStatusList.stream().mapToInt(x -> x.getAvgVehTimeHeadway()).average().getAsDouble()));
-
-                        vdRetList.add(vdStatus);
+                        else {
+                            ParseData(dev, detectorCnt, carTypeCnt, bysData, pos, vdRetList);
+                        }
                     }
                     else {
                         log.error("车检器->报文异常！");
@@ -129,13 +114,50 @@ public class VdtServiceImpl implements IVdtService {
         log.info("车检器->结束采集...");
     }
 
-    void SendToDASS(List<VDStatus> result) {
+    int ParseData(TblDeviceInfo dev, int detectorCnt, int carTypeCnt, byte[] bysData, int pos, List<TblVdHistoryRecord> vdRetList) {
+
+        String nowTime = DateUtils.dateTimeNow("yyyy-MM-dd HH:mm:ss");
+        TblVdHistoryRecord vdStatus = new TblVdHistoryRecord();
+        vdStatus.setDeviceId(dev.getDeviceId());
+        vdStatus.setDirection((int)dev.getDirection());
+        vdStatus.setPileNo(dev.getPileNo());
+        vdStatus.setCollectTime(nowTime);
+        List<VDComplexStatus> complexStatusList = new ArrayList<>();
+
+        for(int i=0; i < detectorCnt; ++i) {
+            VDComplexStatus complexStatus = new VDComplexStatus();
+            //车型流量
+            Integer totalVolume = 0;
+            for(int j=0; j < carTypeCnt; ++j) {
+                Integer volume = bysData[pos++] * 256 + bysData[pos++];
+                totalVolume += volume;
+            }
+            complexStatus.setTotalVolume(totalVolume);
+            //跳过车速字节
+            pos += (carTypeCnt + 1) / 2 * 2;
+            complexStatus.setAvgSpeed((int)bysData[pos++]);
+            complexStatus.setAvgOccupy((int)bysData[pos++]);
+            complexStatus.setAvgVehTimeHeadway((int)bysData[pos++] * 256 + (int)bysData[pos++]);
+            complexStatusList.add(complexStatus);
+        }
+        vdStatus.setVolume((long)complexStatusList.stream().mapToInt(x -> x.getTotalVolume()).sum());
+        if(vdStatus.getVolume() > 0) {
+            vdStatus.setSpeed((long)complexStatusList.stream().mapToInt(x -> x.getAvgSpeed()).average().getAsDouble());
+            vdStatus.setOccupy((long)complexStatusList.stream().mapToInt(x -> x.getAvgOccupy()).average().getAsDouble());
+            vdStatus.setVh((long)complexStatusList.stream().mapToInt(x -> x.getAvgVehTimeHeadway()).average().getAsDouble());
+            vdRetList.add(vdStatus);
+        }
+        return pos;
+    }
+
+    void SendToDASS(List<TblVdHistoryRecord> result) {
         String post;
         R ret;
-        int time = 1;
-        while (true) {
+        int time = 2;
+        while (time-- > 0) {
             try {
-                post = HttpUtil.post(HostConfig.DASSHOST + "/device-monitor/vdt/notifyResult", JSON.toJSONString(result));
+                String temp = JSON.toJSONString(result);
+                post = HttpUtil.post(HostConfig.DASSHOST + "/device-monitor/vdt/notifyResult", temp);
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         ret = JSON.parseObject(post, R.class);
@@ -152,7 +174,6 @@ public class VdtServiceImpl implements IVdtService {
             } catch (InterruptedException e) {
                 log.error(JSON.toJSONString(result) + "车检器转发异常：" + e.getMessage());
             }
-            time += 2;
         }
     }
 
