@@ -18,4 +18,9 @@ public class VdHistoryRecordServiceImpl implements IVdHistoryRecordService {
     public List<Map> selectVdHistory(String deviceName, Integer statisticsType, Date startDate, Date endTime) {
         return tblVdHistoryRecordMapper.selectVdHistory(deviceName,statisticsType,startDate,endTime);
     }
+
+    @Override
+    public List<Map> selectPileNo() {
+        return tblVdHistoryRecordMapper.selectPileNo();
+    }
 }
