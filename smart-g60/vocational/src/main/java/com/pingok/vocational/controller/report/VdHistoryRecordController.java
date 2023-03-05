@@ -2,6 +2,7 @@ package com.pingok.vocational.controller.report;
 
 import com.pingok.vocational.service.report.IVdHistoryRecordService;
 import com.ruoyi.common.core.web.controller.BaseController;
+import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.web.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,5 +29,10 @@ public class VdHistoryRecordController extends BaseController {
         startPage();
         List<Map> info = iVdHistoryRecordService.selectVdHistory(deviceName,statisticsType,startDate,endDate);
         return getDataTable(info);
+    }
+
+    @GetMapping("/pileNo")
+    public AjaxResult getPileNo(){
+        return AjaxResult.success(iVdHistoryRecordService.selectPileNo());
     }
 }
