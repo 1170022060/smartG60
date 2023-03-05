@@ -66,4 +66,9 @@ public class ServiceNameConstants
      * 算法服务的serviceid
      */
     public static final String ALGORITHM_SERVICE = "algorithm";
+
+    /**
+     * 北京算法服务的serviceid
+     */
+    public static final String ALGORITHM_BEIJING_SERVICE = "algorithm-beijin";
 }
