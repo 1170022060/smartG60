@@ -1,16 +1,19 @@
 package com.pingok.monitor.service.vdt.Impl;
 
+import cn.hutool.core.lang.Console;
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.pingok.monitor.config.HostConfig;
 import com.pingok.monitor.domain.device.TblDeviceInfo;
 import com.pingok.monitor.domain.common.MbsAttribute;
-import com.pingok.monitor.domain.vdt.TblVdtStatusLog;
-import com.pingok.monitor.domain.vdt.VDComplexStatus;
-import com.pingok.monitor.domain.vdt.VDFlowStatus;
-import com.pingok.monitor.domain.vdt.VDStatus;
+import com.pingok.monitor.domain.vdt.*;
 import com.pingok.monitor.mapper.device.TblDeviceInfoMapper;
 import com.pingok.monitor.mapper.vdt.TblVdtStatusLogMapper;
 import com.pingok.monitor.service.common.IModbusService;
 import com.pingok.monitor.service.vdt.IVdtService;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.NetUtil;
 import com.ruoyi.common.core.utils.StringUtils;
@@ -20,8 +23,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.internals.Heartbeat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.security.ssl.Debug;
+
 import static com.pingok.monitor.utils.ByteUtils.*;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,22 +40,19 @@ import java.util.List;
 public class VdtServiceImpl implements IVdtService {
 
     @Autowired
-    TblDeviceInfoMapper tblDeviceInfoMapper;
-    @Autowired
-    TblVdtStatusLogMapper tblVdtStatusLogMapper;
-    @Autowired
     IModbusService iModbusService;
-    @Autowired
-    RemoteIdProducerService idProducerService;
 
     @Override
-    public void collect() {
+    public void collect(List<TblDeviceInfo> devList) {
         log.info("车检器->开始采集...");
 
-        //设备信息
-        List<TblDeviceInfo> devList = tblDeviceInfoMapper.findByProtocol("vdt.swarco");
+        if(devList == null || devList.size() == 0) {
+            log.error("车检器->设备信息为空！");
+            return;
+        }
         //采集
         try {
+            List<TblVdHistoryRecord> vdRetList = new ArrayList<>();
             for(TblDeviceInfo dev : devList) {
                 if(false == NetUtil.ping(dev.getDeviceIp())) {
                     continue;
@@ -58,75 +61,38 @@ public class VdtServiceImpl implements IVdtService {
                  检测单元数据块长度（2B车型n流量*3 + 1B车型n速度*3 + 1B平均速度*3 + 1B平均时间占有率*3 + 2B平均车头时距*3）
                  寄存器数量最多125个
                  */
+                String remark = dev.getRemark();
+                String[] splitRemark = remark.split("\\|");
+                int carTypeCnt = 0;
+                int detectorCnt = 0;
+                if(splitRemark.length > 0) {
+                    carTypeCnt = Integer.parseInt(splitRemark[0]);
+                    detectorCnt = Integer.parseInt(splitRemark[1]);
+                }
+                int nRegCnt = 8 + (carTypeCnt + 1 + (carTypeCnt + 1) / 2 + 1) * detectorCnt;
                 MbsAttribute mbs = new MbsAttribute(dev.getDeviceIp(), dev.getPort(), dev.getSlaveId(),
-                        3, Integer.valueOf("1800", 16), 100, DataType.TWO_BYTE_INT_SIGNED);
+                        3, Integer.valueOf("1300", 16), nRegCnt, DataType.TWO_BYTE_INT_UNSIGNED);
                 try {
-                    byte[] data = iModbusService.readHoldingRegister(mbs);
-                    if(data != null && data.length >= 100) {
-                        //解析，参照协议《第二部分 环形线圈式车辆检测器功能要求及用户层通信规程1.1.1.doc》
-                        VDStatus vdStatus = new VDStatus();
-                        int pos = 5;
-                        String year = toBCDStr(data, 2, pos); pos += 2;
-                        String month = StringUtils.leftPad(toBCDStr(data, 1, pos++), 2, '0');
-                        String day = StringUtils.leftPad(toBCDStr(data, 1, pos++),2, '0');
-                        String hour = StringUtils.leftPad(toBCDStr(data, 1, pos++),2, '0');
-                        String min = StringUtils.leftPad(toBCDStr(data, 1, pos++),2, '0');
-                        String sec = StringUtils.leftPad(toBCDStr(data, 1, pos++),2, '0'); pos += 1;
-                        vdStatus.setTime(String.format("%s/%s/%s %s:%s:%s", year,month,day,hour,min,sec));
+                    short[] data = iModbusService.readHoldingRegisterByShort(mbs);
+                    if(data != null && data.length >= nRegCnt) {
+                        byte[] bysData = shortToByte(data); // 每个byte是十进制显示
+                        String resp = bytesToHex(bysData);
+                        Console.log("车检器报文：" + resp);
+//                        解析，参照协议《第二部分 环形线圈式车辆检测器功能要求及用户层通信规程1.1.1.doc》
+                        int pos = 8*2; //前面要跳过8个数据
+                        // 这里线圈车检器上下行是一起的，要分开
+                        if(detectorCnt > 5) {
+                            int detCnt1 = detectorCnt / 2;
+                            dev.setDirection((short)1);
+                            pos = ParseData(dev, detCnt1, carTypeCnt, bysData, pos, vdRetList);
 
-                        //复合检测单元数量
-                        Integer complexUnitCount = b2i(data[pos++]);
-                        //流量检测单元数量
-                        Integer flowUnitCount = b2i(data[pos++]); pos += 5;
-                        //车型分类数
-                        Integer carTypeCount = b2i(data[pos++]);
-                        List<VDComplexStatus> complexStatusList = new ArrayList<>();
-                        for(int i=0; i < complexUnitCount; ++i) {
-                            VDComplexStatus complexStatus = new VDComplexStatus();
-                            //车型流量
-                            Integer totalVolume = 0;
-                            List<Integer> volumns = new ArrayList<>();
-                            for(int j=0; j < carTypeCount; ++j) {
-                                Integer volume = b2i(data[pos++]) * 256 + b2i(data[pos++]);
-                                totalVolume += volume;
-                                volumns.add(volume);
-                            }
-                            complexStatus.setTotalVolume(totalVolume);
-                            complexStatus.setVolumes(volumns);
-                            List<Integer> speeds = new ArrayList<>();
-                            //车型规律是 2，1，4，3，6，5……
-                            for(int j=0; j < carTypeCount; j+=2, pos+=2) {
-                                speeds.add(b2i(data[pos+1]));
-                                speeds.add(b2i(data[pos]));
-                            }
-                            complexStatus.setSpeeds(speeds);
-                            //speeds会多一个
-//                            if(carTypeCount % 2 != 0) pos++;
-                            complexStatus.setAvgSpeed(b2i(data[pos++]));
-                            complexStatus.setAvgOccupy(b2i(data[pos++]));
-                            complexStatus.setAvgVehTimeHeadway(b2i(data[pos++]) * 256 + b2i(data[pos++]));
-                            complexStatusList.add(complexStatus);
+                            int detCnt2 = detectorCnt - detCnt1;
+                            dev.setDirection((short)2);
+                            ParseData(dev, detCnt2, carTypeCnt, bysData, pos, vdRetList);
                         }
-                        vdStatus.setComplexStatusList(complexStatusList);
-
-                        List<VDFlowStatus> flowStatusList = new ArrayList<>();
-                        for(int i=0; i < flowUnitCount; ++i) {
-                            VDFlowStatus flowStatus = new VDFlowStatus();
-                            flowStatus.setTotalVolume(b2i(data[pos++]) * 256 + b2i(data[pos++]));
-                            flowStatus.setAvgSpeed(b2i(data[pos++]));
-                            flowStatus.setAvgOccupy(b2i(data[pos++]));
-                            flowStatus.setAvgVehTimeHeadway(b2i(data[pos++]) * 256 + b2i(data[pos++]));
-                            flowStatusList.add(flowStatus);
+                        else {
+                            ParseData(dev, detectorCnt, carTypeCnt, bysData, pos, vdRetList);
                         }
-                        vdStatus.setFlowStatusList(flowStatusList);
-
-                        //入库
-                        TblVdtStatusLog rec = new TblVdtStatusLog();
-                        rec.setId(idProducerService.nextId());
-                        rec.setVdtId(dev.getDeviceId());
-                        rec.setCreateTime(DateUtils.getNowDate());
-                        rec.setDetails(JSON.toJSONString(vdStatus));
-                        tblVdtStatusLogMapper.insert(rec);
                     }
                     else {
                         log.error("车检器->报文异常！");
@@ -136,10 +102,92 @@ public class VdtServiceImpl implements IVdtService {
                     continue;
                 }
             }
+            if(vdRetList.size() > 0) {
+                // 发送到 DASS
+//                VDHeartbeat hb = new VDHeartbeat(JSON.toJSONString(vdRetList));
+                SendToDASS(vdRetList);
+            }
         } catch (Exception e) {
             log.error("车检器->采集异常：" + e.getMessage());
         }
 
         log.info("车检器->结束采集...");
+    }
+
+    int ParseData(TblDeviceInfo dev, int detectorCnt, int carTypeCnt, byte[] bysData, int pos, List<TblVdHistoryRecord> vdRetList) {
+
+        String nowTime = DateUtils.dateTimeNow("yyyy-MM-dd HH:mm:ss");
+        TblVdHistoryRecord vdStatus = new TblVdHistoryRecord();
+        vdStatus.setDeviceId(dev.getDeviceId());
+        vdStatus.setDirection((int)dev.getDirection());
+        vdStatus.setPileNo(dev.getPileNo());
+        vdStatus.setCollectTime(nowTime);
+        List<VDComplexStatus> complexStatusList = new ArrayList<>();
+
+        for(int i=0; i < detectorCnt; ++i) {
+            VDComplexStatus complexStatus = new VDComplexStatus();
+            //车型流量
+            Integer totalVolume = 0;
+            for(int j=0; j < carTypeCnt; ++j) {
+                Integer volume = bysData[pos++] * 256 + bysData[pos++];
+                totalVolume += volume;
+            }
+            complexStatus.setTotalVolume(totalVolume);
+            //跳过车速字节
+            pos += (carTypeCnt + 1) / 2 * 2;
+            complexStatus.setAvgSpeed((int)bysData[pos++]);
+            complexStatus.setAvgOccupy((int)bysData[pos++]);
+            complexStatus.setAvgVehTimeHeadway((int)bysData[pos++] * 256 + (int)bysData[pos++]);
+            complexStatusList.add(complexStatus);
+        }
+        vdStatus.setVolume((long)complexStatusList.stream().mapToInt(x -> x.getTotalVolume()).sum());
+        if(vdStatus.getVolume() > 0) {
+            vdStatus.setSpeed((long)complexStatusList.stream().mapToInt(x -> x.getAvgSpeed()).average().getAsDouble());
+            vdStatus.setOccupy((long)complexStatusList.stream().mapToInt(x -> x.getAvgOccupy()).average().getAsDouble());
+            vdStatus.setVh((long)complexStatusList.stream().mapToInt(x -> x.getAvgVehTimeHeadway()).average().getAsDouble());
+            vdRetList.add(vdStatus);
+        }
+        return pos;
+    }
+
+    void SendToDASS(List<TblVdHistoryRecord> result) {
+        String post;
+        R ret;
+        int time = 2;
+        while (time-- > 0) {
+            try {
+                String temp = JSON.toJSONString(result);
+                post = HttpUtil.post(HostConfig.DASSHOST + "/device-monitor/vdt/notifyResult", temp);
+                if (!StringUtils.isEmpty(post)) {
+                    if (post.startsWith("{")) {
+                        ret = JSON.parseObject(post, R.class);
+                        if (R.SUCCESS == ret.getCode()) {
+                            break;
+                        } else {
+                            log.error(JSON.toJSONString(result) + "车检器转发失败：" + ret.getMsg());
+                        }
+                    } else {
+                        log.error(JSON.toJSONString(result) + "车检器转发状态未知");
+                    }
+                    Thread.sleep(time * 1000);
+                }
+            } catch (InterruptedException e) {
+                log.error(JSON.toJSONString(result) + "车检器转发异常：" + e.getMessage());
+            }
+        }
+    }
+
+    String bytesToHex(byte[] bytes) {
+        String hex = new BigInteger(1, bytes).toString(16);
+        return hex;
+    }
+
+    byte[] shortToByte(short[] data) {
+        byte[] byteValue = new byte[data.length * 2];
+        for (int i = 0; i < data.length; i++) {
+            byteValue[i * 2 + 1] = (byte) (data[i] & 0xff);
+            byteValue[i * 2] = (byte) ((data[i] & 0xff00) >> 8);
+        }
+        return byteValue;
     }
 }

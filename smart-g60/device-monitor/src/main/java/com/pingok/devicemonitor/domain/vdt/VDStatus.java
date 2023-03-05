@@ -1,8 +1,6 @@
-package com.pingok.monitor.domain.vdt;
+package com.pingok.devicemonitor.domain.vdt;
 
 import lombok.Data;
-
-import java.util.List;
 
 /**
  * @author
