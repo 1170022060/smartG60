@@ -21,7 +21,7 @@ public interface TblVdHistoryRecordMapper {
             "SUBSTR(vd.COLLECT_TIME, 0, 10) as \"time\", " +
             "</when>"+
             "<when test='statisticsType == 3'> " +
-            "substr(vd.COLLECT_TIME,1,7) AS \"time\"," +
+            "substr(vd.COLLECT_TIME,0,7) AS \"time\"," +
             "</when>"+
             "<when test='statisticsType == 4'> " +
             "SUBSTR(vd.COLLECT_TIME, 0, 4) AS \"time\"," +
