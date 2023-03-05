@@ -37,4 +37,9 @@ public class TblRoadInfo implements Serializable {
     /** 路段描述 */
     private String message;
 
+    /**
+     * 路段GIS ID
+     */
+    private BigDecimal gisRoadId;
+
 }
