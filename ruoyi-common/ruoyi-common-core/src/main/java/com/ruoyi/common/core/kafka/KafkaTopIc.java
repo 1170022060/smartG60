@@ -64,4 +64,6 @@ public class KafkaTopIc {
     public final static String G60 = "g60";
 
     public final static String G60_OVER_VEHICLE = "g60_over_vehicle";
+
+    public final static String GIS_ROAD_STATUS_UPDATE = "gis_road_status_update";
 }

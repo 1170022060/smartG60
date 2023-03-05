@@ -12,6 +12,7 @@ import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -46,6 +47,13 @@ public class VolumeVelocityConsumer implements RocketMQListener<String> {
                 tblRoadVolumeVelocity.setStartTime(DateUtils.parseDate(object.getString("start_time")));
                 tblRoadVolumeVelocity.setEndTime(DateUtils.parseDate(object.getString("end_time")));
                 iRoadService.addRoadVolumeVelocity(tblRoadVolumeVelocity);
+
+//                拿到gisId,根据Congestion进行判断调用kafka来更新gis地图中的状态
+                if (tblRoadVolumeVelocity.getCongestion().compareTo(BigDecimal.valueOf(0))>=0 &&
+                tblRoadVolumeVelocity.getCongestion().compareTo(BigDecimal.valueOf(2))==-1){
+//                [0,2)畅通
+
+                }
             }
         }
     }
