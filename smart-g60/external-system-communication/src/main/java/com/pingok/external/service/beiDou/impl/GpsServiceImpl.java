@@ -38,7 +38,9 @@ public class GpsServiceImpl implements IGpsService {
 
     @Override
     public List<TblMaintainCarGps> carGps() {
-        return tblMaintainCarGpsMapper.selectAll();
+        Example example = new Example(TblMaintainCarGps.class);
+        example.createCriteria().andGreaterThanOrEqualTo("time",DateUtils.parseDate(DateUtils.dateTime(DateUtils.getNowDate(),DateUtils.YYYY_MM_DD+" 00:00:00")));
+        return tblMaintainCarGpsMapper.selectByExample(example);
     }
 
     @Override

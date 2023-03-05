@@ -53,6 +53,10 @@ public class TblRoadNodesInfo implements Serializable {
      */
     private BigDecimal direction;
 
+    /**
+     * HEX
+     */
+    private String HEX;
 
     @Transient
     private JSONArray geo;

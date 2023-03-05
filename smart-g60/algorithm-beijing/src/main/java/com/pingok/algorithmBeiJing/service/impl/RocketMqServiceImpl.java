@@ -7,6 +7,7 @@ import com.pingok.algorithmBeiJing.domain.vo.RoadVo;
 import com.pingok.algorithmBeiJing.mapper.GantryMapper;
 import com.pingok.algorithmBeiJing.service.IRoadService;
 import com.pingok.algorithmBeiJing.service.IRocketMqService;
+import com.ruoyi.common.core.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,8 @@ public class RocketMqServiceImpl implements IRocketMqService {
 
     @Override
     public void trajectoryData(String plate, String instanceId, String startTime, String endTime) {
-        List<Map> list = gantryMapper.trajectoryData(plate, startTime, endTime);
+        String year = DateUtils.getYear(DateUtils.parseDate(startTime));
+        List<Map> list = gantryMapper.trajectoryData(year, plate, startTime, endTime);
         if (list != null && list.size() > 0) {
             JSONObject object = new JSONObject();
             object.put("plate", plate);
@@ -59,7 +61,8 @@ public class RocketMqServiceImpl implements IRocketMqService {
 
     @Override
     public void gantryTransactionLog(String startTime, String endTime) {
-        List<Map> gantrys = gantryMapper.gantrys(startTime, endTime);
+        String year = DateUtils.getYear(DateUtils.parseDate(startTime));
+        List<Map> gantrys = gantryMapper.gantrys();
         if (gantrys != null && gantrys.size() > 0) {
             JSONObject object = new JSONObject();
             object.put("gantry_ids", JSON.parseArray(JSON.toJSONString(gantrys)));
@@ -69,7 +72,7 @@ public class RocketMqServiceImpl implements IRocketMqService {
             JSONArray array;
             List<Map> list;
             for (Map g : gantrys) {
-                list = gantryMapper.gantryTransactionLog(g.get("id").toString(), startTime, endTime);
+                list = gantryMapper.gantryTransactionLog(year, g.get("id").toString(), startTime, endTime);
                 record = new JSONArray();
                 for (Map m : list) {
                     array = new JSONArray();

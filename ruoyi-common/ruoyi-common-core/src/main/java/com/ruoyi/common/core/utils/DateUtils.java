@@ -129,6 +129,13 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     }
 
     /**
+     * 获取时间年份
+     */
+    public static final String getYear(Date now) {
+        return DateFormatUtils.format(now, "yyyy");
+    }
+
+    /**
      * 获取当前年份
      */
     public static final String dateYear() {
