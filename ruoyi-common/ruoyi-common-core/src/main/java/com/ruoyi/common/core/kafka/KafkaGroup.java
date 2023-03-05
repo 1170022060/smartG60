@@ -56,4 +56,6 @@ public class KafkaGroup {
     public final static String G60_GROUP = "g60Group";
 
     public final static String G60_OVER_VEHICLE_GROUP = "g60_OverVehicleGroup";
+
+    public final static String GIS_ROAD_STATUS_UPDATE_GROUP = "gisRoadStatusUpdateGROUP";
 }

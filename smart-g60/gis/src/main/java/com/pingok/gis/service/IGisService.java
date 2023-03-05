@@ -16,4 +16,6 @@ public interface IGisService {
      * @param type
      */
     void updateStatus(String code, Integer status, String type);
+
+    void UpdateRoadStatus(Long gisId,Integer status);
 }

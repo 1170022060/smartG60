@@ -44,5 +44,20 @@ public class Consumer {
             }
         }
     }
+    @KafkaListener(topics = KafkaTopIc.GIS_ROAD_STATUS_UPDATE,groupId = KafkaGroup.GIS_ROAD_STATUS_UPDATE_GROUP)
+    public void UpdateRoadStatus(ConsumerRecord<?,?>record,Acknowledgment ack,@Header(KafkaHeaders.RECEIVED_TOPIC)String topic){
+        Optional message = Optional.ofNullable(record.value());
+        if (message.isPresent()) {
+            Object msg = message.get();
+            log.info("updateRoadStatus 消费了： Topic:" + topic + ",Message:" + msg);
+            JSONObject object = JSONObject.parseObject(String.valueOf(msg));
+            try {
+                iGisService.UpdateRoadStatus(object.getLong("gisId"), object.getInteger("status"));
+                ack.acknowledge();
+            } catch (Exception e) {
+                log.error("updateRoadStatus消费者，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
+            }
+        }
+    }
 
 }

@@ -1,13 +1,7 @@
 package com.pingok.gis.service.impl;
 
-import com.pingok.gis.domain.Camera;
-import com.pingok.gis.domain.Light;
-import com.pingok.gis.domain.Vd;
-import com.pingok.gis.domain.Vms;
-import com.pingok.gis.mapper.CameraMapper;
-import com.pingok.gis.mapper.LightMapper;
-import com.pingok.gis.mapper.VdMapper;
-import com.pingok.gis.mapper.VmsMapper;
+import com.pingok.gis.domain.*;
+import com.pingok.gis.mapper.*;
 import com.pingok.gis.service.IGisService;
 import com.ruoyi.common.core.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +27,9 @@ public class GisServiceImpl implements IGisService {
 
     @Autowired
     private LightMapper lightMapper;
+
+    @Autowired
+    private RoadMapper roadMapper;
 
     @Override
     public void updateStatus(String code, Integer status, String type) {
@@ -74,6 +71,18 @@ public class GisServiceImpl implements IGisService {
                     lightMapper.updateByPrimaryKey(light);
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void UpdateRoadStatus(Long gisId,Integer status) {
+        Example example;
+        example = new Example(Road.class);
+        example.createCriteria().andEqualTo("id", gisId);
+        Road road = roadMapper.selectOneByExample(example);
+        if (StringUtils.isNotNull(road)) {
+            road.setStatus(status);
+            roadMapper.updateByPrimaryKey(road);
         }
     }
 }
