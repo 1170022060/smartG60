@@ -15,16 +15,16 @@ public interface TblVdHistoryRecordMapper {
             "a.DEVICE_NAME as \"deviceName\", " +
             "a.PILE_NO as \"pileNo\", " +
             "<when test='statisticsType == 1'> " +
-            "to_char(to_date(vd.COLLECT_TIME, 'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24')|| '时' as \"time\", " +
+            "SUBSTR(vd.COLLECT_TIME, 0, 13)|| '时' as \"time\", " +
             "</when>"+
             "<when test='statisticsType == 2'> " +
-            "to_char(to_date(vd.COLLECT_TIME, 'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd')|| '时' as \"time\", " +
+            "SUBSTR(vd.COLLECT_TIME, 0, 10) as \"time\", " +
             "</when>"+
             "<when test='statisticsType == 3'> " +
-            "substr(to_char(to_date(vd.COLLECT_TIME, 'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd'),1,7) AS \"time\"," +
+            "substr(vd.COLLECT_TIME,1,7) AS \"time\"," +
             "</when>"+
             "<when test='statisticsType == 4'> " +
-            "substr(to_char(to_date(vd.COLLECT_TIME, 'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd'),1,4) AS \"time\"," +
+            "SUBSTR(vd.COLLECT_TIME, 0, 4) AS \"time\"," +
             "</when>"+
             "sum(vd.VOLUME) as \"totalFlow\" " +
             "FROM TBL_VD_HISTORY_RECORD vd  " +
@@ -34,23 +34,23 @@ public interface TblVdHistoryRecordMapper {
             " and vd.DEVICE_ID = #{deviceName} " +
             "</when>"+
             "<when test='startDate != null'> " +
-            " and vd.COLLECT_TIME &gt;= #{startDate} " +
+            " and to_date( vd.COLLECT_TIME, 'yyyy-mm-dd hh24:mi:ss' ) &gt;= #{startDate} " +
             "</when>"+
             "<when test='endDate != null'> " +
-            " and vd.COLLECT_TIME &lt;= #{endDate} " +
+            " and to_date( vd.COLLECT_TIME, 'yyyy-mm-dd hh24:mi:ss' ) &lt;= #{endDate} " +
             "</when> "+
             " group by a.DEVICE_NAME,a.PILE_NO " +
             "<when test='statisticsType == 1'> " +
-            " ,to_char(to_date(vd.COLLECT_TIME, 'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd hh24') || '时' " +
+            " ,SUBSTR(vd.COLLECT_TIME, 0, 13) || '时' " +
             "</when>"+
             "<when test='statisticsType == 2'> " +
-            " ,to_char(to_date(vd.COLLECT_TIME, 'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd') " +
+            " ,SUBSTR(vd.COLLECT_TIME, 0, 10) " +
             "</when>"+
             "<when test='statisticsType == 3'> " +
-            " ,substr(to_char(to_date(vd.COLLECT_TIME, 'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd'),1,7) " +
+            " ,SUBSTR(vd.COLLECT_TIME, 0, 7) " +
             "</when>"+
             "<when test='statisticsType == 4'> " +
-            " ,substr(to_char(to_date(vd.COLLECT_TIME, 'yyyy-mm-dd hh24:mi:ss'),'yyyy-mm-dd'),1,4) " +
+            " ,SUBSTR(vd.COLLECT_TIME, 0, 4) " +
             "</when>" +
             "</script>"})
     List<Map> selectVdHistory(@Param("deviceName") String deviceName,
