@@ -18,7 +18,9 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
             " FROM TBL_DEVICE_INFO where 1=1 and DEVICE_TYPE = 9 and FIELD_BELONG = 5 ")
     List<TblDeviceInfo> selectVmsInfo();
 
-    @Select("SELECT ID as \"id\", DEVICE_ID as \"deviceId\", DEVICE_IP as \"deviceIp\" " +
+    @Select("SELECT ID as \"id\", DEVICE_ID as \"deviceId\", DEVICE_IP as \"deviceIp\", " +
+            "PORT as \"port\", DIRECTION as \"direction\", PILE_NO as \"pileNo\", " +
+            "REMARK as \"remark\", SLAVE_ID as \"slaveId\" " +
             " FROM TBL_DEVICE_INFO where 1=1 and DEVICE_TYPE = 11 ")
     List<TblDeviceInfo> selectVdtInfo();
 }
