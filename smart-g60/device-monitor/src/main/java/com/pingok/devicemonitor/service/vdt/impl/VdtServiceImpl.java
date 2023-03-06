@@ -41,7 +41,7 @@ public class VdtServiceImpl implements IVdtService {
             kafkaEnum.setData(JSON.toJSONString(allDevList));
             remoteKafkaService.send(kafkaEnum);
         } catch (Exception e) {
-            log.error("情报板采集异常：" + e.getMessage());
+            log.error("车检器流量数据采集异常：" + e.getMessage());
         }
     }
 
