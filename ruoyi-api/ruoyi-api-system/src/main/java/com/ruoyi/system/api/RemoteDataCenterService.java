@@ -146,4 +146,11 @@ public interface RemoteDataCenterService {
      */
     @PostMapping("/green/greenDownload")
     R greenDownload();
+
+    /**
+     * 在途流量统计
+     * @return
+     */
+    @PostMapping("/carFlowStatistics")
+    R carFlowStatistics();
 }

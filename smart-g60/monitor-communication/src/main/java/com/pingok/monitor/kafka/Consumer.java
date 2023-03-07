@@ -1,8 +1,11 @@
 package com.pingok.monitor.kafka;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.monitor.domain.infoboard.SanSiInfo;
 import com.pingok.monitor.service.device.IStatusService;
+import com.pingok.monitor.service.infoboard.IFcmsService;
 import com.pingok.monitor.service.infoboard.IVmsService;
 import com.pingok.monitor.service.pilotLight.IPilotLightService;
 import com.pingok.monitor.service.smartToilet.ISmartToiletService;
@@ -36,6 +39,8 @@ public class Consumer {
     private IStatusService iStatusService;
     @Autowired
     private IVmsService iVmsService;
+    @Autowired
+    private IFcmsService iFcmsService;
     @Autowired
     private IPilotLightService iPilotLightService;
     @Autowired
@@ -190,6 +195,20 @@ public class Consumer {
                 ack.acknowledge();
             } catch (Exception e) {
                 log.error("infoBoardPublish消费者，Topic" + topic + ",Message:" + message.get() + "处理失败。错误信息：" + e.getMessage());
+            }
+        }
+    }
+    @KafkaListener(topics = KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PARKING, groupId = KafkaGroup.MONITOR_SIGNAL_INFOBOARD_PARKING_GROUP)
+    public void infoBoardPublishParking(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        Optional message = Optional.ofNullable(record.value());
+        if (message.isPresent()) {
+            Object msg = message.get();
+            SanSiInfo sanSi = JSON.parseObject(String.valueOf(msg),SanSiInfo.class);
+            try {
+                iFcmsService.sendData(sanSi);
+                log.info("infoBoardPublishParking 消费了： Topic:" + topic + ",Message:" + msg);
+            } catch (Exception e) {
+                log.error("infoBoardPublishParking，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
             }
         }
     }
