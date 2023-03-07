@@ -79,4 +79,15 @@ public class RosterTask {
             log.error("rosterTask定时任务greenDownload----失败：" + r.getMsg());
         }
     }
+
+    public void carFlowStatistics() {
+        R r = remoteDataCenterService.carFlowStatistics();
+        if (r.getCode() == 200) {
+            log.info("rosterTask定时任务greenDownload----成功");
+        } else {
+            log.error("rosterTask定时任务greenDownload----失败：" + r.getMsg());
+        }
+    }
+
+
 }
