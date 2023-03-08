@@ -1,8 +1,12 @@
 # Tomcat
 server:
   port: 8081
-  tomcat:
-    uri-encoding: UTF-8
+  ssl:
+    key-store: classpath:server.pfx
+    key-store-password: test@123
+    key-store-type: PKCS12
+#  tomcat:
+#    uri-encoding: UTF-8
 
 # Spring
 spring: 
