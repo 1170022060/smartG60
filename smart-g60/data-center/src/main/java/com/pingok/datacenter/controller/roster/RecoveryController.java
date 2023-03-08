@@ -28,7 +28,7 @@ public class RecoveryController extends BaseController {
 
     @PostMapping
     public AjaxResult recovery(@RequestBody JSONObject object) {
-        log.info("追缴名单----请求参数-----" + object.toJSONString());
+//        log.info("追缴名单----请求参数-----" + object.toJSONString());
         iRecoveryService.recovery(object);
         return AjaxResult.success();
     }

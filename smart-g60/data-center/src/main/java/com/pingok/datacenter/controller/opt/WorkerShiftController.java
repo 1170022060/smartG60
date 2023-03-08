@@ -26,7 +26,7 @@ public class WorkerShiftController extends BaseController {
 
     @PostMapping
     public AjaxResult workerShift(@RequestBody JSONObject object) {
-        log.info("工班----请求参数-----" + object.toJSONString());
+//        log.info("工班----请求参数-----" + object.toJSONString());
         iWorkerShiftService.workerShift(object);
         return AjaxResult.success();
     }

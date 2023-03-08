@@ -28,7 +28,7 @@ public class RescueController extends BaseController {
 
     @PostMapping
     public AjaxResult rescue(@RequestBody JSONObject object) {
-        log.info("抢险救灾名单----请求参数-----" + object.toJSONString());
+//        log.info("抢险救灾名单----请求参数-----" + object.toJSONString());
         iRescueService.rescue(object);
         return AjaxResult.success();
     }

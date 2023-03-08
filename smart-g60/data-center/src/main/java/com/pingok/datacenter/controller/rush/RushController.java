@@ -46,7 +46,7 @@ public class RushController extends BaseController {
 
     @PostMapping
     public AjaxResult rushRecord(@RequestParam(value = "year") String year, @RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime") String endTime, @RequestParam(value = "twoHours") String twoHours) {
-        log.info("rushRecord----------year:" + year + "---startTime:" + startTime + "---endTime:" + endTime + "---twoHours:" + twoHours);
+//        log.info("rushRecord----------year:" + year + "---startTime:" + startTime + "---endTime:" + endTime + "---twoHours:" + twoHours);
         iRushService.rushRecord(year, startTime, endTime, twoHours);
         return AjaxResult.success();
     }

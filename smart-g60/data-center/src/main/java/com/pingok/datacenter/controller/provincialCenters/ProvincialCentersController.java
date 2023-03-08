@@ -45,7 +45,7 @@ public class ProvincialCentersController extends BaseController {
 
     @PostMapping
     public R getData(@RequestParam(value = "name") String name, @RequestParam(value = "dateTimeNow") String dateTimeNow) {
-        log.info("省中心-获取交易数据请求参数：name=" + name + ",dateTimeNow=" + dateTimeNow);
+//        log.info("省中心-获取交易数据请求参数：name=" + name + ",dateTimeNow=" + dateTimeNow);
         JSONArray jsonArray = iProvincialCentersService.getData(name, DateUtils.parseDate(dateTimeNow));
         if (jsonArray != null && jsonArray.size() > 0) {
             switch (name) {

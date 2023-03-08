@@ -28,7 +28,7 @@ public class BlackCardController extends BaseController {
 
     @PostMapping
     public AjaxResult blackCard(@RequestBody JSONObject object) {
-        log.info("状态名单----请求参数-----" + object.toJSONString());
+//        log.info("状态名单----请求参数-----" + object.toJSONString());
         iBlackCardService.blackCard(object);
         return AjaxResult.success();
     }
