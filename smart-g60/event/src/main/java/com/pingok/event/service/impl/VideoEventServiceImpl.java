@@ -69,142 +69,6 @@ public class VideoEventServiceImpl implements IVideoEventService {
     @Autowired
     private TblEventRecordMapper tblEventRecordMapper;
 
-    @Autowired
-    private TblFaceInfoMapper tblFaceInfoMapper;
-
-
-    @Override
-    public void faceIn(TblFaceInfo tblFaceInfo) {
-        tblFaceInfo.setId(remoteIdProducerService.nextId());
-        tblFaceInfoMapper.insert(tblFaceInfo);
-
-        Long fieldId = 0l;
-        String workDate = DateUtils.dateTime(new Date(tblFaceInfo.getUbiTime()),DateUtils.YYYY_MM_DD);
-        Integer hour = Integer.parseInt(DateUtils.dateTime(new Date(tblFaceInfo.getUbiTime()), DateUtils.HH));
-        Integer areaId = 0;
-
-        switch (tblFaceInfo.getSzSourceCode()) {
-            //北服务区商铺
-            case "181":
-            case "182":
-                fieldId = 3941l;
-                areaId = 1;
-                break;
-            //北服务区小超市
-            case "183":
-                fieldId = 3941l;
-                areaId = 2;
-                break;
-            //北服务区男厕
-            case "184":
-                fieldId = 3941l;
-                areaId = 3;
-                break;
-            //北服务区女厕
-            case "185":
-                fieldId = 3941l;
-                areaId = 4;
-                break;
-            //南服务区商铺
-            case "186":
-            case "187":
-            case "188":
-                fieldId = 3940l;
-                areaId = 1;
-                break;
-            //南服务区艺海棠
-            case "189":
-                fieldId = 3940l;
-                areaId = 5;
-                break;
-            //南服务区超市
-            case "190":
-            case "191":
-                fieldId = 3940l;
-                areaId = 2;
-                break;
-            //南服务区男厕
-            case "192":
-                fieldId = 3940l;
-                areaId = 3;
-                break;
-            //南服务区女厕
-            case "193":
-            case "194":
-                fieldId = 3940l;
-                areaId = 4;
-                break;
-            //南服务区司机之家
-            case "195":
-                fieldId = 3940l;
-                areaId = 6;
-                break;
-            default:
-                return;
-        }
-        Example example = new Example(TblEventPassengerStatistics.class);
-        example.createCriteria().andEqualTo("workDate", workDate)
-                .andEqualTo("hour", hour)
-                .andEqualTo("areaId", areaId)
-                .andEqualTo("fieldId", fieldId);
-        List<TblEventPassengerStatistics> list;
-        TblEventPassengerStatistics statistics;
-        Integer ageChild = 0;
-        Integer ageYouth = 0;
-        Integer ageMidlife = 0;
-        Integer ageOld = 0;
-        Integer sexMan = 0;
-        Integer sexWoman = 0;
-        switch (tblFaceInfo.getUiAge()){
-            case 0:
-                ageChild = 1;
-                break;
-            case 1:
-                ageYouth = 1;
-                break;
-            case 2:
-                ageMidlife = 1;
-                break;
-            case 3:
-                ageOld = 1;
-                break;
-        }
-        switch (tblFaceInfo.getUiSex()){
-            case 0:
-                ageChild = 1;
-                break;
-            case 1:
-                ageYouth = 1;
-                break;
-        }
-        list = tblEventPassengerStatisticsMapper.selectByExample(example);
-        if (list == null || list.size() <= 0) {
-            statistics = new TblEventPassengerStatistics();
-            statistics.setId(remoteIdProducerService.nextId());
-            statistics.setWorkDate(workDate);
-            statistics.setHour(hour);
-            statistics.setAreaId(areaId);
-            statistics.setFieldId(fieldId);
-            statistics.setEntry(0);
-            statistics.setOut(0);
-
-            statistics.setAgeChild(ageChild);
-            statistics.setAgeMidlife(ageMidlife);
-            statistics.setAgeOld(ageOld);
-            statistics.setAgeYouth(ageYouth);
-
-            statistics.setSexMan(0);
-            statistics.setSexWoman(0);
-            statistics.setMask(0);
-            statistics.setNoMask(0);
-
-            tblEventPassengerStatisticsMapper.insert(statistics);
-
-        } else {
-            statistics = list.get(0);
-            tblEventPassengerStatisticsMapper.updateByPrimaryKey(statistics);
-        }
-    }
 
     @Override
     public void relieveEvent(TblEventVehicleEvent tblEventVehicleEvent) {
@@ -366,8 +230,8 @@ public class VideoEventServiceImpl implements IVideoEventService {
         tblEventPassengerFlowMapper.insert(tblEventPassengerFlow);
 
         Long fieldId = 0l;
-        String workDate = DateUtils.dateTime(new Date(tblEventPassengerFlow.getUbiEndTime()),DateUtils.YYYY_MM_DD);
-        Integer hour = Integer.parseInt(DateUtils.dateTime(new Date(tblEventPassengerFlow.getUbiEndTime()), DateUtils.HH));
+        String workDate = DateUtils.getDate();
+        Integer hour = Integer.parseInt(DateUtils.dateTime(DateUtils.getNowDate(), DateUtils.HH));
         Integer areaId = 0;
         Integer entry = tblEventPassengerFlow.getUiGetInPeos();
         Integer out = tblEventPassengerFlow.getUiGetOutPeos();
@@ -447,26 +311,18 @@ public class VideoEventServiceImpl implements IVideoEventService {
             statistics.setFieldId(fieldId);
             statistics.setEntry(entry);
             statistics.setOut(out);
-            statistics.setAgeChild(0);
-            statistics.setAgeMidlife(0);
-            statistics.setAgeOld(0);
-            statistics.setAgeYouth(0);
-            statistics.setSexMan(0);
-            statistics.setSexWoman(0);
-            statistics.setMask(0);
-            statistics.setNoMask(0);
 
-//            example = new Example(TblEventPassengerStatistics.class);
-//            example.createCriteria().andEqualTo("workDate", workDate)
-//                    .andEqualTo("hour", Integer.parseInt(DateUtils.dateTime(DateUtils.getPreTime(DateUtils.getNowDate(), -60), DateUtils.HH)))
-//                    .andEqualTo("areaId", areaId)
-//                    .andEqualTo("fieldId", fieldId);
-//            List<TblEventPassengerStatistics> infos = tblEventPassengerStatisticsMapper.selectByExample(example);
-//            if (infos == null || infos.size() <= 0) {
-//                statistics.setInAmount((entry - out) >= 0 ? (entry - out) : 0);
-//            } else {
-//                statistics.setInAmount((infos.get(0).getInAmount() + entry - out) >= 0 ? (infos.get(0).getInAmount() + entry - out) : 0);
-//            }
+            example = new Example(TblEventPassengerStatistics.class);
+            example.createCriteria().andEqualTo("workDate", workDate)
+                    .andEqualTo("hour", Integer.parseInt(DateUtils.dateTime(DateUtils.getPreTime(DateUtils.getNowDate(), -60), DateUtils.HH)))
+                    .andEqualTo("areaId", areaId)
+                    .andEqualTo("fieldId", fieldId);
+            List<TblEventPassengerStatistics> infos = tblEventPassengerStatisticsMapper.selectByExample(example);
+            if (infos == null || infos.size() <= 0) {
+                statistics.setInAmount((entry - out) >= 0 ? (entry - out) : 0);
+            } else {
+                statistics.setInAmount((infos.get(0).getInAmount() + entry - out) >= 0 ? (infos.get(0).getInAmount() + entry - out) : 0);
+            }
             tblEventPassengerStatisticsMapper.insert(statistics);
 
         } else {

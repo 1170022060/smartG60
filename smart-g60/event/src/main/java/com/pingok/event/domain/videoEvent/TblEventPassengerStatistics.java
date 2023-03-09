@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 服务区客流统计表(TBL_EVENT_PASSENGER_STATISTICS)
@@ -70,54 +71,5 @@ public class TblEventPassengerStatistics implements Serializable {
      */
     @ApiModelProperty(value = "服务区ID")
     private Long fieldId;
-
-
-    /**
-     * 儿童
-     */
-    @ApiModelProperty(value = "儿童")
-    private Integer ageChild;
-
-    /**
-     * 青年
-     */
-    @ApiModelProperty(value = "青年")
-    private Integer ageYouth;
-
-    /**
-     * 中年
-     */
-    @ApiModelProperty(value = "中年")
-    private Integer ageMidlife;
-
-    /**
-     * 老年
-     */
-    @ApiModelProperty(value = "老年")
-    private Integer ageOld;
-
-    /**
-     * 男
-     */
-    @ApiModelProperty(value = "男")
-    private Integer sexMan;
-
-    /**
-     * 女
-     */
-    @ApiModelProperty(value = "女")
-    private Integer sexWoman;
-
-    /**
-     * 带口罩
-     */
-    @ApiModelProperty(value = "带口罩")
-    private Integer mask;
-
-    /**
-     * 未带口罩
-     */
-    @ApiModelProperty(value = "未带口罩")
-    private Integer noMask;
 
 }

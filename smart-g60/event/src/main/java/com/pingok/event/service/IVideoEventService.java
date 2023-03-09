@@ -5,12 +5,6 @@ import com.pingok.event.domain.videoEvent.*;
 public interface IVideoEventService {
 
     /**
-     * 人像识别信息入库
-     * @param tblFaceInfo
-     */
-    void faceIn(TblFaceInfo tblFaceInfo);
-
-    /**
      * 事件解除
      * @param tblEventVehicleEvent
      */
