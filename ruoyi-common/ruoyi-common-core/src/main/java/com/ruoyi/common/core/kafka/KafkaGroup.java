@@ -23,6 +23,8 @@ public class KafkaGroup {
 
     public final static String MONITOR_SIGNAL_INFOBOARD_PUBLISH_GROUP = "monitorSignalInfoBoardPublishGroup";
 
+    public final static String MONITOR_SIGNAL_INFOBOARD_PARKING_GROUP = "monitorSignalInfoBoardParkingGroup";
+
     public final static String MONITOR_SIGNAL_INFOBOARD_PING_GROUP = "monitorSignalInfoBoardPingGroup";
 
     public final static String MONITOR_SIGNAL_PILOTLIGHT_GROUP = "monitorSignalPilotLightGroup";
