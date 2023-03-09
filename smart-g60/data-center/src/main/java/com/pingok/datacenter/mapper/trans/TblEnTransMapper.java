@@ -1,6 +1,7 @@
 package com.pingok.datacenter.mapper.trans;
 
 import com.pingok.datacenter.domain.trans.TblEnTrans;
+import com.pingok.datacenter.domain.trans.vo.EnTranFlow;
 import com.pingok.datacenter.domain.trans.vo.UpdatePassIdVo;
 import com.ruoyi.common.core.mapper.CommonRepository;
 import org.apache.ibatis.annotations.Mapper;
@@ -27,4 +28,11 @@ public interface TblEnTransMapper {
      * @return 结果
      */
     public int updatePassId(UpdatePassIdVo updatePassIdVo);
+
+    /**
+     * 查询指定的站入口流量之和
+     *
+     * @return 结果
+     */
+    public int selectEnFlow(EnTranFlow enTranFlow);
 }

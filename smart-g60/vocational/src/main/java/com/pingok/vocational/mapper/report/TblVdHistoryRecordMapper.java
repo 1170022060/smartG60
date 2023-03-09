@@ -52,6 +52,18 @@ public interface TblVdHistoryRecordMapper {
             "<when test='statisticsType == 4'> " +
             " ,SUBSTR(vd.COLLECT_TIME, 0, 4) " +
             "</when>" +
+            "<when test='statisticsType == 1'> " +
+            " order by SUBSTR(vd.COLLECT_TIME, 0, 13) || '时' desc " +
+            "</when>"+
+            "<when test='statisticsType == 2'> " +
+            " order by SUBSTR(vd.COLLECT_TIME, 0, 10) desc  " +
+            "</when>"+
+            "<when test='statisticsType == 3'> " +
+            " order by SUBSTR(vd.COLLECT_TIME, 0, 7) desc " +
+            "</when>"+
+            "<when test='statisticsType == 4'> " +
+            " order by SUBSTR(vd.COLLECT_TIME, 0, 4) desc" +
+            "</when>" +
             "</script>"})
     List<Map> selectVdHistory(@Param("deviceName") String deviceName,
                               @Param("statisticsType") Integer statisticsType,
