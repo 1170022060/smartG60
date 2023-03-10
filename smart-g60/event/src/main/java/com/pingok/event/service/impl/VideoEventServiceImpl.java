@@ -198,6 +198,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             statistics.setFieldId(fieldId);
             statistics.setEntry(0);
             statistics.setOut(0);
+            statistics.setInAmount(0);
 
             statistics.setAgeChild(ageChild);
             statistics.setAgeMidlife(ageMidlife);
