@@ -1,16 +1,21 @@
 package com.pingok.monitor.service.videoEvent.impl;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.monitor.config.HostConfig;
 import com.pingok.monitor.domain.event.*;
+import com.pingok.monitor.domain.event.vo.FaceInfoVo;
 import com.pingok.monitor.mapper.event.*;
 import com.pingok.monitor.service.videoEvent.IVideoEventService;
 import com.pingok.monitor.service.videoEvent.IVideoService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.common.core.utils.sign.Base64;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -41,6 +46,40 @@ public class VideoEventServiceImpl implements IVideoEventService {
     @Autowired
     private IVideoService iVideoService;
 
+
+    @Async
+    @Override
+    public void updateFaceInfo(FaceInfoVo faceInfoVo) {
+        log.info("人像信息上传------------------------------" + faceInfoVo.getUbiLogicId());
+        faceInfoVo.setSzImg(updateImages(faceInfoVo.getSzImg()));
+        faceInfoVo.setSzSmallImg(updateImages((faceInfoVo.getSzSmallImg())));
+        log.info(JSON.toJSONString(faceInfoVo));
+        int time = 3;
+        while (true) {
+            try {
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/faceInfo", JSON.toJSONString(faceInfoVo));
+                if (!StringUtils.isEmpty(post)) {
+                    if (post.startsWith("{")) {
+                        R ret = JSON.parseObject(post, R.class);
+                        if (R.SUCCESS == ret.getCode()) {
+                            break;
+                        } else {
+                            log.error(faceInfoVo.getUbiLogicId() + " 人像信息上传失败：" + ret.getMsg());
+                        }
+                    } else {
+                        log.error(faceInfoVo.getUbiLogicId() + " 人像信息上传失败：" + post);
+                    }
+                    Thread.sleep(time * 1000);
+                }
+            } catch (Exception e) {
+                log.error(faceInfoVo.getUbiLogicId() + " 人像信息上传失败：" + e.getMessage());
+            }
+            time += 3;
+            if (time > 9) {
+                return;
+            }
+        }
+    }
 
     @Override
     public void fluxData(TblEventFlux tblEventFlux) {
@@ -121,7 +160,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 log.error(tblEventFlux.getUbiLogicId() + " 流量统计上报失败：" + e.getMessage());
             }
             time += 3;
-            if(time>9){
+            if (time > 9) {
                 return;
             }
         }
@@ -152,7 +191,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 log.error(tblEventPlateInfo.getUbiLogicId() + " 过车数据上报失败：" + e.getMessage());
             }
             time += 3;
-            if(time>9){
+            if (time > 9) {
                 return;
             }
         }
@@ -184,7 +223,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 log.error(tblEventVehicleEvent.getUbiLogicId() + " 交通事件上报失败：" + e.getMessage());
             }
             time += 3;
-            if(time>9){
+            if (time > 9) {
                 return;
             }
         }
@@ -227,7 +266,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 log.error(tblEventPassengerFlow.getUiType() + " 客流量上报失败：" + e.getMessage());
             }
             time += 3;
-            if(time>9){
+            if (time > 9) {
                 return;
             }
         }
@@ -258,11 +297,36 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 log.error(tblEventParkingEvent.getUbiLogicId() + " 货车检查事件上报失败：" + e.getMessage());
             }
             time += 3;
-            if(time>9){
+            if (time > 9) {
                 return;
             }
         }
         tblEventParkingEventMapper.delete(tblEventParkingEvent);
+    }
+
+
+    private String updateImages(String images) {
+        String url = null;
+        byte[] bytes = Base64.decode(images);
+        HttpResponse httpResponse = HttpRequest.post(HostConfig.DASSHOST + "/ruoyi-file/upload")
+                .form("file", bytes, ContentType.APPLICATION_OCTET_STREAM.toString())
+                .execute();
+        String post = httpResponse.body();
+        if (!StringUtils.isEmpty(post)) {
+            if (post.startsWith("{")) {
+                JSONObject ret = JSONObject.parseObject(post);
+                if (ret.containsKey("code") && ret.getInteger("code") == 200) {
+                    url = ret.getJSONObject("data").getString("url");
+                } else {
+                    log.error(" 图片上传失败：" + ret.getString("msg"));
+                }
+            } else {
+                log.error(" 图片上传失败：" + post);
+            }
+        } else {
+            log.error(" 图片上传失败：" + post);
+        }
+        return url;
     }
 
 }
