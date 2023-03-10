@@ -29,21 +29,6 @@ public class AlgorithmController extends BaseController {
     @Autowired
     private IRocketMqService iRocketMqService;
 
-    @Autowired
-    private RemoteKafkaService remoteKafkaService;
-
-    @PostMapping("/test")
-    public AjaxResult test(@RequestParam(value = "gisId") Integer gisId, @RequestParam(value = "status") Integer status) {
-        KafkaEnum kafkaEnum = new KafkaEnum();
-        kafkaEnum.setTopIc(KafkaTopIc.GIS_ROAD_STATUS_UPDATE);
-        JSONObject gisOb = new JSONObject();
-        gisOb.put("gisId",gisId);
-        gisOb.put("status",status);
-        kafkaEnum.setData(gisOb.toJSONString());
-        remoteKafkaService.send(kafkaEnum);
-        return AjaxResult.success();
-    }
-
     @PostMapping("/gantryTransactionLog")
     public AjaxResult gantryTransactionLog(@RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime") String endTime) {
         log.info("推送交易数据请求参数：startTime:" + startTime + "，endTime:" + endTime);

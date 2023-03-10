@@ -28,7 +28,7 @@ public class GreenController extends BaseController {
 
     @PostMapping
     public AjaxResult green(@RequestBody JSONObject object) {
-        log.info("绿通名单----请求参数-----" + object.toJSONString());
+//        log.info("绿通名单----请求参数-----" + object.toJSONString());
         iGreenService.green(object);
         return AjaxResult.success();
     }

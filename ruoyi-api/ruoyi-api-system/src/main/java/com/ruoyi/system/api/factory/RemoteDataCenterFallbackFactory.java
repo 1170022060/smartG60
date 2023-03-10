@@ -108,6 +108,11 @@ public class RemoteDataCenterFallbackFactory implements FallbackFactory<RemoteDa
             public R greenDownload() {
                 return null;
             }
+
+            @Override
+            public R carFlowStatistics() {
+                return null;
+            }
         };
     }
 }

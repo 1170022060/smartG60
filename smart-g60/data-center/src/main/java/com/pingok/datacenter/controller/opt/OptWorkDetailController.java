@@ -25,7 +25,7 @@ public class OptWorkDetailController  extends BaseController {
 
     @PostMapping
     public AjaxResult optWorkDetail(@RequestBody JSONObject object) {
-        log.info("排班当岗----请求参数-----" + object.toJSONString());
+//        log.info("排班当岗----请求参数-----" + object.toJSONString());
         iOptWorkDetailService.optWorkDetail(object);
         return AjaxResult.success();
     }

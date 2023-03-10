@@ -28,14 +28,14 @@ public class EpidemicController extends BaseController {
 
     @PostMapping
     public AjaxResult epidemic(@RequestBody JSONObject object) {
-        log.info("中高风险名单----请求参数-----" + object.toJSONString());
+//        log.info("中高风险名单----请求参数-----" + object.toJSONString());
         iEpidemicService.epidemic(object);
         return AjaxResult.success();
     }
 
     @PostMapping("/prefix")
     public AjaxResult epidemicPrefix(@RequestBody JSONObject object) {
-        log.info("中高风险车牌名单----请求参数-----" + object.toJSONString());
+//        log.info("中高风险车牌名单----请求参数-----" + object.toJSONString());
         iEpidemicService.epidemicPrefix(object);
         return AjaxResult.success();
     }

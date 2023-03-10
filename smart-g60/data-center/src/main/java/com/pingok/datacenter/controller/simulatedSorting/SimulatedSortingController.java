@@ -38,7 +38,7 @@ public class SimulatedSortingController extends BaseController {
 
     @PostMapping
     public AjaxResult simulatedSorting(@RequestParam(value = "year") String year, @RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime") String endTime) {
-        log.info("rushRecord----------year:" + year + "---startTime:" + startTime + "---endTime:" + endTime);
+//        log.info("rushRecord----------year:" + year + "---startTime:" + startTime + "---endTime:" + endTime);
         iSimulatedSortingService.simulatedSorting(year, startTime, endTime);
         return AjaxResult.success();
     }

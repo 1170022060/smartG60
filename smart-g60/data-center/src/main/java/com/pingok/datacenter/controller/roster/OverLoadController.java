@@ -26,7 +26,7 @@ public class OverLoadController extends BaseController {
 
     @PostMapping
     public AjaxResult overLoad(@RequestBody JSONObject object) {
-        log.info("超限车辆名单----请求参数-----" + object.toJSONString());
+//        log.info("超限车辆名单----请求参数-----" + object.toJSONString());
         iOverLoadService.overLoad(object);
         return AjaxResult.success();
     }
