@@ -147,7 +147,7 @@ public class ParkingLotServiceImpl implements IParkingLotService {
                     }else{
                         areaVo.setHourFlow(tblEventPassengerFlowMapper.hourFlow(areaVo.getAreaId(),dailyTime,hour,Long.parseLong(map.get("fieldId").toString())));
                     }
-                    areaVo.setNoMask(0);
+                    areaVo.setNoMask(tblEventPassengerFlowMapper.noMaskFlow(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
                 }
                 map.put("area",areaVos);
             }
@@ -191,7 +191,7 @@ public class ParkingLotServiceImpl implements IParkingLotService {
                     }else{
                         areaVo.setHourFlow(tblEventPassengerFlowMapper.hourFlow(areaVo.getAreaId(),dailyTime,hour,Long.parseLong(map.get("fieldId").toString())));
                     }
-                    areaVo.setNoMask(0);
+                    areaVo.setNoMask(tblEventPassengerFlowMapper.noMaskFlow(dailyTime,areaVo.getAreaId(),Long.parseLong(map.get("fieldId").toString())));
                 }
                 map.put("area",areaVos);
             }
