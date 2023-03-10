@@ -86,6 +86,9 @@ public interface GantryMapper {
             "TO_CHAR(gtd.TRANS_TIME,'yyyy-MM-dd HH24:mi:ss') as \"transTime\",  " +
             "TO_CHAR(NVL( gtd.LAST_GANTRY_TIME, gtd.OBU_LAST_GANTRY_TIME ),'yyyy-MM-dd HH24:mi:ss') as \"lastGantryTime\",  " +
             "SUBSTR( gtd.VEHICLE_PLATE, 0, LENGTH( gtd.VEHICLE_PLATE ) - 2 ) AS \"vehiclePlate\",  " +
+            "SUBSTR( gtd.VEHICLE_PLATE, LENGTH( gtd.VEHICLE_PLATE ), 2 ) AS \"vehicleColor\",  " +
+            "gtd.FEE AS \"fee\",  " +
+            "gtd.VEHICLE_TYPE AS \"vehicleType\",  " +
             "tgi1.ID as \"gantryId\",  " +
             "tgi1.NAME as \"gantryName\",  " +
             "tgi.DEVICE_ID AS \"lastGantryId\",   " +
@@ -103,6 +106,9 @@ public interface GantryMapper {
             "TO_CHAR(gtd.EN_TIME,'yyyy-MM-dd HH24:mi:ss') as \"transTime\",  " +
             "NULL as \"lastGantryTime\",  " +
             "SUBSTR( gtd.VEHICLE_ID, 0, LENGTH( gtd.VEHICLE_ID ) - 2 ) AS \"vehiclePlate\",  " +
+            "SUBSTR( gtd.VEHICLE_ID, LENGTH( gtd.VEHICLE_ID ), 2 ) AS \"vehicleColor\",  " +
+            "gtd.TRANS_FEE AS \"fee\",  " +
+            "gtd.VEHICLE_TYPE AS \"vehicleType\",  " +
             "tgi.ID as \"gantryId\",  " +
             "tgi.NAME as \"gantryName\",  " +
             "NULL AS \"lastGantryId\",   " +
@@ -121,6 +127,9 @@ public interface GantryMapper {
             "TO_CHAR(gtd.EX_TIME,'yyyy-MM-dd HH24:mi:ss') as \"transTime\",  " +
             "NULL as \"lastGantryTime\",  " +
             "SUBSTR( gtd.VEHICLE_ID, 0, LENGTH( gtd.VEHICLE_ID ) - 2 ) AS \"vehiclePlate\",  " +
+            "SUBSTR( gtd.VEHICLE_ID, LENGTH( gtd.VEHICLE_ID ), 2 ) AS \"vehicleColor\",  " +
+            "gtd.FEE AS \"fee\",  " +
+            "gtd.VEHICLE_TYPE AS \"vehicleType\",  " +
             "tgi.ID as \"gantryId\",  " +
             "tgi.NAME as \"gantryName\",  " +
             "NULL AS \"lastGantryId\",   " +
@@ -137,6 +146,9 @@ public interface GantryMapper {
             "TO_CHAR(gtd.EX_TIME,'yyyy-MM-dd HH24:mi:ss') as \"transTime\",  " +
             "NULL as \"lastGantryTime\",  " +
             "SUBSTR( gtd.VEHICLE_ID, 0, LENGTH( gtd.VEHICLE_ID ) - 2 ) AS \"vehiclePlate\",  " +
+            "SUBSTR( gtd.VEHICLE_ID, LENGTH( gtd.VEHICLE_ID ), 2 ) AS \"vehicleColor\",  " +
+            "gtd.FEE AS \"fee\",  " +
+            "gtd.VEHICLE_TYPE AS \"vehicleType\",  " +
             "tgi.ID as \"gantryId\",  " +
             "tgi.NAME as \"gantryName\",  " +
             "NULL AS \"lastGantryId\",   " +
