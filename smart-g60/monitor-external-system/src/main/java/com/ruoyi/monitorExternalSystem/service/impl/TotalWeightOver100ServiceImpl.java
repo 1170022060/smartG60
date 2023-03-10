@@ -24,7 +24,7 @@ public class TotalWeightOver100ServiceImpl implements ITotalWeightOver100Service
         try {
             HttpResponse response = HttpRequest.post(url)
                     .header("Authorization", PrimaryConfig.TOKEN)
-                    .header("Content-Type", PrimaryConfig.FONT)
+                    .header("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
                     .body(params.toJSONString()).execute();
             String result=response.body();
             if (!StringUtils.isEmpty(result)) {

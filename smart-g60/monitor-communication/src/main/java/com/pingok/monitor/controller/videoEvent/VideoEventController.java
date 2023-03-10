@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.pingok.monitor.domain.event.TblEventPassengerFlow;
 import com.pingok.monitor.domain.event.TblEventPlateInfo;
 import com.pingok.monitor.domain.event.TblEventVehicleEvent;
+import com.pingok.monitor.domain.event.vo.FaceInfoVo;
 import com.pingok.monitor.service.videoEvent.IVideoEventService;
 import com.pingok.monitor.service.videoEvent.IVideoService;
 import com.ruoyi.common.core.utils.StringUtils;
@@ -49,7 +50,7 @@ public class VideoEventController extends BaseController {
 //                break;
             case "PLATE_INFO":
                 TblEventPlateInfo tblEventPlateInfo = JSON.parseObject(data, TblEventPlateInfo.class);
-                log.info("PLATE_INFO-----"+tblEventPlateInfo.getSzText()+"------"+tblEventPlateInfo.getSzSourceCode());
+                log.info("PLATE_INFO-----" + tblEventPlateInfo.getSzText() + "------" + tblEventPlateInfo.getSzSourceCode());
                 if (StringUtils.isCarNo(tblEventPlateInfo.getSzText())) {
                     iVideoEventService.plateInfo(tblEventPlateInfo);
                     iVideoEventService.updatePlateInfo(tblEventPlateInfo);
@@ -57,7 +58,7 @@ public class VideoEventController extends BaseController {
                 break;
             case "VEHICLE_EVENT":
                 TblEventVehicleEvent tblEventVehicleEvent = JSON.parseObject(data, TblEventVehicleEvent.class);
-                log.info("VEHICLE_EVENT-----"+tblEventVehicleEvent.getUiEventType());
+                log.info("VEHICLE_EVENT-----" + tblEventVehicleEvent.getUiEventType());
                 List<Integer> list = Arrays.asList(5, 6, 14, 15, 17, 10016, 37);
                 if (!list.contains(tblEventVehicleEvent.getUiEventType())) {
                     iVideoEventService.vehicleEvent(tblEventVehicleEvent);
@@ -78,6 +79,10 @@ public class VideoEventController extends BaseController {
 //                iVideoEventService.parkingEvent(tblEventParkingEvent);
 //                iVideoEventService.updateParkingEvent(tblEventParkingEvent);
 //                break;
+            case "FACE_INFO":
+                FaceInfoVo faceInfoVo = JSON.parseObject(data, FaceInfoVo.class);
+                iVideoEventService.updateFaceInfo(faceInfoVo);
+                break;
         }
         return AjaxResult.success();
     }

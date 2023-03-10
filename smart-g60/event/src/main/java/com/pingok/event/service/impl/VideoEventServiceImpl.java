@@ -74,12 +74,13 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
 
     @Override
-    public void faceIn(TblFaceInfo tblFaceInfo) {
+    public void faceInfo(TblFaceInfo tblFaceInfo) {
+
         tblFaceInfo.setId(remoteIdProducerService.nextId());
         tblFaceInfoMapper.insert(tblFaceInfo);
 
         Long fieldId = 0l;
-        String workDate = DateUtils.dateTime(new Date(tblFaceInfo.getUbiTime()),DateUtils.YYYY_MM_DD);
+        String workDate = DateUtils.dateTime(new Date(tblFaceInfo.getUbiTime()), DateUtils.YYYY_MM_DD);
         Integer hour = Integer.parseInt(DateUtils.dateTime(new Date(tblFaceInfo.getUbiTime()), DateUtils.HH));
         Integer areaId = 0;
 
@@ -155,7 +156,9 @@ public class VideoEventServiceImpl implements IVideoEventService {
         Integer ageOld = 0;
         Integer sexMan = 0;
         Integer sexWoman = 0;
-        switch (tblFaceInfo.getUiAge()){
+        Integer mask = 0;
+        Integer noMask = 0;
+        switch (tblFaceInfo.getUiAge()) {
             case 0:
                 ageChild = 1;
                 break;
@@ -169,12 +172,20 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 ageOld = 1;
                 break;
         }
-        switch (tblFaceInfo.getUiSex()){
+        switch (tblFaceInfo.getUiSex()) {
             case 0:
-                ageChild = 1;
+                sexMan = 1;
                 break;
             case 1:
-                ageYouth = 1;
+                sexWoman = 1;
+                break;
+        }
+        switch (tblFaceInfo.getUiMask()) {
+            case 0:
+                mask = 1;
+                break;
+            case 1:
+                noMask = 1;
                 break;
         }
         list = tblEventPassengerStatisticsMapper.selectByExample(example);
@@ -193,15 +204,26 @@ public class VideoEventServiceImpl implements IVideoEventService {
             statistics.setAgeOld(ageOld);
             statistics.setAgeYouth(ageYouth);
 
-            statistics.setSexMan(0);
-            statistics.setSexWoman(0);
-            statistics.setMask(0);
-            statistics.setNoMask(0);
+            statistics.setSexMan(sexMan);
+            statistics.setSexWoman(sexWoman);
+
+            statistics.setMask(mask);
+            statistics.setNoMask(noMask);
 
             tblEventPassengerStatisticsMapper.insert(statistics);
 
         } else {
             statistics = list.get(0);
+            statistics.setAgeChild(ageChild + statistics.getAgeChild());
+            statistics.setAgeMidlife(ageMidlife + statistics.getAgeMidlife());
+            statistics.setAgeOld(ageOld + statistics.getAgeOld());
+            statistics.setAgeYouth(ageYouth + statistics.getAgeYouth());
+
+            statistics.setSexMan(sexMan + statistics.getSexMan());
+            statistics.setSexWoman(sexWoman + statistics.getSexWoman());
+
+            statistics.setMask(mask + statistics.getMask());
+            statistics.setNoMask(noMask + statistics.getNoMask());
             tblEventPassengerStatisticsMapper.updateByPrimaryKey(statistics);
         }
     }
@@ -366,7 +388,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         tblEventPassengerFlowMapper.insert(tblEventPassengerFlow);
 
         Long fieldId = 0l;
-        String workDate = DateUtils.dateTime(new Date(tblEventPassengerFlow.getUbiEndTime()),DateUtils.YYYY_MM_DD);
+        String workDate = DateUtils.dateTime(new Date(tblEventPassengerFlow.getUbiEndTime()), DateUtils.YYYY_MM_DD);
         Integer hour = Integer.parseInt(DateUtils.dateTime(new Date(tblEventPassengerFlow.getUbiEndTime()), DateUtils.HH));
         Integer areaId = 0;
         Integer entry = tblEventPassengerFlow.getUiGetInPeos();

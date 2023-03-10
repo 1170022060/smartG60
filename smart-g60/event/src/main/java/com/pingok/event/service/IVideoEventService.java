@@ -8,7 +8,7 @@ public interface IVideoEventService {
      * 人像识别信息入库
      * @param tblFaceInfo
      */
-    void faceIn(TblFaceInfo tblFaceInfo);
+    void faceInfo(TblFaceInfo tblFaceInfo);
 
     /**
      * 事件解除
