@@ -114,7 +114,7 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "to_char(ter.RELIEVE_TIME, 'yyyy-mm-dd hh24:mi:ss') AS \"relieveTime\", " +
             "case " +
             "ter.DEVICE_TYPE " +
-            "when 0 then '视频' when 1 then '雷视' " +
+            "when 0 then '视频' when 1 then '雷视' when 2 then '雷视融合' " +
             "when null then '视频' when 10 then '激光测雾' " +
             "end as \"deviceType\", "+
             "usr.NICK_NAME AS \"confirmUser\", " +
