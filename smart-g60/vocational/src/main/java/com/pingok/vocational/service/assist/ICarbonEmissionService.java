@@ -19,4 +19,12 @@ public interface ICarbonEmissionService {
      * @return 碳排放
      */
     List<Map> selectCarbonEmission(Date startDate, Date endDate);
+
+    /**
+     * 单位收益碳排放
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<Map> Co2Emission(Date startDate, Date endDate,Integer type);
 }
