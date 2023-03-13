@@ -35,7 +35,7 @@ public interface IPrimaryCarService {
      * @param vehPlate
      * @return
      */
-    List<Map> selectPrimaryGpsInfo(String vehPlate);
+    List<Map> selectPrimaryGpsInfo(String vehPlate,Date startTime,Date endTime);
 
     /**
      * 获取车辆GPS轨迹
