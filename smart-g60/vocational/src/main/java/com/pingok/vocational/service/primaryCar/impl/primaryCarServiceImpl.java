@@ -44,8 +44,8 @@ public class primaryCarServiceImpl implements IPrimaryCarService {
     }
 
     @Override
-    public List<Map> selectPrimaryGpsInfo(String vehPlate) {
-        return tblPrimaryGpsInfoMapper.selectPrimaryGpsInfo(vehPlate);
+    public List<Map> selectPrimaryGpsInfo(String vehPlate,Date startTime,Date endTime) {
+        return tblPrimaryGpsInfoMapper.selectPrimaryGpsInfo(vehPlate,startTime,endTime);
     }
 
     @Override
