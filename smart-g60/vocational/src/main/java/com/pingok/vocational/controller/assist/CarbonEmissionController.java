@@ -2,6 +2,7 @@ package com.pingok.vocational.controller.assist;
 
 import com.pingok.vocational.service.assist.ICarbonEmissionService;
 import com.ruoyi.common.core.web.controller.BaseController;
+import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
@@ -28,13 +29,18 @@ public class CarbonEmissionController extends BaseController{
     @Autowired
     private ICarbonEmissionService carbonEmissionService;
 
-    @RequiresPermissions("vocational:carbonEmission:info")
-    @Log(title = "碳排放统计查询", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("vocational:carbonEmission:info")
+//    @Log(title = "碳排放统计查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
     public TableDataInfo info(@RequestParam(name = "startDate",required = false) Date startDate, @RequestParam(name = "endDate",required = false) Date endDate)
     {
         startPage();
         List<Map> info = carbonEmissionService.selectCarbonEmission(startDate,endDate);
         return getDataTable(info);
+    }
+
+    @GetMapping("/getCo2Emisson")
+    public AjaxResult getCo2Emisson(@RequestParam(name = "startDate",required = false) Date startDate, @RequestParam(name = "endDate",required = false) Date endDate,@RequestParam(name = "type")Integer type){
+        return AjaxResult.success(carbonEmissionService.Co2Emission(startDate,endDate,type));
     }
 }

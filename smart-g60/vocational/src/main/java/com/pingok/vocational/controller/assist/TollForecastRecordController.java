@@ -1,11 +1,10 @@
 package com.pingok.vocational.controller.assist;
 
+import com.pingok.vocational.service.algorithm.IProfitPredictService;
 import com.pingok.vocational.service.assist.ITollForecastRecordService;
 import com.ruoyi.common.core.web.controller.BaseController;
+import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.web.page.TableDataInfo;
-import com.ruoyi.common.log.annotation.Log;
-import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.security.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,14 +26,27 @@ public class TollForecastRecordController extends BaseController {
 
     @Autowired
     private ITollForecastRecordService tollForecastRecordService;
+    @Autowired
+    private IProfitPredictService iProfitPredictService;
 
-    @RequiresPermissions("vocational:tollForecast:info")
-    @Log(title = "通行费预测查询", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("vocational:tollForecast:info")
+//    @Log(title = "通行费预测查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
     public TableDataInfo info(@RequestParam(name = "forecastType",required = false) Integer forecastType,@RequestParam(name = "startDate",required = false) Date startDate, @RequestParam(name = "endDate",required = false) Date endDate)
     {
         startPage();
         List<Map> info = tollForecastRecordService.selectTollForecast(forecastType,startDate,endDate);
         return getDataTable(info);
+    }
+    @GetMapping("/predict")
+    public AjaxResult getResult(@RequestParam(name = "startTime",required = false) Date startTime,
+                                @RequestParam(name = "endTime",required = false) Date endTime,
+                                @RequestParam(name = "type") Integer type){
+        return AjaxResult.success(iProfitPredictService.profitPredict(startTime,endTime,type));
+    }
+    @GetMapping("/getProfitPredTotal")
+    public AjaxResult getTotal(@RequestParam(name = "startTime",required = false) Date startTime,
+                               @RequestParam(name = "endTime",required = false) Date endTime){
+        return AjaxResult.success(iProfitPredictService.getProfitPredTotal(startTime,endTime));
     }
 }
