@@ -28,7 +28,7 @@ public interface TblOwInfoMapper {
             "ow.OVER_WEIGHT as \"overWeight\", " +
             "ow.OVER_RATE as \"overRate\", " +
             "case when ow.FLOW_STAUS=1 then '未处置' when ow.FLOW_STAUS=2 then '立案'  " +
-            "when ow.FLOW_STAUS=3 then '不予立案' when ow.FLOW_STAUS=4 then '结案' ELSE null end as flowStatus, " +
+            "when ow.FLOW_STAUS=3 then '不予立案' when ow.FLOW_STAUS=4 then '结案' ELSE null end as \"flowStatus\", " +
             "ow.PLATE_PIC as \"platePic\", " +
             "ow.FIRSTHEADER_PIC as \"firstHeaderPic\", " +
             "ow.DEGREE45_PIC as \"degree45Pic\", " +
@@ -36,6 +36,7 @@ public interface TblOwInfoMapper {
             "ow.VIDEO as \"video\" " +
             "FROM TBL_OW_INFO ow " +
             "left join  SYS_DICT_DATA a on a.DICT_VALUE=ow.PLATE_COLOR and a.DICT_TYPE='veh_color' " +
+            "where ow.EQUIP_CODE like 'G0060%' " +
             "<when test='vehPlate != null'> " +
             "and ow.VEHICLE_NO like '%' || #{vehPlate} || '%' " +
             "</when>"+

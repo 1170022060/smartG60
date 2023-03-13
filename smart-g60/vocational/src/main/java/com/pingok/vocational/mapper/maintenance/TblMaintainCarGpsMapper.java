@@ -29,7 +29,7 @@ public interface TblMaintainCarGpsMapper extends CommonRepository<TblMaintainCar
             "FROM TBL_MAINTAIN_CAR_GPS tmcg " +
             "where 1=1 " +
             "<when test='vehPlate != null'> " +
-            "and tmcg.VEH_PLATE like '%' || #{vehPlate} || '%' " +
+            "and tmcg.LICENSE_PLATE like '%' || #{vehPlate} || '%' " +
             "</when>"+
             "order by tmcg.CREATE_TIME " +
             "</script>"})
