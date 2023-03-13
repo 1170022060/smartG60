@@ -27,6 +27,7 @@ public interface TblPrimaryGpsInfoMapper {
             "where 1=1 " +
             "<when test='vehPlate != null'>" +
             "and LICENSE like '%' || #{vehPlate} || '%' " +
+            "</when>"+
             "<when test='startTime != null'> " +
             " and TIME &gt;= #{startTime} " +
             "</when>"+
