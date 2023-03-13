@@ -41,7 +41,7 @@ public class SimulatedSortingServiceImpl implements ISimulatedSortingService {
 
     @Override
     public void simulatedSorting(String year, String startTime, String endTime) {
-        List<TblSimulatedSorting> list = tblSimulatedSortingMapper.simulatedSorting(year, startTime, endTime);
+        List<TblSimulatedSorting> list = tblSimulatedSortingMapper.simulatedSortingNew(year, startTime, endTime);
         for (TblSimulatedSorting info : list) {
             info.setId(remoteIdProducerService.nextId());
             tblSimulatedSortingMapper.insert(info);

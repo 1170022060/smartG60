@@ -7,7 +7,6 @@ import com.ruoyi.common.core.mapper.CommonRepository;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +16,80 @@ import java.util.Map;
  * @author xia
  */
 public interface TblSimulatedSortingMapper extends CommonRepository<TblSimulatedSorting> {
+
+    @Select({"SELECT " +
+            "TO_CHAR( tgt.TRANS_TIME, 'yyyy-mm-dd' ) AS \"sortingDate\", " +
+            "TO_CHAR( tgt.TRANS_TIME, 'hh24' ) AS \"sortingHour\", " +
+            "tgt.MEDIA_TYPE AS \"mediaType\", " +
+            "DECODE( " +
+            "tnt.PASS_ID, " +
+            "NULL, " +
+            "DECODE( txt.PASS_ID, NULL, 4, 3 ), " +
+            "DECODE( txt.PASS_ID, NULL, 2, 1 )  " +
+            ") AS \"routeType\", " +
+            "nvl( tgt.CPU_CARD_TYPE, 0 ) AS \"cardType\", " +
+            "DECODE( " +
+            "DECODE( " +
+            "tgt.MEDIA_TYPE, " +
+            "1, " +
+            "SUBSTR( tgt.CPU_ISSUE_ID, 0, 8 ), " +
+            "SUBSTR( tgt.OBU_ISSUE_ID, 0, 8 )  " +
+            "), " +
+            "'C9CFBAA3', " +
+            "1, " +
+            "0  " +
+            ") AS \"issueId\", " +
+            "COUNT( 0 ) AS \"flow\", " +
+            "sum( tgt.FEE ) AS \"fee\"  " +
+            "FROM " +
+            "TBL_SHAR_GTD_RES_SENDER_${year} tgt " +
+            "LEFT JOIN TBL_SHAR_ENPD_RES_SENDER_${year} tnt ON tnt.PASS_ID = tgt.PASS_ID " +
+            "LEFT JOIN ( " +
+            "SELECT " +
+            "PASS_ID  " +
+            "FROM " +
+            "TBL_SHAR_ETCTD_RES_SENDER_${year}  " +
+            "WHERE " +
+            "EN_TIME >= to_date( #{startTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
+            "AND EN_TIME <= to_date( #{endTime}, 'yyyy-mm-dd hh24:mi:ss' ) UNION " +
+            "SELECT " +
+            "PASS_ID  " +
+            "FROM " +
+            "TBL_SHAR_OTD_RES_SENDER_${year}  " +
+            "WHERE " +
+            "EN_TIME >= to_date( #{startTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
+            "AND EN_TIME <= to_date( #{endTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
+            ") txt ON txt.PASS_ID = tgt.PASS_ID  " +
+            "WHERE " +
+            "tgt.TRADE_RESULT = 0  " +
+            "AND tgt.TRANS_TIME >= to_date( #{startTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
+            "AND tgt.TRANS_TIME <= to_date( #{endTime}, 'yyyy-mm-dd hh24:mi:ss' )  " +
+            "GROUP BY " +
+            "TO_CHAR( tgt.TRANS_TIME, 'yyyy-mm-dd' ), " +
+            "TO_CHAR( tgt.TRANS_TIME, 'hh24' ), " +
+            "tgt.MEDIA_TYPE, " +
+            "DECODE( " +
+            "tnt.PASS_ID, " +
+            "NULL, " +
+            "DECODE( txt.PASS_ID, NULL, 4, 3 ), " +
+            "DECODE( txt.PASS_ID, NULL, 2, 1 )  " +
+            "), " +
+            "nvl( tgt.CPU_CARD_TYPE, 0 ), " +
+            "DECODE( " +
+            "DECODE( " +
+            "tgt.MEDIA_TYPE, " +
+            "1, " +
+            "SUBSTR( tgt.CPU_ISSUE_ID, 0, 8 ), " +
+            "SUBSTR( tgt.OBU_ISSUE_ID, 0, 8 )  " +
+            "), " +
+            "'C9CFBAA3', " +
+            "1, " +
+            "0  " +
+            ")  " +
+            "ORDER BY " +
+            "TO_CHAR( tgt.TRANS_TIME, 'yyyy-mm-dd' ), " +
+            "TO_CHAR( tgt.TRANS_TIME, 'hh24' ) "})
+    List<TblSimulatedSorting> simulatedSortingNew(@Param("year") String year, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
 
     @Select({"SELECT  " +
@@ -84,7 +157,7 @@ public interface TblSimulatedSortingMapper extends CommonRepository<TblSimulated
             "ORDER BY " +
             "TO_CHAR( tgt.TRANS_TIME, 'yyyy-mm-dd' ), " +
             "TO_CHAR( tgt.TRANS_TIME, 'hh24' ) "})
-    List<TblSimulatedSorting> simulatedSorting(@Param("year") String year, @Param("startTime") String startTime, @Param("endTime")  String endTime);
+    List<TblSimulatedSorting> simulatedSorting(@Param("year") String year, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
 
     @Select({"<script>" +
@@ -140,12 +213,12 @@ public interface TblSimulatedSortingMapper extends CommonRepository<TblSimulated
             "where 1=1" +
             "<when test='startTime != null'> " +
             "and to_date(SORTING_DATE,'yyyy-mm-dd') <![CDATA[>=]]> to_date(#{startTime},'yyyy-mm-dd') " +
-            "</when>"+
+            "</when>" +
             "<when test='endTime != null'> " +
             "and to_date(SORTING_DATE,'yyyy-mm-dd') <![CDATA[<=]]> to_date(#{endTime},'yyyy-mm-dd') " +
-            "</when>"+
+            "</when>" +
             "GROUP BY " +
             "SORTING_DATE " +
             "</script>"})
-    List<SimulatedSortingVo> dayStatistics(@Param("startTime") String startTime, @Param("endTime")  String endTime);
+    List<SimulatedSortingVo> dayStatistics(@Param("startTime") String startTime, @Param("endTime") String endTime);
 }
