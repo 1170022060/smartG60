@@ -37,7 +37,6 @@ public class AlgorithmController extends BaseController {
     }
 
     @PostMapping("/sendRoads")
-    @Log(title = "算法服务-发送路网结构", businessType = BusinessType.OTHER)
     public AjaxResult sendRoads() {
         iRocketMqService.sendRoads();
         return AjaxResult.success();
