@@ -42,7 +42,7 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "FROM " +
             "( " +
             "SELECT " +
-            "tdf.ID AS \"id\", " +
+            "tdf.ID AS \"id\", tdf.FAULT_TYPE as \"type\"," +
             "case tdf.FAULT_TYPE when 'offLine' then '离线' else tdf.FAULT_TYPE end AS \"faultType\", " +
             "tdf.FAULT_ID AS \"faultId\", " +
             "tdf.FAULT_DESCRIPTION AS \"faultDescription\", " +
@@ -87,7 +87,7 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "LEFT JOIN  SYS_USER creatUser ON creatUser.USER_ID = tdf.CREATE_USER_ID " +
             "LEFT JOIN  SYS_USER updateUser ON updateUser.USER_ID = tdf.UPDATE_USER_ID UNION " +
             "SELECT " +
-            "tdf.ID AS \"id\", " +
+            "tdf.ID AS \"id\", tdf.FAULT_TYPE as \"type\"," +
             "case tdf.FAULT_TYPE when 'offLine' then '离线' else tdf.FAULT_TYPE end AS \"faultType\", " +
             "tdf.FAULT_ID AS \"faultId\", " +
             "tdf.FAULT_DESCRIPTION AS \"faultDescription\", " +
@@ -132,7 +132,7 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "LEFT JOIN  SYS_USER creatUser ON creatUser.USER_ID = tdf.CREATE_USER_ID " +
             "LEFT JOIN  SYS_USER updateUser ON updateUser.USER_ID = tdf.UPDATE_USER_ID UNION " +
             "SELECT " +
-            "tdf.ID AS \"id\", " +
+            "tdf.ID AS \"id\",tdf.FAULT_TYPE as \"type\"," +
             "case tdf.FAULT_TYPE when 'offLine' then '离线' else tdf.FAULT_TYPE end AS \"faultType\", " +
             "tdf.FAULT_ID AS \"faultId\", " +
             "tdf.FAULT_DESCRIPTION AS \"faultDescription\", " +
@@ -179,7 +179,7 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             ") f " +
             "where 1=1 " +
             "<when test='faultType != null'> " +
-            "and f.\"faultType\"= #{faultType} " +
+            "and f.\"type\"= #{faultType} " +
             "</when>"+
             "<when test='deviceId != null'> " +
             "and f.\"deviceId\"= #{deviceId} " +
@@ -292,5 +292,5 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "</when>"+
             "GROUP BY tdf.FAULT_TYPE,tdf.FAULT_DESCRIPTION " +
             "</script>"})
-    List<Map> selectFaultByFaultType(@Param("faultType")Integer faultType,@Param("startTime") Date startTime, @Param("endTime")  Date endTime);
+    List<Map> selectFaultByFaultType(@Param("faultType")String faultType,@Param("startTime") Date startTime, @Param("endTime")  Date endTime);
 }

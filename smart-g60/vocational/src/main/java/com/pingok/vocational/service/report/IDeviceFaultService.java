@@ -102,5 +102,5 @@ public interface IDeviceFaultService {
      * @param endTime
      * @return
      */
-    List<Map> selectFaultByFaultType(Integer faultType,Date startTime, Date endTime);
+    List<Map> selectFaultByFaultType(String faultType,Date startTime, Date endTime);
 }

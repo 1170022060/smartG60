@@ -96,9 +96,9 @@ public class DropDownListController extends BaseController {
     }
 
     @GetMapping(value="/deptUser")
-    public AjaxResult deptUser(Integer id)
+    public AjaxResult deptUser()
     {
-        List<Map> info = tblEmergencyGroupService.selectDeptUser(id);
+        List<Map> info = tblEmergencyGroupService.selectDeptUser();
         return AjaxResult.success(info);
     }
 

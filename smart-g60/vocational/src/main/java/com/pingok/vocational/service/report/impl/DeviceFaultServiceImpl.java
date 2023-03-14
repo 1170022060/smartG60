@@ -109,7 +109,7 @@ public class DeviceFaultServiceImpl implements IDeviceFaultService {
     }
 
     @Override
-    public List<Map> selectFaultByFaultType(Integer faultType, Date startTime, Date endTime) {
+    public List<Map> selectFaultByFaultType(String faultType, Date startTime, Date endTime) {
         return tblDeviceFaultMapper.selectFaultByFaultType(faultType,startTime,endTime);
     }
 }

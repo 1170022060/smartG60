@@ -68,5 +68,5 @@ public interface TblEmergencyGroupService {
      *
      * @return 结果
      */
-    public List<Map> selectDeptUser(Integer deptId);
+    public List<Map> selectDeptUser();
 }

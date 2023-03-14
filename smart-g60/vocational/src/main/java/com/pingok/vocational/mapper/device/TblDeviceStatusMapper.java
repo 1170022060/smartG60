@@ -21,7 +21,7 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "SELECT " +
             "tdi.ID as \"id\", " +
             "tfi.FIELD_NAME as \"fieldName\"," +
-            "tfi.FIELD_NUM as fieldNum, " +
+            "tfi.FIELD_NUM as \"fieldNum\", " +
             "tdi.DEVICE_NAME as \"deviceName\", " +
             "tdi.DEVICE_ID as \"deviceId\", " +
             "sdd.DICT_LABEL as \"deviceType\"," +
