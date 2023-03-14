@@ -13,6 +13,7 @@ import com.sansi.playlist.entry.BaseColour;
 import com.sansi.playlist.entry.PlayTimeBase;
 import com.sansi.playlist.entry.TextBase;
 import com.sansi.playlist.fcms.PlayListFcms;
+import com.sansi.version.SdkVersion;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,16 +37,32 @@ import java.util.UUID;
 public class FcmsServiceImpl implements IFcmsService {
 
     @Override
-    public JSONObject sendData(SanSiInfo sanSiData) {
+    public JSONObject sendData(SanSiInfo demo) {
+
+        String sdkVerison = SdkVersion.getSdkVersion();
+        System.out.println("version:" + sdkVerison);
+
+        String devId = "1";
+        SanSiInfo sanSiData = new SanSiInfo(devId, "10.31.42.68", "1");
+
         //设备初始化
-        RetrunData result= DeviceVar.deviceInforInit(sanSiData.getDeviceId(),sanSiData.getFcmsVersion(),
-                sanSiData.getIpAddr(),sanSiData.getIpPort(),sanSiData.getBlockSize());
+//        RetrunData result= DeviceVar.deviceInforInit(sanSiData.getDeviceId(),sanSiData.getFcmsVersion(),
+//                sanSiData.getIpAddr(),sanSiData.getIpPort(),sanSiData.getBlockSize());
+        RetrunData result= DeviceVar.deviceInforInit(devId,1,
+                "10.31.42.68",3434,2048);
+
+        result = DeviceControl.fcmsFaultQurey(devId);
+        result = DeviceControl.fcmsLightAndModeQurey(devId);//读取调节模式和亮度值
+        result = DeviceControl.fcmsNowPictureQuery(devId,"D:\\temp\\DASS\\2.bmp");
+        result = DeviceControl.fcmsDownFile(devId,"D:\\temp\\DASS\\r64.bmp","r64.bmp");//下载文件
+        result = DeviceControl.fcmsActivePlayList(devId,"000");
+        result = DeviceControl.fcmsFileInfor(devId);
+        result = DeviceControl.fcmsVersionRead(devId);
 
         //打包文件
         Animation animation = new Animation(); //FCMS只支持入动画效果，且必须填写入动画效果，其它停留动画和出动画效果设置无效
         animation.setInAnimation(sanSiData.getInAnimation());
         animation.setInAnimationSpeed(sanSiData.getInAnimationSpeed());
-
 
         TextBase textBase = new TextBase(0,sanSiData.getTextPath());
         textBase.setFontSize(sanSiData.getFontSize());
@@ -82,10 +99,10 @@ public class FcmsServiceImpl implements IFcmsService {
         PageItem pageItem = new PageItem(UUID.randomUUID().toString(),sanSiData.getPlayName(),areaItemList);
 
         PlayListFcms plf = new PlayListFcms();
-        result = plf.createFcmsPlayList("E:\\downtest\\bmp\\play.lst",pageItem);
+        result = plf.createFcmsPlayList("D:\\temp\\DASS\\play.lst",pageItem);
 
         //上传文件
-        result = DeviceControl.fcmsUploadFile(sanSiData.getDeviceId(),"E:\\downtest\\bmp\\play.lst" ,sanSiData.getPlayName());
+        result = DeviceControl.fcmsUploadFile(sanSiData.getDeviceId(),"D:\\temp\\DASS\\play.lst" ,sanSiData.getPlayName());
 
         //激活播放表
         result = DeviceControl.fcmsActivePlayList(sanSiData.getDeviceId(),sanSiData.getPlayName());

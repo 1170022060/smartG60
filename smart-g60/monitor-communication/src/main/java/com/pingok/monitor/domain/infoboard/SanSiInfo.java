@@ -23,7 +23,6 @@ public class SanSiInfo {
     private String fontSize;//字体大小，格式：xx,xx
     private String fontName;//字体名称，FCMS 设备取值范围：h,k,s,f 其它字体不支持
     private BaseColour fontColour;//字体颜色
-
     //此时间是单次播放总时间，但显示屏播放时是循环播放，所以在未切换播放表时显示屏会一直播放相应的播放项。
     private Integer totalTime;
 
@@ -31,6 +30,24 @@ public class SanSiInfo {
     private Integer posY;//播放项显示点坐标 y，默认：0
 
     private String playName;//播放项名称
+
+    public SanSiInfo(String devId, String ip, String text) {
+        deviceId = devId;
+        ipAddr = ip;
+        textPath = text;
+        fcmsVersion = 1;
+        ipPort = 3434;
+        blockSize = 2048;
+        inAnimation = 0;
+        inAnimationSpeed = 20;
+        baseColour = new BaseColour(255,255,255,1,0);
+        fontName = "k";
+        fontSize = "32,32";
+        fontColour = new BaseColour(0, 255,0,1,0);
+        totalTime = 86400000;
+        posX = posY = 0;
+        playName = "aaa";
+    }
 }
 
 
