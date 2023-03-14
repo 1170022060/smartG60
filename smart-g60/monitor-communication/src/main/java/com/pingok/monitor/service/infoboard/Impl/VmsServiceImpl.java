@@ -9,6 +9,7 @@ import com.pingok.monitor.domain.common.MbsAttribute;
 import com.pingok.monitor.domain.device.TblDeviceInfo;
 import com.pingok.monitor.domain.infoboard.DevInfo;
 import com.pingok.monitor.domain.infoboard.PlaylstWndInfo;
+import com.pingok.monitor.domain.infoboard.SansiParkingPubInfo;
 import com.pingok.monitor.domain.infoboard.VmsPubInfo;
 import com.pingok.monitor.service.common.IModbusService;
 import com.pingok.monitor.service.common.ISocketService;
@@ -100,6 +101,60 @@ public class VmsServiceImpl implements IVmsService {
         result.put("devList", jaResult);
 
         return result;
+    }
+
+    @Override
+    public boolean publish(SansiParkingPubInfo parkInfo) {
+        boolean ret = true;
+        byte[] sendPkg = null;
+//        String infoType = parkInfo.getInfoType() == 1 ? " 01 " : " 0A ";
+        switch (parkInfo.getDevPos()){
+            case 1: {}
+            case 2: {
+                byte[] data = new byte[9];
+                data[0] = (byte)parkInfo.getColor2A_huoA().intValue();
+                int num = Integer.parseInt(parkInfo.getText2A_huoA());
+                data[1] = (byte)(num / 256);
+                data[2] = (byte)(num % 256);
+                data[3] = (byte)parkInfo.getColor2A_huoB().intValue();
+                num = Integer.parseInt(parkInfo.getText2A_huoB());
+                data[4] = (byte)(num / 256);
+                data[5] = (byte)(num % 256);
+                data[6] = (byte)parkInfo.getColor2A_ke().intValue();
+                num = Integer.parseInt(parkInfo.getText2A_ke());
+                data[7] = (byte)(num / 256);
+                data[8] = (byte)(num % 256);
+                sendPkg = PacketParking(1, (byte) 0x01, data);
+                break;
+            }
+            case 3: {
+                byte[] data = new byte[6];
+                data[0] = (byte)parkInfo.getColor2BC_huoB().intValue();
+                int num = Integer.parseInt(parkInfo.getText2BC_huoB());
+                data[1] = (byte)(num / 256);
+                data[2] = (byte)(num % 256);
+                data[3] = (byte)parkInfo.getColor2BC_ke().intValue();
+                num = Integer.parseInt(parkInfo.getText2BC_ke());
+                data[4] = (byte)(num / 256);
+                data[5] = (byte)(num % 256);
+                sendPkg = PacketParking(1, (byte) 0x01, data);
+                break;
+            }
+            default: ret = false; break;
+        }
+
+        int recv = 1;
+        Socket skt = null;
+        try {
+            skt = iSocketService.clientSocket(parkInfo.getDevIp(), 3434);
+            recv = iSocketService.writeAndResult(sendPkg, skt);
+            skt.close();
+        } catch (Exception ex) {
+            log.error("情报板发布：上传文件异常！" + ex.getMessage());
+            recv = -1;
+        }
+        ret = recv != -1;
+        return ret;
     }
 
     @Override
@@ -1212,7 +1267,40 @@ public class VmsServiceImpl implements IVmsService {
         ret[pos] = 0x03;
 
         //转义
-        byte[] sendPkg = ByteUtils.TransPkg(ret);
+        byte[] sendPkg = ByteUtils.TransPkg(ret, 5);
+        System.out.println("长度：" + sendPkg.length + "，发送报文：" + ByteUtils.bytes2hex(sendPkg));
+
+        return sendPkg;
+    }
+
+    // 枫泾停车场
+    private byte[] PacketParking(int slaveID, byte pkgType, byte[] data) {
+
+        int len = data == null ? 0 : data.length;
+        int pos = 0;
+        byte[] ret = new byte[len + 7];
+        ret[pos++] = 0x02;
+        String sid = String.format("%02d", slaveID);
+        ret[pos++] = (byte) (sid.charAt(0) - '0');
+        ret[pos++] = (byte) (sid.charAt(1) - '0');
+        ret[pos++] = pkgType;
+
+        if (len > 0) {
+            System.arraycopy(data, 0, ret, 4, len);
+        }
+        pos += len;
+
+        //校验
+        byte[] crcBytes = new byte[ret.length - 4];
+        System.arraycopy(ret, 1, crcBytes, 0, crcBytes.length);
+        byte[] crc2 = ByteUtils.GetCrc(crcBytes, crcBytes.length);
+        ret[pos++] = crc2[0];
+        ret[pos++] = crc2[1];
+
+        ret[pos] = 0x03;
+
+        //转义
+        byte[] sendPkg = ByteUtils.TransPkg(ret, 4);
         System.out.println("长度：" + sendPkg.length + "，发送报文：" + ByteUtils.bytes2hex(sendPkg));
 
         return sendPkg;
