@@ -13,7 +13,6 @@ import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.system.api.RemoteKafkaService;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -164,8 +163,8 @@ public class EventController extends BaseController {
 //    @RequiresPermissions("event:eventControl:confirm")
     @Log(title = "事件确认", businessType = BusinessType.UPDATE)
     @PutMapping("/confirm")
-    public AjaxResult confirm(@RequestParam Long id, @RequestParam String eventType,@RequestParam(required = false) String eventSubtype, @RequestParam String remark, @RequestParam String direction) {
-        iEventService.confirm(id, eventType,eventSubtype, remark, direction);
+    public AjaxResult confirm(@RequestParam Long id, @RequestParam String eventType, @RequestParam(required = false) String eventSubtype, @RequestParam String remark, @RequestParam String direction) {
+        iEventService.confirm(id, eventType, eventSubtype, remark, direction);
         return AjaxResult.success();
     }
 
@@ -177,9 +176,9 @@ public class EventController extends BaseController {
 //    @RequiresPermissions("event:eventControl:list")
 //    @Log(title = "事件管理", businessType = BusinessType.OTHER)
     @GetMapping("/list")
-    public TableDataInfo list(Integer status, Date startTime,Date endTime,String eventType) {
+    public TableDataInfo list(Integer status, Date startTime, Date endTime, String eventType) {
         startPage();
-        List<Map> list = iEventService.search(status,startTime,endTime,eventType);
+        List<Map> list = iEventService.search(status, startTime, endTime, eventType);
         return getDataTable(list);
     }
 
@@ -243,6 +242,13 @@ public class EventController extends BaseController {
         iVideoEventService.plateInfo(tblEventPlateInfo);
         iVideoEventService.parkVehInfo(tblEventPlateInfo);
         iVideoEventService.parkingStatistics(tblEventPlateInfo);
+        return AjaxResult.success();
+    }
+
+
+    @PostMapping("/faceInfo")
+    public AjaxResult faceInfo(@RequestBody TblFaceInfo tblFaceInfo) {
+        iVideoEventService.faceInfo(tblFaceInfo);
         return AjaxResult.success();
     }
 

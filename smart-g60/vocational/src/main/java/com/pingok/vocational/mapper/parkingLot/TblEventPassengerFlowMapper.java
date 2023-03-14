@@ -46,6 +46,10 @@ public interface TblEventPassengerFlowMapper extends CommonRepository<TblEventPa
             " order by to_date(WORK_DATE ||' '||HOUR ||':00:00','yyyy-mm-dd hh24:mi:ss') desc ")
     Integer hourFlow(@Param("areaId") Integer areaId,@Param("time") String time, @Param("hour") Integer hour,@Param("fieldId") Long fieldId);
 
+    @Select("select NVL(sum(NO_MASK),0) as \"noMask\" from TBL_EVENT_PASSENGER_STATISTICS " +
+            "where AREA_ID = #{areaId} and WORK_DATE = #{time} and FIELD_ID= #{fieldId} ")
+    Integer noMaskFlow(@Param("time") String time,@Param("areaId") Integer areaId,@Param("fieldId") Long fieldId);
+
     @Select({"<script>" +
             "SELECT " +
             "tfi.FIELD_NAME AS \"fieldName\", " +

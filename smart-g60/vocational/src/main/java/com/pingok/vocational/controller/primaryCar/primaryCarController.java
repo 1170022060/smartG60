@@ -48,9 +48,11 @@ public class primaryCarController extends BaseController {
     }
 
     @GetMapping("/getPrimaryGps")
-    public TableDataInfo getPrimaryGps(@RequestParam(name = "vehPlate",required = false) String vehPlate){
+    public TableDataInfo getPrimaryGps(@RequestParam(name = "vehPlate",required = false) String vehPlate,
+                                       @RequestParam(name = "startTime",required = false) Date startTime,
+                                       @RequestParam(name = "endTime",required = false) Date endTime){
         startPage();
-        return getDataTable(iPrimaryCarService.selectPrimaryGpsInfo(vehPlate));
+        return getDataTable(iPrimaryCarService.selectPrimaryGpsInfo(vehPlate,startTime,endTime));
     }
 
     @RequiresPermissions("vocational:primaryCar:vehGps")

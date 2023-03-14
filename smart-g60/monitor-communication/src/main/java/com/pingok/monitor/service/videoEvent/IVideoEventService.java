@@ -3,8 +3,11 @@ package com.pingok.monitor.service.videoEvent;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.monitor.domain.event.*;
+import com.pingok.monitor.domain.event.vo.FaceInfoVo;
 
 public interface IVideoEventService {
+
+    void updateFaceInfo(FaceInfoVo faceInfoVo);
 
     void fluxData(TblEventFlux tblEventFlux);
 

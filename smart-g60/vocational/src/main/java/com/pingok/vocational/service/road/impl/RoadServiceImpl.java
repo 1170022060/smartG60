@@ -6,6 +6,7 @@ import com.pingok.vocational.service.road.IRoadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,12 +19,12 @@ public class RoadServiceImpl implements IRoadService {
     private TblRoadStatisEventMapper tblRoadStatisEventMapper;
 
     @Override
-    public List<Map> selectRoadVideoEvent() {
-        return tblRoadVideoEventMapper.selectRoadVideoEvent();
+    public List<Map> selectRoadVideoEvent(Integer type) {
+        return tblRoadVideoEventMapper.selectRoadVideoEvent(type);
     }
 
     @Override
-    public List<Map> selectRoadStatisEvent() {
-        return tblRoadStatisEventMapper.selectRoadStatisEvent();
+    public List<Map> selectRoadStatisEvent(String vehPlate, Date startTime,Date endTime) {
+        return tblRoadStatisEventMapper.selectRoadStatisEvent(vehPlate,startTime,endTime);
     }
 }

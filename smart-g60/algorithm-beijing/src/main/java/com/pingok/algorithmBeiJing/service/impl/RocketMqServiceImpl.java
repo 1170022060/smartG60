@@ -70,7 +70,10 @@ public class RocketMqServiceImpl implements IRocketMqService {
             JSONObject records = new JSONObject();
             JSONArray record;
             JSONArray array;
+            JSONObject vehicle;
             List<Map> list;
+            Integer coachOrTruck;
+            Boolean special;
             for (Map g : gantrys) {
                 list = gantryMapper.gantryTransactionLog(year, g.get("id").toString(), startTime, endTime);
                 record = new JSONArray();
@@ -80,6 +83,43 @@ public class RocketMqServiceImpl implements IRocketMqService {
                     array.add(m.get("transTime") != null ? m.get("transTime") : "");
                     array.add(m.get("lastGantryId") != null ? m.get("lastGantryId") : "");
                     array.add(m.get("lastGantryTime") != null ? m.get("lastGantryTime") : "");
+                    array.add(m.get("fee") != null ? m.get("fee") : "");
+                    vehicle = new JSONObject();
+                    vehicle.put("plate_color",m.get("vehicleColor"));
+                    switch (Integer.parseInt(m.get("vehicleType").toString())){
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                            coachOrTruck = 0;
+                            special = false;
+                            break;
+                        case 11:
+                        case 12:
+                        case 13:
+                        case 14:
+                        case 15:
+                        case 16:
+                            coachOrTruck = 1;
+                            special = false;
+                            break;
+                        case 21:
+                        case 22:
+                        case 23:
+                        case 24:
+                        case 25:
+                        case 26:
+                            coachOrTruck = 1;
+                            special = true;
+                            break;
+                        default:
+                            coachOrTruck = 0;
+                            special = false;
+                            break;
+                    }
+                    vehicle.put("coach_or_truck",coachOrTruck);
+                    vehicle.put("special",special);
+                    array.add(vehicle);
                     record.add(array);
                 }
                 records.put(g.get("id").toString(), record);
