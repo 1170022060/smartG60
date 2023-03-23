@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @time 2022/5/20 17:57
  */
 @Data
-@Table(name="tbl_gantry_sum_transaction")
+@Table(name="TBL_GANTRY_SUM_TRANSACTION")
 public class TblGantrySumTransaction implements Serializable {
     /** 版本号 */
     private static final long serialVersionUID = 1L;
