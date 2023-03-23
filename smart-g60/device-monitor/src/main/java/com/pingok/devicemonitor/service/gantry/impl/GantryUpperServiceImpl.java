@@ -20,6 +20,7 @@ import org.apache.http.entity.ContentType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Example;
@@ -121,6 +122,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         return jo;
     }
 
+    @Async
     @Override
     public void handleBaseInfoUpload(JSONObject data) {
         try {
@@ -197,6 +199,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
+    @Async
     @Override
     public void handleTghbu(JSONObject data) {
         try {
@@ -310,6 +313,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
+    @Async
     @Override
     public void handleSpecialEventUpload(JSONObject data) {
         try {
@@ -320,6 +324,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
+    @Async
     @Override
     public void handleViu(List<TblGantryTravelImage> data) {
         try {
@@ -335,6 +340,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
+    @Async
     @Override
     public void handleVipu(List<TblGantryPicture> data) {
         try {
@@ -350,7 +356,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
-
+    @Async
     @Override
     public void handleSvipu(List<TblGantryPictureFail> data) {
         try {
@@ -366,6 +372,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
+    @Async
     @Override
     public void handleEtctu(List<TblGantryTransaction> data) {
         try {
@@ -381,6 +388,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
+    @Async
     @Override
     public void handleEtcsu(List<TblGantrySumTransaction> data) {
         try {
@@ -396,6 +404,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
+    @Async
     @Override
     public void handleVisu(List<TblGantrySumTravelImage> data) {
         try {
@@ -411,6 +420,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
+    @Async
     @Override
     public void handleLog(JSONObject data) {
         try {

@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.pingok.devicemonitor.domain.gantry.*;
 import com.pingok.devicemonitor.service.gantry.IGantryUpperStoreService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,9 +20,9 @@ import java.util.List;
 @Service
 public class GantryUpperStoreServiceImpl implements IGantryUpperStoreService {
 
-
+    @Async
     @Override
-    public List<TblGantryTravelImage> saveViu(String reqFileName, JSONObject data) {
+    public List<TblGantryTravelImage> changeViu(String reqFileName, JSONObject data) {
         List<TblGantryTravelImage> list = new ArrayList<>();
         try {
             if (data.containsKey("picInfoList")) {
@@ -34,13 +35,14 @@ public class GantryUpperStoreServiceImpl implements IGantryUpperStoreService {
                 }
             }
         } catch (Exception ex) {
-            log.error(reqFileName + "暂存牌识流水异常：" + ex.getMessage());
+            log.error(reqFileName + "转换牌识流水异常：" + ex.getMessage());
         }
         return list;
     }
 
+    @Async
     @Override
-    public List<TblGantryPicture> saveVipu(String reqFileName, JSONArray data) {
+    public List<TblGantryPicture> changeVipu(String reqFileName, JSONArray data) {
         List<TblGantryPicture> list = new ArrayList<>();
         try {
             TblGantryPicture gantryPicture;
@@ -50,13 +52,14 @@ public class GantryUpperStoreServiceImpl implements IGantryUpperStoreService {
                 list.add(gantryPicture);
             }
         } catch (Exception ex) {
-            log.error("暂存牌识图片异常：" + ex.getMessage());
+            log.error("转换牌识图片异常：" + ex.getMessage());
         }
         return list;
     }
 
+    @Async
     @Override
-    public List<TblGantryPictureFail> saveSvipu(String reqFileName, JSONArray data) {
+    public List<TblGantryPictureFail> changeSvipu(String reqFileName, JSONArray data) {
         List<TblGantryPictureFail> list = new ArrayList<>();
         try {
             TblGantryPictureFail gantryPictureFail;
@@ -66,13 +69,14 @@ public class GantryUpperStoreServiceImpl implements IGantryUpperStoreService {
                 list.add(gantryPictureFail);
             }
         } catch (Exception ex) {
-            log.error("暂存牌识图片（交易失败或未匹配）异常：" + ex.getMessage());
+            log.error("转换牌识图片（交易失败或未匹配）异常：" + ex.getMessage());
         }
         return list;
     }
 
+    @Async
     @Override
-    public List<TblGantryTransaction> saveEtctu(String reqFileName, JSONObject data) {
+    public List<TblGantryTransaction> changeEtctu(String reqFileName, JSONObject data) {
         List<TblGantryTransaction> list = new ArrayList<>();
         try {
             if (data.containsKey("tradeInfoList")) {
@@ -85,13 +89,14 @@ public class GantryUpperStoreServiceImpl implements IGantryUpperStoreService {
                 }
             }
         } catch (Exception ex) {
-            log.error(reqFileName + "暂存交易流水异常：" + ex.getMessage());
+            log.error(reqFileName + "转换交易流水异常：" + ex.getMessage());
         }
         return list;
     }
 
+    @Async
     @Override
-    public List<TblGantrySumTransaction> saveEtcsu(String reqFileName, JSONArray data) {
+    public List<TblGantrySumTransaction> changeEtcsu(String reqFileName, JSONArray data) {
         List<TblGantrySumTransaction> list = new ArrayList<>();
         try {
             TblGantrySumTransaction gantrySumTransaction;
@@ -101,13 +106,14 @@ public class GantryUpperStoreServiceImpl implements IGantryUpperStoreService {
                 list.add(gantrySumTransaction);
             }
         } catch (Exception ex) {
-            log.error("暂存ETC 门架交易小时批次汇总异常：" + ex.getMessage());
+            log.error("转换ETC 门架交易小时批次汇总异常：" + ex.getMessage());
         }
         return list;
     }
 
+    @Async
     @Override
-    public List<TblGantrySumTravelImage> saveVisu(String reqFileName, JSONArray data) {
+    public List<TblGantrySumTravelImage> changeVisu(String reqFileName, JSONArray data) {
         List<TblGantrySumTravelImage> list = new ArrayList<>();
         try {
             TblGantrySumTravelImage gantrySumTravelImage;
@@ -117,7 +123,7 @@ public class GantryUpperStoreServiceImpl implements IGantryUpperStoreService {
                 list.add(gantrySumTravelImage);
             }
         } catch (Exception ex) {
-            log.error("暂存ETC 门架牌识小时批次汇总异常：" + ex.getMessage());
+            log.error("转换ETC 门架牌识小时批次汇总异常：" + ex.getMessage());
         }
         return list;
     }
