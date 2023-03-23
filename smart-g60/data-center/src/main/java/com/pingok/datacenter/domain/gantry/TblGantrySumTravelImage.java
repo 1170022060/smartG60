@@ -12,7 +12,7 @@ import java.util.Date;
  * @time 2022/5/20 17:57
  */
 @Data
-@Table(name="tbl_gantry_sum_travelimage")
+@Table(name="TBL_GANTRY_SUM_TRAVELIMAGE")
 public class TblGantrySumTravelImage implements Serializable {
     /** 版本号 */
     private static final long serialVersionUID = 1L;

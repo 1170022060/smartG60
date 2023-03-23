@@ -2,6 +2,7 @@ package com.pingok.devicemonitor.domain.gantry;
 
 import lombok.Data;
 
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,6 +13,7 @@ import java.util.Date;
  * @version 1.0.0 2022-05-19
  */
 @Data
+@Table(name = "TBL_GANTRY_MONITOR_STATUS")
 public class TblGantryMonitorStatus implements Serializable {
     /** 版本号 */
     private static final long serialVersionUID = 1L;

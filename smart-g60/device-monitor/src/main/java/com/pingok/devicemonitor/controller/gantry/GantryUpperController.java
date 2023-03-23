@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.devicemonitor.domain.gantry.*;
 import com.pingok.devicemonitor.domain.gantry.vo.*;
+import com.pingok.devicemonitor.service.gantry.CustomHttpServletRequestWrapper;
 import com.pingok.devicemonitor.service.gantry.IGantryService;
 import com.pingok.devicemonitor.service.gantry.IGantryUpperService;
 import com.pingok.devicemonitor.service.gantry.IGantryUpperStoreService;
@@ -81,6 +82,8 @@ public class GantryUpperController {
     @PostMapping(value = "/bin/{reqFileName}")
     public void handleRequest(@PathVariable String reqFileName, HttpServletRequest request, HttpServletResponse response) {
         // 设置headers（）
+        HttpServletRequest wrappedRequest = new CustomHttpServletRequestWrapper(request);
+
         String resFileName = reqFileName.replace("REQ", "RES").replace("@_@", ".");
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment;filename=" + resFileName);
@@ -88,46 +91,59 @@ public class GantryUpperController {
         String reqType = iGantryUpperService.getReqType(reqFileName);
         JSONObject ret = iGantryUpperService.genResponse(reqType, 200);
         try {
-            BufferedReader reader = request.getReader();
+
+            int len = request.getContentLength();
             StringBuffer sb = new StringBuffer();
-            String str = null;
-            while (null != (str = reader.readLine())) {
-                sb.append(str);
+            if (len != -1) {
+                BufferedReader reader = request.getReader();
+                String str = null;
+                while (null != (str = reader.readLine())) {
+                    sb.append(str);
+                }
             }
+//            BufferedReader reader = wrappedRequest.getReader();
+//            StringBuffer sb = new StringBuffer();
+//            char[] buf = new char[1024];
+//            int read;
+//            while ((read = reader.read(buf)) != -1) {
+//                sb.append(buf, 0, read);
+//            }
+//            String requestBody = sb.toString();
+
             if (sb != null) {
                 switch (reqType) {
                     case "GBUPLOAD_VIU":
-                        List<TblGantryTravelImage> gantryTravelImages = iGantryUpperStoreService.saveViu(reqFileName, JSONObject.parseObject(sb.toString()));
+                        List<TblGantryTravelImage> gantryTravelImages = iGantryUpperStoreService.changeViu(reqFileName, JSONObject.parseObject(sb.toString()));
                         if (gantryTravelImages != null && gantryTravelImages.size() > 0) {
                             iGantryUpperService.handleViu(gantryTravelImages);
                         }
                         break; //牌识流水
                     case "GBUPLOAD_VIPU":
-                        List<TblGantryPicture> gantryPictures = iGantryUpperStoreService.saveVipu(reqFileName, JSONArray.parseArray(sb.toString()));
+                        List<TblGantryPicture> gantryPictures = iGantryUpperStoreService.changeVipu(reqFileName, JSONArray.parseArray(sb.toString()));
                         if (gantryPictures != null && gantryPictures.size() > 0) {
                             iGantryUpperService.handleVipu(gantryPictures);
                         }
                         break; //牌识图片（按需、全量）
                     case "GBUPLOAD_SVIPU":
-                        List<TblGantryPictureFail> gantryPictureFails = iGantryUpperStoreService.saveSvipu(reqFileName, JSONArray.parseArray(sb.toString()));
+                        List<TblGantryPictureFail> gantryPictureFails = iGantryUpperStoreService.changeSvipu(reqFileName, JSONArray.parseArray(sb.toString()));
                         if (gantryPictureFails != null && gantryPictureFails.size() > 0) {
                             iGantryUpperService.handleSvipu(gantryPictureFails);
                         }
                         break; //牌识图片（失败或未匹配）
                     case "GBUPLOAD_ETCTU":
-                        List<TblGantryTransaction> gantryTransactions = iGantryUpperStoreService.saveEtctu(reqFileName, JSONObject.parseObject(sb.toString()));
+                        List<TblGantryTransaction> gantryTransactions = iGantryUpperStoreService.changeEtctu(reqFileName, JSONObject.parseObject(sb.toString()));
                         if (gantryTransactions != null && gantryTransactions.size() > 0) {
                             iGantryUpperService.handleEtctu(gantryTransactions);
                         }
                         break; //交易上传
                     case "GBUPLOAD_ETCSU":
-                        List<TblGantrySumTransaction> gantrySumTransactions = iGantryUpperStoreService.saveEtcsu(reqFileName, JSONArray.parseArray(sb.toString()));
+                        List<TblGantrySumTransaction> gantrySumTransactions = iGantryUpperStoreService.changeEtcsu(reqFileName, JSONArray.parseArray(sb.toString()));
                         if (gantrySumTransactions != null && gantrySumTransactions.size() > 0) {
                             iGantryUpperService.handleEtcsu(gantrySumTransactions);
                         }
                         break; //交易小时汇总上传
                     case "GBUPLOAD_VISU":
-                        List<TblGantrySumTravelImage> gantrySumTravelImages = iGantryUpperStoreService.saveVisu(reqFileName, JSONArray.parseArray(sb.toString()));
+                        List<TblGantrySumTravelImage> gantrySumTravelImages = iGantryUpperStoreService.changeVisu(reqFileName, JSONArray.parseArray(sb.toString()));
                         if (gantrySumTravelImages != null && gantrySumTravelImages.size() > 0) {
                             iGantryUpperService.handleVisu(gantrySumTravelImages);
                         }
@@ -207,5 +223,7 @@ public class GantryUpperController {
     public AjaxResult LogBUpload(@RequestBody LogBUploadModel data) {
         return iGantryUpperService.LogBUpload(data);
     }
+
+
 
 }

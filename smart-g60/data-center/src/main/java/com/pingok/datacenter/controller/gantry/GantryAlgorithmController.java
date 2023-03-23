@@ -29,7 +29,7 @@ public class GantryAlgorithmController extends BaseController {
     private IGantryAlgorithm gantryAlgorithm;
 
     @GetMapping("/info")
-    public AjaxResult info(@RequestParam(name = "startTime",required = false) String startTime, @RequestParam(name = "endTime",required = false) String endTime)
+    public AjaxResult info(@RequestParam(name = "startTime",required = false) Date startTime, @RequestParam(name = "endTime",required = false) String endTime)
     {
         List<Map> info = gantryAlgorithm.selectGantryAlgorithm(startTime , endTime);
         return AjaxResult.success(info);
@@ -43,7 +43,7 @@ public class GantryAlgorithmController extends BaseController {
     }
 
     @GetMapping("/passRecord")
-    public AjaxResult passRecord(@RequestParam(name = "gantryId",required = false) String gantryId,@RequestParam(name = "startTime",required = false) String startTime, @RequestParam(name = "endTime",required = false) String endTime)
+    public AjaxResult passRecord(@RequestParam(name = "gantryId",required = false) String gantryId,@RequestParam(name = "startTime",required = false) Date startTime, @RequestParam(name = "endTime",required = false) String endTime)
     {
         List<Map> info = gantryAlgorithm.selectGantryAlgorithmPassRecord(gantryId,startTime,endTime);
         return AjaxResult.success(info);
