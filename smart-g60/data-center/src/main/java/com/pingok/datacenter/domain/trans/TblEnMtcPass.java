@@ -2,6 +2,7 @@ package com.pingok.datacenter.domain.trans;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 /**
@@ -13,6 +14,8 @@ public class TblEnMtcPass implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    private Long id;
 
     /** CPC卡ID */
     private Long cpcCardId;
@@ -29,6 +32,14 @@ public class TblEnMtcPass implements Serializable {
 
     /** 表名   */
     private String tableName;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getCpcCardId() {
         return cpcCardId;
