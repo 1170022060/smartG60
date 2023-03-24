@@ -106,6 +106,12 @@ public class TransServiceImpl implements ITransService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         String year = sdf.format(tblExEtcPass.getTransTime());
         tblExEtcPass.setRecordId(recordId);
+        if (tblExEtcPass.getEtcCardId() == null){
+            tblExEtcPass.setEtcCardId((long) 0);
+        }
+        if (tblExEtcPass.getEtcCardNet() == null){
+            tblExEtcPass.setEtcCardNet("0");
+        }
         tblExEtcPass.setTableName("TBL_EX_ETC_PASS_"+ year);
         return tblExEtcPassMapper.insertExEtcPass(tblExEtcPass);
     }
