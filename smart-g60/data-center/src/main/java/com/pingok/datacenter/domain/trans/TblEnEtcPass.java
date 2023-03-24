@@ -15,6 +15,9 @@ public class TblEnEtcPass implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    private Long id;
+
     /** ETC卡号 */
     private Long etcCardId;
 
@@ -87,6 +90,14 @@ public class TblEnEtcPass implements Serializable {
 
     /** 表名   */
     private String tableName;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getRecordId() {
         return recordId;
