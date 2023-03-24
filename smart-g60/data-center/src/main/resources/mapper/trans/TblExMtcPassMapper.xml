@@ -5,7 +5,8 @@
 <mapper namespace="com.pingok.datacenter.mapper.trans.TblExMtcPassMapper">
 
     <resultMap type="com.pingok.datacenter.domain.trans.TblExMtcPass" id="TblExMtcPassResult">
-        <id     property="recordId"  column="record_id"   />
+        <id     property="id"  column="id"   />
+        <result     property="recordId"  column="record_id"   />
         <result property="transTime"  column="trans_time"   />
         <result property="cpcCardId"  column="cpc_card_id"   />
         <result property="cpcElec"  column="cpc_elec"   />
@@ -22,6 +23,7 @@
     <insert id="insertExMtcPass" parameterType="com.pingok.datacenter.domain.trans.TblExMtcPass">
         insert into ${tableName}(
         <if test="transTime != null ">trans_time,</if>
+        <if test="recordId != null ">record_id,</if>
         <if test="cpcCardId != null ">cpc_card_id,</if>
         <if test="cpcElec != null ">cpc_elec,</if>
         <if test="cpcCardPlate != null ">cpc_card_plate,</if>
@@ -32,9 +34,10 @@
         <if test="cpcCardEnTime != null ">cpc_card_en_time,</if>
         <if test="cpcCardEnStation != null ">cpc_card_en_station,</if>
         <if test="cpcCardProCount != null ">cpc_card_pro_count,</if>
-        record_id
+        id
         )values(
         <if test="transTime != null ">#{transTime},</if>
+        <if test="recordId != null ">#{recordId},</if>
         <if test="cpcCardId != null ">#{cpcCardId},</if>
         <if test="cpcElec != null ">#{cpcElec},</if>
         <if test="cpcCardPlate != null ">#{cpcCardPlate},</if>
@@ -45,7 +48,7 @@
         <if test="cpcCardEnTime != null ">#{cpcCardEnTime},</if>
         <if test="cpcCardEnStation != null ">#{cpcCardEnStation},</if>
         <if test="cpcCardProCount != null ">#{cpcCardProCount},</if>
-        #{recordId}
+        #{id}
         )
     </insert>
 </mapper>
