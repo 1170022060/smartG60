@@ -31,7 +31,7 @@ public interface IGantryUpperStoreService {
      * 交易流水
      * @param data
      */
-    List<TblGantryTransaction> changeEtctu(String reqFileName, JSONObject data);
+    List<TblGantryTransaction> changeEtctu(String reqFileName, String data);
 
     /**
      * ETC 门架交易小时批次汇总

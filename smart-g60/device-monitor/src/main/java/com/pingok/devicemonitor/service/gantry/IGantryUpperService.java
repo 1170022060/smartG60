@@ -34,7 +34,18 @@ public interface IGantryUpperService {
      *存储门架牌识数据
      * @param data
      */
+    void handleViu(TblGantryTravelImage data);
+    /**
+     *存储门架牌识数据
+     * @param data
+     */
     void handleViu(List<TblGantryTravelImage> data);
+
+    /**
+     * 存储ETC 门架牌识图片（按需调取、全量）上传
+     * @param data
+     */
+    void handleVipu(TblGantryPicture data);
 
     /**
      * 存储ETC 门架牌识图片（按需调取、全量）上传
@@ -48,6 +59,12 @@ public interface IGantryUpperService {
      */
     void handleSvipu(List<TblGantryPictureFail> data);
 
+
+    /**
+     *存储交易流水
+     * @param data
+     */
+    void handleEtctu(TblGantryTransaction data);
     /**
      *存储交易流水
      * @param data
