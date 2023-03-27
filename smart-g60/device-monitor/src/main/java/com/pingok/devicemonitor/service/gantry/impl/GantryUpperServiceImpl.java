@@ -324,7 +324,17 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
-    @Async
+    @Override
+    public void handleViu(TblGantryTravelImage data) {
+        try {
+            String year = DateUtils.dateYear();
+            data.setYear(year);
+            tblGantryTravelImageMapper.addTblGantryTravelimage(data);
+        } catch (Exception ex) {
+            log.error("存储门架牌识数据异常：" + ex.getMessage());
+        }
+    }
+
     @Override
     public void handleViu(List<TblGantryTravelImage> data) {
         try {
@@ -340,7 +350,15 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
-    @Async
+    @Override
+    public void handleVipu(TblGantryPicture data) {
+        try {
+            tblGantryPictureMapper.addTblGantryPicture(data);
+        } catch (Exception ex) {
+            log.error("存储门架牌识图片异常：" + ex.getMessage());
+        }
+    }
+
     @Override
     public void handleVipu(List<TblGantryPicture> data) {
         try {
@@ -369,6 +387,17 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
             }
         } catch (Exception ex) {
             log.error("存储门架牌识图片异常：" + ex.getMessage());
+        }
+    }
+
+    @Override
+    public void handleEtctu(TblGantryTransaction data) {
+        try {
+            String year = DateUtils.dateYear();
+            data.setYear(year);
+            tblGantryTransactionMapper.addtblGantryTransaction(data);
+        } catch (Exception ex) {
+            log.error("存储门架交易流水异常：" + ex.getMessage());
         }
     }
 
@@ -425,7 +454,7 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
     public void handleLog(JSONObject data) {
         try {
             String gantryId = null;
-            String path = "/root/"+DateUtils.getNowTimestampLong();
+            String path = "/root/" + DateUtils.getNowTimestampLong();
             String fileName = data.getString("reqFileName") + ".zip";
             File file = new File(path);
             if (!file.exists()) {
@@ -467,21 +496,21 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
             R<SysFile> r = remoteFileService.upload(mFile);
             if (r != null) {
                 if (R.SUCCESS == r.getCode()) {
-                    if(gantryId!=null){
+                    if (gantryId != null) {
                         Example example = new Example(TblGantryLogfile.class);
-                        example.createCriteria().andEqualTo("gantryId",gantryId);
+                        example.createCriteria().andEqualTo("gantryId", gantryId);
                         TblGantryLogfile tblGantryLogfile = tblGantryLogfileMapper.selectOneByExample(example);
-                        if(tblGantryLogfile==null){
+                        if (tblGantryLogfile == null) {
                             tblGantryLogfile = new TblGantryLogfile();
                             tblGantryLogfile.setGantryId(gantryId);
                             tblGantryLogfile.setId(remoteIdProducerService.nextId());
                             tblGantryLogfile.setUrl(r.getData().getUrl());
                             tblGantryLogfileMapper.insert(tblGantryLogfile);
-                        }else {
+                        } else {
                             tblGantryLogfile.setUrl(r.getData().getUrl());
                             tblGantryLogfileMapper.updateByPrimaryKey(tblGantryLogfile);
                         }
-                    }else {
+                    } else {
                         throw new ServiceException("门架日志存储失败，原因：JSON文件内未包含门架编号");
                     }
                 } else {

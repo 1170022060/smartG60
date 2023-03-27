@@ -20,7 +20,6 @@ import java.util.List;
 @Service
 public class GantryUpperStoreServiceImpl implements IGantryUpperStoreService {
 
-    @Async
     @Override
     public List<TblGantryTravelImage> changeViu(String reqFileName, JSONObject data) {
         List<TblGantryTravelImage> list = new ArrayList<>();
@@ -40,7 +39,6 @@ public class GantryUpperStoreServiceImpl implements IGantryUpperStoreService {
         return list;
     }
 
-    @Async
     @Override
     public List<TblGantryPicture> changeVipu(String reqFileName, JSONArray data) {
         List<TblGantryPicture> list = new ArrayList<>();
@@ -57,7 +55,6 @@ public class GantryUpperStoreServiceImpl implements IGantryUpperStoreService {
         return list;
     }
 
-    @Async
     @Override
     public List<TblGantryPictureFail> changeSvipu(String reqFileName, JSONArray data) {
         List<TblGantryPictureFail> list = new ArrayList<>();
@@ -74,19 +71,15 @@ public class GantryUpperStoreServiceImpl implements IGantryUpperStoreService {
         return list;
     }
 
-    @Async
+
     @Override
-    public List<TblGantryTransaction> changeEtctu(String reqFileName, JSONObject data) {
+    public List<TblGantryTransaction> changeEtctu(String reqFileName, String data) {
         List<TblGantryTransaction> list = new ArrayList<>();
         try {
-            if (data.containsKey("tradeInfoList")) {
-                JSONArray tradeInfoList = data.getJSONArray("tradeInfoList");
+            if (data != null) {
                 TblGantryTransaction gantryTransaction;
-                int size = tradeInfoList.size();
-                for (int i = 0; i < size; i++) {
-                    gantryTransaction = JSON.parseObject(tradeInfoList.getString(i), TblGantryTransaction.class);
-                    list.add(gantryTransaction);
-                }
+                gantryTransaction = JSON.parseObject(data, TblGantryTransaction.class);
+                list.add(gantryTransaction);
             }
         } catch (Exception ex) {
             log.error(reqFileName + "转换交易流水异常：" + ex.getMessage());
@@ -94,7 +87,6 @@ public class GantryUpperStoreServiceImpl implements IGantryUpperStoreService {
         return list;
     }
 
-    @Async
     @Override
     public List<TblGantrySumTransaction> changeEtcsu(String reqFileName, JSONArray data) {
         List<TblGantrySumTransaction> list = new ArrayList<>();
@@ -111,7 +103,6 @@ public class GantryUpperStoreServiceImpl implements IGantryUpperStoreService {
         return list;
     }
 
-    @Async
     @Override
     public List<TblGantrySumTravelImage> changeVisu(String reqFileName, JSONArray data) {
         List<TblGantrySumTravelImage> list = new ArrayList<>();
