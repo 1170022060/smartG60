@@ -6,4 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface TblGantrySumTransactionMapper extends CommonRepository<TblGantrySumTransaction> {
+
+    int addTblGantrySumTransaction(TblGantrySumTransaction tblGantrySumTransaction);
 }

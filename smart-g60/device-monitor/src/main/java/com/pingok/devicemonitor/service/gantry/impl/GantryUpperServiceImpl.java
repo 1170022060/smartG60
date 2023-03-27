@@ -374,7 +374,15 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
-    @Async
+    @Override
+    public void handleSvipu(TblGantryPictureFail data) {
+        try {
+            tblGantryPictureFailMapper.addTblGantryPictureFail(data);
+        } catch (Exception ex) {
+            log.error("存储门架牌识图片异常：" + ex.getMessage());
+        }
+    }
+
     @Override
     public void handleSvipu(List<TblGantryPictureFail> data) {
         try {
@@ -401,7 +409,6 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
-    @Async
     @Override
     public void handleEtctu(List<TblGantryTransaction> data) {
         try {
@@ -417,7 +424,15 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
-    @Async
+    @Override
+    public void handleEtcsu(TblGantrySumTransaction data) {
+        try {
+            tblGantrySumTransactionMapper.addTblGantrySumTransaction(data);
+        } catch (Exception ex) {
+            log.error("存储ETC 门架交易小时批次汇总异常：" + ex.getMessage());
+        }
+    }
+
     @Override
     public void handleEtcsu(List<TblGantrySumTransaction> data) {
         try {
@@ -433,7 +448,16 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
-    @Async
+    @Override
+    public void handleVisu(TblGantrySumTravelImage data) {
+        try {
+
+            tblGantrySumTravelImageMapper.addTblGantrySumTravelimage(data);
+        } catch (Exception ex) {
+            log.error("存储ETC 门架牌识小时批次汇总异常：" + ex.getMessage());
+        }
+    }
+
     @Override
     public void handleVisu(List<TblGantrySumTravelImage> data) {
         try {
@@ -449,7 +473,6 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
-    @Async
     @Override
     public void handleLog(JSONObject data) {
         try {

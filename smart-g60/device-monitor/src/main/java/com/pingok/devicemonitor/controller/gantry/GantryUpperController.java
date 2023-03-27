@@ -114,25 +114,16 @@ public class GantryUpperController {
                         iGantryUpperService.handleVipu(JSON.parseObject(sb.toString(), TblGantryPicture.class));
                         break;
                     case "GBUPLOAD_SVIPU"://牌识图片（失败或未匹配）
-                        List<TblGantryPictureFail> gantryPictureFails = iGantryUpperStoreService.changeSvipu(reqFileName, JSONArray.parseArray(sb.toString()));
-                        if (gantryPictureFails != null && gantryPictureFails.size() > 0) {
-                            iGantryUpperService.handleSvipu(gantryPictureFails);
-                        }
+                        iGantryUpperService.handleSvipu(JSON.parseObject(sb.toString(), TblGantryPictureFail.class));
                         break;
                     case "GBUPLOAD_ETCTU"://交易上传
                         iGantryUpperService.handleEtctu(JSON.parseObject(sb.toString(), TblGantryTransaction.class));
                         break;
                     case "GBUPLOAD_ETCSU": //交易小时汇总上传
-                        List<TblGantrySumTransaction> gantrySumTransactions = iGantryUpperStoreService.changeEtcsu(reqFileName, JSONArray.parseArray(sb.toString()));
-                        if (gantrySumTransactions != null && gantrySumTransactions.size() > 0) {
-                            iGantryUpperService.handleEtcsu(gantrySumTransactions);
-                        }
+                        iGantryUpperService.handleEtcsu(JSON.parseObject(sb.toString(), TblGantrySumTransaction.class));
                         break;
                     case "GBUPLOAD_VISU"://牌识小时汇总上传
-                        List<TblGantrySumTravelImage> gantrySumTravelImages = iGantryUpperStoreService.changeVisu(reqFileName, JSONArray.parseArray(sb.toString()));
-                        if (gantrySumTravelImages != null && gantrySumTravelImages.size() > 0) {
-                            iGantryUpperService.handleVisu(gantrySumTravelImages);
-                        }
+                        iGantryUpperService.handleVisu(JSON.parseObject(sb.toString(), TblGantrySumTravelImage.class));
                         break;
                     case "GBUPLOAD_LOGBUPLOAD"://日志文件按需调取
                         iGantryUpperService.handleLog(JSONObject.parseObject(sb.toString()));
@@ -206,8 +197,8 @@ public class GantryUpperController {
     }
 
     @PostMapping("/test")
-    public AjaxResult test(@RequestBody TblGantryPicture data){
-        iGantryUpperService.handleVipu(data);
+    public AjaxResult test(@RequestBody TblGantryPictureFail data){
+        iGantryUpperService.handleSvipu(data);
         return AjaxResult.success();
     }
 }
