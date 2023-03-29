@@ -12,7 +12,7 @@ import java.util.Date;
  * @time 2022/5/20 17:58
  */
 @Data
-@Table(name = "tbl_gantry_transaction")
+@Table(name = "TBL_GANTRY_TRANSACTION")
 public class TblGantryTransaction implements Serializable {
     /** 版本号 */
     private static final long serialVersionUID = 1L;

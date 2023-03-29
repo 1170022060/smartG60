@@ -19,7 +19,7 @@ import java.util.Date;
  */
 @Component
 @Slf4j
-@RocketMQMessageListener(consumerGroup = "JAVASERVER",
+@RocketMQMessageListener(consumerGroup = "JAVA",
         topic = "LongShortTermPredict_out",
         selectorExpression = "*")
 public class ForecastConsumer implements RocketMQListener<String> {

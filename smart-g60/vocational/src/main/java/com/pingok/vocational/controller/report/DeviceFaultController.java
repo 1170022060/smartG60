@@ -124,7 +124,7 @@ public class DeviceFaultController extends BaseController {
     }
 
     @GetMapping("/countFaultByFaultType")
-    public TableDataInfo getFaultByFaultType(Integer faultType, Date startTime, Date endTime){
+    public TableDataInfo getFaultByFaultType(String faultType, Date startTime, Date endTime){
         startPage();
         List<Map> info = deviceFaultService.selectFaultByFaultType(faultType,startTime,endTime);
         return getDataTable(info);

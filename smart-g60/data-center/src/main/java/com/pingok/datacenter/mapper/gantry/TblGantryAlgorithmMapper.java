@@ -1,5 +1,6 @@
 package com.pingok.datacenter.mapper.gantry;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -12,7 +13,7 @@ import java.util.Map;
  *
  * @author xia
  */
-
+@Mapper
 public interface TblGantryAlgorithmMapper {
 
     @Select({"<script>" +
@@ -24,17 +25,17 @@ public interface TblGantryAlgorithmMapper {
             "substr(b.VEHICLE_PLATE,1,instr(b.VEHICLE_PLATE,'_',-1)-1) as \"licensePlate\" ," +
             "to_char(b.TRANS_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"passTime\" ," +
             "nvl(c.MILEAGE,0) as \"nextGantryDistance\"  from TBL_GANTRY_INFO a " +
-            "left join TBL_GANTRY_TRANSACTION b on b.GANTRY_ID=a.DEVICE_ID and b.VEHICLE_TYPE in(1,2,3,4,11,12,13,14,15,16) and substr(b.VEHICLE_PLATE,instr(b.VEHICLE_PLATE,'_',-1)+1) in('1','4')" +
+            "left join TBL_GANTRY_TRANSACTION_${year} b on b.GANTRY_ID=a.DEVICE_ID and b.VEHICLE_TYPE in(1,2,3,4,11,12,13,14,15,16) and substr(b.VEHICLE_PLATE,instr(b.VEHICLE_PLATE,'_',-1)+1) in('1','4')" +
             "left join TBL_GANTRY_CHARGE_INFO c on c.START_PILE_NO=a.PILE_NO and c.DIRECTION=a.DIRECTION and c.CHARGING_UNIT_TYPE=1 " +
             "where 1=1 " +
             "<when test='startTime != null'> " +
-            " and b.TRANS_TIME &gt;= to_date(#{startTime},'yyyy-mm-dd hh24:mi:ss') " +
+            " and b.TRANS_TIME &gt;= #{startTime} " +
             "</when>"+
             "<when test='endTime != null'> " +
             " and b.TRANS_TIME &lt;= to_date(#{endTime},'yyyy-mm-dd hh24:mi:ss') " +
             "</when>"+
             "</script>"})
-    List<Map> selectGantryAlgorithm(@Param("startTime") String startTime, @Param("endTime")  String endTime);
+    List<Map> selectGantryAlgorithm(@Param("year") String year,@Param("startTime") Date startTime, @Param("endTime")  String endTime);
 
 
     @Select({"<script>" +
@@ -80,18 +81,18 @@ public interface TblGantryAlgorithmMapper {
             "select " +
             "GANTRY_ID as \"gantryId\" ," +
             "substr(VEHICLE_PLATE,1,instr(VEHICLE_PLATE,'_',-1)-1) as \"licensePlate\" ," +
-            "to_char(TRANS_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"passTime\"  from TBL_GANTRY_TRANSACTION " +
+            "to_char(TRANS_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"passTime\"  from TBL_GANTRY_TRANSACTION_${year} " +
             "where 1=1 " +
             "<when test='gantryId != null'> " +
             " and GANTRY_ID = #{gantryId} " +
             "</when>"+
             "<when test='startTime != null'> " +
-            " and TRANS_TIME &gt;= to_date(#{startTime},'yyyy-mm-dd hh24:mi:ss') " +
+            " and TRANS_TIME &gt;= #{startTime} " +
             "</when>"+
             "<when test='endTime != null'> " +
             " and TRANS_TIME &lt;= to_date(#{endTime},'yyyy-mm-dd hh24:mi:ss') " +
             "</when>" +
             "order by TRANS_TIME DESC"+
             "</script>"})
-    List<Map> selectGantryAlgorithmPassRecord(@Param("gantryId") String gantryId,@Param("startTime") String startTime, @Param("endTime")  String endTime);
+    List<Map> selectGantryAlgorithmPassRecord(@Param("year") String year,@Param("gantryId") String gantryId,@Param("startTime") Date startTime, @Param("endTime")  String endTime);
 }

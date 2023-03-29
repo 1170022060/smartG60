@@ -26,9 +26,11 @@ public interface BridgeStatusMapper {
             "tbi.ENTIRETY_RATING as \"entiretyRating\", " +
             "tbi.COMPONENT_RATING as \"componentRating\", " +
             "tbi.DEVICE_STATUS as \"deviceStatus\", " +
+            "t.TEMPERATURE as \"temper\"," +
             "to_char(tbi.UPDATE_TIME,'yyyy-MM-dd HH24:mi:ss') as \"time\" " +
             "FROM " +
             "TBL_BRIDGE_INFO tbi " +
+            "LEFT JOIN TBL_BRIDGE_TEMPERATURE t on t.DEVICE_ID=tbi.SERIAL_NO " +
             "WHERE 1=1 " +
             "<when test='name != null'> " +
             "and tbi.NAME like ('%'||#{name}||'%') " +

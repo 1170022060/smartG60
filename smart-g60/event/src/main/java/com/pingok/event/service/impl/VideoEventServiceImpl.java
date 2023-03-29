@@ -630,6 +630,10 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 enter = 1;
                 currentNum = 1;
                 break;
+            case "202":
+            case "203":
+                fieldId = 3940l;
+                break;
             //南出
             case "201":
                 fieldId = 3940l;

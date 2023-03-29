@@ -88,12 +88,12 @@
         </set>
         where RECORD_ID = #{recordId}
     </update>
-    <select id="selectEnFlow" parameterType="com.pingok.datacenter.domain.trans.vo.EnTranFlow" resultType="java.lang.Integer">
-        select count(1) from ${tableName}
-        where transttime>=#{startTime,jdbcType=TIMESTAMP}
-        and transttime <![CDATA[ < ]]>#{endTime,jdbcType=TIMESTAMP}
-        and left(lanehex,8) in ${stations}
-    </select>
+<!--    <select id="selectEnFlow" parameterType="com.pingok.datacenter.domain.trans.vo.EnTranFlow" resultType="java.lang.Integer">-->
+<!--        select count(1) from ${tableName}-->
+<!--        where transttime>=#{startTime,jdbcType=TIMESTAMP}-->
+<!--        and transttime <![CDATA[ < ]]>#{endTime,jdbcType=TIMESTAMP}-->
+<!--        and left(lanehex,8) in ${stations}-->
+<!--    </select>-->
 
 
 </mapper>

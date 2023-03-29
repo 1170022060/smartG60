@@ -85,7 +85,7 @@ public class TblEmergencyGroupServiceImpl implements TblEmergencyGroupService {
     }
 
     @Override
-    public List<Map> selectDeptUser(Integer deptId) {
-        return tblEmergencyGroupMapper.selectDeptUser(deptId);
+    public List<Map> selectDeptUser() {
+        return tblEmergencyGroupMapper.selectDeptUser();
     }
 }

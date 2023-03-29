@@ -11,6 +11,7 @@ import java.util.Date;
  * @time 2022/5/22 10:37
  */
 @Data
+
 public class TblGantryPictureFail implements Serializable {
     /** 版本号 */
     private static final long serialVersionUID = 1L;

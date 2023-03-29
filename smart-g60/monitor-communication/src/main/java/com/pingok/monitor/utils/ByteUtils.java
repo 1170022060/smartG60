@@ -110,7 +110,7 @@ public class ByteUtils {
     /**
      * 三思 v4.20，帧转义
      */
-    public static byte[] TransPkg(byte[] buf)
+    public static byte[] TransPkg(byte[] buf, Integer start)
     {
         // 帧数据或帧校验中如果有某个字符等于帧头、帧尾或0x1b，则在发送时需转为两个字节
         // 0x02 -> 0x1b, 0xe7
@@ -125,7 +125,7 @@ public class ByteUtils {
 
         //前5位是：1帧头 + 2地址 + 2类型，li.Count - 1是去掉帧尾
         byte r = 0x1b; //要转义成什么
-        for (int i = 5; i < li.size() - 1; ++i)
+        for (int i = start; i < li.size() - 1; ++i)
         {
             byte b = li.get(i);
             switch (b)

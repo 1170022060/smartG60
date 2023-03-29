@@ -9,6 +9,7 @@ package com.pingok.datacenter.service.gantry;
 import com.pingok.datacenter.domain.gantry.TblGantryChargeInfo;
 import com.pingok.datacenter.domain.gantry.model.ChargeFlowModel;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public interface IGantryAlgorithm {
      * @param endTime 结束时间
      * @return 结果
      */
-    List<Map> selectGantryAlgorithm(String startTime, String endTime);
+    List<Map> selectGantryAlgorithm(Date startTime, String endTime);
 
     /**
      * 根据上下行获取对应门架集合
@@ -39,7 +40,7 @@ public interface IGantryAlgorithm {
      * @param endTime 结束时间
      * @return 结果
      */
-    List<Map> selectGantryAlgorithmPassRecord(String gantryId,String startTime, String endTime);
+    List<Map> selectGantryAlgorithmPassRecord(String gantryId, Date startTime, String endTime);
 
     /**
      * 获取收费单元信息（含理论日收益预测因子）

@@ -164,4 +164,6 @@ public class TblGantryTravelImage implements Serializable {
 
     /** rsuMatchReliability */
     private Integer rsuMatchReliability;
+
+    private String year;
 }

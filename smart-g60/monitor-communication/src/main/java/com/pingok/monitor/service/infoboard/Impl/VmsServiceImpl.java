@@ -9,6 +9,7 @@ import com.pingok.monitor.domain.common.MbsAttribute;
 import com.pingok.monitor.domain.device.TblDeviceInfo;
 import com.pingok.monitor.domain.infoboard.DevInfo;
 import com.pingok.monitor.domain.infoboard.PlaylstWndInfo;
+import com.pingok.monitor.domain.infoboard.SansiParkingPubInfo;
 import com.pingok.monitor.domain.infoboard.VmsPubInfo;
 import com.pingok.monitor.service.common.IModbusService;
 import com.pingok.monitor.service.common.ISocketService;
@@ -52,13 +53,14 @@ public class VmsServiceImpl implements IVmsService {
     @Override
     public JSONObject publish(String pubInfo) {
 
-        int retCode = 200;
-
         JSONObject jo = JSONObject.parseObject(pubInfo);
 //        JSONArray devInfoList = jo.getJSONArray("devInfo");
         List<DevInfo> devInfoList = JSON.parseArray(JSONObject.toJSONString(jo.get("devInfo")), DevInfo.class);
         JSONArray dataList = jo.getJSONArray("data");
-        int model = jo.getInteger("model");
+        int model = 0;
+        if(jo.containsKey("model")) {
+            model = jo.getInteger("model");
+        }
         List<List<VmsPubInfo>> pubList = new ArrayList<>();
         for (int i = 0; i < dataList.size(); ++i) {
             List<VmsPubInfo> vmsInfoList = JSON.parseArray(JSONObject.toJSONString(dataList.get(i)), VmsPubInfo.class);
@@ -83,12 +85,13 @@ public class VmsServiceImpl implements IVmsService {
                 case InfoBoardConfig.DONGHAI_F:
                     ret = publishDonghaiF(dev, pubList.get(0));
                     break;
+                case InfoBoardConfig.SANSI_PLIST:
                 case InfoBoardConfig.SANSI_PLIST_MULTI:
                     ret = publishSansiPlistMulti(dev, playlst);
 //                    ret = 200;
                     break;
                 default:
-                    retCode = 500;
+                    ret = 500;
                     break;
             }
             JSONObject joRet = new JSONObject();
@@ -100,6 +103,72 @@ public class VmsServiceImpl implements IVmsService {
         result.put("devList", jaResult);
 
         return result;
+    }
+
+    @Override
+    public boolean publish(SansiParkingPubInfo parkInfo) {
+        boolean ret = true;
+        byte[] sendPkg = null;
+//        String infoType = parkInfo.getInfoType() == 1 ? " 01 " : " 0A ";
+        switch (parkInfo.getDevPos()){
+            case 1: {
+                byte[] data = new byte[6];
+                data[0] = (byte)parkInfo.getColor1_ke().intValue();
+                int num = Integer.parseInt(parkInfo.getText1_ke());
+                data[1] = (byte)(num / 256);
+                data[2] = (byte)(num % 256);
+                data[3] = (byte)parkInfo.getColor1_huo().intValue();
+                num = Integer.parseInt(parkInfo.getText1_huo());
+                data[4] = (byte)(num / 256);
+                data[5] = (byte)(num % 256);
+                sendPkg = PacketParking(1, (byte) 0x01, data);
+                break;
+            }
+            case 2: {
+                byte[] data = new byte[9];
+                data[0] = (byte)parkInfo.getColor2A_huoA().intValue();
+                int num = Integer.parseInt(parkInfo.getText2A_huoA());
+                data[1] = (byte)(num / 256);
+                data[2] = (byte)(num % 256);
+                data[3] = (byte)parkInfo.getColor2A_huoB().intValue();
+                num = Integer.parseInt(parkInfo.getText2A_huoB());
+                data[4] = (byte)(num / 256);
+                data[5] = (byte)(num % 256);
+                data[6] = (byte)parkInfo.getColor2A_ke().intValue();
+                num = Integer.parseInt(parkInfo.getText2A_ke());
+                data[7] = (byte)(num / 256);
+                data[8] = (byte)(num % 256);
+                sendPkg = PacketParking(1, (byte) 0x01, data);
+                break;
+            }
+            case 3: {
+                byte[] data = new byte[6];
+                data[0] = (byte)parkInfo.getColor2BC_huoB().intValue();
+                int num = Integer.parseInt(parkInfo.getText2BC_huoB());
+                data[1] = (byte)(num / 256);
+                data[2] = (byte)(num % 256);
+                data[3] = (byte)parkInfo.getColor2BC_ke().intValue();
+                num = Integer.parseInt(parkInfo.getText2BC_ke());
+                data[4] = (byte)(num / 256);
+                data[5] = (byte)(num % 256);
+                sendPkg = PacketParking(1, (byte) 0x01, data);
+                break;
+            }
+            default: ret = false; break;
+        }
+
+        int recv = 1;
+        Socket skt = null;
+        try {
+            skt = iSocketService.clientSocket(parkInfo.getDevIp(), 3434);
+            recv = iSocketService.writeAndResult(sendPkg, skt);
+            skt.close();
+        } catch (Exception ex) {
+            log.error("情报板发布：上传文件异常！" + ex.getMessage());
+            recv = -1;
+        }
+        ret = recv != -1;
+        return ret;
     }
 
     @Override
@@ -336,7 +405,7 @@ public class VmsServiceImpl implements IVmsService {
         return retCode;
     }
 
-    /* 三思 播放列表 多分区
+    /* 三思 播放列表 多分区 & v4.20（V3全彩屏）
      */
     private int publishSansiPlistMulti(DevInfo dev, String playlst) {
         int retCode = 1;
@@ -1003,6 +1072,54 @@ public class VmsServiceImpl implements IVmsService {
                     }
                 }
             }
+            else if(dev.getProtocol().equals(InfoBoardConfig.SANSI_PLIST)) {
+                if(pubList.size() > 0) {
+                    StringBuilder playlstAll = new StringBuilder();
+                    playlstAll.append("[list]" + nl);
+                    List<VmsPubInfo> editList = pubList.get(0);
+                    playlstAll.append("item_no=" + editList.size() + nl);
+                    StringBuilder playlstItem = new StringBuilder();
+                    StringBuilder playlstAllItem = new StringBuilder();
+
+                    int xPos = 0, yPos = 0;
+                    for(int k=0; k < editList.size(); ++k) {
+                        VmsPubInfo edit = editList.get(k);
+                        playlstItem.setLength(0); //清空
+                        playlstItem.append("item"+k+"=500,1,0,");
+                        //text <br>替换为\n
+                        //计算文字的xy坐标，x按最长文字算，y按行数
+                        String[] splitText = edit.getContent().split("<br>");
+                        int fontSize = Integer.parseInt(edit.getTextSize());
+                        if (splitText.length > 0) {
+                            //取最长的x
+                            String splitTemp = splitText[0];
+                            for (int idx = 1; idx < splitText.length; ++idx) {
+                                if (splitText[idx].length() > splitTemp.length()) splitTemp = splitText[idx];
+                            }
+                            int textXLen = splitTemp.length() * fontSize;
+                            int textYLen = splitText.length * fontSize;
+                            if (textXLen > W) {
+                                xPos = 0;
+                            } else {
+                                xPos = (W - textXLen) / 2;
+                            }
+                            if (textYLen > H) {
+                                yPos = 0;
+                            } else {
+                                yPos = (H - textYLen) / 2;
+                            }
+                        }
+                        String xy = String.format("%03d%03d", xPos, yPos);
+                        String text = edit.getContent().replace("<br>", "\\n");
+                        playlstItem.append("\\C" + xy);
+                        playlstItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, edit.getTypeface()) + fontSize + fontSize);
+                        playlstItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, edit.getTextColor()) + text);
+                    }
+                    playlstAllItem.append(playlstItem + nl);
+                    playlstAll.append(playlstAllItem);
+                    playlst = playlstAll.toString();
+                }
+            }
         }
         return playlst;
     }
@@ -1162,7 +1279,6 @@ public class VmsServiceImpl implements IVmsService {
 
     // 判断多分区（A7,A8）图片前缀是 \B还是\P
 
-
     // playlst上传文件
     private int ULOneFile10(Integer slaveID, String ip, Integer port, byte[] data) {
         byte[] sendPkg = PacketPlaylst(slaveID, "10", data);
@@ -1212,7 +1328,40 @@ public class VmsServiceImpl implements IVmsService {
         ret[pos] = 0x03;
 
         //转义
-        byte[] sendPkg = ByteUtils.TransPkg(ret);
+        byte[] sendPkg = ByteUtils.TransPkg(ret, 5);
+        System.out.println("长度：" + sendPkg.length + "，发送报文：" + ByteUtils.bytes2hex(sendPkg));
+
+        return sendPkg;
+    }
+
+    // 枫泾停车场
+    private byte[] PacketParking(int slaveID, byte pkgType, byte[] data) {
+
+        int len = data == null ? 0 : data.length;
+        int pos = 0;
+        byte[] ret = new byte[len + 7];
+        ret[pos++] = 0x02;
+        String sid = String.format("%02d", slaveID);
+        ret[pos++] = (byte) (sid.charAt(0) - '0');
+        ret[pos++] = (byte) (sid.charAt(1) - '0');
+        ret[pos++] = pkgType;
+
+        if (len > 0) {
+            System.arraycopy(data, 0, ret, 4, len);
+        }
+        pos += len;
+
+        //校验
+        byte[] crcBytes = new byte[ret.length - 4];
+        System.arraycopy(ret, 1, crcBytes, 0, crcBytes.length);
+        byte[] crc2 = ByteUtils.GetCrc(crcBytes, crcBytes.length);
+        ret[pos++] = crc2[0];
+        ret[pos++] = crc2[1];
+
+        ret[pos] = 0x03;
+
+        //转义
+        byte[] sendPkg = ByteUtils.TransPkg(ret, 4);
         System.out.println("长度：" + sendPkg.length + "，发送报文：" + ByteUtils.bytes2hex(sendPkg));
 
         return sendPkg;

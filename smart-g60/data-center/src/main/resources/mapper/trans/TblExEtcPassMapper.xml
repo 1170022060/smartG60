@@ -5,7 +5,8 @@
 <mapper namespace="com.pingok.datacenter.mapper.trans.TblExEtcPassMapper">
 
     <resultMap type="com.pingok.datacenter.domain.trans.TblExEtcPass" id="TblExEtcPassResult">
-        <id     property="recordId"  column="record_id"   />
+        <id     property="id"  column="id"   />
+        <result     property="recordId"  column="record_id"   />
         <result property="transTime"  column="trans_time"   />
         <result property="vehLwh"  column="veh_lwh"   />
         <result property="etcCardId"  column="etc_card_id"   />
@@ -43,6 +44,7 @@
     <insert id="insertExEtcPass" parameterType="com.pingok.datacenter.domain.trans.TblExEtcPass">
         insert into ${tableName}(
         <if test="transTime != null ">trans_time,</if>
+        <if test="recordId != null ">record_id,</if>
         <if test="vehLwh != null ">veh_lwh,</if>
         <if test="etcCardId != null ">etc_card_id,</if>
         <if test="etcCardVer != null ">etc_card_ver,</if>
@@ -74,9 +76,10 @@
         <if test="mac != null ">mac,</if>
         <if test="tac != null ">tac,</if>
         <if test="usedTime != null ">used_time,</if>
-        record_id
+        id
         )values(
         <if test="transTime != null ">#{transTime},</if>
+        <if test="recordId != null ">#{recordId},</if>
         <if test="vehLwh != null ">#{vehLwh},</if>
         <if test="etcCardId != null ">#{etcCardId},</if>
         <if test="etcCardVer != null ">#{etcCardVer},</if>
@@ -108,7 +111,7 @@
         <if test="mac != null ">#{mac},</if>
         <if test="tac != null ">#{tac},</if>
         <if test="usedTime != null ">#{usedTime},</if>
-        #{recordId}
+        #{id}
         )
     </insert>
 </mapper>

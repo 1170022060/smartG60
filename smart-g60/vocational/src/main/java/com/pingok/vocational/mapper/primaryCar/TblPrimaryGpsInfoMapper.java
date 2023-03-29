@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,14 @@ public interface TblPrimaryGpsInfoMapper {
             "where 1=1 " +
             "<when test='vehPlate != null'>" +
             "and LICENSE like '%' || #{vehPlate} || '%' " +
-            "</when> " +
+            "</when>"+
+            "<when test='startTime != null'> " +
+            " and TIME &gt;= #{startTime} " +
+            "</when>"+
+            "<when test='endTime != null'> " +
+            " and TIME &lt;= #{endTime} " +
+            "</when>"+
+            " order by TIME DESC " +
             "</script>"})
-    List<Map> selectPrimaryGpsInfo(@Param("vehPlate") String vehPlate);
+    List<Map> selectPrimaryGpsInfo(@Param("vehPlate") String vehPlate, @Param("startTime")Date startTime,@Param("endTime")Date endTime);
 }

@@ -3,7 +3,6 @@ package com.pingok.algorithmBeiJing.mqConsumer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.algorithmBeiJing.domain.TblRoadCo2PerProfit;
-import com.pingok.algorithmBeiJing.domain.TblRoadProfitPred;
 import com.pingok.algorithmBeiJing.service.IRoadService;
 import com.ruoyi.common.core.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-@RocketMQMessageListener(consumerGroup = "JAVASERVER",
+@RocketMQMessageListener(consumerGroup = "JAVA",
         topic = "CarbonEmission_out",
         selectorExpression = "*")
 public class Co2PerProfitConsumer implements RocketMQListener<String> {
@@ -34,5 +33,6 @@ public class Co2PerProfitConsumer implements RocketMQListener<String> {
         tblRoadCo2PerProfit.setCo2PerProfit(object.getBigDecimal("co2_per_profit"));
         tblRoadCo2PerProfit.setIncrementPerHour(object.getBigDecimal("increment_per_hour"));
         tblRoadCo2PerProfit.setTime(DateUtils.getNowDate());
+        iRoadService.addRoadCo2PerProfit(tblRoadCo2PerProfit);
     }
 }

@@ -74,7 +74,7 @@ public class TblSpecialRecord implements Serializable {
     /**
      * 操作员ID
      */
-    private Integer optId;
+    private Long optId;
 
     /**
      * 操作员姓名
@@ -147,7 +147,11 @@ public class TblSpecialRecord implements Serializable {
     @Transient
     private String typeValue;
 
-    public TblSpecialRecord(Long id, String recordId, String netWork, String stationId, String laneId, Integer laneType, String markName, Date workDate, Date time, Integer optId, String optName, Integer shift, Integer specialLevel, Integer type, String message, Integer status, Integer winId, Integer transStatus, Integer optType, String handleMessage, Date createTime, Date updateTime, Long createUserId, Long updateUserId) {
+    public TblSpecialRecord() {
+
+    }
+
+    public TblSpecialRecord(Long id, String recordId, String netWork, String stationId, String laneId, Integer laneType, String markName, Date workDate, Date time, Long optId, String optName, Integer shift, Integer specialLevel, Integer type, String message, Integer status, Integer winId, Integer transStatus, Integer optType, String handleMessage, Date createTime, Date updateTime, Long createUserId, Long updateUserId) {
         this.id = id;
         this.recordId = recordId;
         this.netWork = netWork;

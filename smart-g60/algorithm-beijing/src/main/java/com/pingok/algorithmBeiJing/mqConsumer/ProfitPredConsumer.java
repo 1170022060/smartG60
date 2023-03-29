@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-@RocketMQMessageListener(consumerGroup = "JAVASERVER",
-        topic = "IncomeForecast_out",
+@RocketMQMessageListener(consumerGroup = "JAVA",
+        topic = "IncomeForeCast_out",
         selectorExpression = "*")
 public class ProfitPredConsumer implements RocketMQListener<String> {
 
