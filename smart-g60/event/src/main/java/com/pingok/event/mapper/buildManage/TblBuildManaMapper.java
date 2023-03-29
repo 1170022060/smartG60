@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.sql.Array;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,4 +45,14 @@ public interface TblBuildManaMapper extends CommonRepository<TblBuildManage> {
             "</when>"+
             "</script>"})
     List<Map> getBuildManaInfo(@Param("content") String content, @Param("startTime") Date startTime, @Param("endTime")  Date endTime);
+
+    @Select("select  " +
+            "ID as \"id\"," +
+            "START_TIME as  \"startTime\", " +
+            "END_TIME as \"endTime\", " +
+            "START_PILE_NUM as \"startPileNo\", " +
+            "END_PILE_NUM as \"endPileNo\" " +
+            "from TBL_BUILD_MANAGE " +
+            "order by CREATE_TIME DESC ")
+    List<Map> buildManaList();
 }

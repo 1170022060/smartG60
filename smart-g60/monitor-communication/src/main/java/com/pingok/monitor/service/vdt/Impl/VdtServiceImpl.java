@@ -68,8 +68,8 @@ public class VdtServiceImpl implements IVdtService {
                     short[] data = iModbusService.readHoldingRegisterByShort(mbs);
                     if(data != null && data.length >= nRegCnt) {
                         byte[] bysData = shortToByte(data); // 每个byte是十进制显示
-                        String resp = bytesToHex(bysData);
-                        Console.log("车检器报文：" + resp);
+//                        String resp = bytesToHex(bysData);
+//                        Console.log("车检器报文：" + resp);
 //                        解析，参照协议《第二部分 环形线圈式车辆检测器功能要求及用户层通信规程1.1.1.doc》
                         int pos = 8*2; //前面要跳过8个数据
                         // 这里线圈车检器上下行是一起的，要分开

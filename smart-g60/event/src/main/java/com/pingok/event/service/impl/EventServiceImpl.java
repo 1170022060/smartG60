@@ -9,6 +9,7 @@ import com.pingok.event.domain.TblEventRecord;
 import com.pingok.event.mapper.TblEventAlarmMapper;
 import com.pingok.event.mapper.TblEventHandleMapper;
 import com.pingok.event.mapper.TblEventRecordMapper;
+import com.pingok.event.mapper.buildManage.TblBuildManaMapper;
 import com.pingok.event.service.IEventService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.exception.ServiceException;
@@ -31,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.sql.Array;
 import java.text.ParseException;
 import java.util.*;
 
@@ -71,6 +73,9 @@ public class EventServiceImpl implements IEventService {
 
     @Autowired
     private RemoteDeviceMonitorService remoteDeviceMonitorService;
+
+    @Autowired
+    private TblBuildManaMapper tblBuildManaMapper;
 
 
     @Override
@@ -595,6 +600,23 @@ public class EventServiceImpl implements IEventService {
         tblEventHandle.setUserId(SecurityUtils.getUserId());
         tblEventHandle.setHandleContent("事件发生");
         tblEventHandleMapper.insert(tblEventHandle);
+
+        List<Map> buildManaList = tblBuildManaMapper.buildManaList();
+
+        for (int i=0;i<buildManaList.size();i++){
+            Map<String,Object> map = buildManaList.get(i);
+            Double start = Double.parseDouble(map.get("startPileNo").toString().replace("K",""));
+            Double end = Double.parseDouble(map.get("endPileNo").toString().replace("K",""));
+            Double position = Double.parseDouble(tblEventRecord.getPileNo().substring(1,3));
+            Date startTime = (Date) map.get("startTime");
+            Date endTime = (Date) map.get("endTime");
+            if (tblEventRecord.getEventTime().after(startTime) && tblEventRecord.getEventTime().before(endTime)){
+                if(start.compareTo(position) <0 &&  position.compareTo(end) <0){
+                    return r;
+                }
+            }
+        }
+
 
         List<TblEventAlarm> list = tblEventAlarmMapper.selectAll();
 
