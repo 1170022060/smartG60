@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @author
@@ -41,8 +42,8 @@ public class TblEventPlateInfo implements Serializable {
     private Integer uiDay; // int 记录时间的天数
     private Integer uiHour; // int 记录时间的小时
     private Integer uiMin; // int 记录时间的分钟
-    private Integer uiWidth; // int 图片宽度
-    private Integer uiHeight; // int 图片高度
+    private BigDecimal uiWidth; // int 图片宽度
+    private BigDecimal uiHeight; // int 图片高度
     private Long ubiTime; // long 记录时间 (ms)
     private String szVehiclePlateRegion; // String 车牌所在区域矩形
     private Long ubiSourceId; // long 视频源id
