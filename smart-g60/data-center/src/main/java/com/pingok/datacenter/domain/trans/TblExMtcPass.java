@@ -16,6 +16,9 @@ public class TblExMtcPass implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    private Long id;
+
     /** 出口时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date transTime;
@@ -56,6 +59,14 @@ public class TblExMtcPass implements Serializable {
 
     /** 表名   */
     private String tableName;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getRecordId() {
         return recordId;

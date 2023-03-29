@@ -74,6 +74,13 @@ public class TransServiceImpl implements ITransService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         String year = sdf.format(tblEnEtcPass.getTransTime());
         tblEnEtcPass.setRecordId(recordId);
+        tblEnEtcPass.setId(remoteIdProducerService.nextId());
+//        if (tblEnEtcPass.getEtcCardId() == null){
+//            tblEnEtcPass.setEtcCardId((long) 0);
+//        }
+//        if (tblEnEtcPass.getEtcCardNet() == null){
+//            tblEnEtcPass.setEtcCardNet("'0'");
+//        }
         tblEnEtcPass.setTableName("TBL_EN_ETC_PASS_"+ year);
         return tblEnEtcPassMapper.insertEnEtcPass(tblEnEtcPass);
     }
@@ -83,6 +90,10 @@ public class TransServiceImpl implements ITransService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         String year = sdf.format(tblEnMtcPass.getTransTime());
         tblEnMtcPass.setRecordId(recordId);
+        tblEnMtcPass.setId(remoteIdProducerService.nextId());
+//        if (tblEnMtcPass.getCpcCardId() == null){
+//            tblEnMtcPass.setCpcCardId((long) 0);
+//        }
         tblEnMtcPass.setTableName("TBL_EN_MTC_PASS_"+ year);
         return tblEnMtcPassMapper.insertEnMtcPass(tblEnMtcPass);
     }
@@ -106,6 +117,13 @@ public class TransServiceImpl implements ITransService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         String year = sdf.format(tblExEtcPass.getTransTime());
         tblExEtcPass.setRecordId(recordId);
+        tblExEtcPass.setId(remoteIdProducerService.nextId());
+//        if (tblExEtcPass.getEtcCardId() == null){
+//            tblExEtcPass.setEtcCardId((long) 0);
+//        }
+//        if (tblExEtcPass.getEtcCardNet() == null){
+//            tblExEtcPass.setEtcCardNet("'0'");
+//        }
         tblExEtcPass.setTableName("TBL_EX_ETC_PASS_"+ year);
         return tblExEtcPassMapper.insertExEtcPass(tblExEtcPass);
     }
@@ -115,6 +133,10 @@ public class TransServiceImpl implements ITransService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         String year = sdf.format(tblExMtcPass.getTransTime());
         tblExMtcPass.setRecordId(recordId);
+        tblExMtcPass.setId(remoteIdProducerService.nextId());
+//        if (tblExMtcPass.getCpcCardId() == null){
+//            tblExMtcPass.setCpcCardId((long) 0);
+//        }
         tblExMtcPass.setTableName("TBL_EX_MTC_PASS_"+ year);
         return tblExMtcPassMapper.insertExMtcPass(tblExMtcPass);
     }

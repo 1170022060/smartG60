@@ -6,4 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface TblGantryPictureFailMapper extends CommonRepository<TblGantryPictureFail> {
+
+    int addTblGantryPictureFail(TblGantryPictureFail tblGantryPictureFail);
 }

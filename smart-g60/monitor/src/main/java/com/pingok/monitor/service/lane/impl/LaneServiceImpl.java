@@ -45,7 +45,9 @@ public class LaneServiceImpl implements ILaneService {
             criteria.andEqualTo("stationId", stationId);
             criteria.andEqualTo("status", 0);
             criteria.andEqualTo("laneId", enLane.get(i).get("laneId"));
-            enLane.get(i).put("specialRecords", tblSpecialRecordMapper.selectByExample(example));
+            Object obj=tblSpecialRecordMapper.selectByExample(example);
+            enLane.get(i).put("specialRecords", obj);
+
             enLane.get(i).put("cameraArr",tblLaneStatusMapper.getCameraId(enLane.get(i).get("laneHex").toString()));
         }
         laneEnum.setEnLane(enLane);
