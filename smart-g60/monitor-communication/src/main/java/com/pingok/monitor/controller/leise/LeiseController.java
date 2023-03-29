@@ -2,14 +2,12 @@ package com.pingok.monitor.controller.leise;
 
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.monitor.domain.infoboard.SansiParkingPubInfo;
-import com.pingok.monitor.service.infoboard.IFcmsService;
 import com.pingok.monitor.service.infoboard.IVmsService;
 import com.pingok.monitor.service.leise.ILeiseService;
 import com.pingok.monitor.service.leise.ILeiseStoreService;
 import com.pingok.monitor.service.pilotLight.IPilotLightService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
-import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

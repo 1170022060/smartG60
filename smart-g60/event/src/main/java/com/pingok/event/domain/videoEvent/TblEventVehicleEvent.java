@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @author
@@ -36,8 +37,8 @@ public class TblEventVehicleEvent implements Serializable {
     private Integer uiDay; // int 记录时间的天数
     private Integer uiHour; // int 记录时间的小时
     private Integer uiMin; // Integer 记录时间的分钟
-    private Integer uiWidth; // Integer 图片宽度
-    private Integer uiHeight; // int 图片高度
+    private BigDecimal uiWidth; // Integer 图片宽度
+    private BigDecimal uiHeight; // int 图片高度
     private Integer uiVehiclePlateColor; // int 车牌颜色
     private Integer uiVehicleColor1; // int 车身颜色1（见附录）
     private Integer uiVehicleColor2; // int 车身颜色2（见附录）

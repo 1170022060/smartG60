@@ -4,10 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.monitor.domain.device.TblDeviceInfo;
-import com.pingok.monitor.domain.infoboard.SanSiInfo;
 import com.pingok.monitor.domain.infoboard.SansiParkingPubInfo;
 import com.pingok.monitor.service.device.IStatusService;
-import com.pingok.monitor.service.infoboard.IFcmsService;
 import com.pingok.monitor.service.infoboard.IVmsService;
 import com.pingok.monitor.service.pilotLight.IPilotLightService;
 import com.pingok.monitor.service.smartToilet.ISmartToiletService;
@@ -42,8 +40,6 @@ public class Consumer {
     private IStatusService iStatusService;
     @Autowired
     private IVmsService iVmsService;
-    @Autowired
-    private IFcmsService iFcmsService;
     @Autowired
     private IPilotLightService iPilotLightService;
     @Autowired
