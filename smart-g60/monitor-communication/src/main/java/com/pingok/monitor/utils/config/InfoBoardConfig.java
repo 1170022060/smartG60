@@ -18,5 +18,8 @@ public class InfoBoardConfig {
     // 三思多分区 A板
     public static final String SANSI_PLIST_MULTI = "sansi_plist_multi";
 
+    // 三思playlst全彩屏
+    public static final String SANSI_PLIST = "sansi_plist";
+
     public static final String SANSI_FENGJING = "sansi_fengjing";
 }

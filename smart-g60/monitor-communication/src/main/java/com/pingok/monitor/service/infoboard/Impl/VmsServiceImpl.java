@@ -53,13 +53,14 @@ public class VmsServiceImpl implements IVmsService {
     @Override
     public JSONObject publish(String pubInfo) {
 
-        int retCode = 200;
-
         JSONObject jo = JSONObject.parseObject(pubInfo);
 //        JSONArray devInfoList = jo.getJSONArray("devInfo");
         List<DevInfo> devInfoList = JSON.parseArray(JSONObject.toJSONString(jo.get("devInfo")), DevInfo.class);
         JSONArray dataList = jo.getJSONArray("data");
-        int model = jo.getInteger("model");
+        int model = 0;
+        if(jo.containsKey("model")) {
+            model = jo.getInteger("model");
+        }
         List<List<VmsPubInfo>> pubList = new ArrayList<>();
         for (int i = 0; i < dataList.size(); ++i) {
             List<VmsPubInfo> vmsInfoList = JSON.parseArray(JSONObject.toJSONString(dataList.get(i)), VmsPubInfo.class);
@@ -84,12 +85,13 @@ public class VmsServiceImpl implements IVmsService {
                 case InfoBoardConfig.DONGHAI_F:
                     ret = publishDonghaiF(dev, pubList.get(0));
                     break;
+                case InfoBoardConfig.SANSI_PLIST:
                 case InfoBoardConfig.SANSI_PLIST_MULTI:
                     ret = publishSansiPlistMulti(dev, playlst);
 //                    ret = 200;
                     break;
                 default:
-                    retCode = 500;
+                    ret = 500;
                     break;
             }
             JSONObject joRet = new JSONObject();
@@ -109,7 +111,19 @@ public class VmsServiceImpl implements IVmsService {
         byte[] sendPkg = null;
 //        String infoType = parkInfo.getInfoType() == 1 ? " 01 " : " 0A ";
         switch (parkInfo.getDevPos()){
-            case 1: {}
+            case 1: {
+                byte[] data = new byte[6];
+                data[0] = (byte)parkInfo.getColor1_ke().intValue();
+                int num = Integer.parseInt(parkInfo.getText1_ke());
+                data[1] = (byte)(num / 256);
+                data[2] = (byte)(num % 256);
+                data[3] = (byte)parkInfo.getColor1_huo().intValue();
+                num = Integer.parseInt(parkInfo.getText1_huo());
+                data[4] = (byte)(num / 256);
+                data[5] = (byte)(num % 256);
+                sendPkg = PacketParking(1, (byte) 0x01, data);
+                break;
+            }
             case 2: {
                 byte[] data = new byte[9];
                 data[0] = (byte)parkInfo.getColor2A_huoA().intValue();
@@ -391,7 +405,7 @@ public class VmsServiceImpl implements IVmsService {
         return retCode;
     }
 
-    /* 三思 播放列表 多分区
+    /* 三思 播放列表 多分区 & v4.20（V3全彩屏）
      */
     private int publishSansiPlistMulti(DevInfo dev, String playlst) {
         int retCode = 1;
@@ -1058,6 +1072,54 @@ public class VmsServiceImpl implements IVmsService {
                     }
                 }
             }
+            else if(dev.getProtocol().equals(InfoBoardConfig.SANSI_PLIST)) {
+                if(pubList.size() > 0) {
+                    StringBuilder playlstAll = new StringBuilder();
+                    playlstAll.append("[list]" + nl);
+                    List<VmsPubInfo> editList = pubList.get(0);
+                    playlstAll.append("item_no=" + editList.size() + nl);
+                    StringBuilder playlstItem = new StringBuilder();
+                    StringBuilder playlstAllItem = new StringBuilder();
+
+                    int xPos = 0, yPos = 0;
+                    for(int k=0; k < editList.size(); ++k) {
+                        VmsPubInfo edit = editList.get(k);
+                        playlstItem.setLength(0); //清空
+                        playlstItem.append("item"+k+"=500,1,0,");
+                        //text <br>替换为\n
+                        //计算文字的xy坐标，x按最长文字算，y按行数
+                        String[] splitText = edit.getContent().split("<br>");
+                        int fontSize = Integer.parseInt(edit.getTextSize());
+                        if (splitText.length > 0) {
+                            //取最长的x
+                            String splitTemp = splitText[0];
+                            for (int idx = 1; idx < splitText.length; ++idx) {
+                                if (splitText[idx].length() > splitTemp.length()) splitTemp = splitText[idx];
+                            }
+                            int textXLen = splitTemp.length() * fontSize;
+                            int textYLen = splitText.length * fontSize;
+                            if (textXLen > W) {
+                                xPos = 0;
+                            } else {
+                                xPos = (W - textXLen) / 2;
+                            }
+                            if (textYLen > H) {
+                                yPos = 0;
+                            } else {
+                                yPos = (H - textYLen) / 2;
+                            }
+                        }
+                        String xy = String.format("%03d%03d", xPos, yPos);
+                        String text = edit.getContent().replace("<br>", "\\n");
+                        playlstItem.append("\\C" + xy);
+                        playlstItem.append("\\f" + fontCvt(InfoBoardConfig.SANSI_PLIST_MULTI, edit.getTypeface()) + fontSize + fontSize);
+                        playlstItem.append("\\c" + fontColorCvt(InfoBoardConfig.SANSI_PLIST_MULTI, edit.getTextColor()) + text);
+                    }
+                    playlstAllItem.append(playlstItem + nl);
+                    playlstAll.append(playlstAllItem);
+                    playlst = playlstAll.toString();
+                }
+            }
         }
         return playlst;
     }
@@ -1216,7 +1278,6 @@ public class VmsServiceImpl implements IVmsService {
     }
 
     // 判断多分区（A7,A8）图片前缀是 \B还是\P
-
 
     // playlst上传文件
     private int ULOneFile10(Integer slaveID, String ip, Integer port, byte[] data) {

@@ -46,8 +46,13 @@ public class LeiseController extends BaseController {
         return AjaxResult.success();
     }
 
-    @PostMapping("/test")
+    @PostMapping("/testParking")
     public void test(@RequestBody SansiParkingPubInfo dt) {
         iVmsService.publish(dt);
+    }
+
+    @PostMapping("/testA9")
+    public JSONObject testA9(@RequestBody JSONObject obj) {
+        return iVmsService.publish(obj.toJSONString());
     }
 }
