@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-@RocketMQMessageListener(consumerGroup = "JAVASERVER",
+@RocketMQMessageListener(consumerGroup = "JAVA",
         topic = "Trajectory_Data",
         selectorExpression = "request")
 public class TrajectoryDataConsumer implements RocketMQListener<String> {

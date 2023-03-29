@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-@RocketMQMessageListener(consumerGroup = "JAVASERVER",
+@RocketMQMessageListener(consumerGroup = "JAVA",
         topic = "Event_Statistic",
         selectorExpression = "*")
 public class EventStatisticConsumer implements RocketMQListener<String> {
