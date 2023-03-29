@@ -804,12 +804,6 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 enter = 1;
                 currentNum = 1;
                 break;
-            case "202":
-                fieldId = 3940l;
-                break;
-            case "203":
-                fieldId = 3940l;
-                break;
             //南出
             case "201":
                 fieldId = 3940l;
@@ -864,7 +858,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 vehType = 2;
                 break;
         }
-        if (vehType != 0) {
+        if (vehType != 0 && fieldId != 0) {
             List<TblParkingStatistics> list;
             TblParkingStatistics statistics;
             Example example = new Example(TblParkingStatistics.class);
