@@ -581,38 +581,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 tblParkingLot.setSurplus((tblParkingLot.getSurplus() - 1) > 0 ? (tblParkingLot.getSurplus() - 1) : 0);
                 tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
 
-                r = remoteDeviceMonitorService.selectByDeviceId("FCMS03");
-                if (r.getCode() == R.SUCCESS && r.getData() != null) {
-                    JSONObject params = new JSONObject();
-                    params.put("devIp",r.getData().getDeviceIp());
-                    params.put("devPos",3);
-                    params.put("infoType",1);
-                    // 货B
-                    params.put("text2BC_huoB",tblParkingLot.getSurplus());
-                    if (tblParkingLot.getSurplus() <5){
-                        //  0123-黑红绿黄
-                        params.put("color2BC_huoB",1);
-                    }else{
-                        params.put("color2BC_huoB",2);
-                    }
-                    // 客A
-                    example = new Example(TblParkingLot.class);
-                    example.createCriteria().andEqualTo("fieldId", 3940)
-                            .andEqualTo("regionNum", "K-A");
-                    tblParkingLot = tblParkingLotMapper.selectOneByExample(example);
-
-                    params.put("text2BC_ke",tblParkingLot.getSurplus());
-                    if (tblParkingLot.getSurplus() <10){
-                        //  0123-黑红绿黄
-                        params.put("color2BC_ke",1);
-                    }else{
-                        params.put("color2BC_ke",2);
-                    }
-                    KafkaEnum kafkaEnum = new KafkaEnum();
-                    kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PARKING);
-                    kafkaEnum.setData(JSON.toJSONString(params));
-                    remoteKafkaService.send(kafkaEnum);
-                }
+                sendData();
                 break;
             //南出
             case "201":
@@ -625,13 +594,11 @@ public class VideoEventServiceImpl implements IVideoEventService {
                     v.setUpdateTime(DateUtils.getNowDate());
                     tblParkingVehicleInfoMapper.updateByPrimaryKey(v);
                 }
-
-                example = new Example(TblParkingLot.class);
-                example.createCriteria().andEqualTo("fieldId", 3940)
-                        .andEqualTo("regionNum", "K-A");
-                tblParkingLot = tblParkingLotMapper.selectOneByExample(example);
-                tblParkingLot.setSurplus((tblParkingLot.getSurplus() + 1) <= tblParkingLot.getTotal() ? (tblParkingLot.getSurplus() + 1) : tblParkingLot.getTotal());
-                tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
+                if (infoList.size()!=0){
+                    tblParkingLot = tblParkingLotMapper.selectByPrimaryKey(infoList.get(0).getParkingId());
+                    tblParkingLot.setSurplus((tblParkingLot.getSurplus() + 1) <= tblParkingLot.getTotal() ? (tblParkingLot.getSurplus() + 1) : tblParkingLot.getTotal());
+                    tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
+                }
                 break;
             case "202": //货A
 //                查表中有入口时间无出口时间
@@ -652,53 +619,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 tblParkingLot.setSurplus((tblParkingLot.getSurplus() - 1) > 0 ? (tblParkingLot.getSurplus() - 1) : 0);
                 tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
 
-                r = remoteDeviceMonitorService.selectByDeviceId("FCMS02");
-                if (r.getCode() == R.SUCCESS && r.getData() != null) {
-                    JSONObject params = new JSONObject();
-                    params.put("devIp",r.getData().getDeviceIp());
-                    params.put("devPos",2);
-                    params.put("infoType",1);
-                    // 货A
-                    params.put("text2A_huoA",tblParkingLot.getSurplus());
-                    if (tblParkingLot.getSurplus() <5){
-                        //  0123-黑红绿黄
-                        params.put("color2A_huoA",1);
-                    }else{
-                        params.put("color2A_huoA",2);
-                    }
-
-                    // 货B
-                    example = new Example(TblParkingLot.class);
-                    example.createCriteria().andEqualTo("fieldId", 3940)
-                            .andEqualTo("regionNum", "H-B");
-                    tblParkingLot = tblParkingLotMapper.selectOneByExample(example);
-                    params.put("text2A_huoB",tblParkingLot.getSurplus());
-                    if (tblParkingLot.getSurplus() <5){
-                        //  0123-黑红绿黄
-                        params.put("color2A_huoB",1);
-                    }else{
-                        params.put("color2A_huoB",2);
-                    }
-
-                    // 客A
-                    example = new Example(TblParkingLot.class);
-                    example.createCriteria().andEqualTo("fieldId", 3940)
-                            .andEqualTo("regionNum", "K-A");
-                    tblParkingLot = tblParkingLotMapper.selectOneByExample(example);
-
-                    params.put("text2A_ke",tblParkingLot.getSurplus());
-                    if (tblParkingLot.getSurplus() <10){
-                        //  0123-黑红绿黄
-                        params.put("color2A_ke",1);
-                    }else{
-                        params.put("color2A_ke",2);
-                    }
-                    KafkaEnum kafkaEnum = new KafkaEnum();
-                    kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PARKING);
-                    kafkaEnum.setData(JSON.toJSONString(params));
-                    remoteKafkaService.send(kafkaEnum);
-                }
-
+                sendData();
                 break;
             case "203"://客A
                 example = new Example(TblParkingVehicleInfo.class);
@@ -718,47 +639,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 tblParkingLot.setSurplus((tblParkingLot.getSurplus() - 1) > 0 ? (tblParkingLot.getSurplus() - 1) : 0);
                 tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
 
-                r = remoteDeviceMonitorService.selectByDeviceId("FCMS01");
-                if (r.getCode() == R.SUCCESS && r.getData() != null) {
-                    JSONObject params = new JSONObject();
-                    params.put("devIp",r.getData().getDeviceIp());
-                    params.put("devPos",1);
-                    params.put("infoType",1);
-                    // 客A
-                    params.put("text1_ke",tblParkingLot.getSurplus());
-                    if (tblParkingLot.getSurplus() <10){
-                        //  0123-黑红绿黄
-                        params.put("color1_ke",1);
-                    }else{
-                        params.put("color1_ke",2);
-                    }
-
-                    // 货A+货B
-                    example = new Example(TblParkingLot.class);
-                    example.createCriteria().andEqualTo("fieldId", 3940)
-                            .andEqualTo("regionNum", "H-A");
-                    tblParkingLot = tblParkingLotMapper.selectOneByExample(example);
-                    int HA = tblParkingLot.getSurplus();
-
-                    example = new Example(TblParkingLot.class);
-                    example.createCriteria().andEqualTo("fieldId", 3940)
-                            .andEqualTo("regionNum", "H-B");
-                    tblParkingLot = tblParkingLotMapper.selectOneByExample(example);
-                    int HB = tblParkingLot.getSurplus();
-
-                    params.put("text1_huo",HA+HB);
-                    if (tblParkingLot.getSurplus() <10){
-                        //  0123-黑红绿黄
-                        params.put("color1_huo",1);
-                    }else{
-                        params.put("color1_huo",2);
-                    }
-
-                    KafkaEnum kafkaEnum = new KafkaEnum();
-                    kafkaEnum.setTopIc(KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PARKING);
-                    kafkaEnum.setData(JSON.toJSONString(params));
-                    remoteKafkaService.send(kafkaEnum);
-                }
+                sendData();
                 break;
             //北出
             case "199":
@@ -781,9 +662,113 @@ public class VideoEventServiceImpl implements IVideoEventService {
         }
     }
 
+    private void sendData() {
+        R<TblDeviceInfo> r1;//1级引导屏
+        R<TblDeviceInfo> r2A;//2级引导屏A区
+        R<TblDeviceInfo> r2BC;//2级引导屏BC区
+        r1 = remoteDeviceMonitorService.selectByDeviceId("FCMS01");
+        r2A = remoteDeviceMonitorService.selectByDeviceId("FCMS02");
+        r2BC = remoteDeviceMonitorService.selectByDeviceId("FCMS03");
+        Example example = new Example(TblParkingLot.class);
+        example.createCriteria().andEqualTo("fieldId", 3940);
+        List<TblParkingLot> list = tblParkingLotMapper.selectByExample(example);
+        JSONObject params1 = new JSONObject();//1级引导屏
+        JSONObject params2A = new JSONObject();//2级引导屏A区
+        JSONObject params2BC = new JSONObject();//2级引导屏BC区
+        int HA = 0, HB = 0, KA = 0;
+        for (TblParkingLot tblParkingLot : list) {
+            if (tblParkingLot.getRegionNum().equals("K-A")) {
+                KA = tblParkingLot.getSurplus();
+            }
+            if (tblParkingLot.getRegionNum().equals("H-A")) {
+                HA = tblParkingLot.getSurplus();
+            }
+            if (tblParkingLot.getRegionNum().equals("H-B")) {
+                HB = tblParkingLot.getSurplus();
+            }
+        }
+
+        //1级引导屏
+        if (r1.getCode() == R.SUCCESS && r1.getData() != null) {
+            params1.put("devIp", r1.getData().getDeviceIp());
+            params1.put("devPos", 1);
+            params1.put("infoType", 1);
+            params1.put("text1_ke", KA);
+            if (KA < 10) {//  0123-黑红绿黄
+                params1.put("color1_ke", 1);
+            } else {
+                params1.put("color1_ke", 2);
+            }
+            params1.put("text1_huo", HA + HB);
+            if (HA + HB < 10) {
+                params1.put("color1_huo", 1);
+            } else {
+                params1.put("color1_huo", 2);
+            }
+        }
+        KafkaEnum kafkaEnum1 = new KafkaEnum();
+        kafkaEnum1.setTopIc(KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PARKING);
+        kafkaEnum1.setData(JSON.toJSONString(params1));
+        remoteKafkaService.send(kafkaEnum1);
+
+        //2级引导屏A区
+        if (r2A.getCode() == R.SUCCESS && r2A.getData() != null) {
+            params2A.put("devIp", r2A.getData().getDeviceIp());
+            params2A.put("devPos", 2);
+            params2A.put("infoType", 1);
+            params2A.put("text2A_huoA", HA);
+            if (HA < 5) {
+                //  0123-黑红绿黄
+                params2A.put("color2A_huoA", 1);
+            } else {
+                params2A.put("color2A_huoA", 2);
+            }
+            params2A.put("text2BC_huoB", HB);
+            if (HB < 5) {
+                params2A.put("color2BC_huoB", 1);
+            } else {
+                params2A.put("color2BC_huoB", 2);
+            }
+            params2A.put("text2BC_ke", KA);
+            if (KA < 10) {
+                params2A.put("color2BC_ke", 1);
+            } else {
+                params2A.put("color2BC_ke", 2);
+            }
+        }
+        KafkaEnum kafkaEnum2A = new KafkaEnum();
+        kafkaEnum2A.setTopIc(KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PARKING);
+        kafkaEnum2A.setData(JSON.toJSONString(params2A));
+        remoteKafkaService.send(kafkaEnum2A);
+
+        //2级引导屏BC区
+        if (r2BC.getCode() == R.SUCCESS && r2BC.getData() != null) {
+            params2BC.put("devIp", r2BC.getData().getDeviceIp());
+            params2BC.put("devPos", 3);
+            params2BC.put("infoType", 1);
+            // 货B
+            params2BC.put("text2BC_huoB", HB);
+            if (HB < 5) {
+                params2BC.put("color2BC_huoB", 1);
+            } else {
+                params2BC.put("color2BC_huoB", 2);
+            }
+            params2BC.put("text2BC_ke", KA);
+            if (KA < 10) {
+                params2BC.put("color2BC_ke", 1);
+            } else {
+                params2BC.put("color2BC_ke", 2);
+            }
+        }
+        KafkaEnum kafkaEnum2BC = new KafkaEnum();
+        kafkaEnum2BC.setTopIc(KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PARKING);
+        kafkaEnum2BC.setData(JSON.toJSONString(params2BC));
+        remoteKafkaService.send(kafkaEnum2BC);
+    }
+
     @Override
     public void parkingStatistics(TblEventPlateInfo tblEventPlateInfo) {
-        Long fieldId = 0l;
+        Long fieldId = 0L;
         Integer enter = 0;
         Integer out = 0;
         Integer vehType = 0;
@@ -794,25 +779,25 @@ public class VideoEventServiceImpl implements IVideoEventService {
             //北区入总
             case "197":
             case "198":
-                fieldId = 3941l;
+                fieldId = 3941L;
                 enter = 1;
                 currentNum = 1;
                 break;
             //南区入总
             case "200":
-                fieldId = 3940l;
+                fieldId = 3940L;
                 enter = 1;
                 currentNum = 1;
                 break;
             //南出
             case "201":
-                fieldId = 3940l;
+                fieldId = 3940L;
                 out = 1;
                 currentNum = -1;
                 break;
             //北出
             case "199":
-                fieldId = 3941l;
+                fieldId = 3941L;
                 out = 1;
                 currentNum = -1;
                 break;
