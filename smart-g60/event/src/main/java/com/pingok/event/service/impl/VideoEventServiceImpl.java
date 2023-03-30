@@ -594,10 +594,11 @@ public class VideoEventServiceImpl implements IVideoEventService {
                     v.setUpdateTime(DateUtils.getNowDate());
                     tblParkingVehicleInfoMapper.updateByPrimaryKey(v);
                 }
-
-                tblParkingLot = tblParkingLotMapper.selectByPrimaryKey(infoList.get(0).getParkingId());
-                tblParkingLot.setSurplus((tblParkingLot.getSurplus() + 1) <= tblParkingLot.getTotal() ? (tblParkingLot.getSurplus() + 1) : tblParkingLot.getTotal());
-                tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
+                if (infoList.size()!=0){
+                    tblParkingLot = tblParkingLotMapper.selectByPrimaryKey(infoList.get(0).getParkingId());
+                    tblParkingLot.setSurplus((tblParkingLot.getSurplus() + 1) <= tblParkingLot.getTotal() ? (tblParkingLot.getSurplus() + 1) : tblParkingLot.getTotal());
+                    tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
+                }
                 break;
             case "202": //货A
 //                查表中有入口时间无出口时间
