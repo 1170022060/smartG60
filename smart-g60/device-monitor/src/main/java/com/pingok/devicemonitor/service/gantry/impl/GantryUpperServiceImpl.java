@@ -10,6 +10,7 @@ import com.pingok.devicemonitor.service.gantry.IGantryUpperService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.DateUtils;
+import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.system.api.RemoteFileService;
 import com.ruoyi.system.api.RemoteIdProducerService;
@@ -127,16 +128,24 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
     public void handleBaseInfoUpload(JSONObject data) {
         try {
             //前端（工控机），历史状态
+            TblGantryBaseInfo tblGantryBaseInfo;
+            String s;
+            TblGantryBaseInfoCurrent tblGantryBaseInfoCurrent;
+            Example example;
+            Example.Criteria criteria;
             JSONArray gantryInfoList = data.getJSONArray("gantryInfoList");
             for (int i = 0; i < gantryInfoList.size(); i++) {
-                String s = gantryInfoList.getJSONObject(i).toJSONString();
-                TblGantryBaseInfo tblGantryBaseInfo = JSON.parseObject(s, TblGantryBaseInfo.class);
+                s = gantryInfoList.getJSONObject(i).toJSONString();
+                tblGantryBaseInfo = JSON.parseObject(s, TblGantryBaseInfo.class);
+                if(StringUtils.isEmpty(tblGantryBaseInfo.getGantryId())){
+                    return;
+                }
                 tblGantryBaseInfo.setFrontSysFlag(1);
                 tblGantryBaseInfoMapper.insert(tblGantryBaseInfo);
                 // 实时状态
-                TblGantryBaseInfoCurrent tblGantryBaseInfoCurrent = JSON.parseObject(s, TblGantryBaseInfoCurrent.class);
-                Example example = new Example(TblGantryBaseInfoCurrent.class);
-                Example.Criteria criteria = example.createCriteria();
+                tblGantryBaseInfoCurrent = JSON.parseObject(s, TblGantryBaseInfoCurrent.class);
+                example = new Example(TblGantryBaseInfoCurrent.class);
+                criteria = example.createCriteria();
                 criteria.andEqualTo("gantryId", tblGantryBaseInfoCurrent.getGantryId());
                 criteria.andEqualTo("frontSysFlag", 1);
                 criteria.andEqualTo("computerOrder", tblGantryBaseInfoCurrent.getComputerOrder());
@@ -144,16 +153,21 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
             }
 
             //后台（服务器），历史状态
+            TblGantryBaseInfo tblGantryBaseInfoBack;
+            TblGantryBaseInfoCurrent tblGantryBaseInfoCurrentBack;
             JSONArray chargeUnitInfoList = data.getJSONArray("chargeUnitInfoList");
             for (int i = 0; i < chargeUnitInfoList.size(); i++) {
-                String s = chargeUnitInfoList.getJSONObject(i).toJSONString();
-                TblGantryBaseInfo tblGantryBaseInfoBack = JSON.parseObject(s, TblGantryBaseInfo.class);
+                s = chargeUnitInfoList.getJSONObject(i).toJSONString();
+                tblGantryBaseInfoBack = JSON.parseObject(s, TblGantryBaseInfo.class);
+                if(StringUtils.isEmpty(tblGantryBaseInfoBack.getGantryId())){
+                    return;
+                }
                 tblGantryBaseInfoBack.setFrontSysFlag(2);
                 tblGantryBaseInfoMapper.insert(tblGantryBaseInfoBack);
                 //实时状态
-                TblGantryBaseInfoCurrent tblGantryBaseInfoCurrentBack = JSON.parseObject(chargeUnitInfoList.toJSONString(), TblGantryBaseInfoCurrent.class);
-                Example example = new Example(TblGantryBaseInfoCurrent.class);
-                Example.Criteria criteria = example.createCriteria();
+                tblGantryBaseInfoCurrentBack = JSON.parseObject(chargeUnitInfoList.toJSONString(), TblGantryBaseInfoCurrent.class);
+                example = new Example(TblGantryBaseInfoCurrent.class);
+                criteria = example.createCriteria();
                 criteria.andEqualTo("gantryId", tblGantryBaseInfoCurrentBack.getGantryId());
                 criteria.andEqualTo("frontSysFlag", 2);
                 criteria.andEqualTo("computerOrder", tblGantryBaseInfoCurrentBack.getComputerOrder());
@@ -161,15 +175,20 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
             }
 
             //牌识，历史状态
+            TblGantryVplrBaseInfo tblGantryVplrBaseInfo;
+            TblGantryVplrBaseInfoCurrent tblGantryVplrBaseInfoCurrent;
             JSONArray cameraInfoList = data.getJSONArray("cameraInfoList");
             for (int i = 0; i < cameraInfoList.size(); i++) {
-                String s = cameraInfoList.getJSONObject(i).toJSONString();
-                TblGantryVplrBaseInfo tblGantryVplrBaseInfo = JSON.parseObject(s, TblGantryVplrBaseInfo.class);
+                s = cameraInfoList.getJSONObject(i).toJSONString();
+                tblGantryVplrBaseInfo = JSON.parseObject(s, TblGantryVplrBaseInfo.class);
+                if(StringUtils.isEmpty(tblGantryVplrBaseInfo.getGantryId())){
+                    return;
+                }
                 tblGantryVplrBaseInfoMapper.insert(tblGantryVplrBaseInfo);
                 //实时状态
-                TblGantryVplrBaseInfoCurrent tblGantryVplrBaseInfoCurrent = JSON.parseObject(s, TblGantryVplrBaseInfoCurrent.class);
-                Example example = new Example(TblGantryVplrBaseInfoCurrent.class);
-                Example.Criteria criteria = example.createCriteria();
+                tblGantryVplrBaseInfoCurrent = JSON.parseObject(s, TblGantryVplrBaseInfoCurrent.class);
+                example = new Example(TblGantryVplrBaseInfoCurrent.class);
+                criteria = example.createCriteria();
                 criteria.andEqualTo("gantryId", tblGantryVplrBaseInfoCurrent.getGantryId());
                 criteria.andEqualTo("cameraNum", tblGantryVplrBaseInfoCurrent.getCameraNum());
                 tblGantryVplrBaseInfoCurrentMapper.updateByExample(tblGantryVplrBaseInfoCurrent, example);
@@ -177,14 +196,19 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
 
             //RSU基础信息
             JSONArray rsuInfoList = data.getJSONArray("RSUInfoList");
+            TblGantryRsuBaseInfo tblGantryRsuBaseInfo;
+            TblGantryRsuBaseInfoCurrent tblGantryRsuBaseInfoCurrent;
             for (int i = 0; i < rsuInfoList.size(); i++) {
-                String s = rsuInfoList.getJSONObject(i).toJSONString();
-                TblGantryRsuBaseInfo tblGantryRsuBaseInfo = JSON.parseObject(s, TblGantryRsuBaseInfo.class);
+                s = rsuInfoList.getJSONObject(i).toJSONString();
+                tblGantryRsuBaseInfo = JSON.parseObject(s, TblGantryRsuBaseInfo.class);
+                if(StringUtils.isEmpty(tblGantryRsuBaseInfo.getGantryId())){
+                    return;
+                }
                 tblGantryRsuBaseInfoMapper.insert(tblGantryRsuBaseInfo);
                 //实时状态
-                TblGantryRsuBaseInfoCurrent tblGantryRsuBaseInfoCurrent = JSON.parseObject(s, TblGantryRsuBaseInfoCurrent.class);
-                Example example = new Example(TblGantryRsuBaseInfoCurrent.class);
-                Example.Criteria criteria = example.createCriteria();
+                tblGantryRsuBaseInfoCurrent = JSON.parseObject(s, TblGantryRsuBaseInfoCurrent.class);
+                example = new Example(TblGantryRsuBaseInfoCurrent.class);
+                criteria = example.createCriteria();
                 criteria.andEqualTo("gantryId", tblGantryRsuBaseInfoCurrent.getGantryId());
                 criteria.andEqualTo("rsuId", tblGantryRsuBaseInfoCurrent.getRsuid());
                 tblGantryRsuBaseInfoCurrentMapper.updateByExample(tblGantryRsuBaseInfoCurrent, example);
@@ -206,13 +230,25 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
             String heatVersion = data.getString("heatVersion");
             //前端（工控机）
             JSONArray gantryHeartbeatList = data.getJSONArray("gantryHeartbeatList");
+            JSONObject jo;
+            String s;
+            String frontRunStateId;
+            Date frontStateTime;
+            Integer frontComputerOrder;
+            TblGantryMonitorStatus tblGantryMonitorStatus;
+            TblGantryMonitorStatusCurrent tblGantryMonitorStatusCurrent;
+            Example example;
+            Example.Criteria criteria;
             for (int i = 0; i < gantryHeartbeatList.size(); i++) {
-                JSONObject jo = gantryHeartbeatList.getJSONObject(i);
-                String s = jo.toJSONString();
-                String frontRunStateId = jo.getString("frontRunStateId");
-                Date frontStateTime = DateUtils.dateTime("yyyy-MM-dd'T'HH:mm:ss", jo.getString("frontStateTime"));
-                Integer frontComputerOrder = jo.getInteger("frontComputerOrder");
-                TblGantryMonitorStatus tblGantryMonitorStatus = JSON.parseObject(s, TblGantryMonitorStatus.class);
+                jo = gantryHeartbeatList.getJSONObject(i);
+                s = jo.toJSONString();
+                frontRunStateId = jo.getString("frontRunStateId");
+                frontStateTime = DateUtils.dateTime("yyyy-MM-dd'T'HH:mm:ss", jo.getString("frontStateTime"));
+                frontComputerOrder = jo.getInteger("frontComputerOrder");
+                tblGantryMonitorStatus = JSON.parseObject(s, TblGantryMonitorStatus.class);
+                if(StringUtils.isEmpty(tblGantryMonitorStatus.getGantryId())){
+                    return;
+                }
                 tblGantryMonitorStatus.setFrontSysFlag(1);
                 tblGantryMonitorStatus.setStateVersion(heatVersion);
                 tblGantryMonitorStatus.setRunStateId(frontRunStateId);
@@ -220,10 +256,10 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
                 tblGantryMonitorStatus.setComputerOrder(frontComputerOrder);
                 tblGantryMonitorStatusMapper.insert(tblGantryMonitorStatus);
                 // 实时状态
-                TblGantryMonitorStatusCurrent tblGantryMonitorStatusCurrent = new TblGantryMonitorStatusCurrent();
+                tblGantryMonitorStatusCurrent = new TblGantryMonitorStatusCurrent();
                 BeanUtils.copyProperties(tblGantryMonitorStatus, tblGantryMonitorStatusCurrent);
-                Example example = new Example(TblGantryMonitorStatusCurrent.class);
-                Example.Criteria criteria = example.createCriteria();
+                example = new Example(TblGantryMonitorStatusCurrent.class);
+                criteria = example.createCriteria();
                 criteria.andEqualTo("gantryId", tblGantryMonitorStatusCurrent.getGantryId());
                 criteria.andEqualTo("stateVersion", tblGantryMonitorStatusCurrent.getStateVersion());
                 criteria.andEqualTo("computerOrder", tblGantryMonitorStatusCurrent.getComputerOrder());
@@ -231,13 +267,19 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
             }
             //后台（服务器）
             JSONArray chargeUnitHeartbeatList = data.getJSONArray("chargeUnitHeartbeatList");
+            String backRunStateId;
+            Date backStateTime;
+            Integer backComputerOrder;
             for (int i = 0; i < chargeUnitHeartbeatList.size(); i++) {
-                JSONObject jo = chargeUnitHeartbeatList.getJSONObject(i);
-                String s = jo.toJSONString();
-                String backRunStateId = jo.getString("backRunStateId");
-                Date backStateTime = DateUtils.dateTime("yyyy-MM-dd'T'HH:mm:ss", jo.getString("backStateTime"));
-                Integer backComputerOrder = jo.getInteger("backComputerOrder");
-                TblGantryMonitorStatus tblGantryMonitorStatus = JSON.parseObject(s, TblGantryMonitorStatus.class);
+                jo = chargeUnitHeartbeatList.getJSONObject(i);
+                s = jo.toJSONString();
+                backRunStateId = jo.getString("backRunStateId");
+                backStateTime = DateUtils.dateTime("yyyy-MM-dd'T'HH:mm:ss", jo.getString("backStateTime"));
+                backComputerOrder = jo.getInteger("backComputerOrder");
+                tblGantryMonitorStatus = JSON.parseObject(s, TblGantryMonitorStatus.class);
+                if(StringUtils.isEmpty(tblGantryMonitorStatus.getGantryId())){
+                    return;
+                }
                 tblGantryMonitorStatus.setFrontSysFlag(2);
                 tblGantryMonitorStatus.setStateVersion(heatVersion);
                 tblGantryMonitorStatus.setRunStateId(backRunStateId);
@@ -265,10 +307,10 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
                 tblGantryMonitorStatus.setFrontErrorEventTotal(jo.getString("backErrorEventTotal"));
                 tblGantryMonitorStatusMapper.insert(tblGantryMonitorStatus);
                 // 实时状态
-                TblGantryMonitorStatusCurrent tblGantryMonitorStatusCurrent = new TblGantryMonitorStatusCurrent();
+                tblGantryMonitorStatusCurrent = new TblGantryMonitorStatusCurrent();
                 BeanUtils.copyProperties(tblGantryMonitorStatus, tblGantryMonitorStatusCurrent);
-                Example example = new Example(TblGantryMonitorStatusCurrent.class);
-                Example.Criteria criteria = example.createCriteria();
+                example = new Example(TblGantryMonitorStatusCurrent.class);
+                criteria = example.createCriteria();
                 criteria.andEqualTo("gantryId", tblGantryMonitorStatusCurrent.getGantryId());
                 criteria.andEqualTo("stateVersion", tblGantryMonitorStatusCurrent.getStateVersion());
                 criteria.andEqualTo("computerOrder", tblGantryMonitorStatusCurrent.getComputerOrder());
@@ -276,15 +318,20 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
             }
             //牌识
             JSONArray cameraHeartbeatList = data.getJSONArray("cameraHeartbeatList");
+            TblGantryVplrMonitor tblGantryVplrMonitor;
+            TblGantryVplrMonitorCurrent tblGantryVplrMonitorCurrent;
             for (int i = 0; i < cameraHeartbeatList.size(); i++) {
-                JSONObject jo = cameraHeartbeatList.getJSONObject(i);
-                String s = jo.toJSONString();
-                TblGantryVplrMonitor tblGantryVplrMonitor = JSON.parseObject(s, TblGantryVplrMonitor.class);
+                jo = cameraHeartbeatList.getJSONObject(i);
+                s = jo.toJSONString();
+                tblGantryVplrMonitor = JSON.parseObject(s, TblGantryVplrMonitor.class);
+                if(StringUtils.isEmpty(tblGantryVplrMonitor.getGantryId())){
+                    return;
+                }
                 tblGantryVplrMonitorMapper.insert(tblGantryVplrMonitor);
-                TblGantryVplrMonitorCurrent tblGantryVplrMonitorCurrent = new TblGantryVplrMonitorCurrent();
+                tblGantryVplrMonitorCurrent = new TblGantryVplrMonitorCurrent();
                 BeanUtils.copyProperties(tblGantryVplrMonitor, tblGantryVplrMonitorCurrent);
-                Example example = new Example(TblGantryVplrMonitorCurrent.class);
-                Example.Criteria criteria = example.createCriteria();
+                example = new Example(TblGantryVplrMonitorCurrent.class);
+                criteria = example.createCriteria();
                 criteria.andEqualTo("gantryId", tblGantryVplrMonitorCurrent.getGantryId());
                 criteria.andEqualTo("cameraNum", tblGantryVplrMonitorCurrent.getCameraNum());
                 tblGantryVplrMonitorCurrentMapper.updateByExample(tblGantryVplrMonitorCurrent, example);
@@ -293,17 +340,22 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
             JSONArray rsuHeartbeatList = data.getJSONArray("RSUHeartbeatList");
             JSONArray psamInfoList = data.getJSONArray("PSAMInfoList");
             JSONArray antennalInfoList = data.getJSONArray("antennalInfoList");
+            TblGantryRsuMonitor tblGantryRsuMonitor;
+            TblGantryRsuMonitorCurrent tblGantryRsuMonitorCurrent;
             for (int i = 0; i < rsuHeartbeatList.size(); i++) {
-                JSONObject jo = rsuHeartbeatList.getJSONObject(i);
+                jo = rsuHeartbeatList.getJSONObject(i);
                 jo.put("psamInfoList", psamInfoList);
                 jo.put("antennalInfoList", antennalInfoList);
-                String s = jo.toJSONString();
-                TblGantryRsuMonitor tblGantryRsuMonitor = JSON.parseObject(s, TblGantryRsuMonitor.class);
+                s = jo.toJSONString();
+                tblGantryRsuMonitor = JSON.parseObject(s, TblGantryRsuMonitor.class);
+                if(StringUtils.isEmpty(tblGantryRsuMonitor.getGantryId())){
+                    return;
+                }
                 tblGantryRsuMonitorMapper.insert(tblGantryRsuMonitor);
-                TblGantryRsuMonitorCurrent tblGantryRsuMonitorCurrent = new TblGantryRsuMonitorCurrent();
+                tblGantryRsuMonitorCurrent = new TblGantryRsuMonitorCurrent();
                 BeanUtils.copyProperties(tblGantryRsuMonitor, tblGantryRsuMonitorCurrent);
-                Example example = new Example(TblGantryRsuMonitorCurrent.class);
-                Example.Criteria criteria = example.createCriteria();
+                example = new Example(TblGantryRsuMonitorCurrent.class);
+                criteria = example.createCriteria();
                 criteria.andEqualTo("gantryId", tblGantryRsuMonitorCurrent.getGantryId());
                 criteria.andEqualTo("rsuId", tblGantryRsuMonitorCurrent.getRsuid());
                 tblGantryRsuMonitorCurrentMapper.updateByExample(tblGantryRsuMonitorCurrent, example);
@@ -318,6 +370,9 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
     public void handleSpecialEventUpload(JSONObject data) {
         try {
             TblGantryErrorInfo tblGantryErrorInfo = JSON.parseObject(data.toJSONString(), TblGantryErrorInfo.class);
+            if(StringUtils.isEmpty(tblGantryErrorInfo.getGantryId())){
+                return;
+            }
             tblGantryErrorInfoMapper.insert(tblGantryErrorInfo);
         } catch (Exception ex) {
             log.error("处理门架报文异常：" + ex.getMessage());
@@ -327,6 +382,9 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
     @Override
     public void handleViu(TblGantryTravelImage data) {
         try {
+            if(StringUtils.isEmpty(data.getGantryId())){
+                return;
+            }
             String year = DateUtils.dateYear();
             data.setYear(year);
             tblGantryTravelImageMapper.addTblGantryTravelimage(data);
@@ -353,6 +411,9 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
     @Override
     public void handleVipu(TblGantryPicture data) {
         try {
+            if(StringUtils.isEmpty(data.getGantryId())){
+                return;
+            }
             tblGantryPictureMapper.addTblGantryPicture(data);
         } catch (Exception ex) {
             log.error("存储门架牌识图片异常：" + ex.getMessage());
@@ -377,6 +438,9 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
     @Override
     public void handleSvipu(TblGantryPictureFail data) {
         try {
+            if(StringUtils.isEmpty(data.getGantryId())){
+                return;
+            }
             tblGantryPictureFailMapper.addTblGantryPictureFail(data);
         } catch (Exception ex) {
             log.error("存储门架牌识图片异常：" + ex.getMessage());
@@ -401,6 +465,9 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
     @Override
     public void handleEtctu(TblGantryTransaction data) {
         try {
+            if(StringUtils.isEmpty(data.getGantryId())){
+                return;
+            }
             String year = DateUtils.dateYear();
             data.setYear(year);
             tblGantryTransactionMapper.addtblGantryTransaction(data);
@@ -427,6 +494,9 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
     @Override
     public void handleEtcsu(TblGantrySumTransaction data) {
         try {
+            if(StringUtils.isEmpty(data.getGantryId())){
+                return;
+            }
             tblGantrySumTransactionMapper.addTblGantrySumTransaction(data);
         } catch (Exception ex) {
             log.error("存储ETC 门架交易小时批次汇总异常：" + ex.getMessage());
@@ -451,7 +521,9 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
     @Override
     public void handleVisu(TblGantrySumTravelImage data) {
         try {
-
+            if(StringUtils.isEmpty(data.getGantryid())){
+                return;
+            }
             tblGantrySumTravelImageMapper.addTblGantrySumTravelimage(data);
         } catch (Exception ex) {
             log.error("存储ETC 门架牌识小时批次汇总异常：" + ex.getMessage());

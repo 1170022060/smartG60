@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.ruoyi.common.core.utils.StringUtils;
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -56,7 +57,8 @@ public class TblRoadNodesInfo implements Serializable {
     /**
      * HEX
      */
-    private String HEX;
+    @Column(name = "HEX")
+    private String hex;
 
     @Transient
     private JSONArray geo;
