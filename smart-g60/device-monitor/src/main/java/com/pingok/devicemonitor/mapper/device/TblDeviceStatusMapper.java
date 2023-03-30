@@ -15,4 +15,6 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
     @Select("SELECT * FROM TBL_DEVICE_STATUS where 1=1 and DEVICE_TYPE = 12 and DEVICE_ID = #{deviceId} ")
     TblDeviceStatus findLightRtStatus(@Param("deviceId") String deviceId);
 
+    @Select("SELECT * FROM TBL_DEVICE_STATUS where 1=1 and DEVICE_ID = #{deviceId} ")
+    TblDeviceStatus findByDeviceId(@Param("deviceId") Long deviceId);
 }

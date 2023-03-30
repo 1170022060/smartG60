@@ -8,9 +8,11 @@ import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,16 +51,22 @@ public class TransServiceImpl implements ITransService {
     private TblTransSummaryMapper tblTransSummaryMapper;
 
     @Autowired
+    private TblSectionRecordMapper tblSectionRecordMapper;
+
+    @Autowired
     private RemoteIdProducerService remoteIdProducerService;
 
     @Override
-    public Long insertEnTrans(TblEnTrans tblEnTrans) {
+    public EnInfoVo insertEnTrans(TblEnTrans tblEnTrans) {
         tblEnTrans.setRecordId(remoteIdProducerService.nextId());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         String year = sdf.format(tblEnTrans.getTransTime());
         tblEnTrans.setTableName("TBL_EN_TRANS_"+ year);
         tblEnTransMapper.insertEnTrans(tblEnTrans);
-        return tblEnTrans.getRecordId();
+        EnInfoVo enInfoVo=new EnInfoVo();
+        enInfoVo.setRecordId(tblEnTrans.getRecordId());
+        enInfoVo.setTableName(tblEnTrans.getTableName());
+        return enInfoVo;
     }
 
     @Override
@@ -66,6 +74,13 @@ public class TransServiceImpl implements ITransService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         String year = sdf.format(tblEnEtcPass.getTransTime());
         tblEnEtcPass.setRecordId(recordId);
+        tblEnEtcPass.setId(remoteIdProducerService.nextId());
+//        if (tblEnEtcPass.getEtcCardId() == null){
+//            tblEnEtcPass.setEtcCardId((long) 0);
+//        }
+//        if (tblEnEtcPass.getEtcCardNet() == null){
+//            tblEnEtcPass.setEtcCardNet("'0'");
+//        }
         tblEnEtcPass.setTableName("TBL_EN_ETC_PASS_"+ year);
         return tblEnEtcPassMapper.insertEnEtcPass(tblEnEtcPass);
     }
@@ -75,6 +90,10 @@ public class TransServiceImpl implements ITransService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         String year = sdf.format(tblEnMtcPass.getTransTime());
         tblEnMtcPass.setRecordId(recordId);
+        tblEnMtcPass.setId(remoteIdProducerService.nextId());
+//        if (tblEnMtcPass.getCpcCardId() == null){
+//            tblEnMtcPass.setCpcCardId((long) 0);
+//        }
         tblEnMtcPass.setTableName("TBL_EN_MTC_PASS_"+ year);
         return tblEnMtcPassMapper.insertEnMtcPass(tblEnMtcPass);
     }
@@ -89,6 +108,7 @@ public class TransServiceImpl implements ITransService {
         ExInfoVo exInfoVo=new ExInfoVo();
         exInfoVo.setRecordId(tblExTrans.getRecordId());
         exInfoVo.setYear(year);
+        exInfoVo.setTableName(tblExTrans.getTableName());
         return exInfoVo;
     }
 
@@ -97,6 +117,13 @@ public class TransServiceImpl implements ITransService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         String year = sdf.format(tblExEtcPass.getTransTime());
         tblExEtcPass.setRecordId(recordId);
+        tblExEtcPass.setId(remoteIdProducerService.nextId());
+//        if (tblExEtcPass.getEtcCardId() == null){
+//            tblExEtcPass.setEtcCardId((long) 0);
+//        }
+//        if (tblExEtcPass.getEtcCardNet() == null){
+//            tblExEtcPass.setEtcCardNet("'0'");
+//        }
         tblExEtcPass.setTableName("TBL_EX_ETC_PASS_"+ year);
         return tblExEtcPassMapper.insertExEtcPass(tblExEtcPass);
     }
@@ -106,6 +133,10 @@ public class TransServiceImpl implements ITransService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         String year = sdf.format(tblExMtcPass.getTransTime());
         tblExMtcPass.setRecordId(recordId);
+        tblExMtcPass.setId(remoteIdProducerService.nextId());
+//        if (tblExMtcPass.getCpcCardId() == null){
+//            tblExMtcPass.setCpcCardId((long) 0);
+//        }
         tblExMtcPass.setTableName("TBL_EX_MTC_PASS_"+ year);
         return tblExMtcPassMapper.insertExMtcPass(tblExMtcPass);
     }
@@ -124,12 +155,96 @@ public class TransServiceImpl implements ITransService {
         int result=0;
         for(TblExTransSplit list :tblExTransSplit)
         {
-            list.setRecordId(exInfoVo.getRecordId());
-            list.setTableName("TBL_EX_TRANS_SPLIT_"+ exInfoVo.getYear());
-            tblExTransSplitMapper.insertExTransSplit(list);
-            result++;
+            try{
+                list.setRecordId(exInfoVo.getRecordId());
+                list.setTableName("TBL_EX_TRANS_SPLIT_"+ exInfoVo.getYear());
+                tblExTransSplitMapper.insertExTransSplit(list);
+                result++;
+            }
+            catch (Exception e)
+            {
+                if(!e.getMessage().contains("unique constraint"))
+                {
+                    throw e;
+                }
+            }
         }
         return result;
+    }
+
+    @Override
+    public void updateSection(Date workDate,String stationId, Integer direction,Integer type,Integer amount) {
+        Example example = new Example(TblSectionRecord.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("workDate", workDate);
+        criteria.andEqualTo("stationId", stationId);
+        criteria.andEqualTo("direction", direction);
+        TblSectionRecord tblSectionRecord=tblSectionRecordMapper.selectOneByExample(example);
+        if(tblSectionRecord==null)
+        {
+            tblSectionRecord=new TblSectionRecord();
+            tblSectionRecord.setId(remoteIdProducerService.nextId());
+            tblSectionRecord.setWorkDate(workDate);
+            tblSectionRecord.setDirection(direction);
+            tblSectionRecord.setStationId(stationId);
+            tblSectionRecord.setEtcLocal(0);
+            tblSectionRecord.setEtcElse(0);
+            tblSectionRecord.setMtcTrans(0);
+            tblSectionRecord.setMtcSingle(0);
+            tblSectionRecord.setLicense(0);
+            tblSectionRecord.setAmount(0);
+            tblSectionRecord.setReleaseTrans(0);
+            tblSectionRecord.setFrontTrans(0);
+            tblSectionRecord.setBarrierTrans(0);
+            tblSectionRecordMapper.insert(tblSectionRecord);
+        }
+        if(type==1)
+        {
+            tblSectionRecord.setEtcLocal(tblSectionRecord.getEtcLocal()+1);
+            tblSectionRecord.setAmount(tblSectionRecord.getAmount()+amount);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
+        if(type==2)
+        {
+            tblSectionRecord.setEtcElse(tblSectionRecord.getEtcElse()+1);
+            tblSectionRecord.setAmount(tblSectionRecord.getAmount()+amount);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
+        if(type==3)
+        {
+            tblSectionRecord.setMtcSingle(tblSectionRecord.getMtcSingle()+1);
+            tblSectionRecord.setAmount(tblSectionRecord.getAmount()+amount);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
+        if(type==4)
+        {
+            tblSectionRecord.setMtcTrans(tblSectionRecord.getMtcTrans()+1);
+            tblSectionRecord.setAmount(tblSectionRecord.getAmount()+amount);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
+        if(type==5)
+        {
+            tblSectionRecord.setReleaseTrans(tblSectionRecord.getReleaseTrans()+1);
+            tblSectionRecord.setAmount(tblSectionRecord.getAmount()+amount);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
+        if(type==6)
+        {
+            tblSectionRecord.setBarrierTrans(tblSectionRecord.getBarrierTrans()+1);
+            tblSectionRecord.setAmount(tblSectionRecord.getAmount()+amount);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
+        if(type==7)
+        {
+            tblSectionRecord.setFrontTrans(tblSectionRecord.getFrontTrans()+1);
+            tblSectionRecord.setAmount(tblSectionRecord.getAmount()+amount);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
+        if(type==8)
+        {
+            tblSectionRecord.setLicense(tblSectionRecord.getLicense()+1);
+            tblSectionRecordMapper.updateByPrimaryKeySelective(tblSectionRecord);
+        }
     }
 
     @Override

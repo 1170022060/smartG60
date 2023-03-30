@@ -3,6 +3,7 @@ package com.pingok.vocational.mapper.baseinfo;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -42,9 +43,20 @@ public interface TblRateMapper {
             "<when test='versionNum != null'> " +
             "and a.VERSION= #{versionNum} " +
             "</when>"+
+            "<when test='provId != null'> " +
+            "and a.EN_PROV= #{provId} " +
+            "</when>"+
+            "<when test='startTime != null'> " +
+            " and a.EFFECT_TIME &gt;= #{startTime} " +
+            "</when>"+
+            "<when test='endTime != null'> " +
+            " and a.EFFECT_TIME &lt;= #{endTime} " +
+            "</when>"+
             " order by a.EN_ID,a.VEH_CLASS "+
             "</script>"})
-    List<Map> selectRate(@Param("inStationName") String inStationName, @Param("exStationId") String exStationId,@Param("vehClass") Integer vehClass,@Param("versionNum") String versionNum);
+    List<Map> selectRate(@Param("inStationName") String inStationName, @Param("exStationId") String exStationId
+            , @Param("vehClass") Integer vehClass, @Param("versionNum") String versionNum
+            , @Param("provId") String provId,@Param("startTime") Date startTime,@Param("endTime") Date endTime);
 
     @Select({"<script>" +
             "select a.P_INDEX as \"pIndex\" ," +

@@ -6,6 +6,7 @@ import com.ruoyi.system.api.domain.release.TblReleasePreset;
 import com.ruoyi.system.api.domain.release.TblReleaseRecord;
 import com.ruoyi.system.api.factory.RemoteReleaseFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,7 +22,7 @@ public interface RemoteReleaseService {
     @PostMapping("/releaseRecord")
     R add(@RequestBody TblReleaseRecord tblReleaseRecord);
 
-    @PostMapping("/releasePreset/publish")
+    @GetMapping("/releasePreset/idInfo")
     R<TblReleasePreset> idInfo(@RequestParam(name = "id") Long id);
 
 }

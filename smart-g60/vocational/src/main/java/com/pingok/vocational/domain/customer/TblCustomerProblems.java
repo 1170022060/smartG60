@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.core.annotation.Excel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.ibatis.annotations.Insert;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -38,10 +39,6 @@ public class TblCustomerProblems implements Serializable {
     @Excel(name = "问题描述")
     private String describe;
 
-    /** 处理结果*/
-    @Excel(name = "处理结果")
-    private String result;
-
     /** 投诉人姓名*/
     @Excel(name = "投诉人姓名")
     private String complaintName;
@@ -54,32 +51,47 @@ public class TblCustomerProblems implements Serializable {
     @Excel(name = "处理部门")
     private Long handleDept;
 
+    /** 处理人 */
+    @Excel(name = "处理人")
+    private Long handler;
+
+    /** 处理结果*/
+    @Excel(name = "回复内容")
+    private String result;
+
     /** 处理时间 */
-    @Excel(name = "处理时间")
+    @Excel(name = "回复时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date handleTime;
+    private Date replyTime;
+
+    /** 更新时间 */
+//    @Excel(name = "更新时间")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    private Date updateTime;
+
+    /** 处理用户ID */
+    @Excel(name = "回复人工号")
+    private Long replyUserId;
+
+    @Excel(name = "回复状态")
+    private Integer status;
 
     /** 创建时间 */
     @Excel(name = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-    /** 更新时间 */
-    @Excel(name = "更新时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updateTime;
-
-    /** 处理用户ID */
-    @Excel(name = "处理用户工号")
-    private Long handleUserId;
-
     /** 创建用户ID */
     @Excel(name = "创建用户工号")
     private Long createUserId;
 
-    /** 更新用户ID */
-    @Excel(name = "更新用户ID")
-    private Long updateUserId;
+//    /** 更新用户ID */
+//    @Excel(name = "更新用户ID")
+//    private Long updateUserId;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public Long getId() {
         return id;
@@ -149,36 +161,36 @@ public class TblCustomerProblems implements Serializable {
         this.handleDept = handleDept;
     }
 
-    public Date getHandleTime() {
-        return handleTime;
+    public Long getHandler() {
+        return handler;
     }
 
-    public void setHandleTime(Date handleTime) {
-        this.handleTime = handleTime;
+    public void setHandler(Long handler) {
+        this.handler = handler;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+    public Date getReplyTime() {
+        return replyTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setReplyTime(Date replyTime) {
+        this.replyTime = replyTime;
     }
 
-    public Long getHandleUserId() {
-        return handleUserId;
+    public Long getReplyUserId() {
+        return replyUserId;
     }
 
-    public void setHandleUserId(Long handleUserId) {
-        this.handleUserId = handleUserId;
+    public void setReplyUserId(Long replyUserId) {
+        this.replyUserId = replyUserId;
     }
 
-    public Long getUpdateUserId() {
-        return updateUserId;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setUpdateUserId(Long updateUserId) {
-        this.updateUserId = updateUserId;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Date getCreateTime() {
@@ -207,12 +219,14 @@ public class TblCustomerProblems implements Serializable {
                 .append("result", getResult())
                 .append("complaintName", getComplaintName())
                 .append("contactInfo", getContactInfo())
-                .append("handleTime", getHandleTime())
+                .append("replyTime", getReplyTime())
                 .append("createTime", getCreateTime())
-                .append("updateTime", getUpdateTime())
-                .append("handleUserId", getHandleUserId())
+//                .append("updateTime", getUpdateTime())
+                .append("replyUserId", getReplyUserId())
                 .append("createUserId", getCreateUserId())
-                .append("updateUserId", getUpdateUserId())
+                .append("handleDept", getHandleDept())
+                .append("handler", getHandler())
+//                .append("updateUserId", getUpdateUserId())
                 .toString();
     }
 }

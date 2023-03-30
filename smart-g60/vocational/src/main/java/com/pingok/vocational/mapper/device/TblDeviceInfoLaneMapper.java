@@ -40,14 +40,14 @@ public interface TblDeviceInfoLaneMapper extends CommonRepository<TblDeviceInfoL
             "a.DEVICE_PHOTO as \"devicePhoto\" ," +
             "to_char(a.CREATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"createTime\"," +
             "to_char(a.UPDATE_TIME, 'yyyy-mm-dd hh24:mi:ss') as \"updateTime\"," +
-            "case when a.CREATE_USER_ID is null then null else a.CREATE_USER_ID || ':' || c.USER_NAME end as \"createUserName\"," +
-            "case when a.UPDATE_USER_ID is null then null else a.UPDATE_USER_ID || ':' || d.USER_NAME end as \"updateUserName\" from TBL_DEVICE_INFO_LANE a " +
+            "case when a.CREATE_USER_ID is null then null else c.NICK_NAME end as \"createUserName\"," +
+            "case when a.UPDATE_USER_ID is null then null else d.NICK_NAME end as \"updateUserName\" from TBL_DEVICE_INFO_LANE a " +
             "left join TBL_DEVICE_CATEGORY b on a.DEVICE_CATEGORY=b.ID " +
             "left join  SYS_USER c on a.CREATE_USER_ID=c.USER_ID " +
             "left join  SYS_USER d on a.UPDATE_USER_ID=d.USER_ID " +
             "left join  SYS_DICT_DATA e on e.DICT_VALUE=to_char(a.STATUS) and e.DICT_TYPE='device_status' " +
             "left join TBL_PROJECT_INFO f on a.ITEM_NAME=f.ID " +
-            "where CONCAT('3101',CONCAT(a.STATION_BELONG,a.LANE_BELONG)) =#{laneHex}" +
+            "where LANE_BELONG =#{laneHex}" +
             "<when test='deviceCategory != null'> " +
             "and (a.DEVICE_CATEGORY= #{deviceCategory} or a.DEVICE_CATEGORY in (SELECT ID FROM TBL_DEVICE_CATEGORY CONNECT BY PRIOR ID = PARENT_CATEGORY START WITH PARENT_CATEGORY = #{deviceCategory})) " +
             "</when>"+

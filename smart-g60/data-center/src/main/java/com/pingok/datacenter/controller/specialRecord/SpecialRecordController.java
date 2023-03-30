@@ -28,7 +28,7 @@ public class SpecialRecordController extends BaseController {
 
     @PostMapping
     public AjaxResult add(@Validated @RequestBody TblSpecialRecord tblSpecialRecord) {
-        log.info("specialRecord--add----请求参数-----" + tblSpecialRecord);
+//        log.info("specialRecord--add----请求参数-----" + tblSpecialRecord);
         iSpecialRecordService.add(tblSpecialRecord);
         return AjaxResult.success();
     }

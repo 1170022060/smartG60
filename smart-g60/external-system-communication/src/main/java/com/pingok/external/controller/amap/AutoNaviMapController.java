@@ -6,6 +6,7 @@ import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
  *
  * @author qiumin
  */
+@Slf4j
 @RestController
 @RequestMapping("/amap")
 public class AutoNaviMapController extends BaseController {
@@ -21,8 +23,9 @@ public class AutoNaviMapController extends BaseController {
     @Autowired
     private IAutoNaviMapService iAutoNaviMapService;
 
-    @GetMapping()
+    @GetMapping("/callback")
     public AjaxResult callback(@RequestParam String sourceid, @RequestParam Long id, @RequestParam Integer status) {
+        log.info("高德地图回调事件：sourceid=" + sourceid + ",id=" + id + ",status=" + status);
         iAutoNaviMapService.callback(sourceid, id, status);
         return AjaxResult.success();
     }
@@ -36,8 +39,8 @@ public class AutoNaviMapController extends BaseController {
 
     @PutMapping()
     @Log(title = "高德地图", businessType = BusinessType.OTHER)
-    public AjaxResult eventRelieve(@RequestParam Long id) {
-        iAutoNaviMapService.eventRelieve(id);
+    public AjaxResult eventRelieve(@RequestBody TblAutoNaviMapRecord tblAutoNaviMapRecord) {
+        iAutoNaviMapService.eventRelieve(tblAutoNaviMapRecord);
         return AjaxResult.success();
     }
 }

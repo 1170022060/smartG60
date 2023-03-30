@@ -66,12 +66,12 @@ public class BridgeTemperatureServiceImpl implements IBridgeTemperatureService {
                 BigDecimal max = null;
                 BigDecimal min = null;
                 re = remoteConfigService.getConfigKey("bridge.temperature.max");
-                if (re.getCode() == R.SUCCESS && re.getData() != null) {
-                    max = new BigDecimal(re.getData().toString());
+                if (re.getCode() == R.SUCCESS) {
+                    max = new BigDecimal(re.getMsg());
                 }
                 re = remoteConfigService.getConfigKey("bridge.temperature.min");
-                if (re.getCode() == R.SUCCESS && re.getData() != null) {
-                    min = new BigDecimal(re.getData().toString());
+                if (re.getCode() == R.SUCCESS) {
+                    min = new BigDecimal(re.getMsg());
                 }
                 int size = results.size();
                 for (int i = 0; i < size; i++) {

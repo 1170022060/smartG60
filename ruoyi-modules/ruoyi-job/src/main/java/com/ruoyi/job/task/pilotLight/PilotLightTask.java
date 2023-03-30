@@ -12,12 +12,12 @@ public class PilotLightTask {
     @Autowired
     private RemotePilotLightService remotePilotLightService;
 
-    public void collectRtStatus() {
-        R r = remotePilotLightService.getRtStatus();
+    public void updateStatus() {
+        R r = remotePilotLightService.updateStatus();
         if (r.getCode() == 200) {
-            log.info("pilotLightTask 定时任务 collectRtStatus----成功");
+            log.info("pilotLightTask 定时任务 updateStatus----成功");
         } else {
-            log.error("pilotLightTask 定时任务 collectRtStatus----失败：" + r.getMsg());
+            log.error("pilotLightTask 定时任务 updateStatus----失败：" + r.getMsg());
         }
     }
 }

@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
@@ -42,6 +43,20 @@ public class TblDeviceStatus {
     /** 状态详情 */
     @Excel(name = "状态详情")
     private String statusDetails;
+
+    /**
+     * 故障类型
+     */
+    @Transient
+    private String faultType;
+
+    public String getFaultType() {
+        return faultType;
+    }
+
+    public void setFaultType(String faultType) {
+        this.faultType = faultType;
+    }
 
     public Long getId() { return id; }
 

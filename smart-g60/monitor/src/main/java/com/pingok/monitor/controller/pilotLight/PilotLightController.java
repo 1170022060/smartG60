@@ -7,11 +7,16 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.kafka.KafkaTopIc;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
+import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.system.api.RemoteKafkaService;
 import com.ruoyi.system.api.domain.kafuka.KafkaEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -23,8 +28,23 @@ public class PilotLightController extends BaseController {
     @Autowired
     private RemoteKafkaService remoteKafkaService;
 
+    @GetMapping("/list")
+    public TableDataInfo list() {
+        startPage();
+        List<Map> info = iPilotLightService.pilotLightStatus();
+        return getDataTable(info);
+    }
+
+
+    @GetMapping("/pilotLightStatus")
+    public AjaxResult pilotLightStatus() {
+        return AjaxResult.success(iPilotLightService.pilotLightStatus());
+    }
+
+
     /**
      * 引导灯控制
+     *
      * @param params：cmdType-预设模式； deviceId-设备ID；
      * @return
      */
@@ -41,5 +61,15 @@ public class PilotLightController extends BaseController {
     @GetMapping("/rtStatus")
     public AjaxResult getRtStatus(@RequestParam(required = false) Integer roadId) {
         return AjaxResult.success(iPilotLightService.getRtStatus(roadId));
+    }
+
+    @GetMapping("/total")
+    public AjaxResult total(Date startTime,Date endTime){
+        return AjaxResult.success(iPilotLightService.visibilityTotal(startTime,endTime));
+    }
+
+    @GetMapping("/trend")
+    public AjaxResult trend(Date startTime,Date endTime){
+        return AjaxResult.success(iPilotLightService.visibilityTrend(startTime,endTime));
     }
 }

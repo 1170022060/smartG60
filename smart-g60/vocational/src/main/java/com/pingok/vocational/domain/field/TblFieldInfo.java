@@ -11,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 场地信息表 TBL_FIELD_INFO
@@ -26,6 +28,9 @@ public class TblFieldInfo implements Serializable {
     @Excel(name = "ID")
     @Id
     private Long id;
+
+    /** 父级场地id */
+    private Long parentId;
 
     /** 场地名称 */
     @Excel(name = "场地名称")
@@ -73,6 +78,8 @@ public class TblFieldInfo implements Serializable {
     @Excel(name = "更新用户ID")
     private Long updateUserId;
 
+    private List<TblFieldInfo> children = new ArrayList<>();
+
     public Long getId()
     {
         return id;
@@ -81,6 +88,14 @@ public class TblFieldInfo implements Serializable {
     public void setId(Long id)
     {
         this.id = id;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long PARENT_ID) {
+        this.parentId = PARENT_ID;
     }
 
     @Size(min = 0, max = 30, message = "场地名称长度不能超过30个字符")
@@ -184,10 +199,19 @@ public class TblFieldInfo implements Serializable {
 
     public void setUpdateUserId(Long updateUserId) { this.updateUserId = updateUserId; }
 
+    public List<TblFieldInfo> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<TblFieldInfo> children) {
+        this.children = children;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
+                .append("id", getParentId())
                 .append("fieldName", getFieldName())
                 .append("fieldNum", getFieldNum())
                 .append("type", getType())

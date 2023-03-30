@@ -42,7 +42,7 @@ public interface TblVehicleRecordMapper extends CommonRepository<TblVehicleRecor
             "where a.VEH_PLATE = #{vehPlate} " +
             "where 1=1 " +
             "<when test='vehPlate != null'> " +
-            " and a.VEH_PLATE = #{vehPlate} " +
+            " and a.VEH_PLATE like '%' || #{vehPlate} || '%' " +
             "</when>"+
             " order by a.EX_TIME desc" +
             "</script>"})

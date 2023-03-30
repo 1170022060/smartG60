@@ -6,4 +6,5 @@ import lombok.Data;
 public class ExInfoVo {
     public Long recordId;
     public String year;
+    public String tableName;
 }

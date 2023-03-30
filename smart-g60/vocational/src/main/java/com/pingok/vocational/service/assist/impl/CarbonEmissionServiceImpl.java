@@ -24,4 +24,9 @@ public class CarbonEmissionServiceImpl implements ICarbonEmissionService{
     public List<Map> selectCarbonEmission(Date startDate, Date endDate) {
         return tblCarbonEmissionMapper.selectCarbonEmission(startDate, endDate);
     }
+
+    @Override
+    public List<Map> Co2Emission(Date startDate, Date endDate,Integer type) {
+        return tblCarbonEmissionMapper.Co2Emission(startDate,endDate,type);
+    }
 }

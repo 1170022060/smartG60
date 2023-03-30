@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,6 +14,7 @@ import java.util.Date;
  * 设备基础信息表
  */
 @Data
+@Table(name = "TBL_DEVICE_INFO")
 public class TblDeviceInfo implements Serializable {
 
     @Id
@@ -203,6 +205,11 @@ public class TblDeviceInfo implements Serializable {
      * 设备协议
      */
     private String protocol;
+
+    /**
+     * 备注
+     */
+    private String remark;
 
     /**
      * 从站id

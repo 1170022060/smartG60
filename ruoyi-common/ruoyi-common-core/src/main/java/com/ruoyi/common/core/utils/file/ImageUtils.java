@@ -5,9 +5,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
+
+import org.apache.commons.codec.binary.Base64;
 import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 图片处理工具类
@@ -80,5 +83,18 @@ public class ImageUtils
         {
             IOUtils.closeQuietly(in);
         }
+    }
+
+    public static MultipartFile base64ToMultipartFile(String base64) {
+        //取索引为1的元素进行处理
+        byte[] b = Base64.decodeBase64(base64);
+        for (int i = 0; i < b.length; ++i) {
+            if (b[i] < 0) {
+                b[i] += 256;
+            }
+        }
+
+        //处理过后的数据通过Base64DecodeMultipartFile转换为MultipartFile对象
+        return new Base64DecodeMultipartFile(b, "[0]data:image/png;base64");
     }
 }

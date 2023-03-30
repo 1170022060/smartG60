@@ -20,15 +20,27 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     public static String YYYY_MM_DD = "yyyy-MM-dd";
 
+    public static String HH_MM_SS = "HH:mm:ss";
+
+    public static String HH_MM = "HH:mm";
+
     public static String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 
     public static String YYYYMMDDHHMM = "yyyyMMddHHmm";
+
+    public static String YYYYMMDD = "yyyyMMdd";
 
     public static String YYYYMMDDHHMMSSSSS = "yyyyMMddHHmmssSSS";
 
     public static String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 
+    public static String YYYY_MM_DDTHH_MM_SS = "yyyy-MM-ddTHH:mm:ss";
+
+    public static String YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
+
     public static String YYYY_MM_DD_HH = "yyyy-MM-dd HH";
+
+    public static String HH = "HH";
 
     private static String[] parsePatterns = {
             "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM",
@@ -55,6 +67,9 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     public static final String getTimeMinute(Date date) {
         return dateTime(date,YYYYMMDDHHMM);
+    }
+    public static final String getTimeDay(Date date) {
+        return dateTime(date,YYYYMMDD);
     }
 
     public static final String getTime() {
@@ -111,6 +126,13 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     public static final String dateTime() {
         Date now = new Date();
         return DateFormatUtils.format(now, "yyyyMMdd");
+    }
+
+    /**
+     * 获取时间年份
+     */
+    public static final String getYear(Date now) {
+        return DateFormatUtils.format(now, "yyyy");
     }
 
     /**
@@ -433,5 +455,23 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         calendar.set(Calendar.MILLISECOND, 0);
         Date endTime = DateUtils.addHours(calendar.getTime(), 1);
         return endTime;
+    }
+
+    public static Date getBeforeMillisEndWithMinute0or5(Integer min,Date baseTime) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(baseTime);
+        int minute = calendar.get(Calendar.MINUTE);
+            int add;
+            if(min==5)
+            {
+                add = minute%10 < 5? - minute%10 : 5 - minute%10;
+            }else
+            {
+                add = -(minute % min);
+            }
+            calendar.add(Calendar.MINUTE,add);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            return calendar.getTime();
     }
 }

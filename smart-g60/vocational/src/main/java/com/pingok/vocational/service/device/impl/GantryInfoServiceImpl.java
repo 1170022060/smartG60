@@ -37,6 +37,12 @@ public class GantryInfoServiceImpl implements IGantryInfoService {
     @Autowired
     private TblDeviceCategoryService tblDeviceCategoryService;
 
+
+    @Override
+    public List<TblGantryInfo> selectAll() {
+        return tblGantryInfoMapper.selectAll();
+    }
+
     @Override
     public TblGantryInfo selectDeviceInfoGantryById(Long Id) {
         return tblGantryInfoMapper.selectByPrimaryKey(Id);
@@ -61,7 +67,7 @@ public class GantryInfoServiceImpl implements IGantryInfoService {
         if (StringUtils.isNotNull(tblDeviceInfoGantry.getGps())) {
             String[] gps = tblDeviceInfoGantry.getGps().split(",");
             TblDeviceCategory deviceCategory = tblDeviceCategoryService.selectCategoryById(tblDeviceInfoGantry.getDeviceCategory());
-            redisService.geoAdd("gantry",Double.valueOf(gps[0]),Double.valueOf(gps[1]),tblDeviceInfoGantry.getId());
+            redisService.geoAdd("gantry",Double.valueOf(gps[0].substring(1)),Double.valueOf(gps[1].substring(0,gps[1].length()-1)),tblDeviceInfoGantry.getId());
         }
         return r;
     }
@@ -73,11 +79,11 @@ public class GantryInfoServiceImpl implements IGantryInfoService {
         }
         tblDeviceInfoGantry.setUpdateTime(new Date());
         tblDeviceInfoGantry.setUpdateUserId(SecurityUtils.getUserId());
-        int r = tblGantryInfoMapper.updateByPrimaryKeySelective(tblDeviceInfoGantry);
+        int r = tblGantryInfoMapper.updateByPrimaryKey(tblDeviceInfoGantry);
         if (StringUtils.isNotNull(tblDeviceInfoGantry.getGps())) {
             String[] gps = tblDeviceInfoGantry.getGps().split(",");
             TblDeviceCategory deviceCategory = tblDeviceCategoryService.selectCategoryById(tblDeviceInfoGantry.getDeviceCategory());
-            redisService.geoAdd("gantry",Double.valueOf(gps[0]),Double.valueOf(gps[1]),tblDeviceInfoGantry.getId());
+            redisService.geoAdd("gantry",Double.valueOf(gps[0].substring(1)),Double.valueOf(gps[1].substring(0,gps[1].length()-1)),tblDeviceInfoGantry.getId());
         }
         return r;
     }

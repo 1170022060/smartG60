@@ -4,6 +4,7 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.monitor.config.HostConfig;
 import com.pingok.monitor.domain.device.TblDeviceInfo;
 import com.pingok.monitor.domain.device.TblDeviceStatus;
 import com.pingok.monitor.service.device.IStatusService;
@@ -27,8 +28,6 @@ import java.math.BigDecimal;
 @Service
 public class StatusServiceImpl implements IStatusService {
 
-    @Value("${daas.host}")
-    private String host;
 
     @Autowired
     private IHeartbeatService iHeartbeatService;
@@ -61,6 +60,7 @@ public class StatusServiceImpl implements IStatusService {
                     threshold = new BigDecimal(r.getData());
                     if (jsonObject.getBigDecimal("cpu").compareTo(threshold) > -1) {
                         deviceStatus.setStatus(0);
+                        deviceStatus.setFaultType("hardwareAbnormal");
                         statusDesc.append("|CPU占用率过高|");
                     }
                 }
@@ -69,6 +69,7 @@ public class StatusServiceImpl implements IStatusService {
                     threshold = new BigDecimal(r.getData());
                     if (jsonObject.getBigDecimal("memoryUsage").compareTo(threshold) > -1) {
                         deviceStatus.setStatus(0);
+                        deviceStatus.setFaultType("hardwareAbnormal");
                         statusDesc.append("|内存占用率过高|");
                         jsonObject.put("memory", 0);
                     } else {
@@ -80,6 +81,7 @@ public class StatusServiceImpl implements IStatusService {
                     threshold = new BigDecimal(r.getData());
                     if (jsonObject.getBigDecimal("storageUsage").compareTo(threshold) > -1) {
                         deviceStatus.setStatus(0);
+                        deviceStatus.setFaultType("hardwareAbnormal");
                         statusDesc.append("|硬盘占用率过高|");
                         jsonObject.put("storage", 0);
 
@@ -93,9 +95,10 @@ public class StatusServiceImpl implements IStatusService {
                 deviceStatus.setStatusDetails(jsonObject.toJSONString());
             } else {
                 deviceStatus.setStatus(0);
-                deviceStatus.setStatusDesc("离线");
+                deviceStatus.setStatusDesc("网络异常");
+                deviceStatus.setFaultType("offLine");
             }
-            post = HttpUtil.post(host + "/device-monitor/deviceMonitor", JSON.toJSONString(deviceStatus));
+            post = HttpUtil.post(HostConfig.DASSHOST + "/device-monitor/deviceMonitor", JSON.toJSONString(deviceStatus));
             if (!StringUtils.isEmpty(post)) {
                 ret = JSON.parseObject(post, R.class);
                 if (R.FAIL == ret.getCode()) {
@@ -127,9 +130,10 @@ public class StatusServiceImpl implements IStatusService {
             online = iHeartbeatService.ping(deviceInfo.getDeviceIp());
             if (!online) {
                 deviceStatus.setStatus(0);
-                deviceStatus.setStatusDesc("离线");
+                deviceStatus.setStatusDesc("网络异常");
+                deviceStatus.setFaultType("offLine");
             }
-            post = HttpUtil.post(host + "/device-monitor/deviceMonitor", JSON.toJSONString(deviceStatus));
+            post = HttpUtil.post(HostConfig.DASSHOST + "/device-monitor/deviceMonitor", JSON.toJSONString(deviceStatus));
             if (!StringUtils.isEmpty(post)) {
                 ret = JSON.parseObject(post, R.class);
                 if (R.FAIL == ret.getCode()) {

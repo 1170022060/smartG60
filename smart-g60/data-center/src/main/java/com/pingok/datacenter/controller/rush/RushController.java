@@ -12,7 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 闯关管理
@@ -44,9 +46,14 @@ public class RushController extends BaseController {
 
     @PostMapping
     public AjaxResult rushRecord(@RequestParam(value = "year") String year, @RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime") String endTime, @RequestParam(value = "twoHours") String twoHours) {
-        log.info("rushRecord----------year:" + year + "---startTime:" + startTime + "---endTime:" + endTime + "---twoHours:" + twoHours);
+//        log.info("rushRecord----------year:" + year + "---startTime:" + startTime + "---endTime:" + endTime + "---twoHours:" + twoHours);
         iRushService.rushRecord(year, startTime, endTime, twoHours);
         return AjaxResult.success();
     }
 
+    @GetMapping("/detail")
+    public AjaxResult detail(@RequestParam(value = "vehPlate") String vehPlate, @RequestParam(value = "laneHex") String laneHex, @RequestParam(value = "transTime")Date transTime) {
+        Map detail = iRushService.detail(vehPlate,laneHex,transTime);
+        return AjaxResult.success(detail);
+    }
 }

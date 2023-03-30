@@ -22,5 +22,5 @@ public interface RemoteAmapService {
     R eventPublish(@RequestBody TblAutoNaviMapRecord autoNaviMapRecord);
 
     @PutMapping("/amap")
-    R eventRelieve(@RequestParam(value = "id") Long id);
+    R eventRelieve(@RequestBody TblAutoNaviMapRecord autoNaviMapRecord);
 }

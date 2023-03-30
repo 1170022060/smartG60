@@ -27,7 +27,7 @@ public interface TblTractorListRecordMapper extends CommonRepository<TblTractorL
             "left join  SYS_DICT_DATA b on b.DICT_VALUE=a.VEH_COLOR and b.DICT_TYPE='veh_color' " +
             "where 1=1 " +
             "<when test='vehPlate != null'> " +
-            "and a.VEH_PLATE= #{vehPlate} " +
+            "and a.VEH_PLATE like '%' || #{vehPlate} || '%' " +
             "</when>"+
             "<when test='status != null'> " +
             "and a.STATUS= #{status} " +

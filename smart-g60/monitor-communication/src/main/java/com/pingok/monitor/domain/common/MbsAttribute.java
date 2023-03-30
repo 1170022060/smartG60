@@ -23,7 +23,7 @@ public class MbsAttribute {
 
     public MbsAttribute(String host, Integer port, Integer slaveId, Integer funcCode, Integer offset, Integer count, Integer dataType) {
         this.host = host;
-        this.port = port;
+        this.port = port == null ? 502 : port;
         this.slaveId = slaveId;
         this.funcCode = funcCode;
         this.offset = offset;

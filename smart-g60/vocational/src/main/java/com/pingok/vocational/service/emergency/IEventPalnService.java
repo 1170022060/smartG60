@@ -1,6 +1,8 @@
 package com.pingok.vocational.service.emergency;
 
+import com.alibaba.fastjson.JSONArray;
 import com.pingok.vocational.domain.emergency.TblEventPaln;
+import com.ruoyi.system.api.domain.device.TblDeviceInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,12 @@ import java.util.Map;
  * @author ruoyi
  */
 public interface IEventPalnService {
+
+    /**
+     * 根据应急预案ID查询设备列表
+     * @return
+     */
+    JSONArray deviceList(Long eventId,Long planId, Integer type);
 
     /**
      * 根据事件id获取应急预案列表
@@ -65,5 +73,12 @@ public interface IEventPalnService {
      * @return 结果
      */
     int update(TblEventPaln tblEventPaln);
+
+    /**
+     * 选择应急小组时查询应急小组信息
+     * @param suppliesType
+     * @return
+     */
+    List<Map> selectPlanGroup(Integer suppliesType);
 
 }

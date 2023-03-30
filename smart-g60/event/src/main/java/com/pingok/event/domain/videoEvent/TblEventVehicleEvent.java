@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @author
@@ -35,9 +36,9 @@ public class TblEventVehicleEvent implements Serializable {
     private Integer uiMonth; // int 记录时间的月份
     private Integer uiDay; // int 记录时间的天数
     private Integer uiHour; // int 记录时间的小时
-    private String uiMin; // string 记录时间的分钟
-    private String uiWidth; // string 图片宽度
-    private Integer uiHeight; // int 图片高度
+    private Integer uiMin; // Integer 记录时间的分钟
+    private BigDecimal uiWidth; // Integer 图片宽度
+    private BigDecimal uiHeight; // int 图片高度
     private Integer uiVehiclePlateColor; // int 车牌颜色
     private Integer uiVehicleColor1; // int 车身颜色1（见附录）
     private Integer uiVehicleColor2; // int 车身颜色2（见附录）
@@ -49,11 +50,14 @@ public class TblEventVehicleEvent implements Serializable {
     private Integer uiVehiclePlateConfidence; // int 置信度
     private Integer uiVehicleSpeed; // int 车速
     private Integer uiVehicleLane; // int 所在车道号
-    private Integer szVehiclePlateRegion; // String 车牌区域所在的矩形（x,y,w,h）
+    private String szVehiclePlateRegion; // String 车牌区域所在的矩形（x,y,w,h）
     private Long ubiSourceId; // long 视频源id
     private String szSceneId; // String 场景id
     private Long ubiSectionId; // long 断面id
-
+    private String szSourceCode;//相机ID
+    private String uiTrackId;
+    private Integer uiDeviceType;
+    private Long ubiPtzShortId;//关联云台相机编号，不存在时为空
     @Transient
     private String video;
 }

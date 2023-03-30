@@ -1,5 +1,7 @@
 package com.pingok.external.controller.roadDoctor;
 
+import cn.hutool.json.JSONObject;
+import com.google.gson.JsonObject;
 import com.pingok.external.service.roadDoctor.IRoadDoctorService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
@@ -9,6 +11,7 @@ import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.InnerAuth;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -27,7 +30,7 @@ public class RoadDoctorController extends BaseController {
     @Autowired
     private IRoadDoctorService iRoadDoctorService;
 
-    @InnerAuth
+//    @InnerAuth
     @PostMapping()
     public AjaxResult updateDisease() {
         iRoadDoctorService.updateDisease();
@@ -40,5 +43,12 @@ public class RoadDoctorController extends BaseController {
         startPage();
         List<Map> list = iRoadDoctorService.list(questName, pZhuangHao, startTime, endTime);
         return getDataTable(list);
+    }
+
+    @RequiresPermissions("external-system:roadDoctor:push")
+    @Log(title = "道路病害管理", businessType = BusinessType.OTHER)
+    @PostMapping("/push")
+    public AjaxResult push(@Validated @RequestBody JSONObject jsonObject) {
+        return AjaxResult.success();
     }
 }

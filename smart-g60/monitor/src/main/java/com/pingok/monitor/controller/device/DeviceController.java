@@ -36,8 +36,8 @@ public class DeviceController extends BaseController {
     }
 
 
-    @RequiresPermissions("monitor:device:search")
-    @Log(title = "设备监控服务", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("monitor:device:search")
+//    @Log(title = "设备监控服务", businessType = BusinessType.OTHER)
     @GetMapping("/search")
     public TableDataInfo search(Long deviceCategory, String deviceName, String deviceId) {
         startPage();
@@ -45,14 +45,14 @@ public class DeviceController extends BaseController {
         return getDataTable(list);
     }
 
-    @RequiresPermissions("monitor:device:findByFieldNum")
-    @Log(title = "设备监控服务", businessType = BusinessType.OTHER)
+//    @RequiresPermissions("monitor:device:findByFieldNum")
+//    @Log(title = "设备监控服务", businessType = BusinessType.OTHER)
     @GetMapping
     public AjaxResult findByFieldNum(@RequestParam String fieldNum) {
         return AjaxResult.success(iDeviceInfoService.findByFieldNum(fieldNum));
     }
 
-    @Log(title = "设备监控服务", businessType = BusinessType.OTHER)
+//    @Log(title = "设备监控服务", businessType = BusinessType.OTHER)
     @GetMapping("/base")
     public AjaxResult base() {
         BaseInfo baseInfo =new BaseInfo();

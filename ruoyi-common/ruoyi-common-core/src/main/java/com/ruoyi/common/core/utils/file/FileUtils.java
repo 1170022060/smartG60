@@ -1,17 +1,26 @@
 package com.ruoyi.common.core.utils.file;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import okhttp3.Response;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import com.ruoyi.common.core.utils.StringUtils;
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.util.TextUtils;
 
 /**
  * 文件处理工具类
@@ -258,4 +267,123 @@ public class FileUtils
         String encode = URLEncoder.encode(s, StandardCharsets.UTF_8.toString());
         return encode.replaceAll("\\+", "%20");
     }
+
+    /**
+     * 将字符串写入指定文件(当指定的父路径中文件夹不存在时，会最大限度去创建，以保证保存成功！)
+     *
+     * @param res            原字符串
+     * @param filePath 文件路径
+     * @return 成功标记
+     */
+    public static boolean string2File(String res, String filePath) {
+        boolean flag = true;
+        BufferedReader bufferedReader = null;
+        BufferedWriter bufferedWriter = null;
+        try {
+            File distFile = new File(filePath);
+            if (!distFile.getParentFile().exists()) distFile.getParentFile().mkdirs();
+            bufferedReader = new BufferedReader(new StringReader(res));
+            bufferedWriter = new BufferedWriter(new FileWriter(distFile));
+            char buf[] = new char[1024];         //字符缓冲区
+            int len;
+            while ((len = bufferedReader.read(buf)) != -1) {
+                bufferedWriter.write(buf, 0, len);
+            }
+            bufferedWriter.flush();
+            bufferedReader.close();
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            flag = false;
+            return flag;
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return flag;
+    }
+
+    /**
+     * 获取文件MD5摘要
+     * @param filePath
+     * @return
+     */
+    public static String fileMd5(String filePath) {
+        String fileMd5 = null;
+        try {
+            fileMd5 = DigestUtils.md5Hex(new FileInputStream(filePath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return fileMd5;
+    }
+    /**
+     * 解析文件头
+     * Content-Disposition:attachment;filename=FileName.txt
+     * Content-Disposition: attachment; filename*="UTF-8''%E6%9B%BF%E6%8D%A2%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A.pdf"
+     */
+    public static String getHeaderFileName(Response response) {
+        String dispositionHeader = response.header("Content-Disposition");
+        if (!TextUtils.isEmpty(dispositionHeader)) {
+            dispositionHeader = dispositionHeader.replace("attachment;filename=", "");
+            return dispositionHeader;
+        }
+        return "";
+    }
+
+    public static List<String> unzip(String zippath, String resourcepath){
+        List<String> fileNames= new ArrayList<>();
+        String zipEntryName;
+        ZipEntry entry;
+        InputStream in;
+        String outpath;
+        File file;
+        OutputStream out;
+        //判断生成目录是否生成，如果没有就创建
+        File pathFile=new File(resourcepath);
+        if(!pathFile.exists()){
+            pathFile.mkdirs();
+        }
+        ZipFile zp=null;
+        try{
+            //指定编码，否则压缩包里面不能有中文目录
+            zp=new ZipFile(zippath, Charset.forName("gbk"));
+            //遍历里面的文件及文件夹
+            Enumeration entries=zp.entries();
+            while(entries.hasMoreElements()){
+                entry= (ZipEntry) entries.nextElement();
+                zipEntryName=entry.getName();
+                fileNames.add(zipEntryName);
+                in=zp.getInputStream(entry);
+                outpath=(resourcepath+zipEntryName).replace("/",File.separator);
+                //判断路径是否存在，不存在则创建文件路径
+                file = new  File(outpath.substring(0,outpath.lastIndexOf(File.separator)));
+                if(!file.exists()){
+                    file.mkdirs();
+                }
+                //判断文件全路径是否为文件夹,如果是,不需要解压
+                if(new File(outpath).isDirectory())
+                    continue;
+                out=new FileOutputStream(outpath);
+                byte[] bf=new byte[2048];
+                int len;
+                while ((len=in.read(bf))>0){
+                    out.write(bf,0,len);
+                }
+                in.close();
+                out.close();
+            }
+            zp.close();
+        }catch ( Exception e){
+            e.printStackTrace();
+        }
+        return fileNames;
+    }
+
+
 }

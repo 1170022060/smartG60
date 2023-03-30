@@ -1,6 +1,8 @@
 package com.pingok.vocational.service.customer.impl;
 
+import com.pingok.vocational.domain.customer.CustomerProblemsEx;
 import com.pingok.vocational.domain.customer.TblCustomerProblems;
+import com.pingok.vocational.domain.customer.vo.CustomerProblemsVo;
 import com.pingok.vocational.mapper.customer.TblCustomerProblemsMapper;
 import com.pingok.vocational.service.customer.ICustomerProblemsService;
 import com.ruoyi.common.core.utils.PinYinUtil;
@@ -33,8 +35,13 @@ public class CustomerProblemsServiceImpl implements ICustomerProblemsService {
     }
 
     @Override
-    public List<Map> selectCustomerProblems(Long handleUserId, Date startTime, Date endTime,Long handleDept) {
-        return tblCustomerProblemsMapper.selectCustomerProblems(handleUserId, startTime, endTime, handleDept);
+    public List<Map> selectInfo(CustomerProblemsVo customerProblemsVo) {
+        return tblCustomerProblemsMapper.selectInfo(customerProblemsVo);
+    }
+
+    @Override
+    public List<CustomerProblemsEx> selectCustomerProblems(CustomerProblemsVo customerProblemsVo) {
+        return tblCustomerProblemsMapper.selectCustomerProblems(customerProblemsVo);
     }
 
     @Override
@@ -47,10 +54,13 @@ public class CustomerProblemsServiceImpl implements ICustomerProblemsService {
 
     @Override
     public int updateCustomer(TblCustomerProblems tblCustomerProblems) {
-        tblCustomerProblems.setUpdateTime(new Date());
-        tblCustomerProblems.setUpdateUserId(SecurityUtils.getUserId());
-        tblCustomerProblems.setHandleTime(new Date());
-        tblCustomerProblems.setHandleUserId(SecurityUtils.getUserId());
-        return tblCustomerProblemsMapper.updateByPrimaryKeySelective(tblCustomerProblems);
+//        tblCustomerProblems.setUpdateTime(new Date());
+//        tblCustomerProblems.setUpdateUserId(SecurityUtils.getUserId());
+        tblCustomerProblems.setReplyTime(new Date());
+        tblCustomerProblems.setReplyUserId(SecurityUtils.getUserId());
+        if (tblCustomerProblems.getResult() !=null){
+            tblCustomerProblems.setStatus(0);
+        }
+        return tblCustomerProblemsMapper.updateByPrimaryKey(tblCustomerProblems);
     }
 }

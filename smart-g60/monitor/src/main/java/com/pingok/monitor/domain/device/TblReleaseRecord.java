@@ -69,4 +69,5 @@ public class TblReleaseRecord implements java.io.Serializable {
     /** 预设名称 */
     private String presetName;
 
+    private Integer model;
 }

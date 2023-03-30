@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -45,6 +46,12 @@ public class TblDeviceStatus implements Serializable {
      * 状态详情
      */
     private String statusDetails;
+    /**
+     * 故障类型
+     */
+    @Transient
+    private String faultType;
+
 
     private static final long serialVersionUID = 1L;
 

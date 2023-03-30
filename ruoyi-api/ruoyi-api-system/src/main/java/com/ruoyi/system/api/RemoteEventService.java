@@ -9,9 +9,7 @@ import com.ruoyi.system.api.factory.RemoteEventFallbackFactory;
 import com.ruoyi.system.api.factory.RemoteGpsFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,9 +21,14 @@ import java.util.List;
 @FeignClient(contextId = "remoteEventService", value = ServiceNameConstants.EVENT_SERVICE, fallbackFactory = RemoteEventFallbackFactory.class)
 public interface RemoteEventService {
 
+    @GetMapping("/eventControl/selectByEventTypeAndPileNo")
+    R<TblEventRecord> selectByEventTypeAndPileNo(@RequestParam(value = "eventType") String eventType, @RequestParam(value = "pileNo") String pileNo);
 
     @PostMapping("/eventControl")
     R add(@Validated @RequestBody TblEventRecord tblEventRecord);
+
+    @PutMapping("/eventControl")
+    R edit(@Validated @RequestBody TblEventRecord tblEventRecord);
 
     @PostMapping("/algorithm/getLaneAvgSpeed")
     R<List<LaneAvgSpeed>> getLaneAvgSpeed(@RequestBody JSONObject body);

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 public class VmsInfoByType {
@@ -22,11 +23,19 @@ public class VmsInfoByType {
 
     private Integer port;
 
+    private Integer slaveId;
+
     private String pileNo;
 
     private Integer direction;
 
     private String gps;
+
+    private String protocol;
+
+    private Integer width;
+
+    private Integer high;
 
     private Integer deviceStatus;
 
@@ -46,4 +55,12 @@ public class VmsInfoByType {
     private String color;
 
     private String pictureType;
+
+    private String recent5;
+
+    private String publishContent;
+
+    private String cameraId;
+
+    private Integer model;
 }

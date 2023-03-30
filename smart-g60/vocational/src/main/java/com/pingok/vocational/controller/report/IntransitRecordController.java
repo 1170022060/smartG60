@@ -41,10 +41,10 @@ public class IntransitRecordController extends BaseController {
     @RequiresPermissions("vocational:intransit:export")
     @Log(title = "在途总流量记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    @ResponseBody
-    public void export(HttpServletResponse response, @RequestBody ReportVo reportVo)
+//    @ResponseBody
+    public void export(HttpServletResponse response, @RequestParam(name = "startDate",required = false) Date startDate, @RequestParam(name = "endDate",required = false) Date endDate)
     {
-        List<IntransitRecordVo> list = tblIntransitRecordService.selectIntransitRecordList(reportVo);
+        List<IntransitRecordVo> list = tblIntransitRecordService.selectIntransitRecordList(startDate,endDate);
         ExcelUtil<IntransitRecordVo> util = new ExcelUtil<IntransitRecordVo>(IntransitRecordVo.class);
         util.exportExcel(response,list, "在途总流量记录");
     }

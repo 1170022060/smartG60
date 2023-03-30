@@ -29,4 +29,13 @@ public interface IGantryRecordService {
      * @return 门架段面记录
      */
     List<GantryRecordVo> selectGantryRecordList(ReportVo reportVo);
+
+    /**
+     * 获取门架断面流量统计数据
+     * @param gantryId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<Map> selectGantryFlow(String gantryId,Date startDate,Date endDate);
 }

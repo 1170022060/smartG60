@@ -23,12 +23,12 @@ public class RemotePilotLightFallbackFactory implements FallbackFactory<RemotePi
         return new RemotePilotLightService() {
 
             @Override
-            public R sendCmdToDeviceV2(JSONObject body) {
+            public R send(JSONObject body) {
                 return null;
             }
 
             @Override
-            public R getRtStatus() {
+            public R updateStatus() {
                 return null;
             }
         };

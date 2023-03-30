@@ -27,7 +27,7 @@ public class LaneStatusController extends BaseController {
 
     @PostMapping
     public AjaxResult update(@Validated @RequestBody TblLaneStatus tblLaneStatus) {
-        log.info("车道状态update----请求参数-----" + tblLaneStatus);
+//        log.info("车道状态update----请求参数-----" + tblLaneStatus);
         iLaneStatusService.update(tblLaneStatus);
         return AjaxResult.success();
     }

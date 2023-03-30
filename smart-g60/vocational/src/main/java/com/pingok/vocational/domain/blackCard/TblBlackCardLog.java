@@ -1,10 +1,13 @@
 package com.pingok.vocational.domain.blackCard;
 
+import lombok.Data;
+
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
+@Data
 @Table(name = "TBL_BLACK_CARD_LOG")
 public class TblBlackCardLog implements Serializable {
 

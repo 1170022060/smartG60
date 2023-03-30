@@ -27,7 +27,6 @@ public class SoftwareInfoController extends BaseController {
 
     @PostMapping
     public AjaxResult heartbeat(@Validated @RequestBody TblSoftwareHeartbeat tblSoftwareHeartbeat) {
-        log.info("heartbeat----请求参数-----" + tblSoftwareHeartbeat);
         if (tblSoftwareHeartbeat.getNum() == null) {
             return AjaxResult.error("num不能为空");
         }

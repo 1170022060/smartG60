@@ -1,22 +1,28 @@
 package com.pingok.monitor.service.videoEvent.impl;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
-import com.pingok.monitor.config.AliYunConfig;
+import com.alibaba.fastjson.JSONObject;
+import com.pingok.monitor.config.HostConfig;
 import com.pingok.monitor.domain.event.*;
+import com.pingok.monitor.domain.event.vo.FaceInfoVo;
 import com.pingok.monitor.mapper.event.*;
 import com.pingok.monitor.service.videoEvent.IVideoEventService;
 import com.pingok.monitor.service.videoEvent.IVideoService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.common.core.utils.sign.Base64;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,6 +46,40 @@ public class VideoEventServiceImpl implements IVideoEventService {
     @Autowired
     private IVideoService iVideoService;
 
+
+    @Async
+    @Override
+    public void updateFaceInfo(FaceInfoVo faceInfoVo) {
+        log.info("人像信息上传------------------------------" + faceInfoVo.getUbiLogicId());
+        faceInfoVo.setSzImg(updateImages(faceInfoVo.getSzImg()));
+        faceInfoVo.setSzSmallImg(updateImages((faceInfoVo.getSzSmallImg())));
+        log.info(JSON.toJSONString(faceInfoVo));
+        int time = 3;
+        while (true) {
+            try {
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/faceInfo", JSON.toJSONString(faceInfoVo));
+                if (!StringUtils.isEmpty(post)) {
+                    if (post.startsWith("{")) {
+                        R ret = JSON.parseObject(post, R.class);
+                        if (R.SUCCESS == ret.getCode()) {
+                            break;
+                        } else {
+                            log.error(faceInfoVo.getUbiLogicId() + " 人像信息上传失败：" + ret.getMsg());
+                        }
+                    } else {
+                        log.error(faceInfoVo.getUbiLogicId() + " 人像信息上传失败：" + post);
+                    }
+                    Thread.sleep(time * 1000);
+                }
+            } catch (Exception e) {
+                log.error(faceInfoVo.getUbiLogicId() + " 人像信息上传失败：" + e.getMessage());
+            }
+            time += 3;
+            if (time > 9) {
+                return;
+            }
+        }
+    }
 
     @Override
     public void fluxData(TblEventFlux tblEventFlux) {
@@ -70,37 +110,39 @@ public class VideoEventServiceImpl implements IVideoEventService {
         tblEventParkingEventMapper.insert(tblEventParkingEvent);
     }
 
+
     @Override
     public void updateEventVideo(Long ubiLogicId) {
-        String url = iVideoService.getEventVideoById(ubiLogicId,2,2);
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("ubiLogicId",ubiLogicId);
-        paramMap.put("url",url);
-        try {
-            String post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/updateEventVideo",paramMap);
-            if (!StringUtils.isEmpty(post)) {
-                if (post.startsWith("{")) {
-                    R ret = JSON.parseObject(post, R.class);
-                    if (R.FAIL == ret.getCode()) {
-                        log.error(ubiLogicId + " 事件视频上传失败：" + ret.getMsg());
+        String url = iVideoService.getEventVideoById(ubiLogicId, 2, 1);
+        if (url != null) {
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("ubiLogicId", ubiLogicId);
+            paramMap.put("url", url);
+            try {
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/updateEventVideo", paramMap);
+                if (!StringUtils.isEmpty(post)) {
+                    if (post.startsWith("{")) {
+                        JSONObject ret = JSONObject.parseObject(post);
+                        if (ret.containsKey("code") && ret.getInteger("code") != 200) {
+                            log.error(ubiLogicId + " 事件视频上传失败：" + ret.getString("msg"));
+                        }
+                    } else {
+                        log.error(ubiLogicId + " 事件视频上传状态未知");
                     }
-                } else {
-                    log.error(ubiLogicId + " 事件视频上传状态未知");
                 }
+            } catch (Exception e) {
+                log.error(ubiLogicId + " 事件视频上传失败：" + e.getMessage());
             }
-        } catch (Exception e) {
-            log.error(ubiLogicId + " 事件视频上传失败：" + e.getMessage());
         }
-
     }
 
     @Async
     @Override
     public void updateFluxData(TblEventFlux tblEventFlux) {
-        int time = 1;
+        int time = 3;
         while (true) {
             try {
-                String post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/flux", JSON.toJSONString(tblEventFlux));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/flux", JSON.toJSONString(tblEventFlux));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -117,21 +159,21 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } catch (Exception e) {
                 log.error(tblEventFlux.getUbiLogicId() + " 流量统计上报失败：" + e.getMessage());
             }
-            time += 2;
+            time += 3;
+            if (time > 9) {
+                return;
+            }
         }
-        Example example = new Example(TblEventFlux.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("ubiLogicId", tblEventFlux.getUbiLogicId());
-        tblEventFluxMapper.deleteByExample(example);
+        tblEventFluxMapper.delete(tblEventFlux);
     }
 
     @Async
     @Override
     public void updatePlateInfo(TblEventPlateInfo tblEventPlateInfo) {
-        int time = 1;
+        int time = 3;
         while (true) {
             try {
-                String post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/plateInfo", JSON.toJSONString(tblEventPlateInfo));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/plateInfo", JSON.toJSONString(tblEventPlateInfo));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -148,22 +190,22 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } catch (Exception e) {
                 log.error(tblEventPlateInfo.getUbiLogicId() + " 过车数据上报失败：" + e.getMessage());
             }
-            time += 2;
+            time += 3;
+            if (time > 9) {
+                return;
+            }
         }
-        Example example = new Example(TblEventPlateInfo.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("ubiLogicId", tblEventPlateInfo.getUbiLogicId());
-        tblEventPlateInfoMapper.deleteByExample(example);
+        tblEventPlateInfoMapper.delete(tblEventPlateInfo);
     }
 
     @Async
     @Override
     public void updateVehicleEvent(TblEventVehicleEvent tblEventVehicleEvent) {
-        int time = 1;
+        int time = 3;
         String post;
         while (true) {
             try {
-                post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/vehicleEvent", JSON.toJSONString(tblEventVehicleEvent));
+                post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/vehicleEvent", JSON.toJSONString(tblEventVehicleEvent));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -180,23 +222,33 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } catch (Exception e) {
                 log.error(tblEventVehicleEvent.getUbiLogicId() + " 交通事件上报失败：" + e.getMessage());
             }
-            time += 2;
+            time += 3;
+            if (time > 9) {
+                return;
+            }
         }
-        Example example = new Example(TblEventVehicleEvent.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("ubiLogicId", tblEventVehicleEvent.getUbiLogicId());
-        tblEventVehicleEventMapper.deleteByExample(example);
 
-        updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
+        tblEventVehicleEventMapper.delete(tblEventVehicleEvent);
+
+        List<Integer> list = Arrays.asList(5, 6, 14, 15, 10016, 31, 32, 34, 35, 36, 40, 41, 37);
+        if (!list.contains(tblEventVehicleEvent.getUiEventType())) {
+//            try {
+//                Thread.sleep(120 * 1000);
+//                updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+            updateEventVideo(tblEventVehicleEvent.getUbiLogicId());
+        }
     }
 
     @Async
     @Override
     public void updatePassengerFlow(TblEventPassengerFlow tblEventPassengerFlow) {
-        int time = 1;
+        int time = 3;
         while (true) {
             try {
-                String post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/passengerFlow", JSON.toJSONString(tblEventPassengerFlow));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/passengerFlow", JSON.toJSONString(tblEventPassengerFlow));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -213,21 +265,21 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } catch (Exception e) {
                 log.error(tblEventPassengerFlow.getUiType() + " 客流量上报失败：" + e.getMessage());
             }
-            time += 2;
+            time += 3;
+            if (time > 9) {
+                return;
+            }
         }
-        Example example = new Example(TblEventPassengerFlow.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("uiType", tblEventPassengerFlow.getUiType());
-        tblEventPassengerFlowMapper.deleteByExample(example);
+        tblEventPassengerFlowMapper.delete(tblEventPassengerFlow);
     }
 
     @Async
     @Override
     public void updateParkingEvent(TblEventParkingEvent tblEventParkingEvent) {
-        int time = 1;
+        int time = 3;
         while (true) {
             try {
-                String post = HttpUtil.post(AliYunConfig.DASSHOST + "/eventControl/parkingEvent", JSON.toJSONString(tblEventParkingEvent));
+                String post = HttpUtil.post(HostConfig.DASSHOST + "/event/eventControl/parkingEvent", JSON.toJSONString(tblEventParkingEvent));
                 if (!StringUtils.isEmpty(post)) {
                     if (post.startsWith("{")) {
                         R ret = JSON.parseObject(post, R.class);
@@ -244,12 +296,37 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } catch (Exception e) {
                 log.error(tblEventParkingEvent.getUbiLogicId() + " 货车检查事件上报失败：" + e.getMessage());
             }
-            time += 2;
+            time += 3;
+            if (time > 9) {
+                return;
+            }
         }
-        Example example = new Example(TblEventParkingEvent.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("ubiLogicId", tblEventParkingEvent.getUbiLogicId());
-        tblEventParkingEventMapper.deleteByExample(example);
+        tblEventParkingEventMapper.delete(tblEventParkingEvent);
+    }
+
+
+    private String updateImages(String images) {
+        String url = null;
+        byte[] bytes = Base64.decode(images);
+        HttpResponse httpResponse = HttpRequest.post(HostConfig.DASSHOST + "/ruoyi-file/upload")
+                .form("file", bytes, ContentType.APPLICATION_OCTET_STREAM.toString())
+                .execute();
+        String post = httpResponse.body();
+        if (!StringUtils.isEmpty(post)) {
+            if (post.startsWith("{")) {
+                JSONObject ret = JSONObject.parseObject(post);
+                if (ret.containsKey("code") && ret.getInteger("code") == 200) {
+                    url = ret.getJSONObject("data").getString("url");
+                } else {
+                    log.error(" 图片上传失败：" + ret.getString("msg"));
+                }
+            } else {
+                log.error(" 图片上传失败：" + post);
+            }
+        } else {
+            log.error(" 图片上传失败：" + post);
+        }
+        return url;
     }
 
 }

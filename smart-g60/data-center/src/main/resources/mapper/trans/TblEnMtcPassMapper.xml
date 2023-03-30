@@ -5,7 +5,8 @@
 <mapper namespace="com.pingok.datacenter.mapper.trans.TblEnMtcPassMapper">
 
     <resultMap type="com.pingok.datacenter.domain.trans.TblEnMtcPass" id="TblEnMtcPassResult">
-        <id     property="recordId"  column="record_id"   />
+        <id     property="id"  column="id"   />
+        <result     property="recordId"  column="record_id"   />
         <result property="transTime"  column="trans_time"   />
         <result property="cpcCardId"  column="cpc_card_id"   />
         <result property="cpcElec"  column="cpc_elec"   />
@@ -13,15 +14,17 @@
 
     <insert id="insertEnMtcPass" parameterType="com.pingok.datacenter.domain.trans.TblEnMtcPass">
         insert into ${tableName}(
+        <if test="recordId != null ">record_id,</if>
         <if test="transTime!= null ">trans_time,</if>
         <if test="cpcCardId!= null ">cpc_card_id,</if>
         <if test="cpcElec!= null ">cpc_elec,</if>
-        record_id
+        id
         )values(
+        <if test="recordId != null ">#{recordId},</if>
         <if test="transTime != null ">#{transTime},</if>
         <if test="cpcCardId != null ">#{cpcCardId},</if>
         <if test="cpcElec != null ">#{cpcElec},</if>
-        #{recordId}
+        #{id}
         )
     </insert>
 </mapper>

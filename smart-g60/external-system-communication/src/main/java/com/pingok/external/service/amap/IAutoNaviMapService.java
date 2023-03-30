@@ -22,7 +22,6 @@ public interface IAutoNaviMapService {
     /**
      * 事件解除
      *
-     * @param id
      */
-    void eventRelieve(Long id);
+    void eventRelieve(TblAutoNaviMapRecord autoNaviMapRecord);
 }

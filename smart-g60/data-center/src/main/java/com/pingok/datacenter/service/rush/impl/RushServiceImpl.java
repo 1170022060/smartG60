@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 闯关确认 服务层处理
@@ -54,5 +56,30 @@ public class RushServiceImpl implements IRushService {
     @Override
     public List<TblRushRecord> list(String stationName, String vehPlate, String startTime, String endTime) {
         return tblRushRecordMapper.list(stationName, vehPlate, startTime, endTime);
+    }
+
+    @Override
+    public Map detail(String vehPlate, String laneHex,Date transTime) {
+        String year=DateUtils.getTimeDay(transTime).substring(0,4);
+
+        String passId=tblRushRecordMapper.getPassId(vehPlate, laneHex, transTime,year);
+        if(passId.startsWith("01")||passId.startsWith("02"))
+        {
+            Map entry=tblRushRecordMapper.entry(passId.substring(22,26),passId);
+            Map exit=tblRushRecordMapper.exit(passId.substring(22,26),passId);
+            List<Map> exitAll=tblRushRecordMapper.exitAll(passId.substring(22,26),(Date)exit.get("transTime"),exit.get("laneHex").toString(),passId);
+            entry.put("exit",exitAll);
+            return entry;
+        }
+        if(passId.startsWith("03"))
+        {
+            Map entry=tblRushRecordMapper.entry(passId.substring(24,28),passId);
+            Map exit=tblRushRecordMapper.exit(passId.substring(24,28),passId);
+
+            List<Map> exitAll=tblRushRecordMapper.exitAll(passId.substring(24,28),(Date)exit.get("transTime"),exit.get("laneHex").toString(),passId);
+            entry.put("exit",exitAll);
+            return exit;
+        }
+        return null;
     }
 }

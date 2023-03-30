@@ -22,17 +22,18 @@ public class BaiDuMapController extends BaseController {
     private IBaiDuMapService iBaiDuMapService;
 
 
+
     @PostMapping()
     @Log(title = "百度地图", businessType = BusinessType.OTHER)
-    public AjaxResult eventPublish(@RequestBody TblBaiDuMapRecord tblBaiDuMapRecord) {
-        iBaiDuMapService.eventPublish(tblBaiDuMapRecord);
+    public AjaxResult eventPublish(@RequestBody TblBaiDuMapRecord baiDuMapRecord) {
+        iBaiDuMapService.eventPublish(baiDuMapRecord);
         return AjaxResult.success();
     }
 
-    @PutMapping()
-    @Log(title = "百度地图", businessType = BusinessType.OTHER)
-    public AjaxResult eventRelieve(@RequestParam Long id) {
-        iBaiDuMapService.eventRelieve(id);
-        return AjaxResult.success();
-    }
+//    @PutMapping()
+//    @Log(title = "百度地图", businessType = BusinessType.OTHER)
+//    public AjaxResult eventRelieve(@RequestParam Long id) {
+//        iBaiDuMapService.eventRelieve(id);
+//        return AjaxResult.success();
+//    }
 }

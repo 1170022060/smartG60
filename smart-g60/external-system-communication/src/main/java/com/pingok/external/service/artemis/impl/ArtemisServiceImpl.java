@@ -30,6 +30,7 @@ public class ArtemisServiceImpl implements IArtemisService {
 
     @Override
     public String httpRequest(String api, String body) {
+        ArtemisConfig ArtemisConfig = new ArtemisConfig();
         ArtemisConfig.host = ArtemisLocalConfig.HOST;
         ArtemisConfig.appKey = ArtemisLocalConfig.APPKEY;
         ArtemisConfig.appSecret = ArtemisLocalConfig.APPSECRET;
@@ -41,8 +42,14 @@ public class ArtemisServiceImpl implements IArtemisService {
             }
         };
         String contentType = "application/json";
-        String result = ArtemisHttpUtil.doPostStringArtemis(path, body, null, null, contentType, null);
+        String result = null;
+        try {
+            result = ArtemisHttpUtil.doPostStringArtemis(ArtemisConfig,path, body, null, null, contentType, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return result;
+
     }
 
     @Override
@@ -91,7 +98,7 @@ public class ArtemisServiceImpl implements IArtemisService {
                                             switch (deviceStatus.getInteger("online")){
                                                 case 0:
                                                     tblDeviceStatus.setStatus(0);
-                                                    tblDeviceStatus.setStatusDesc("离线");
+                                                    tblDeviceStatus.setStatusDesc("网络异常");
                                                     break;
                                                 case 1:
                                                     tblDeviceStatus.setStatus(1);

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
@@ -24,6 +25,7 @@ public class TblDeviceInfo implements Serializable {
     /**
      * 立项时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date itemListTime;
 
     /**
@@ -69,6 +71,7 @@ public class TblDeviceInfo implements Serializable {
     /**
      * 安装日期
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date installDate;
 
     /**
@@ -174,11 +177,13 @@ public class TblDeviceInfo implements Serializable {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     /**
@@ -200,6 +205,25 @@ public class TblDeviceInfo implements Serializable {
      * 设备协议
      */
     private String protocol;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 设备类型
+     */
+    private Integer deviceType;
+
+    /**
+     * 从站id
+     */
+    private Integer slaveId;
+
+    private Integer width;
+
+    private Integer high;
 
     private static final long serialVersionUID = 1L;
 }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  *
  * @author ruoyi
  */
-@FeignClient(contextId = "remoteInfoBoardService", value = ServiceNameConstants.DATA_CENTER_SERVICE, fallbackFactory = RemoteInfoBoardFallbackFactory.class)
+@FeignClient(contextId = "remoteInfoBoardService", value = ServiceNameConstants.DEVICE_MONITOR_SERVICE, fallbackFactory = RemoteInfoBoardFallbackFactory.class)
 public interface RemoteInfoBoardService {
 
     @PostMapping("/infoBoard/publish")

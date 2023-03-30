@@ -24,5 +24,11 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.ruoyi.system.api.factory.RemotePostFallbackFactory,\
   com.ruoyi.system.api.factory.RemoteRoleFallbackFactory,\
   com.ruoyi.system.api.factory.RemoteVodFallbackFactory,\
-  com.ruoyi.system.api.factory.RemoteVdtMonitorFallbackFactory,\
-  com.ruoyi.system.api.factory.RemoteRoadDoctorFallbackFactory
+  com.ruoyi.system.api.factory.RemoteRoadDoctorFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteArtemisFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteWeatherFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteIntegerLogFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteIntegerUserFallbackFactory,\
+  com.ruoyi.system.api.factory.RemotePrimaryFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteAlgorithmBeiJingFallbackFactory,\
+  com.ruoyi.system.api.factory.RemoteVdtFallbackFactory

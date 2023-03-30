@@ -10,7 +10,7 @@ public class VmsInfoByTypeList {
 
     private Integer id;
 
-    private String label;
+    private String deviceName;
 
     private Integer level;
 

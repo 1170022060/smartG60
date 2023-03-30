@@ -1,9 +1,10 @@
 package com.pingok.datacenter.service.rush;
 
 import com.pingok.datacenter.domain.rush.TblRushRecord;
-import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 闯关确认 业务层
@@ -38,4 +39,6 @@ public interface IRushService {
      * @return
      */
     List<TblRushRecord> list(String stationName, String vehPlate,String startTime, String endTime);
+
+    Map detail(String vehPlate, String laneHex,Date transTime);
 }

@@ -57,6 +57,6 @@ public interface TblIntransitRecordMapper{
             "</when>"+
             "order by WORK_DATE" +
             "</script>"})
-    List<IntransitRecordVo> selectIntransitRecordList(ReportVo reportVo);
+    List<IntransitRecordVo> selectIntransitRecordList(@Param("startDate") Date startDate, @Param("endDate")  Date endDate);
 
 }

@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @author
@@ -30,9 +31,9 @@ public class TblEventPlateInfo implements Serializable {
     private Integer uiCarColor3; // int 车身颜色3(见附录)
     private Integer uiSpeed; // int 车速
     private Long ubiImgId; // long 大图
-    private String szImg; // String 过车图片，Base64字符串
+//    private String szImg; // String 过车图片，Base64字符串
     private Long ubiSmallImgId; // long 车牌图
-    private String szPlateImg; // String 车牌小图，Base64字符串
+//    private String szPlateImg; // String 车牌小图，Base64字符串
     private Long ubiCarImgId; // long 目标图
     private Integer uiCarConfidence; // int 车牌号置信度
     private Integer uiSubType; // int 车型细分(见附录)
@@ -41,8 +42,8 @@ public class TblEventPlateInfo implements Serializable {
     private Integer uiDay; // int 记录时间的天数
     private Integer uiHour; // int 记录时间的小时
     private Integer uiMin; // int 记录时间的分钟
-    private Integer uiWidth; // int 图片宽度
-    private Integer uiHeight; // int 图片高度
+    private BigDecimal uiWidth; // int 图片宽度
+    private BigDecimal uiHeight; // int 图片高度
     private Long ubiTime; // long 记录时间 (ms)
     private String szVehiclePlateRegion; // String 车牌所在区域矩形
     private Long ubiSourceId; // long 视频源id
@@ -52,4 +53,6 @@ public class TblEventPlateInfo implements Serializable {
     private Long ubiVehicleRatio; // long 车道占有率
     private Long ubiSectionId; // long 断面
     private String szCarPosition; // String 车辆位置(w,y,w,h)
+    private String szSourceCode;//相机ID
+    private String uiTrackId;
 }

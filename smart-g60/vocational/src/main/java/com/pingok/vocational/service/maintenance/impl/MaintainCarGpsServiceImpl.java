@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 养护车辆GPS信息 服务层处理
@@ -22,5 +23,10 @@ public class MaintainCarGpsServiceImpl implements IMaintainCarGpsService {
     @Override
     public List<TblMaintainCarGps> selectAll() {
         return tblMaintainCarGpsMapper.selectAll();
+    }
+
+    @Override
+    public List<Map> selectInfo(String vehPlate) {
+        return tblMaintainCarGpsMapper.selectInfo(vehPlate);
     }
 }

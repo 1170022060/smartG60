@@ -44,8 +44,8 @@ public interface TblEventPalnMapper extends CommonRepository<TblEventPaln> {
             "ELSE " +
             "'停用' " +
             "END  as \"statusDesc\", " +
-            "cusr.USER_NAME as \"createUser\", " +
-            "uusr.USER_NAME as \"updateUser\" " +
+            "cusr.NICK_NAME as \"createUser\", " +
+            "uusr.NICK_NAME as \"updateUser\" " +
             "FROM " +
             "TBL_EVENT_PALN tep " +
             "LEFT JOIN  SYS_USER cusr ON cusr.USER_ID = tep.CREATE_USER_ID " +
@@ -59,4 +59,14 @@ public interface TblEventPalnMapper extends CommonRepository<TblEventPaln> {
 
     @Select("select EVENT_TYPE from TBL_EVENT_RECORD where ID = #{id}")
     Object eventType(@Param("id") Long id);
+
+    @Select("SELECT " +
+            "ID as \"id\"," +
+            "GROUP_NAME as \"groupName\"," +
+            "GROUP_LEADER as \"groupLeader\"," +
+            "GROUP_LEADER_DEP as \"groupLeaderDep\"," +
+            "GROUP_MEMBERS as \"groupMembers\"," +
+            "DUTY as \"duty\" " +
+            "FROM TBL_EMERGENCY_GROUP ")
+    List<Map> selectGroup();
 }

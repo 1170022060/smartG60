@@ -1,5 +1,7 @@
 package com.pingok.monitor.service.smartToilet;
 
+
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,5 +16,5 @@ public interface ISmartToiletService {
      * @param fieldNum 场地编号
      * @return
      */
-    List<Map> findByFieldNum(String fieldNum);
+    List<Map> findByFieldNum(String fieldNum, Date workDate);
 }

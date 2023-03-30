@@ -1,10 +1,12 @@
 package com.pingok.datacenter.service.trans;
 
 import com.pingok.datacenter.domain.trans.*;
+import com.pingok.datacenter.domain.trans.vo.EnInfoVo;
 import com.pingok.datacenter.domain.trans.vo.EnTransEnum;
 import com.pingok.datacenter.domain.trans.vo.ExInfoVo;
 import com.pingok.datacenter.domain.trans.vo.ExTransEnum;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,7 +21,7 @@ public interface ITransService {
      *
      * @param tblEnTrans 接收入口流水表信息
      */
-    public Long insertEnTrans(TblEnTrans tblEnTrans);
+    public EnInfoVo insertEnTrans(TblEnTrans tblEnTrans);
 
     /**
      * ETC入口通行信息表入库
@@ -76,6 +78,7 @@ public interface ITransService {
      */
     public int insertExTransSplit(ExInfoVo exInfoVo, List<TblExTransSplit> tblExTransSplit);
 
+    public void updateSection(Date workDate,String stationId, Integer direction,Integer type,Integer amount);
 
     /**
      * 入口流水表入汇总表

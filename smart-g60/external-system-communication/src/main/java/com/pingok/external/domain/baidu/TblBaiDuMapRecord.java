@@ -57,7 +57,7 @@ public class TblBaiDuMapRecord implements Serializable {
     /**
      * 事件ID
      */
-    private Integer eventId;
+    private String eventId;
 
     /**
      * 事件类型101:拥堵102:交通事故103:交通管制104:封路105:故障车110:施工112:交通阻断201:路面塌陷202:桥梁坍塌210:路面坑洼301:交通信号灯故障401：大雾403：结冰404：积雪405：积水901:通告702:事故高发
@@ -72,7 +72,7 @@ public class TblBaiDuMapRecord implements Serializable {
     /**
      * 事件级别1: 一般2: 重要
      */
-    private Integer level;
+    private Integer eventLevel;
 
     /**
      * 道路名称
@@ -187,6 +187,6 @@ public class TblBaiDuMapRecord implements Serializable {
     /**
      * 百度事件ID
      */
-    private Long baiduEventId;
+    private String baiduEventId;
 
 }

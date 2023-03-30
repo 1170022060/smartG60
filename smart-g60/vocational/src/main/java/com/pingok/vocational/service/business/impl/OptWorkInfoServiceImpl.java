@@ -68,7 +68,7 @@ public class OptWorkInfoServiceImpl implements IOptWorkInfoService {
         TblOptWorkInfo tblOptWorkInfo= tblOptWorkInfoMapper.selectByPrimaryKey(id);
         tblOptWorkInfo.setResetStatus(0);
         tblOptWorkInfo.setIssueStatus(0);
-        return tblOptWorkInfoMapper.updateByPrimaryKeySelective(tblOptWorkInfo);
+        return tblOptWorkInfoMapper.updateByPrimaryKey(tblOptWorkInfo);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class OptWorkInfoServiceImpl implements IOptWorkInfoService {
             {
                 tblOptWorkInfo.setIssueStatus(1);
                 tblOptWorkInfo.setIssueTime(new Date());
-                tblOptWorkInfoMapper.updateByPrimaryKeySelective(tblOptWorkInfo);
+                tblOptWorkInfoMapper.updateByPrimaryKey(tblOptWorkInfo);
             }
         }
     }

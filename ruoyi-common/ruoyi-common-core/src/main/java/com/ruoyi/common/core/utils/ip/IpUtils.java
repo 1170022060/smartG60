@@ -1,5 +1,6 @@
 package com.ruoyi.common.core.utils.ip;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import javax.servlet.http.HttpServletRequest;
@@ -205,5 +206,22 @@ public class IpUtils
         {
         }
         return "未知";
+    }
+
+    /**
+     * ping ip
+     * @param ip
+     * @return 是否ping通：true在线，false离线
+     */
+    public static boolean ping(String ip) throws IOException {
+        if (ip == null || ip.isEmpty()) return false;
+        int timeout = 2000;
+        int tryTimes = 3;
+        boolean reachable;
+        while (tryTimes-- > 0) {
+            reachable = InetAddress.getByName(ip).isReachable(timeout);
+            if(reachable) return true;
+        }
+        return false;
     }
 }

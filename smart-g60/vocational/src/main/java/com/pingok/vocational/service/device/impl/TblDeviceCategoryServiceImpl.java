@@ -80,7 +80,7 @@ public class TblDeviceCategoryServiceImpl implements TblDeviceCategoryService {
         }
         tblDeviceCategory.setUpdateTime(new Date());
         tblDeviceCategory.setUpdateUserId(SecurityUtils.getUserId());
-        return tblDeviceCategoryMapper.updateByPrimaryKeySelective(tblDeviceCategory);
+        return tblDeviceCategoryMapper.updateByPrimaryKey(tblDeviceCategory);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class TblDeviceCategoryServiceImpl implements TblDeviceCategoryService {
         tblDeviceCategory.setUpdateTime(new Date());
         tblDeviceCategory.setUpdateUserId(SecurityUtils.getUserId());
         tblDeviceCategory.setStatus(status);
-        return tblDeviceCategoryMapper.updateByPrimaryKeySelective(tblDeviceCategory);
+        return tblDeviceCategoryMapper.updateByPrimaryKey(tblDeviceCategory);
     }
 
 

@@ -39,7 +39,7 @@ public interface TblRescueListRecordMapper extends CommonRepository<TblRescueLis
             "left join  SYS_DICT_DATA e on e.DICT_VALUE=a.VEH_COLOR and e.DICT_TYPE='veh_color' " +
             "where 1=1 " +
             "<when test='vehPlate != null'> " +
-            " and a.VEH_PLATE = #{vehPlate} " +
+            " and a.VEH_PLATE like '%' || #{vehPlate} || '%' " +
             "</when>"+
             "<when test='startTime != null'> " +
             "and a.START_TIME &gt;= #{startTime} " +

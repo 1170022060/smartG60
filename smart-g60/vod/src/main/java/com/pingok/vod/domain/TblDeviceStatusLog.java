@@ -2,6 +2,7 @@ package com.pingok.vod.domain;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -12,7 +13,7 @@ import java.util.Date;
  * @version 1.0.0 2022-03-30
  */
 @Table(name = "TBL_DEVICE_STATUS_LOG")
-public class TblDeviceStatusLog {
+public class TblDeviceStatusLog  implements Serializable {
     /** 版本号 */
     private static final long serialVersionUID = -223578168306249736L;
 

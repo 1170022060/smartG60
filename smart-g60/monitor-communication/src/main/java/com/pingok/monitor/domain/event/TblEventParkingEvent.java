@@ -2,6 +2,7 @@ package com.pingok.monitor.domain.event;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,11 +14,12 @@ import java.io.Serializable;
  * @time 2022/5/6 19:59
  */
 @Data
-@Table(name = "t_event_parking_event")
+@Table(name = "tbl_event_parking_event")
 public class TblEventParkingEvent implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @KeySql(useGeneratedKeys = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer ubiLogicId; // int 唯一标识
@@ -33,4 +35,5 @@ public class TblEventParkingEvent implements Serializable {
     private Long ubiVideoId2; // Long 视频下载ID
     private Long ubiVideoId3; // Long 视频下载ID
     private Long ubiVideoId4; // Long 视频下载ID
+    private String szSourceCode;//相机ID
 }

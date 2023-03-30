@@ -8,6 +8,7 @@ import com.ruoyi.common.core.constant.UserConstants;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +60,7 @@ public class TblEmergencyGroupServiceImpl implements TblEmergencyGroupService {
         tblEmergencyGroup.setGroupMembers(JSON.toJSONString(tblEmergencyGroup.getGroupMembersStr()));
         tblEmergencyGroup.setUpdateTime(new Date());
         tblEmergencyGroup.setUpdateUserId(SecurityUtils.getUserId());
-        return tblEmergencyGroupMapper.updateByPrimaryKeySelective(tblEmergencyGroup);
+        return tblEmergencyGroupMapper.updateByPrimaryKey(tblEmergencyGroup);
     }
 
     @Override
@@ -68,7 +69,7 @@ public class TblEmergencyGroupServiceImpl implements TblEmergencyGroupService {
         tblEmergencyGroup.setUpdateTime(new Date());
         tblEmergencyGroup.setUpdateUserId(SecurityUtils.getUserId());
         tblEmergencyGroup.setStatus(status);
-        return tblEmergencyGroupMapper.updateByPrimaryKeySelective(tblEmergencyGroup);
+        return tblEmergencyGroupMapper.updateByPrimaryKey(tblEmergencyGroup);
     }
 
     @Override

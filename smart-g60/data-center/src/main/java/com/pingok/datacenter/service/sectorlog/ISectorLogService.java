@@ -10,6 +10,14 @@ import com.pingok.datacenter.domain.sectorlog.vo.SectorLogVo;
 public interface ISectorLogService {
 
     /**
+     * 获取车道日志
+     * @param laneHex
+     * @param gid
+     * @return
+     */
+    void getSectorLog(String laneHex, String gid);
+
+    /**
      * 扇区日志主表入库
      *
      * @param sectorLogVo 接收扇区日志信息

@@ -30,6 +30,6 @@ public interface IReleaseRecordService {
      * @param endTime 结束时间
      * @return 信息发布预设信息
      */
-    public List<Map> selectReleaseRecord( Integer infoType, String deviceId, String deviceName, String pileNo, Date startTime, Date endTime);
+    public List<Map> selectReleaseRecord(String deviceId, String deviceName, String pileNo, String startTime, String endTime);
 
 }

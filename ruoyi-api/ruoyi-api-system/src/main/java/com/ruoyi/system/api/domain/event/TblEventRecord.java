@@ -29,6 +29,9 @@ public class TblEventRecord implements Serializable {
      */
     private String eventType;
 
+    @Transient
+    private String eventTypeLabel;
+
     /**
      * 位置区间
      */
@@ -121,5 +124,20 @@ public class TblEventRecord implements Serializable {
     private String remark;
     /** 上行、下行、双向 */
     private String direction;
+    /** 相机ID */
+    private String szSourceCode;
+
+    /**
+     * 桩号
+     */
+    private String pileNo;
+
+    /**
+     * 检测设备类型
+     */
+    private Integer deviceType;
+
+    private Integer eventLevel;
+
 
 }

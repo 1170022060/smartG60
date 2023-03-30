@@ -28,7 +28,7 @@ public interface TblVehicleStressMapper extends CommonRepository<TblVehicleStres
             "and a.VEH_TYPE = #{vehType} " +
             "</when>"+
             "<when test='vehPlate != null'> " +
-            "and a.VEH_PLATE= #{vehPlate} " +
+            "and a.VEH_PLATE like '%' || #{vehPlate} || '%' " +
             "</when>"+
             "</script>"})
     List<Map> selectVehicleRecord(@Param("vehType") Integer vehType,@Param("vehPlate") String vehPlate);

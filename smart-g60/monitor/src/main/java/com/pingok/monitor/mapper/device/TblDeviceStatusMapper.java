@@ -25,7 +25,7 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "tdi.DEVICE_NAME as \"deviceName\", \n" +
             "tdi.DEVICE_ID as \"deviceId\", \n" +
             "tdi.DEVICE_IP as \"ip\", \n" +
-            "tds.TIME as \"time\", \n" +
+            "TO_CHAR(tds.TIME, 'YY-MM-DD HH24:MI:SS') as \"time\", \n" +
             "nvl(tds.STATUS,0) as \"status\", \n" +
             "nvl(tds.STATUS_DESC,'未知') as \"statusDesc\", \n" +
             "tds.STATUS_DETAILS as \"statusDetails\"\n" +

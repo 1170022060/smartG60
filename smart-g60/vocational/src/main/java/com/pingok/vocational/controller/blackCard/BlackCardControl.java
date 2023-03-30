@@ -25,13 +25,10 @@ public class BlackCardControl extends BaseController {
 
     @Log(title = "状态名单分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/list")
-    public TableDataInfo getNowList(@RequestParam(name = "mediaType", required = false) Integer mediaType,
-                                    @RequestParam(name = "mediaId",required = false) String mediaId,
-                                    @RequestParam(name = "startDate",required = false) String startDate,
-                                    @RequestParam(name = "endDate",required = false) String endDate) {
+    public TableDataInfo getNowList(String cardId) {
 
         startPage();
-        List<Map> info = iBlackCardService.getNowList(mediaId, mediaType, startDate, endDate);
+        List<Map> info = iBlackCardService.getNowList(cardId);
         return getDataTable(info);
     }
 

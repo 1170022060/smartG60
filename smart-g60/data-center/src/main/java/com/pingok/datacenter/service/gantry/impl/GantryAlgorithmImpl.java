@@ -5,6 +5,7 @@ import com.pingok.datacenter.domain.gantry.model.ChargeFlowModel;
 import com.pingok.datacenter.mapper.gantry.TblGantryAlgorithmMapper;
 import com.pingok.datacenter.mapper.gantry.TblGantryChargeInfoMapper;
 import com.pingok.datacenter.service.gantry.IGantryAlgorithm;
+import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,8 @@ public class GantryAlgorithmImpl implements IGantryAlgorithm {
     private TblGantryChargeInfoMapper tblGantryChargeInfoMapper;
 
     @Override
-    public List<Map> selectGantryAlgorithm(String startTime, String endTime) {
-        return tblGantryAlgorithmMapper.selectGantryAlgorithm(startTime,endTime);
+    public List<Map> selectGantryAlgorithm(Date startTime, String endTime) {
+        return tblGantryAlgorithmMapper.selectGantryAlgorithm(DateUtils.getTimeDay(startTime).substring(0,4),startTime,endTime);
     }
 
     @Override
@@ -39,8 +40,8 @@ public class GantryAlgorithmImpl implements IGantryAlgorithm {
     }
 
     @Override
-    public List<Map> selectGantryAlgorithmPassRecord(String gantryId, String startTime, String endTime) {
-        return tblGantryAlgorithmMapper.selectGantryAlgorithmPassRecord(gantryId,startTime,endTime);
+    public List<Map> selectGantryAlgorithmPassRecord(String gantryId, Date startTime, String endTime) {
+        return tblGantryAlgorithmMapper.selectGantryAlgorithmPassRecord(DateUtils.getTimeDay(startTime).substring(0,4),gantryId,startTime,endTime);
     }
 
     @Override

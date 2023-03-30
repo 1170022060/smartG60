@@ -4,7 +4,9 @@ import com.pingok.monitor.domain.lane.TblLaneStatus;
 import com.pingok.monitor.domain.lane.vo.LaneEnum;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 车道 业务层
@@ -18,4 +20,25 @@ public interface ILaneService {
      * @return
      */
     LaneEnum findByStationId(String stationId);
+
+    /**
+     * 获取收费站流水上传状态
+     * @return
+     */
+    List<Map> getStationFlowUpload();
+
+    Object getStationTotalFlow(String currentDate);
+
+    /**
+     * 获取站信息
+     * @return
+     */
+    List<Map> getStationInfo();
+
+    /**
+     * 获取站的设备状态监控
+     * @param stationHex
+     * @return
+     */
+    Object getDeviceStatus(String stationHex);
 }

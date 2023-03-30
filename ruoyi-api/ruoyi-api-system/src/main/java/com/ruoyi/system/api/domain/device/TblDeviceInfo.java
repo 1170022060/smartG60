@@ -155,12 +155,12 @@ public class TblDeviceInfo {
 
     /** 创建时间 */
     @Excel(name = "创建时间")
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /** 更新时间 */
     @Excel(name = "更新时间")
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     /** 创建用户ID */
@@ -183,5 +183,14 @@ public class TblDeviceInfo {
     @Excel(name = "备注")
     private String remark;
 
+    /**
+     * 设备类型
+     */
+    private Integer deviceType;
 
+    private Integer slaveId;
+
+    private Integer width;
+
+    private Integer high;
 }

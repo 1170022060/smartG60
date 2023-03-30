@@ -24,6 +24,11 @@ public class SimulatedSortingController extends BaseController {
     @Autowired
     private ISimulatedSortingService iSimulatedSortingService;
 
+    @GetMapping("/statistics")
+    public AjaxResult statistics(String date) {
+        return AjaxResult.success(iSimulatedSortingService.statistics(date));
+    }
+
     @GetMapping("/dayStatistics")
     public TableDataInfo dayStatistics(String startTime, String endTime) {
         startPage();
@@ -33,7 +38,6 @@ public class SimulatedSortingController extends BaseController {
 
     @PostMapping
     public AjaxResult simulatedSorting(@RequestParam(value = "year") String year, @RequestParam(value = "startTime") String startTime, @RequestParam(value = "endTime") String endTime) {
-        log.info("rushRecord----------year:" + year + "---startTime:" + startTime + "---endTime:" + endTime);
         iSimulatedSortingService.simulatedSorting(year, startTime, endTime);
         return AjaxResult.success();
     }

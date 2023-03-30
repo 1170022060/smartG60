@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 百度服务降级处理
@@ -24,7 +26,7 @@ public class RemoteBaiDuFallbackFactory implements FallbackFactory<RemoteBaiDuSe
         return new RemoteBaiDuService() {
 
             @Override
-            public R eventPublish(TblBaiDuMapRecord tblBaiDuMapRecord) {
+            public R eventPublish(@RequestBody TblBaiDuMapRecord tblBaiDuMapRecord) {
                 return null;
             }
 

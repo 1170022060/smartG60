@@ -5,6 +5,7 @@ import com.pingok.vocational.service.baseinfo.IRateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +21,8 @@ public class IRateServiceImpl implements IRateService {
     private TblRateMapper tblRateMapper;
 
     @Override
-    public List<Map> selectRate(String inStationName, String exStationId, Integer vehClass,String versionNum) {
-        return tblRateMapper.selectRate(inStationName,  exStationId,  vehClass,  versionNum);
+    public List<Map> selectRate(String inStationName, String exStationId, Integer vehClass, String versionNum, String provId, Date startTime, Date endTime) {
+        return tblRateMapper.selectRate(inStationName,  exStationId,  vehClass,  versionNum , provId,  startTime,  endTime);
     }
 
     @Override

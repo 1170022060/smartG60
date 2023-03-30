@@ -11,7 +11,7 @@ import java.util.Date;
  * @time 2022/5/23 12:52
  */
 @Data
-@Table(name = "tbl_gantry_errorinfo")
+@Table(name = "TBL_GANTRY_ERRORINFO")
 public class TblGantryErrorInfo implements Serializable {
     /** 版本号 */
     private static final long serialVersionUID = 1L;

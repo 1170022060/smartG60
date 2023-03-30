@@ -9,6 +9,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class TblFieldInfoController extends BaseController {
         return AjaxResult.success(idInfo);
     }
 
-    @RequiresPermissions("vocational:field:info")
+//    @RequiresPermissions("vocational:field:info")
     @Log(title = "场地信息-分页查询", businessType = BusinessType.OTHER)
     @GetMapping(value="/info")
     public TableDataInfo info(@RequestParam(name = "stationBelong",required = false) String stationBelong, @RequestParam(name = "roadBelong",required = false) String roadBelong, @RequestParam(name = "fieldName",required = false) String fieldName, @RequestParam(name = "type",required = false) Integer type,@RequestParam(name = "status",required = false) Integer status)
@@ -47,7 +48,7 @@ public class TblFieldInfoController extends BaseController {
     }
 
     @RequiresPermissions("vocational:field:add")
-    @Log(title = "场地信息", businessType = BusinessType.INSERT)
+    @Log(title = "场地信息", businessType = BusinessType.INSERT) 
     @PostMapping
     public AjaxResult add(@Validated @RequestBody TblFieldInfo tblFieldInfo)
     {
@@ -76,5 +77,23 @@ public class TblFieldInfoController extends BaseController {
     public AjaxResult status(@RequestParam(name = "id") Long id,@RequestParam(name = "status") Integer status)
     {
         return toAjax(tblFieldInfoService.updateStatus(id,status));
+    }
+
+    @GetMapping("/getFieldTreeMenu")
+    public AjaxResult tree(){
+        List<TblFieldInfo> menus = tblFieldInfoService.selectAll();
+        return AjaxResult.success(tblFieldInfoService.fieldTreeMenu(menus));
+    }
+
+    @GetMapping("/getServiceField")
+    public AjaxResult getServiceField(){
+        List<Map> info = tblFieldInfoService.selectServiceName();
+        return AjaxResult.success(info);
+    }
+
+    @GetMapping("/getChildrenField")
+    public AjaxResult getChildrenField(Long id){
+        List<Map> info = tblFieldInfoService.getChildrenField(id);
+        return AjaxResult.success(info);
     }
 }

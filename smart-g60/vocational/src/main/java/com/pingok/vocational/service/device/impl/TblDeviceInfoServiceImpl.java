@@ -38,6 +38,13 @@ public class TblDeviceInfoServiceImpl implements TblDeviceInfoService {
     private TblDeviceCategoryService tblDeviceCategoryService;
 
     @Override
+    public List<TblDeviceInfo> selectByDeviceType(Integer deviceType) {
+        Example example = new Example(TblDeviceInfo.class);
+        example.createCriteria().andEqualTo("deviceType",deviceType);
+        return tblDeviceInfoMapper.selectByExample(example);
+    }
+
+    @Override
     public List<Map> findBydeviceCategory(Long deviceCategory) {
         return tblDeviceInfoMapper.findBydeviceCategory(deviceCategory);
     }
@@ -64,11 +71,6 @@ public class TblDeviceInfoServiceImpl implements TblDeviceInfoService {
         tblDeviceInfo.setCreateTime(new Date());
         tblDeviceInfo.setCreateUserId(SecurityUtils.getUserId());
         int r = tblDeviceInfoMapper.insert(tblDeviceInfo);
-        if (StringUtils.isNotNull(tblDeviceInfo.getGps())) {
-            String[] gps = tblDeviceInfo.getGps().split(",");
-            TblDeviceCategory deviceCategory = tblDeviceCategoryService.selectCategoryById(tblDeviceInfo.getDeviceCategory());
-            redisService.geoAdd(deviceCategory.getCategoryNum(),Double.valueOf(gps[0]),Double.valueOf(gps[1]),tblDeviceInfo.getId());
-        }
         return r;
     }
 
@@ -80,12 +82,7 @@ public class TblDeviceInfoServiceImpl implements TblDeviceInfoService {
         }
         tblDeviceInfo.setUpdateTime(new Date());
         tblDeviceInfo.setUpdateUserId(SecurityUtils.getUserId());
-        int r = tblDeviceInfoMapper.updateByPrimaryKeySelective(tblDeviceInfo);
-        if (StringUtils.isNotNull(tblDeviceInfo.getGps())) {
-            String[] gps = tblDeviceInfo.getGps().split(",");
-            TblDeviceCategory deviceCategory = tblDeviceCategoryService.selectCategoryById(tblDeviceInfo.getDeviceCategory());
-            redisService.geoAdd(deviceCategory.getCategoryNum(),Double.valueOf(gps[0]),Double.valueOf(gps[1]),tblDeviceInfo.getId());
-        }
+        int r = tblDeviceInfoMapper.updateByPrimaryKey(tblDeviceInfo);
         return r;
     }
 

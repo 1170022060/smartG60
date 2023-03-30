@@ -2,11 +2,15 @@ package com.pingok.monitor.service.common.Impl;
 
 import com.pingok.monitor.domain.common.MbsAttribute;
 import com.pingok.monitor.service.common.IModbusService;
+
+import com.pingok.monitor.service.infoboard.Impl.SerialPortWrapperImpl;
 import com.serotonin.modbus4j.ModbusFactory;
 import com.serotonin.modbus4j.ModbusMaster;
 import com.serotonin.modbus4j.ip.IpParameters;
 import com.serotonin.modbus4j.msg.*;
 import com.serotonin.modbus4j.sero.util.queue.ByteQueue;
+
+import gnu.io.SerialPort;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -52,25 +56,63 @@ public class ModbusServiceImpl implements IModbusService {
     }
 
     @Override
-    public boolean writeRegister(MbsAttribute mbs, short value) {
-        boolean ret = true;
+    public short[] readHoldingRegisterByShort(MbsAttribute mbs) {
+        try {
+            // 03 Holding Register类型数据读取
+            ReadHoldingRegistersRequest req = new ReadHoldingRegistersRequest(mbs.getSlaveId(), mbs.getOffset(), mbs.getCount());
+            ModbusMaster master = getMaster(mbs.getHost(), mbs.getPort());
+            ReadHoldingRegistersResponse resp = (ReadHoldingRegistersResponse)master.send(req);
+            return resp.getShortData();
+        } catch (Exception e) {
+            log.error("情报板读寄存器失败：" + e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public int writeRegister(MbsAttribute mbs, short value) {
+        int ret = 200;
         try {
             WriteRegisterRequest req = new WriteRegisterRequest(mbs.getSlaveId(), mbs.getOffset(), value);
             ModbusMaster master = getMaster(mbs.getHost(), mbs.getPort());
             ModbusResponse resp = master.send(req);
             if(resp.isException()) {
-                log.error("车检器写寄存器失败：" + resp.getExceptionMessage());
-                ret = false;
+                log.error("情报板寄存器失败：" + resp.getExceptionMessage());
+                ret = -1;
             }
         } catch (Exception e) {
-            log.error("车检器写寄存器失败：" + e.getMessage());
-            ret = false;
+            log.error("情报板写寄存器异常：" + e.getMessage());
+            ret = -1;
         }
         return ret;
     }
 
     @Override
-    public void writeMultiRegister(MbsAttribute mbs, short[] values) {
+    public int writeRegister(String portName, Integer slaveId, Integer address, Short value) {
+
+        SerialPortWrapperImpl wrapper = new SerialPortWrapperImpl(portName, 9600,
+                SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE, 0, 0);
+
+//        https://blog.csdn.net/zhangFG77/article/details/126423708
+        ModbusFactory modbusFactory = new ModbusFactory();
+        ModbusMaster master = modbusFactory.createRtuMaster(wrapper);
+        try {
+            master.init();
+            WriteRegisterRequest request = new WriteRegisterRequest(slaveId, address, value);
+            WriteRegisterResponse response = (WriteRegisterResponse) master.send(request);
+            if (response.isException()){
+                log.error("情报板串口，写保持寄存器错误：" + response.getExceptionMessage());
+                return -1;
+            }
+        } catch (Exception ex){
+            log.error("情报板串口，写寄存器异常：" + ex.getMessage());
+            return -1;
+        }
+        return 200;
+    }
+
+    @Override
+    public int writeMultiRegister(MbsAttribute mbs, short[] values) {
         try {
             WriteRegistersRequest req = new WriteRegistersRequest(mbs.getSlaveId(), mbs.getOffset(), values);
             ModbusMaster master = getMaster(mbs.getHost(), mbs.getPort());
@@ -80,6 +122,30 @@ public class ModbusServiceImpl implements IModbusService {
             }
         } catch (Exception e) {
             log.error("情报板写多寄存器失败：" + e.getMessage());
+            return -1;
         }
+        return 200;
+    }
+
+    @Override
+    public int writeMultiRegister(String portName, Integer slaveId, Integer address, short[] value) {
+
+        SerialPortWrapperImpl wrapper = new SerialPortWrapperImpl(portName, 9600,
+                SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE, 0, 0);
+        ModbusFactory modbusFactory = new ModbusFactory();
+        ModbusMaster master = modbusFactory.createRtuMaster(wrapper);
+        try {
+            master.init();
+            WriteRegistersRequest request = new WriteRegistersRequest(slaveId, address, value);
+            WriteRegistersResponse response = (WriteRegistersResponse) master.send(request);
+            if (response.isException()){
+                log.error("情报板串口，写多保持寄存器错误：" + response.getExceptionMessage());
+                return -1;
+            }
+        } catch (Exception ex){
+            log.error("情报板串口，写多寄存器异常：" + ex.getMessage());
+            return -1;
+        }
+        return 200;
     }
 }
