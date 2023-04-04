@@ -705,11 +705,13 @@ public class EventServiceImpl implements IEventService {
 
     @Override
     public List<Map> filterUpEvent() {
-        return tblEventRecordMapper.filterUpEvent();
+        Date time=DateUtils.parseDate(DateUtils.getDate());
+        return tblEventRecordMapper.filterUpEvent(time);
     }
 
     @Override
     public List<Map> filterDownEvent() {
-        return tblEventRecordMapper.filterDownEvent();
+        Date time=DateUtils.parseDate(DateUtils.getDate());
+        return tblEventRecordMapper.filterDownEvent(time);
     }
 }

@@ -48,7 +48,7 @@ public class PolicyRecordController extends BaseController {
     }
 
 
-//    @RequiresPermissions("vocational:policyRecord:add")
+    @RequiresPermissions("vocational:policyRecord:add")
     @Log(title = "收费政策信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody TblPolicyRecord tblPolicyRecord)
