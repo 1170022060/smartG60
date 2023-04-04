@@ -86,7 +86,8 @@ public interface TblParkingVehicleInfoMapper extends CommonRepository<TblParking
             "</when>"+
             "<when test='regionName != null'> " +
             "and tpl.REGION_NAME = #{regionName}" +
-            "</when>"+
+            "</when>" +
+            "order by pvi.EN_TIME DESC "+
             "</script>"})
     List<Map> overtimeInfo(@Param("fieldNum") String fieldNum,@Param("regionName") String regionName);
 }

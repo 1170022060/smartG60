@@ -31,7 +31,7 @@ public class OilPriceServiceImpl implements IOilPriceService {
 
     @Override
     public TblOilPrice selectOilPrice(Date date) {
-        return tblOilPriceMapper.checkDateUnique(date);
+        return tblOilPriceMapper.selectNewPrice(date);
     }
 
     @Override

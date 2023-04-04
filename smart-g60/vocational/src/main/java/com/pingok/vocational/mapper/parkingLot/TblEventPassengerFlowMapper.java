@@ -111,16 +111,16 @@ public interface TblEventPassengerFlowMapper extends CommonRepository<TblEventPa
             "</when>" +
             " order by " +
             "<when test='statisticsType == 1'> " +
-            " eps.WORK_DATE || ' ' ｜｜eps.HOUR || '时' " +
+            " eps.WORK_DATE || ' ' ｜｜eps.HOUR || '时' DESC " +
             "</when>"+
             "<when test='statisticsType == 2'> " +
-            " eps.WORK_DATE " +
+            " eps.WORK_DATE DESC " +
             "</when>"+
             "<when test='statisticsType == 3'> " +
-            " substr(eps.WORK_DATE,1,7) " +
+            " substr(eps.WORK_DATE,1,7) DESC " +
             "</when>"+
             "<when test='statisticsType == 4'> " +
-            " substr(eps.WORK_DATE,1,4) " +
+            " substr(eps.WORK_DATE,1,4) DESC " +
             "</when>" +
             "</script>"})
     List<Map> humanFlow(@Param("fieldNum") String fieldNum,@Param("areaId") Integer areaId ,@Param("startDate") Date startDate,@Param("endDate") Date endDate,@Param("statisticsType") Integer statisticsType);
