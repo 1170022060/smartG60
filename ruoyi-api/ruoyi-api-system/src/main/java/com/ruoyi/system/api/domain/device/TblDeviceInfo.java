@@ -32,7 +32,7 @@ public class TblDeviceInfo {
 
     /** 立项时间 */
     @Excel(name = "立项时间")
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date itemListTime;
 
     /** 设备类目 */
