@@ -20,14 +20,49 @@ public interface TblGantrySumTransactionMapper extends CommonRepository<TblGantr
     public int selectGantryFlow(GantryFlowModel gantryFlowModel);
 
     /**
-     * 门架本地ETC流量统计（省界入口、大港、新桥）
+     * 门架ETC本地流量统计（省界入口、大港、新桥）
      * @return
      */
     @Select({"<script>" +
             "SELECT COUNT(*) FROM " +
             "TBL_SHAR_GTD_RES_SENDER_${year} a " +
             "WHERE a.TRANS_TIME <![CDATA[ >= ]]> startTime AND a.TRANS_TIME <![CDATA[ <= ]]> endTime  " +
-            "AND GANTRY_ID in #{gantryIds} AND TRADE_RESULT = 0 AND PROVINCE_NUM_AFTER =1 " +
+            "AND GANTRY_ID in #{gantryIds} AND TRADE_RESULT = 0 AND CPU_NET_ID like '31%' and MEDIA_TYPE = 1 " +
+            "</script>"})
+    public int selectGantryFlowLocal(@Param("year")String year, @Param("startTime")Date startTime,@Param("endTime")Date endTime,@Param("gantryIds")String gantryIds);
+
+    /**
+     * 门架ETC异地流量统计（省界入口、大港、新桥）
+     * @return
+     */
+    @Select({"<script>" +
+            "SELECT COUNT(*) FROM " +
+            "TBL_SHAR_GTD_RES_SENDER_${year} a " +
+            "WHERE a.TRANS_TIME <![CDATA[ >= ]]> startTime AND a.TRANS_TIME <![CDATA[ <= ]]> endTime  " +
+            "AND GANTRY_ID in #{gantryIds} AND TRADE_RESULT = 0 AND CPU_NET_ID not like '31%' and MEDIA_TYPE = 1 " +
+            "</script>"})
+    public int selectGantryFlowLOther(@Param("year")String year, @Param("startTime")Date startTime,@Param("endTime")Date endTime,@Param("gantryIds")String gantryIds);
+    /**
+     * 门架MTC单省流量统计（省界入口、大港、新桥）
+     * @return
+     */
+    @Select({"<script>" +
+            "SELECT COUNT(*) FROM " +
+            "TBL_SHAR_GTD_RES_SENDER_${year} a " +
+            "WHERE a.TRANS_TIME <![CDATA[ >= ]]> startTime AND a.TRANS_TIME <![CDATA[ <= ]]> endTime  " +
+            "AND GANTRY_ID in #{gantryIds} AND TRADE_RESULT = 0 AND PROVINCE_NUM_AFTER =1 and MEDIA_TYPE = 2 " +
+            "</script>"})
+    public int selectGantryFlowSingle(@Param("year")String year, @Param("startTime")Date startTime,@Param("endTime")Date endTime,@Param("gantryIds")String gantryIds);
+
+    /**
+     * 门架MTC跨省流量统计（省界入口、大港、新桥）
+     * @return
+     */
+    @Select({"<script>" +
+            "SELECT COUNT(*) FROM " +
+            "TBL_SHAR_GTD_RES_SENDER_${year} a " +
+            "WHERE a.TRANS_TIME <![CDATA[ >= ]]> startTime AND a.TRANS_TIME <![CDATA[ <= ]]> endTime  " +
+            "AND GANTRY_ID in #{gantryIds} AND TRADE_RESULT = 0 AND PROVINCE_NUM_AFTER >1 and MEDIA_TYPE = 2 " +
             "</script>"})
     public int selectGantryFlow(@Param("year")String year, @Param("startTime")Date startTime,@Param("endTime")Date endTime,@Param("gantryIds")String gantryIds);
 }

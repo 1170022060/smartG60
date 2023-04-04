@@ -178,9 +178,9 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "LEFT JOIN  SYS_DICT_DATA sdd2 ON sdd2.DICT_VALUE = ter.VEH_COLOR  " +
             "AND sdd2.DICT_TYPE = 'veh_color' " +
             "LEFT JOIN  TBL_DEVICE_INFO tdi ON tdi.DEVICE_ID = ter.SZ_SOURCE_CODE  " +
-            "where ter.STATUS = 1 and tdi.DIRECTION = 1 and to_char(ter.EVENT_TIME, 'yyyy-mm-dd hh24:mi:ss') like '#{time}%' " +
+            "where ter.STATUS = 1 and tdi.DIRECTION = 1 and to_char(ter.EVENT_TIME, 'yyyy-mm-dd hh24:mi:ss') like CONCAT(#{time},'%') " +
             "ORDER BY ter.EVENT_TIME DESC" )
-    List<Map> filterUpEvent(@Param("time") Date time);
+    List<Map> filterUpEvent(@Param("time") String time);
 
     @Select("SELECT " +
             "ter.ID AS \"id\", " +
@@ -208,7 +208,7 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "LEFT JOIN  SYS_DICT_DATA sdd2 ON sdd2.DICT_VALUE = ter.VEH_COLOR  " +
             "AND sdd2.DICT_TYPE = 'veh_color' " +
             "LEFT JOIN  TBL_DEVICE_INFO tdi ON tdi.DEVICE_ID = ter.SZ_SOURCE_CODE  " +
-            "where ter.STATUS = 1 and tdi.DIRECTION = 2 and to_char(ter.EVENT_TIME, 'yyyy-mm-dd hh24:mi:ss') like '#{time}%' " +
+            "where ter.STATUS = 1 and tdi.DIRECTION = 2 and to_char(ter.EVENT_TIME, 'yyyy-mm-dd hh24:mi:ss') like CONCAT(#{time},'%') " +
             "ORDER BY ter.EVENT_TIME DESC" )
-    List<Map> filterDownEvent(@Param("time") Date time);
+    List<Map> filterDownEvent(@Param("time") String time);
 }

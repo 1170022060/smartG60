@@ -38,15 +38,37 @@ public interface TblExTransMapper{
      */
     public int selectExFlow(ExTranFlow exTranFlow);
 
+    /**
+     * MTC单省
+     * @param year
+     * @param startTime
+     * @param endTime
+     * @return
+     */
     @Select({"<script>" +
             "SELECT COUNT(*) as \"count\" FROM " +
-            "(SELECT EX_TOLL_STATION_NAME,EX_TIME from TBL_SHAR_ETCTD_RES_SENDER_${year} " +
-            "UNION ALL " +
-            "SELECT EX_TOLL_STATION_NAME,EX_TIME FROM TBL_SHAR_OTD_RES_SENDER_${year})a " +
+            "(SELECT EX_TOLL_STATION_NAME,EX_TIME FROM TBL_SHAR_OTD_RES_SENDER_${year})a " +
             "LEFT JOIN TBL_BASE_STATION_INFO b on a.EX_TOLL_STATION_NAME = b.STATION_NAME " +
             "WHERE a.EX_TIME <![CDATA[ >= ]]> #{startTime} AND a.EX_TIME <![CDATA[ <= ]]> #{endTime}  " +
             "AND CONCAT('3101', LOWER(b.STATION_ID)) in ('31010801','31010804','31010805','31010806','31010807','31010808','31010809','3101080a') " +
             "and PROVINCE_COUNT =1 " +
+            "</script>"})
+    public int selectExFlowSingle(@Param("year")String year, @Param("startTime")Date startTime,@Param("endTime")Date endTime);
+
+    /**
+     * MTC跨省
+     * @param year
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    @Select({"<script>" +
+            "SELECT COUNT(*) as \"count\" FROM " +
+            "(SELECT EX_TOLL_STATION_NAME,EX_TIME FROM TBL_SHAR_OTD_RES_SENDER_${year})a " +
+            "LEFT JOIN TBL_BASE_STATION_INFO b on a.EX_TOLL_STATION_NAME = b.STATION_NAME " +
+            "WHERE a.EX_TIME <![CDATA[ >= ]]> #{startTime} AND a.EX_TIME <![CDATA[ <= ]]> #{endTime}  " +
+            "AND CONCAT('3101', LOWER(b.STATION_ID)) in ('31010801','31010804','31010805','31010806','31010807','31010808','31010809','3101080a') " +
+            "and PROVINCE_COUNT >1 " +
             "</script>"})
     public int selectExFlow(@Param("year")String year, @Param("startTime")Date startTime,@Param("endTime")Date endTime);
 }
