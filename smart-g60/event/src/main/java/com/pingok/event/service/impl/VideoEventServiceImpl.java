@@ -1,5 +1,6 @@
 package com.pingok.event.service.impl;
 
+import cn.hutool.core.date.LocalDateTimeUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.event.domain.TblEventRecord;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Example;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -402,8 +404,10 @@ public class VideoEventServiceImpl implements IVideoEventService {
         tblEventPassengerFlowMapper.insert(tblEventPassengerFlow);
 
         Long fieldId = 0l;
-        String workDate = DateUtils.dateTime(new Date(tblEventPassengerFlow.getUbiEndTime()), DateUtils.YYYY_MM_DD);
-        Integer hour = Integer.parseInt(DateUtils.dateTime(new Date(tblEventPassengerFlow.getUbiEndTime()), DateUtils.HH));
+//        String workDate = DateUtils.dateTime(new Date(tblEventPassengerFlow.getUbiEndTime()*1000), DateUtils.YYYY_MM_DD);
+        LocalDateTime localDateTime = LocalDateTimeUtil.of(tblEventPassengerFlow.getUbiEndTime() * 1000);
+        String workDate = localDateTime.toLocalDate().toString();
+        Integer hour = localDateTime.getHour();
         Integer areaId = 0;
         Integer entry = tblEventPassengerFlow.getUiGetInPeos();
         Integer out = tblEventPassengerFlow.getUiGetOutPeos();
@@ -492,6 +496,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             statistics.setMask(0);
             statistics.setNoMask(0);
 
+
 //            example = new Example(TblEventPassengerStatistics.class);
 //            example.createCriteria().andEqualTo("workDate", workDate)
 //                    .andEqualTo("hour", Integer.parseInt(DateUtils.dateTime(DateUtils.getPreTime(DateUtils.getNowDate(), -60), DateUtils.HH)))
@@ -509,6 +514,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             statistics = list.get(0);
             statistics.setEntry(statistics.getEntry() + entry);
             statistics.setOut(statistics.getOut() + out);
+
             statistics.setInAmount((statistics.getInAmount() + entry - out) >= 0 ? (statistics.getInAmount() + entry - out) : 0);
             tblEventPassengerStatisticsMapper.updateByPrimaryKey(statistics);
         }
