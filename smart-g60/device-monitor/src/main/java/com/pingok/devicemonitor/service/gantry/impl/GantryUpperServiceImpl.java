@@ -365,7 +365,6 @@ public class GantryUpperServiceImpl implements IGantryUpperService {
         }
     }
 
-    @Async
     @Override
     public void handleSpecialEventUpload(JSONObject data) {
         try {

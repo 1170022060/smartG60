@@ -34,6 +34,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.sql.Array;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -705,13 +706,19 @@ public class EventServiceImpl implements IEventService {
 
     @Override
     public List<Map> filterUpEvent() {
-        Date time=DateUtils.parseDate(DateUtils.getDate());
-        return tblEventRecordMapper.filterUpEvent(time);
+
+        Date now = new Date(); //获取当前时间
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String nowStr = sdf.format(now); //得到今天时间
+        
+        return tblEventRecordMapper.filterUpEvent(nowStr);
     }
 
     @Override
     public List<Map> filterDownEvent() {
-        Date time=DateUtils.parseDate(DateUtils.getDate());
-        return tblEventRecordMapper.filterDownEvent(time);
+        Date now = new Date(); //获取当前时间
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String nowStr = sdf.format(now); //得到今天时间
+        return tblEventRecordMapper.filterDownEvent(nowStr);
     }
 }

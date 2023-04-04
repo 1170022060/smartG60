@@ -42,10 +42,19 @@ public interface TblEnTransMapper {
      */
     public int selectEnFlow(EnTranFlow enTranFlow);
 
+    /**
+     * 本地入口
+     * @param year
+     * @param startTime
+     * @param endTime
+     * @return
+     */
     @Select({"<script>" +
             "SELECT COUNT(*) FROM TBL_SHAR_ENPD_RES_SENDER_${year} a  " +
             "WHERE a.EN_TIME <![CDATA[ >= ]]> #{startTime} AND a.EN_TIME <![CDATA[ <= ]]> #{endTime}  " +
             "AND SUBSTR(EN_TOLL_LANE_HEX,0, 8) in ('31010801','31010804','31010805','31010806','31010807','31010808','31010809','3101080a') " +
             "</script>"})
     public int selectEnFlow(@Param("year") String year,@Param("startTime")Date startTime,@Param("endTime")Date endTime);
+
+
 }
