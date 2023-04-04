@@ -37,7 +37,7 @@ public class PolicyRecordController extends BaseController {
         return AjaxResult.success(idInfo);
     }
 
-    @RequiresPermissions("vocational:policyRecord:info")
+//    @RequiresPermissions("vocational:policyRecord:info")
     @Log(title = "收费政策信息-分页查询", businessType = BusinessType.OTHER)
     @GetMapping("/info")
     public TableDataInfo info(@RequestParam(name = "title",required = false) String title,@RequestParam(name = "status",required = false) Integer status)
@@ -48,7 +48,7 @@ public class PolicyRecordController extends BaseController {
     }
 
 
-    @RequiresPermissions("vocational:policyRecord:add")
+//    @RequiresPermissions("vocational:policyRecord:add")
     @Log(title = "收费政策信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody TblPolicyRecord tblPolicyRecord)

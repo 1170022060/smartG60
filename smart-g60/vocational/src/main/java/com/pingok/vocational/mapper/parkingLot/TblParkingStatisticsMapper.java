@@ -86,16 +86,16 @@ public interface TblParkingStatisticsMapper extends CommonRepository<TblParkingS
             "</when>" +
             " order by " +
             "<when test='statisticsType == 1'> " +
-            " to_char(tps.DAY,'yyyy-mm-dd') || ' ' ｜｜tps.HOUR || '时' " +
+            " to_char(tps.DAY,'yyyy-mm-dd') || ' ' ｜｜tps.HOUR || '时' DESC " +
             "</when>"+
             "<when test='statisticsType == 2'> " +
-            " to_char(tps.DAY,'yyyy-mm-dd') " +
+            " to_char(tps.DAY,'yyyy-mm-dd') DESC " +
             "</when>"+
             "<when test='statisticsType == 3'> " +
-            " substr(to_char(tps.DAY,'yyyy-mm-dd'),1,7) " +
+            " substr(to_char(tps.DAY,'yyyy-mm-dd'),1,7) DESC " +
             "</when>"+
             "<when test='statisticsType == 4'> " +
-            " substr(to_char(tps.DAY,'yyyy-mm-dd'),1,4) " +
+            " substr(to_char(tps.DAY,'yyyy-mm-dd'),1,4) DESC " +
             "</when>" +
             "</script>"})
     List<Map> traffic(@Param("fieldNum") String fieldNum,@Param("vehType") Integer vehType ,@Param("startDate") Date startDate,@Param("endDate") Date endDate,@Param("statisticsType") Integer statisticsType);
