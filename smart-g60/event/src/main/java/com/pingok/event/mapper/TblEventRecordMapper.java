@@ -2,6 +2,7 @@ package com.pingok.event.mapper;
 
 import com.pingok.event.domain.TblEventRecord;
 import com.ruoyi.common.core.mapper.CommonRepository;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -14,6 +15,7 @@ import java.util.Map;
  *
  * @author qiumin
  */
+@Mapper
 public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
 
     @Select("SELECT " +
