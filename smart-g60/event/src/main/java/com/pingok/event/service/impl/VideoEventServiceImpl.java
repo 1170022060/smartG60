@@ -33,6 +33,7 @@ import tk.mybatis.mapper.entity.Example;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -515,7 +516,10 @@ public class VideoEventServiceImpl implements IVideoEventService {
             statistics.setEntry(statistics.getEntry() + entry);
             statistics.setOut(statistics.getOut() + out);
 
-            statistics.setInAmount((statistics.getInAmount() + entry - out) >= 0 ? (statistics.getInAmount() + entry - out) : 0);
+            if(Objects.isNull(statistics.getInAmount())){
+                statistics.setInAmount(0);
+            }
+            statistics.setInAmount((statistics.getInAmount()  + entry - out) >= 0 ? (statistics.getInAmount() + entry - out) : 0);
             tblEventPassengerStatisticsMapper.updateByPrimaryKey(statistics);
         }
     }

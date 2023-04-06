@@ -152,7 +152,8 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
     @Select("SELECT DICT_LABEL FROM SYS_DICT_DATA WHERE DICT_TYPE = 'event_type' AND DICT_VALUE = #{eventType}")
     Object translateEventType(@Param("eventType") String eventType);
 
-    @Select("SELECT " +
+    @Select("<script>" +
+            "SELECT " +
             "ter.ID AS \"id\", " +
             "sdd.DICT_LABEL AS \"eventType\", " +
             "ter.LOCATION_INTERVAL AS \"locationInterval\", " +
@@ -178,11 +179,13 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "LEFT JOIN  SYS_DICT_DATA sdd2 ON sdd2.DICT_VALUE = ter.VEH_COLOR  " +
             "AND sdd2.DICT_TYPE = 'veh_color' " +
             "LEFT JOIN  TBL_DEVICE_INFO tdi ON tdi.DEVICE_ID = ter.SZ_SOURCE_CODE  " +
-            "where ter.STATUS = 1 and tdi.DIRECTION = 1 and to_char(ter.EVENT_TIME, 'yyyy-mm-dd hh24:mi:ss') like CONCAT(#{time},'%') " +
-            "ORDER BY ter.EVENT_TIME DESC" )
-    List<Map> filterUpEvent(@Param("time") String time);
+            "where ter.STATUS = 1 and tdi.DIRECTION = 1 and ter.EVENT_TIME <![CDATA[ >= ]]>  TRUNC(sysdate) " +
+            "ORDER BY ter.EVENT_TIME DESC" +
+            "</script>")
+    List<Map> filterUpEvent();
 
-    @Select("SELECT " +
+    @Select("<script>" +
+            "SELECT " +
             "ter.ID AS \"id\", " +
             "sdd.DICT_LABEL AS \"eventType\", " +
             "ter.LOCATION_INTERVAL AS \"locationInterval\", " +
@@ -208,7 +211,8 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "LEFT JOIN  SYS_DICT_DATA sdd2 ON sdd2.DICT_VALUE = ter.VEH_COLOR  " +
             "AND sdd2.DICT_TYPE = 'veh_color' " +
             "LEFT JOIN  TBL_DEVICE_INFO tdi ON tdi.DEVICE_ID = ter.SZ_SOURCE_CODE  " +
-            "where ter.STATUS = 1 and tdi.DIRECTION = 2 and to_char(ter.EVENT_TIME, 'yyyy-mm-dd hh24:mi:ss') like CONCAT(#{time},'%') " +
-            "ORDER BY ter.EVENT_TIME DESC" )
+            "where ter.STATUS = 1 and tdi.DIRECTION = 2 and ter.EVENT_TIME <![CDATA[ >= ]]>  TRUNC(sysdate) " +
+            "ORDER BY ter.EVENT_TIME DESC" +
+            "</script>" )
     List<Map> filterDownEvent(@Param("time") String time);
 }
