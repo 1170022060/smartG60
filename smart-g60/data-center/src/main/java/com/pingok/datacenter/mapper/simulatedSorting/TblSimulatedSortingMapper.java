@@ -219,6 +219,7 @@ public interface TblSimulatedSortingMapper extends CommonRepository<TblSimulated
             "</when>" +
             "GROUP BY " +
             "SORTING_DATE " +
+            "ORDER BY SORTING_DATE DESC" +
             "</script>"})
     List<SimulatedSortingVo> dayStatistics(@Param("startTime") String startTime, @Param("endTime") String endTime);
 }
