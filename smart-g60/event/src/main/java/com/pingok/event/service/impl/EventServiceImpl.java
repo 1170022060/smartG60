@@ -709,9 +709,9 @@ public class EventServiceImpl implements IEventService {
 
         Date now = new Date(); //获取当前时间
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String nowStr = sdf.format(now); //得到今天时间
-        
-        return tblEventRecordMapper.filterUpEvent(nowStr);
+        String nowStr = sdf.format(now)+ " 00:00:00"; //得到今天时间凌晨时间
+//        DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS,nowStr);
+        return tblEventRecordMapper.filterUpEvent();
     }
 
     @Override
