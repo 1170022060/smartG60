@@ -3,7 +3,7 @@ package com.pingok.algorithmBeiJing.service;
 public interface IRocketMqService {
 
     /**
-     * 发送门架交易记录
+     * 发送车辆轨迹记录
      */
     void trajectoryData(String plate,String instanceId,String startTime,String endTime);
 
