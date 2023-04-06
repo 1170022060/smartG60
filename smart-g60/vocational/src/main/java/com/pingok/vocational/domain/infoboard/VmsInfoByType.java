@@ -63,4 +63,12 @@ public class VmsInfoByType {
     private String cameraId;
 
     private Integer model;
+    /**
+     * x坐标
+     */
+    private float posX;
+    /**
+     * y坐标
+     */
+    private float posY;
 }
