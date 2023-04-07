@@ -17,9 +17,21 @@ import java.util.Map;
 @Mapper
 public interface TblSmartToiletInfoMapper extends CommonRepository<TblSmartToiletInfo> {
 
+
+//    @Select("SELECT " +
+//            "ID AS \"id\", " +
+//            "'当班厕长：' || TOI_CHIEF || '，当班保洁（上午）：' || WORK_CLEANER_AM || '，当班保洁（下午）：' || WORK_CLEANER_PM AS \"content\"  " +
+//            "FROM " +
+//            "TBL_SMART_TOILET_SCHEDULE  " +
+//            "WHERE " +
+//            "ROWNUM = 1  " +
+//            "AND TOILET_ID = #{toiletId} " +
+//            "ORDER BY " +
+//            "NVL( UPDATE_TIME, CREATE_TIME ) DESC ")
+// TODO: 2023/4/7 0007 临时删除保洁
     @Select("SELECT " +
             "ID AS \"id\", " +
-            "'当班厕长：' || TOI_CHIEF || '，当班保洁（上午）：' || WORK_CLEANER_AM || '，当班保洁（下午）：' || WORK_CLEANER_PM AS \"content\"  " +
+            "'当班厕长：' || TOI_CHIEF  AS \"content\"  " +
             "FROM " +
             "TBL_SMART_TOILET_SCHEDULE  " +
             "WHERE " +
