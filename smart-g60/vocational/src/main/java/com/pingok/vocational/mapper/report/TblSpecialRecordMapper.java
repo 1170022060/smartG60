@@ -71,7 +71,7 @@ public interface TblSpecialRecordMapper {
             " and a.WORK_DATE &lt;= #{endDate} " +
             "</when>"+
             "group by a.WORK_DATE,b.STATION_NAME,c.DICT_LABEL "+
-            "order by a.WORK_DATE,b.STATION_NAME,c.DICT_LABEL" +
+            "order by a.WORK_DATE DESC,b.STATION_NAME,c.DICT_LABEL" +
             "</script>"})
     List<Map> selectSpecialStatistic(@Param("startDate") Date startDate, @Param("endDate")  Date endDate);
 
