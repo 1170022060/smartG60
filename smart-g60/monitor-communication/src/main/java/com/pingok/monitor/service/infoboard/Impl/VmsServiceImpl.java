@@ -108,55 +108,60 @@ public class VmsServiceImpl implements IVmsService {
     @Override
     public boolean publish(SansiParkingPubInfo parkInfo) {
         boolean ret = true;
-        byte[] sendPkg = null;
-//        String infoType = parkInfo.getInfoType() == 1 ? " 01 " : " 0A ";
-        switch (parkInfo.getDevPos()){
-            case 1: {
-                byte[] data = new byte[6];
-                data[0] = (byte)parkInfo.getColor1_ke().intValue();
-                int num = Integer.parseInt(parkInfo.getText1_ke());
-                data[1] = (byte)(num / 256);
-                data[2] = (byte)(num % 256);
-                data[3] = (byte)parkInfo.getColor1_huo().intValue();
-                num = Integer.parseInt(parkInfo.getText1_huo());
-                data[4] = (byte)(num / 256);
-                data[5] = (byte)(num % 256);
-                sendPkg = PacketParking(1, (byte) 0x01, data);
-                break;
+        int c1=0,c2=0,c3=0; //颜色
+        String n1="",n2="",n3=""; //停车位数量
+        byte[] data=null; //主体报文
+        byte[] jam=null; //中文转码
+        byte[] sendPkg=null; //最终发送报文
+        try {
+            switch (parkInfo.getDevPos()){
+                case 1: {
+                    data = new byte[17*2];
+                    c1 = parkInfo.getColor1_ke().intValue();
+                    c2 = parkInfo.getColor1_huo().intValue();
+                    n1 = parkInfo.getText1_ke();
+                    n2 = parkInfo.getText1_huo();
+                    break;
+                }
+                case 2: {
+                    data = new byte[17*3];
+                    c1 = parkInfo.getColor2A_huoA().intValue();
+                    c2 = parkInfo.getColor2A_huoB().intValue();
+                    c3 = parkInfo.getColor2A_ke().intValue();
+                    n1 = parkInfo.getText2A_huoA();
+                    n2 = parkInfo.getText2A_huoB();
+                    n3 = parkInfo.getText2A_ke();
+                    break;
+                }
+                case 3: {
+                    data = new byte[17*2];
+                    c1 = parkInfo.getColor2BC_huoB().intValue();
+                    c2 = parkInfo.getColor2BC_ke().intValue();
+                    n1 = parkInfo.getText2BC_huoB();
+                    n2 = parkInfo.getText2BC_ke();
+                    break;
+                }
+                default: ret = false; break;
             }
-            case 2: {
-                byte[] data = new byte[9];
-                data[0] = (byte)parkInfo.getColor2A_huoA().intValue();
-                int num = Integer.parseInt(parkInfo.getText2A_huoA());
-                data[1] = (byte)(num / 256);
-                data[2] = (byte)(num % 256);
-                data[3] = (byte)parkInfo.getColor2A_huoB().intValue();
-                num = Integer.parseInt(parkInfo.getText2A_huoB());
-                data[4] = (byte)(num / 256);
-                data[5] = (byte)(num % 256);
-                data[6] = (byte)parkInfo.getColor2A_ke().intValue();
-                num = Integer.parseInt(parkInfo.getText2A_ke());
-                data[7] = (byte)(num / 256);
-                data[8] = (byte)(num % 256);
-                sendPkg = PacketParking(1, (byte) 0x01, data);
-                break;
+            //拥挤: D3B5BCB7
+            jam = n1.getBytes("gb2312");
+            data[0] = (byte)c1;
+            System.arraycopy(jam,0, data,1,jam.length > 4 ? 4 : jam.length);
+            data[17] = (byte)c2;
+            jam = n2.getBytes("gb2312");
+            System.arraycopy(jam, 0, data, 18, jam.length > 4 ? 4 : jam.length);
+            if(2 == parkInfo.getDevPos()) {
+                data[34] = (byte)c3;
+                jam = n3.getBytes("gb2312");
+                System.arraycopy(jam, 0, data, 35, jam.length > 4 ? 4 : jam.length);
             }
-            case 3: {
-                byte[] data = new byte[6];
-                data[0] = (byte)parkInfo.getColor2BC_huoB().intValue();
-                int num = Integer.parseInt(parkInfo.getText2BC_huoB());
-                data[1] = (byte)(num / 256);
-                data[2] = (byte)(num % 256);
-                data[3] = (byte)parkInfo.getColor2BC_ke().intValue();
-                num = Integer.parseInt(parkInfo.getText2BC_ke());
-                data[4] = (byte)(num / 256);
-                data[5] = (byte)(num % 256);
-                sendPkg = PacketParking(1, (byte) 0x01, data);
-                break;
-            }
-            default: ret = false; break;
+            sendPkg = PacketParking(1, (byte)0x0A, data); //发中文用0A
+        }catch (Exception ex){
+            log.error("停车场诱导屏发布失败:" + ex.getMessage());
+            return false;
         }
 
+        //socket发送报文
         int recv = 1;
         Socket skt = null;
         try {

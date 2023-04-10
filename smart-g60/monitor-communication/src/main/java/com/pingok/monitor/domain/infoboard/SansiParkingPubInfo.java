@@ -5,11 +5,10 @@ import lombok.Data;
 @Data
 public class SansiParkingPubInfo {
     private String devIp;
-    private Integer devPos;         //设备位置：1-一级诱导屏；2-二级A区；3-二级BC区
-    private Integer infoType;       //发布类型：1-数字（默认）；2-文字（暂不实现）
+    private Integer devPos;             //设备位置：1-一级诱导屏；2-二级A区；3-二级BC区
     //一级诱导屏
     private String text1_ke;
-    private Integer color1_ke;         //颜色（0123-黑红绿黄）
+    private Integer color1_ke;          //颜色（0123-黑红绿黄）
     private String text1_huo;
     private Integer color1_huo;
     //二级诱导屏A区
@@ -26,6 +25,12 @@ public class SansiParkingPubInfo {
     private Integer color2BC_ke;
 
     public SansiParkingPubInfo() {
-
+        color1_ke = 2;
+        color1_huo = 2;
+        color2A_huoA = 2;
+        color2A_huoB = 2;
+        color2A_ke = 2;
+        color2BC_huoB = 2;
+        color2BC_ke = 2;
     }
 }
