@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-@RocketMQMessageListener(consumerGroup = "JAVA",
+@RocketMQMessageListener(consumerGroup = "JAVA_CARBON",
         topic = "CarbonEmission_out",
         selectorExpression = "*")
 public class Co2PerProfitConsumer implements RocketMQListener<String> {
