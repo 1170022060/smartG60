@@ -703,16 +703,20 @@ public class VideoEventServiceImpl implements IVideoEventService {
             params1.put("devIp", r1.getData().getDeviceIp());
             params1.put("devPos", 1);
             params1.put("infoType", 1);
-            params1.put("text1_ke", KA);
+
             if (KA < 10) {//  0123-黑红绿黄
+                params1.put("text1_ke", "拥挤");
                 params1.put("color1_ke", 1);
             } else {
+                params1.put("text1_ke",KA);
                 params1.put("color1_ke", 2);
             }
-            params1.put("text1_huo", HA + HB);
+
             if (HA + HB < 10) {
+                params1.put("text1_huo", "拥挤");
                 params1.put("color1_huo", 1);
             } else {
+                params1.put("text1_huo", HA + HB);
                 params1.put("color1_huo", 2);
             }
         }
@@ -726,23 +730,26 @@ public class VideoEventServiceImpl implements IVideoEventService {
             params2A.put("devIp", r2A.getData().getDeviceIp());
             params2A.put("devPos", 2);
             params2A.put("infoType", 1);
-            params2A.put("text2A_huoA", HA);
             if (HA < 5) {
+                params2A.put("text2A_huoA", "拥挤");
                 //  0123-黑红绿黄
                 params2A.put("color2A_huoA", 1);
             } else {
+                params2A.put("text2A_huoA", HA);
                 params2A.put("color2A_huoA", 2);
             }
-            params2A.put("text2BC_huoB", HB);
             if (HB < 5) {
+                params2A.put("text2BC_huoB", "拥挤");
                 params2A.put("color2BC_huoB", 1);
             } else {
+                params2A.put("text2BC_huoB", HB);
                 params2A.put("color2BC_huoB", 2);
             }
-            params2A.put("text2BC_ke", KA);
             if (KA < 10) {
+                params2A.put("text2BC_ke", "拥挤");
                 params2A.put("color2BC_ke", 1);
             } else {
+                params2A.put("text2BC_ke", KA);
                 params2A.put("color2BC_ke", 2);
             }
         }
@@ -757,16 +764,20 @@ public class VideoEventServiceImpl implements IVideoEventService {
             params2BC.put("devPos", 3);
             params2BC.put("infoType", 1);
             // 货B
-            params2BC.put("text2BC_huoB", HB);
+
             if (HB < 5) {
+                params2BC.put("text2BC_huoB", "拥挤");
                 params2BC.put("color2BC_huoB", 1);
             } else {
+                params2BC.put("text2BC_huoB", HB);
                 params2BC.put("color2BC_huoB", 2);
             }
-            params2BC.put("text2BC_ke", KA);
+
             if (KA < 10) {
+                params2BC.put("text2BC_ke", "拥挤");
                 params2BC.put("color2BC_ke", 1);
             } else {
+                params2BC.put("text2BC_ke", KA);
                 params2BC.put("color2BC_ke", 2);
             }
         }
