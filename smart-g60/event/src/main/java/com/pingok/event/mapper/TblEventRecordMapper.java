@@ -75,6 +75,7 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "LEFT JOIN  TBL_DEVICE_INFO tdi ON tdi.DEVICE_ID = ter.SZ_SOURCE_CODE  " +
             "where to_char(ter.EVENT_TIME,'yyyy-mm-dd')=to_char(sysdate,'yyyy-mm-dd') " +
             "AND ter.STATUS in (0,1) " +
+            "AND AND ter.EVENT_TYPE IN (SELECT EVENT_TYPE FROM TBL_EVENT_ALARM) " +
             "ORDER BY ter.EVENT_TIME DESC" )
     List<Map> searchEvent();
 
