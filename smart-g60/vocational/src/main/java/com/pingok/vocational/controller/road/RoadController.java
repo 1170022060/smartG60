@@ -28,9 +28,11 @@ public class RoadController extends BaseController {
     }
 
     @GetMapping("/roadStatisEvent")
-    public AjaxResult getRoadStatisEvent(@RequestParam(name = "vehPlate",required = false)String vehPlate,
+    public TableDataInfo getRoadStatisEvent(@RequestParam(name = "vehPlate",required = false)String vehPlate,
                                          @RequestParam(name = "startTime",required = false)Date startTime,
                                          @RequestParam(name = "endTime",required = false)Date endTime){
-        return AjaxResult.success(iRoadService.selectRoadStatisEvent(vehPlate,startTime,endTime));
+        startPage();
+        List<Map> maps = iRoadService.selectRoadStatisEvent(vehPlate, startTime, endTime);
+        return getDataTable(maps);
     }
 }

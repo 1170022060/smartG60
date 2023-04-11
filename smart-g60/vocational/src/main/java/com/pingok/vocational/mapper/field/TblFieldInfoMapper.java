@@ -51,6 +51,7 @@ public interface TblFieldInfoMapper extends CommonRepository<TblFieldInfo> {
             "<when test='status != null'> " +
             "and a.STATUS= #{status} " +
             "</when>"+
+            "ORDER BY a.UPDATE_TIME DESC"+
             "</script>"})
     List<Map> selectFieldInfo(@Param("stationBelong") String stationBelong, @Param("roadBelong") String roadBelong, @Param("fieldName") String fieldName, @Param("type") Integer type, @Param("status") Integer status);
 

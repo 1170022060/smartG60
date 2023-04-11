@@ -29,6 +29,7 @@ public interface TblRoadForecastMapper {
             "<when test='endDate != null'> " +
             " and r.END_TIME &lt;= #{endDate} " +
             "</when> "+
+            "ORDER BY r.START_TIME DESC"+
             "</script>"})
     List<Map> roadForecast(@Param("startDate") Date startDate, @Param("endDate")Date endDate);
 }

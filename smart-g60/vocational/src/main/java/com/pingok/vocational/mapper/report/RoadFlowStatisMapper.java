@@ -44,6 +44,7 @@ public interface RoadFlowStatisMapper {
             "<when test='endDate != null'> " +
             " and r.END_TIME &lt;= #{endDate} " +
             "</when> "+
+            "ORDER BY START_TIME DESC"+
             "</script>"})
     List<Map> roadFlowStatis(@Param("startDate")Date startDate,@Param("endDate")Date endDate);
 }

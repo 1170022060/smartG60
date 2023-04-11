@@ -212,6 +212,7 @@ public interface TblDeviceFaultMapper extends CommonRepository<TblDeviceFault> {
             "and a.FAULT_TYPE= #{faultType} " +
             "</when>"+
             "group by b.DICT_LABEL order by b.DICT_LABEL" +
+            "ORDER BY a.FAULT_TIME DESC"+
             "</script>"})
     List<Map> selectDeviceFaultByType(@Param("faultType") String faultType, @Param("startTime") Date startTime, @Param("endTime")  Date endTime);
 

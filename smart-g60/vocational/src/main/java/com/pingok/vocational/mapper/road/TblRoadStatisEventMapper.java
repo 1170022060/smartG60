@@ -35,6 +35,7 @@ public interface TblRoadStatisEventMapper {
             "<when test='endTime != null'> " +
             " and to_date(a.END_TIME,'yyyy-mm-dd hh24:mi:ss') &lt;= #{endTime} " +
             "</when>"+
+            "ORDER BY a.START_TIME DESC"+
             "</script>"})
     List<Map> selectRoadStatisEvent(@Param("vehPlate")String vehPlate, @Param("startTime")Date startTime,@Param("endTime")Date endTime);
 }
