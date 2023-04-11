@@ -614,6 +614,8 @@ public class EventServiceImpl implements IEventService {
             Date endTime = (Date) map.get("endTime");
             if (tblEventRecord.getEventTime().after(startTime) && tblEventRecord.getEventTime().before(endTime)){
                 if(start.compareTo(position) <0 &&  position.compareTo(end) <0){
+                    tblEventRecord.setStatus(2);
+                    tblEventRecordMapper.updateByPrimaryKeySelective(tblEventRecord);
                     return r;
                 }
             }
