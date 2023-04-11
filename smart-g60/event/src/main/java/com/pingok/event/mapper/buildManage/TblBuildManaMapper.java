@@ -43,6 +43,7 @@ public interface TblBuildManaMapper extends CommonRepository<TblBuildManage> {
             "<when test='endTime != null'> " +
             " and tbm.END_TIME &lt;= #{endTime} " +
             "</when>"+
+            "ORDER BY tbm.START_TIME DESC "+
             "</script>"})
     List<Map> getBuildManaInfo(@Param("content") String content, @Param("startTime") Date startTime, @Param("endTime")  Date endTime);
 
