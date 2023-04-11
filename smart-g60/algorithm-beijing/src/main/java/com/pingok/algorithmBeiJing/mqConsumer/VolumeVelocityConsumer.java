@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Component
 @Slf4j
-@RocketMQMessageListener(consumerGroup = "JAVA",
+@RocketMQMessageListener(consumerGroup = "JAVA_VOLUMEVELOCITY",
         topic = "VolumeVelocity_out",
         selectorExpression = "*")
 public class VolumeVelocityConsumer implements RocketMQListener<String> {

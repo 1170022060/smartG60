@@ -624,7 +624,10 @@ public class EventServiceImpl implements IEventService {
         List<Integer> eventTypeList = list.stream().map(TblEventAlarm::getEventType).collect(Collectors.toList());
         JSONObject event;
         JSONObject data;
-        if (!eventTypeList.isEmpty() && eventTypeList.contains(tblEventRecord.getEventType())) {
+        log.info("是否将通知发送到大屏：{}",eventTypeList.contains(tblEventRecord.getEventType()));
+        log.info("允许推送的事件类型：{}",eventTypeList);
+        log.info("事件类型：{}",tblEventRecord.getEventType());
+        if (eventTypeList.contains(tblEventRecord.getEventType())) {
             event = new JSONObject();
             event.put("id", tblEventRecord.getId());
             event.put("eventType", tblEventRecordMapper.translateEventType(tblEventRecord.getEventType()));

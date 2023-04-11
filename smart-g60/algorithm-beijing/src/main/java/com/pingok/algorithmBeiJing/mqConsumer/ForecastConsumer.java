@@ -15,11 +15,11 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 /**
- * 预测流量流速监听
+ * 预测流量流速监听 长短时预测
  */
 @Component
 @Slf4j
-@RocketMQMessageListener(consumerGroup = "JAVA",
+@RocketMQMessageListener(consumerGroup = "JAVA_LONGSHORT",
         topic = "LongShortTermPredict_out",
         selectorExpression = "*")
 public class ForecastConsumer implements RocketMQListener<String> {
