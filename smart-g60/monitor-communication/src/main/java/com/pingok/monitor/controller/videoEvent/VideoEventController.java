@@ -59,8 +59,9 @@ public class VideoEventController extends BaseController {
             case "VEHICLE_EVENT":
                 TblEventVehicleEvent tblEventVehicleEvent = JSON.parseObject(data, TblEventVehicleEvent.class);
                 log.info("VEHICLE_EVENT-----" + tblEventVehicleEvent.getUiEventType());
-                List<Integer> list = Arrays.asList(5, 6, 14, 15, 17, 10016, 37);
-                if (!list.contains(tblEventVehicleEvent.getUiEventType())) {
+                // 只有在以下列表中配置的事件类型才会接收保存
+                List<Integer> acceptList = Arrays.asList(1, 2, 7, 14, 15,16,18,20,21,22,30);
+                if (acceptList.contains(tblEventVehicleEvent.getUiEventType())) {
                     iVideoEventService.vehicleEvent(tblEventVehicleEvent);
                     iVideoEventService.updateVehicleEvent(tblEventVehicleEvent);
 //                    list = Arrays.asList(31, 32, 34, 35, 36, 40, 41);
