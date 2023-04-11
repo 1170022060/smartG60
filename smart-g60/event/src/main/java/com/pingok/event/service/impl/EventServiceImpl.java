@@ -36,6 +36,7 @@ import java.sql.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 事件服务 服务层处理
@@ -620,9 +621,11 @@ public class EventServiceImpl implements IEventService {
 
 
         List<TblEventAlarm> list = tblEventAlarmMapper.selectAll();
-
-        if (list == null || list.size() <= 0) {
-            JSONObject event = new JSONObject();
+        List<Integer> eventTypeList = list.stream().map(TblEventAlarm::getEventType).collect(Collectors.toList());
+        JSONObject event;
+        JSONObject data;
+        if (!eventTypeList.isEmpty() && eventTypeList.contains(tblEventRecord.getEventType())) {
+            event = new JSONObject();
             event.put("id", tblEventRecord.getId());
             event.put("eventType", tblEventRecordMapper.translateEventType(tblEventRecord.getEventType()));
             event.put("eventTime", tblEventRecord.getEventTime());
@@ -631,36 +634,13 @@ public class EventServiceImpl implements IEventService {
             event.put("img", tblEventRecord.getEventPhoto());
             event.put("video", tblEventRecord.getVideo());
 
-            JSONObject data = new JSONObject();
+            data = new JSONObject();
             data.put("type", "eventOccur");
             data.put("data", event.toJSONString());
             KafkaEnum kafkaEnum = new KafkaEnum();
             kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
             kafkaEnum.setData(data.toJSONString());
             remoteKafkaService.send(kafkaEnum);
-        } else {
-            JSONObject event;
-            JSONObject data;
-            for (TblEventAlarm i : list) {
-                if (tblEventRecord.getEventType().equals(i.getEventType().toString())) {
-                    event = new JSONObject();
-                    event.put("id", tblEventRecord.getId());
-                    event.put("eventType", tblEventRecordMapper.translateEventType(tblEventRecord.getEventType()));
-                    event.put("eventTime", tblEventRecord.getEventTime());
-                    event.put("locationInterval", tblEventRecord.getLocationInterval());
-                    event.put("deviceId", tblEventRecord.getSzSourceCode());
-                    event.put("img", tblEventRecord.getEventPhoto());
-                    event.put("video", tblEventRecord.getVideo());
-
-                    data = new JSONObject();
-                    data.put("type", "eventOccur");
-                    data.put("data", event.toJSONString());
-                    KafkaEnum kafkaEnum = new KafkaEnum();
-                    kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-                    kafkaEnum.setData(data.toJSONString());
-                    remoteKafkaService.send(kafkaEnum);
-                }
-            }
         }
         return r;
     }

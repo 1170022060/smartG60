@@ -702,7 +702,6 @@ public class VideoEventServiceImpl implements IVideoEventService {
         if (r1.getCode() == R.SUCCESS && r1.getData() != null) {
             params1.put("devIp", r1.getData().getDeviceIp());
             params1.put("devPos", 1);
-            params1.put("infoType", 1);
 
             if (KA < 10) {//  0123-黑红绿黄
                 params1.put("text1_ke", "拥挤");
@@ -729,7 +728,6 @@ public class VideoEventServiceImpl implements IVideoEventService {
         if (r2A.getCode() == R.SUCCESS && r2A.getData() != null) {
             params2A.put("devIp", r2A.getData().getDeviceIp());
             params2A.put("devPos", 2);
-            params2A.put("infoType", 1);
             if (HA < 5) {
                 params2A.put("text2A_huoA", "拥挤");
                 //  0123-黑红绿黄
@@ -762,7 +760,6 @@ public class VideoEventServiceImpl implements IVideoEventService {
         if (r2BC.getCode() == R.SUCCESS && r2BC.getData() != null) {
             params2BC.put("devIp", r2BC.getData().getDeviceIp());
             params2BC.put("devPos", 3);
-            params2BC.put("infoType", 1);
             // 货B
 
             if (HB < 5) {
