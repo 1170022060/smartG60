@@ -40,6 +40,7 @@ public class VolumeVelocityConsumer implements RocketMQListener<String> {
         JSONObject object = JSON.parseObject(message);
         JSONObject flow = object.getJSONObject("flow");
         JSONObject velocity = object.getJSONObject("velocity");
+        // TODO: 2023/4/10 0010 参数有变更
         JSONObject congestion = object.getJSONObject("congestion");
         List<TblRoadInfo> list = iRoadService.selectAll();
         TblRoadVolumeVelocity tblRoadVolumeVelocity;

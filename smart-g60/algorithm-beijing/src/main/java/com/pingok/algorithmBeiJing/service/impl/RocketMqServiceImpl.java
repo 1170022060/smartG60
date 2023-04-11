@@ -63,7 +63,7 @@ public class RocketMqServiceImpl implements IRocketMqService {
     public void gantryTransactionLog(String startTime, String endTime) {
         String year = DateUtils.getYear(DateUtils.parseDate(startTime));
         List<Map> gantrys = gantryMapper.gantrys();
-        if (gantrys != null && gantrys.size() > 0) {
+        if (gantrys != null && !gantrys.isEmpty()) {
             JSONObject object = new JSONObject();
             object.put("gantry_ids", JSON.parseArray(JSON.toJSONString(gantrys)));
 

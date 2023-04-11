@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * 预测流量流速监听 长短时预测
@@ -42,6 +43,9 @@ public class ForecastConsumer implements RocketMQListener<String> {
         JSONArray velocity;
         JSONArray congestion;
         TblRoadForecast tblRoadForecast;
+        if (Objects.isNull(roadIds)) {
+            return;
+        }
         for (int i = 0; i < roadIds.size(); i++) {
             flow = flowArray.getJSONArray(i);
             velocity = velocityArray.getJSONArray(i);
