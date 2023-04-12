@@ -72,6 +72,14 @@ public interface TblEventPassengerFlowMapper extends CommonRepository<TblEventPa
             "when 4 then '女厕' " +
             "when 5 then '艺海棠' " +
             "when 6 then '司机之家' end AS \"area\"," +
+            "sum(AGE_CHILD) as \"ageChild\"," +
+            "sum(AGE_YOUTH) as \"ageYouth\"," +
+            "sum(AGE_MIDLIFE) as \"ageMidLife\"," +
+            "sum(AGE_OLD) as \"ageOld\"," +
+            "sum(SEX_MAN) as \"sexMan\"," +
+            "sum(SEX_WOMAN) as \"sexWoman\"," +
+            "sum(MASK) as \"mask\"," +
+            "sum(NO_MASK) as \"noMask\"," +
             "sum(eps.ENTRY) AS \"flow\" " +
             "FROM " +
             "TBL_EVENT_PASSENGER_STATISTICS eps " +
