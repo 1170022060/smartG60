@@ -83,7 +83,8 @@ public class VmsServiceImpl implements IVmsService {
                     ret = publishSansiXS(dev, pubList.get(0));
                     break;
                 case InfoBoardConfig.DONGHAI_F:
-                    ret = publishDonghaiF(dev, pubList.get(0));
+//                    ret = publishDonghaiF(dev, pubList.get(0));
+                    ret = publishF1orF2(dev.getDevId(), pubList.get(0));
                     break;
                 case InfoBoardConfig.SANSI_PLIST:
                 case InfoBoardConfig.SANSI_PLIST_MULTI:
@@ -312,8 +313,9 @@ public class VmsServiceImpl implements IVmsService {
                     3, Integer.valueOf("1801", 16), 0, DataType.TWO_BYTE_INT_SIGNED);
             try {
                 if (dev.getDevId().equals("S1")) {
-                    retCode = iModbusService.writeRegister("COM12", dev.getSlave(),
-                            0x1801, Short.parseShort(fmsValue, 16));
+//                    retCode = iModbusService.writeRegister("COM12", dev.getSlave(),
+//                            0x1801, Short.parseShort(fmsValue, 16));
+                    retCode = publishS1(info.getPicId());
                 } else {
                     retCode = iModbusService.writeRegister(mbsAttribute, Short.parseShort(fmsValue, 16));
                 }
@@ -325,6 +327,67 @@ public class VmsServiceImpl implements IVmsService {
         return retCode;
     }
 
+    int publishS1(String picId) {
+        int ret = 200;
+        String host = "http://10.31.42.203:8733/vmsapi/publish";
+
+        JSONObject jo = new JSONObject();
+        jo.put("type", "S");
+        jo.put("id", "S1");
+        jo.put("speed", XsSpeedCvt(picId));
+        try{
+            String post = HttpUtil.post(host, JSON.toJSONString(jo));
+            if(!StringUtils.isEmpty(post)) {
+                if(post.startsWith("[")){
+                    JSONArray jaRet = JSONArray.parseArray(post);
+                    R r = JSON.parseObject(JSON.toJSONString(jaRet.get(0)), R.class);
+                    if(R.SUCCESS != r.getCode()){
+                        log.error("发布限速板S1失败！" + r.getMsg());
+                        ret = -1;
+                    }
+                }
+            }
+        }catch (Exception e) {
+            log.error("情报板S1发布失败：" + e.getMessage());
+        }
+        return ret;
+    }
+
+    int publishF1orF2(String devId, List<VmsPubInfo> vmsInfoList) {
+        int ret = 200;
+        String host = "http://10.31.42.203:8733/vmsapi/publish";
+
+        JSONObject jo = new JSONObject();
+        jo.put("type", "F");
+        jo.put("id", devId);
+        JSONArray ja = new JSONArray();
+        for (VmsPubInfo info : vmsInfoList) {
+            JSONObject joText = new JSONObject();
+            joText.put("text", info.getContent());
+            joText.put("font", info.getTypeface());
+            joText.put("fontSize", info.getTextSize());
+            joText.put("fontColor", info.getTextColor());
+            ja.add(joText);
+        }
+        jo.put("texts", ja);
+        try{
+            String post = HttpUtil.post(host, JSON.toJSONString(jo));
+            if(!StringUtils.isEmpty(post)) {
+                if(post.startsWith("[")){
+                    JSONArray jaRet = JSONArray.parseArray(post);
+                    R r = JSON.parseObject(JSON.toJSONString(jaRet.get(0)), R.class);
+                    if(R.SUCCESS != r.getCode()){
+                        log.error("发布" + devId + "失败！" + r.getMsg());
+                        ret = -1;
+                    }
+                }
+            }
+        }catch (Exception e) {
+            log.error("情报板"+devId+"发布失败：" + e.getMessage());
+        }
+
+        return ret;
+    }
     /* 东海 F板
        正常用7C：24*24 最多12个字； 78：32*32
      */
@@ -1682,6 +1745,20 @@ public class VmsServiceImpl implements IVmsService {
             }
         }
         return fmsCode;
+    }
+    private String XsSpeedCvt(String picId) {
+        switch (picId) {
+            case "40": return "C2";
+            case "50": return "DB";
+            case "60": return "C3";
+            case "70": return "DE";
+            case "80": return "C4";
+            case "90": return "DF";
+            case "100": return "C5";
+            case "110": return "E0";
+            case "120": return "C6";
+            default: return "C4";
+        }
     }
 
     //东海校验码
