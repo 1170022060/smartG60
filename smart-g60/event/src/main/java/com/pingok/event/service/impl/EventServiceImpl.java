@@ -605,21 +605,24 @@ public class EventServiceImpl implements IEventService {
 
         List<Map> buildManaList = tblBuildManaMapper.buildManaList();
 
-        for (int i=0;i<buildManaList.size();i++){
-            Map<String,Object> map = buildManaList.get(i);
-            Double start = Double.parseDouble(map.get("startPileNo").toString().replace("K",""));
-            Double end = Double.parseDouble(map.get("endPileNo").toString().replace("K",""));
-            Double position = Double.parseDouble(tblEventRecord.getPileNo().substring(1,3));
-            Date startTime = (Date) map.get("startTime");
-            Date endTime = (Date) map.get("endTime");
-            if (tblEventRecord.getEventTime().after(startTime) && tblEventRecord.getEventTime().before(endTime)){
-                if(start.compareTo(position) <0 &&  position.compareTo(end) <0){
-                    tblEventRecord.setStatus(2);
-                    tblEventRecordMapper.updateByPrimaryKeySelective(tblEventRecord);
-                    return r;
+        if(tblEventRecord.getEventType() == "20" ){
+            for (int i=0;i<buildManaList.size();i++){
+                Map<String,Object> map = buildManaList.get(i);
+                Double start = Double.parseDouble(map.get("startPileNo").toString().replace("K",""));
+                Double end = Double.parseDouble(map.get("endPileNo").toString().replace("K",""));
+                Double position = Double.parseDouble(tblEventRecord.getPileNo().substring(1,3));
+                Date startTime = (Date) map.get("startTime");
+                Date endTime = (Date) map.get("endTime");
+                if (tblEventRecord.getEventTime().after(startTime) && tblEventRecord.getEventTime().before(endTime)){
+                    if(start.compareTo(position) <0 &&  position.compareTo(end) <0){
+                        tblEventRecord.setStatus(2);
+                        tblEventRecordMapper.updateByPrimaryKeySelective(tblEventRecord);
+                        return r;
+                    }
                 }
             }
         }
+
 
 
         List<TblEventAlarm> list = tblEventAlarmMapper.selectAll();
