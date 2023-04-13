@@ -23,49 +23,49 @@ public class DeviceInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private Short id;
+    private String id;
 
 
     /**
      * 创建人id
      */
     @ApiModelProperty(value = "创建人id")
-    private Short createUser;
+    private String createUser;
 
 
     /**
      * 创建时间
      */
     @ApiModelProperty(value = "创建时间")
-    private LocalDateTime createTime;
+    private String createTime;
 
 
     /**
      * 修改人id
      */
     @ApiModelProperty(value = "修改人id")
-    private Short updateUser;
+    private String updateUser;
 
 
     /**
      * 修改时间
      */
     @ApiModelProperty(value = "修改时间")
-    private LocalDateTime updateTime;
+    private String updateTime;
 
 
     /**
      * 状态
      */
     @ApiModelProperty(value = "状态")
-    private BigDecimal status;
+    private Integer status;
 
 
     /**
      * 是否删除
      */
     @ApiModelProperty(value = "是否删除")
-    private BigDecimal isDeleted;
+    private Integer isDeleted;
 
 
     /**
@@ -79,7 +79,7 @@ public class DeviceInfo implements Serializable {
      * 设施设备分类ID
      */
     @ApiModelProperty(value = "设施设备分类ID")
-    private Short pid;
+    private String pid;
 
 
     /**
@@ -114,14 +114,14 @@ public class DeviceInfo implements Serializable {
      * 工程主管ID
      */
     @ApiModelProperty(value = "工程主管ID")
-    private Short proChargeId;
+    private String proChargeId;
 
 
     /**
      * 技术主管ID
      */
     @ApiModelProperty(value = "技术主管ID")
-    private Short techChargeId;
+    private String techChargeId;
 
 
     /**
@@ -142,14 +142,14 @@ public class DeviceInfo implements Serializable {
      * 起点K数
      */
     @ApiModelProperty(value = "起点K数")
-    private Short startKNumber;
+    private String startKNumber;
 
 
     /**
      * 终点K数
      */
     @ApiModelProperty(value = "终点K数")
-    private Short endKNumber;
+    private String endKNumber;
 
 
     /**
@@ -192,10 +192,5 @@ public class DeviceInfo implements Serializable {
      */
     @ApiModelProperty(value = "计量单位名称")
     private String unitDictKeyName;
-
-
-
-
-
 
 }
