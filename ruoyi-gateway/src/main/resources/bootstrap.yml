@@ -1,6 +1,10 @@
 # Tomcat
 server:
   port: 8082
+  ssl:
+    key-store: classpath:9662171_shlqfz.com.pfx
+    key-store-password: lothe50v
+    key-store-type: PKCS12
   tomcat:
     uri-encoding: UTF-8
 

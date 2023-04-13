@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.dingtalk.mapper.base.DeviceInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.pingok.dingtalk.daemon.base.DeviceInfo">
+        <id column="ID" property="id" />
+        <result column="CREATE_USER" property="createUser" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="UPDATE_USER" property="updateUser" />
+        <result column="UPDATE_TIME" property="updateTime" />
+        <result column="STATUS" property="status" />
+        <result column="IS_DELETED" property="isDeleted" />
+        <result column="REMARK" property="remark" />
+        <result column="PID" property="pid" />
+        <result column="FACILITY_CODE" property="facilityCode" />
+        <result column="FACILITY_NAME" property="facilityName" />
+        <result column="UNIT_DICT_KEY" property="unitDictKey" />
+        <result column="LOCATION" property="location" />
+        <result column="PRO_CHARGE_ID" property="proChargeId" />
+        <result column="TECH_CHARGE_ID" property="techChargeId" />
+        <result column="LONGITUDE" property="longitude" />
+        <result column="LATITUDE" property="latitude" />
+        <result column="START_K_NUMBER" property="startKNumber" />
+        <result column="END_K_NUMBER" property="endKNumber" />
+        <result column="LOCATION_TYPE" property="locationType" />
+        <result column="CATEGORY_NAME" property="categoryName" />
+        <result column="LOCATION_TYPE_NAME" property="locationTypeName" />
+        <result column="PRO_CHARGE_NAME" property="proChargeName" />
+        <result column="TECH_CHARGE_NAME" property="techChargeName" />
+        <result column="UNIT_DICT_KEY_NAME" property="unitDictKeyName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, STATUS, IS_DELETED, REMARK, PID, FACILITY_CODE, FACILITY_NAME, UNIT_DICT_KEY, LOCATION, PRO_CHARGE_ID, TECH_CHARGE_ID, LONGITUDE, LATITUDE, START_K_NUMBER, END_K_NUMBER, LOCATION_TYPE, CATEGORY_NAME, LOCATION_TYPE_NAME, PRO_CHARGE_NAME, TECH_CHARGE_NAME, UNIT_DICT_KEY_NAME
+    </sql>
+
+</mapper>
