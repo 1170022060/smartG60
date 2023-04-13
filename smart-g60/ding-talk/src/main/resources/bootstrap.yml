@@ -33,3 +33,11 @@ spring:
         # 共享配置
         shared-configs:
           - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+ding-talk:
+  base-url: http://101.132.102.133:8087
+  appKey: suitegfgyqtbj5uf6occa
+  appSecret: jAhPTPo_6HNB4WPybKzgBgBuHzcQlDiaeYIVOXrHnJ_pJy2sWnfNEb5qdnEbf7M7
+  tenantId: 000000
+  authorization: Basic c3dvcmQ6c3dvcmRfc2VjcmV0
+  whiteList:
+   - /oauth/getAuthToken

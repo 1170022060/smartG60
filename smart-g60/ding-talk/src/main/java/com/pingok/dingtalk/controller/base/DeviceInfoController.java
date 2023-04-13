@@ -1,5 +1,10 @@
 package com.pingok.dingtalk.controller.base;
 
+import com.pingok.dingtalk.daemon.page.Page;
+import com.pingok.dingtalk.daemon.result.Result;
+import com.pingok.dingtalk.feign.BaseFeign;
+import com.pingok.dingtalk.service.auth.AuthService;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
 import com.pingok.dingtalk.daemon.base.DeviceInfo;
@@ -8,6 +13,7 @@ import com.pingok.dingtalk.service.base.IDeviceInfoService;
 import java.util.List;
 
 import javax.annotation.Resource;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +35,10 @@ public class DeviceInfoController extends BaseController {
 
     @Resource
     private IDeviceInfoService iDeviceInfoService;
+    @Resource
+    private AuthService authService;
+    @Resource
+    private BaseFeign baseFeign;
 
     @ApiOperation("设施设备信息表-钉钉分页列表")
     @GetMapping("/page")
@@ -68,5 +78,14 @@ public class DeviceInfoController extends BaseController {
     @DeleteMapping(value = "/{id}")
     public AjaxResult deleteById(@PathVariable("id") Short id) {
         return toAjax(iDeviceInfoService.deleteById(id));
+    }
+
+    @GetMapping("test")
+    public void test() {
+        Result<DeviceInfo> deviceInfoResult = baseFeign.deviceInfoPage();
+        Boolean success = deviceInfoResult.getSuccess();
+        Page<DeviceInfo> data = deviceInfoResult.getData();
+        List<DeviceInfo> records = data.getRecords();
+        System.out.println(success);
     }
 }
