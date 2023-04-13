@@ -2,8 +2,8 @@
 server:
   port: 8081
   ssl:
-    key-store: classpath:server.pfx
-    key-store-password: test@123
+    key-store: classpath:9662171_shlqfz.com.pfx
+    key-store-password: lothe50v
     key-store-type: PKCS12
 #  tomcat:
 #    uri-encoding: UTF-8
