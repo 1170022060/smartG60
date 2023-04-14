@@ -49,9 +49,11 @@ public interface TblParkingStatisticsMapper extends CommonRepository<TblParkingS
             "</when>"+
             "<when test='statisticsType == 3'> " +
             "substr(to_char(tps.DAY,'yyyy-mm-dd'),1,7) AS \"day\"," +
+            "CEIL(sum(ENTER)/(select to_number(to_char(last_day(trunc(sysdate)),'dd')) as \"mouthNum\" from DUAL)) AS \"avgDayFlow\"," +
             "</when>"+
             "<when test='statisticsType == 4'> " +
             "substr(to_char(tps.DAY,'yyyy-mm-dd'),1,4) AS \"day\"," +
+            "CEIL(sum(ENTER)/(select add_months(trunc(sysdate,'yyyy'),12)-trunc(sysdate,'yyyy') \"yearNum\" from DUAL)) AS \"avgDayFlow\"," +
             "</when>"+
             "case tps.VEH_TYPE when 1 then '客车' when 2 then '货车' end AS \"vehType\"," +
             "sum(ENTER) AS \"flow\" " +

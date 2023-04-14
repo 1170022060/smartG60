@@ -61,8 +61,8 @@ public class PersonnelHealthServiceImpl implements IPersonnelHealthService {
             tblPersonnelHealth.setServiceId(personnelHealth.getLong("serviceId"));
             tblPersonnelHealth.setTransDate(personnelHealth.getDate("transDate"));
             tblPersonnelHealth.setFieldId(obj.getLong("fieldId"));
-            tblPersonnelHealth.setAbnormalNum(obj.getInteger("normalNum"));
-            tblPersonnelHealth.setNormalNum(obj.getInteger("abnormalNum"));
+            tblPersonnelHealth.setAbnormalNum(obj.getInteger("abnormalNum"));
+            tblPersonnelHealth.setNormalNum(obj.getInteger("normalNum"));
             tblPersonnelHealth.setCreateTime(new Date());
             tblPersonnelHealth.setCreateUserId(SecurityUtils.getUserId());
             tblPersonnelHealthMapper.insert(tblPersonnelHealth);
