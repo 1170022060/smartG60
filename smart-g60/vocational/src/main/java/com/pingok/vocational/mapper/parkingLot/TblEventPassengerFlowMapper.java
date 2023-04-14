@@ -61,9 +61,11 @@ public interface TblEventPassengerFlowMapper extends CommonRepository<TblEventPa
             "</when>"+
             "<when test='statisticsType == 3'> " +
             "substr(eps.WORK_DATE,1,7) AS \"day\"," +
+            "CEIL(sum(eps.ENTRY)/(select to_number(to_char(last_day(trunc(sysdate)),'dd')) as \"mouthNum\" from DUAL)) AS \"avgDayFlow\"," +
             "</when>"+
             "<when test='statisticsType == 4'> " +
             "substr(eps.WORK_DATE,1,4) AS \"day\"," +
+            "CEIL(sum(eps.ENTRY)/(select add_months(trunc(sysdate,'yyyy'),12)-trunc(sysdate,'yyyy') \"yearNum\" from DUAL)) AS \"avgDayFlow\"," +
             "</when>"+
             "case eps.AREA_ID " +
             "when 1 then '商铺' " +

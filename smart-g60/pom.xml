@@ -27,6 +27,7 @@
         <module>gis</module>
         <module>monitor-external-system</module>
         <module>algorithm-beijing</module>
+        <module>ding-talk</module>
     </modules>
 
     <artifactId>smart-g60</artifactId>
