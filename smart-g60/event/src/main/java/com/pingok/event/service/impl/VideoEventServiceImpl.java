@@ -704,18 +704,18 @@ public class VideoEventServiceImpl implements IVideoEventService {
             params1.put("devPos", 1);
 
             if (KA < 10) {//  0123-黑红绿黄
-                params1.put("text1_ke", "拥挤");
+                params1.put("text1_ke", "余" + KA);
                 params1.put("color1_ke", 1);
             } else {
                 params1.put("text1_ke",KA);
                 params1.put("color1_ke", 2);
             }
-
+            int sum = HA + HB;
             if (HA + HB < 10) {
-                params1.put("text1_huo", "拥挤");
+                params1.put("text1_huo", "余" + sum);
                 params1.put("color1_huo", 1);
             } else {
-                params1.put("text1_huo", HA + HB);
+                params1.put("text1_huo", sum);
                 params1.put("color1_huo", 2);
             }
         }
@@ -729,7 +729,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             params2A.put("devIp", r2A.getData().getDeviceIp());
             params2A.put("devPos", 2);
             if (HA < 5) {
-                params2A.put("text2A_huoA", "拥挤");
+                params2A.put("text2A_huoA", "余" + HA);
                 //  0123-黑红绿黄
                 params2A.put("color2A_huoA", 1);
             } else {
@@ -737,14 +737,14 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 params2A.put("color2A_huoA", 2);
             }
             if (HB < 5) {
-                params2A.put("text2BC_huoB", "拥挤");
+                params2A.put("text2BC_huoB", "余" + HB);
                 params2A.put("color2BC_huoB", 1);
             } else {
                 params2A.put("text2BC_huoB", HB);
                 params2A.put("color2BC_huoB", 2);
             }
             if (KA < 10) {
-                params2A.put("text2BC_ke", "拥挤");
+                params2A.put("text2BC_ke", "余" +KA);
                 params2A.put("color2BC_ke", 1);
             } else {
                 params2A.put("text2BC_ke", KA);
@@ -763,7 +763,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             // 货B
 
             if (HB < 5) {
-                params2BC.put("text2BC_huoB", "拥挤");
+                params2BC.put("text2BC_huoB", "余" + HB);
                 params2BC.put("color2BC_huoB", 1);
             } else {
                 params2BC.put("text2BC_huoB", HB);
@@ -771,7 +771,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
             }
 
             if (KA < 10) {
-                params2BC.put("text2BC_ke", "拥挤");
+                params2BC.put("text2BC_ke", "余" + KA);
                 params2BC.put("color2BC_ke", 1);
             } else {
                 params2BC.put("text2BC_ke", KA);
