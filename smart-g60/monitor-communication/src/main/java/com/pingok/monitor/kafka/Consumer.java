@@ -206,6 +206,7 @@ public class Consumer {
             SansiParkingPubInfo info = JSON.parseObject(String.valueOf(msg), SansiParkingPubInfo.class);
             try {
                 iVmsService.publish(info);
+                ack.acknowledge();
                 log.info("infoBoardPublishParking 消费了： Topic:" + topic + ",Message:" + msg);
             } catch (Exception e) {
                 log.error("infoBoardPublishParking，Topic" + topic + ",Message:" + msg + "处理失败。错误信息：" + e.getMessage());
@@ -220,10 +221,11 @@ public class Consumer {
             log.info("infoBoardPing 消费了： Topic:" + topic + ",Message:" + message.get());
             try {
                 iVmsService.collect(message.get().toString());
+                ack.acknowledge();
             } catch (Exception e) {
                 log.error("infoBoardPing 消费者，Topic" + topic + ",Message:" + message.get() + "处理失败。错误信息：" + e.getMessage());
             }
-            ack.acknowledge();
+
         }
     }
 
