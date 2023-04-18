@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 视频 信息操作处理
@@ -172,4 +173,13 @@ public class VodController extends BaseController {
         return AjaxResult.success();
     }
 
+    @GetMapping("getStreamList")
+    public AjaxResult getStreamList(Integer roadId) {
+        return AjaxResult.success(iMonitorPresetService.getCameraStreamList(roadId));
+    }
+    @GetMapping("stop")
+    public AjaxResult stop(Integer roadId) {
+        iMonitorPresetService.stop(roadId);
+        return AjaxResult.success();
+    }
 }

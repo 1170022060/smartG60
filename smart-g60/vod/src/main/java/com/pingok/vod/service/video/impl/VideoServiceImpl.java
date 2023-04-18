@@ -59,7 +59,7 @@ public class VideoServiceImpl implements IVideoService {
         String body = jsonBody.toJSONString();
         String result = null;
         try {
-            result = ArtemisHttpUtil.doPostStringArtemis(ArtemisConfig,path, body, null, null, contentType, null);
+//            result = ArtemisHttpUtil.doPostStringArtemis(ArtemisConfig,path, body, null, null, contentType, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,7 +104,7 @@ public class VideoServiceImpl implements IVideoService {
         String body = jsonBody.toJSONString();
         String result = null;
         try {
-            result = ArtemisHttpUtil.doPostStringArtemis(ArtemisConfig,path, body, null, null, contentType, null);
+//            result = ArtemisHttpUtil.doPostStringArtemis(ArtemisConfig,path, body, null, null, contentType, null);
         } catch (Exception e) {
             e.printStackTrace();
         }

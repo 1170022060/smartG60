@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pingok.vod.mapper.TblDeviceInfoMapper">
+    <select id="getDeviceByPileNo" resultType="java.lang.Long">
+        SELECT
+        tdi.DEVICE_ID
+        FROM
+        TBL_DEVICE_INFO tdi LEFT JOIN (
+        SELECT
+        ( SELECT REGEXP_REPLACE( PILE_NO, '\D' ) FROM TBL_ROAD_NODES_INFO WHERE ID = tri.ORIGIN ) AS ORIGIN,
+        ( SELECT REGEXP_REPLACE( PILE_NO, '\D' ) FROM TBL_ROAD_NODES_INFO WHERE ID = tri.DESTINATION ) AS DESTINATION
+        FROM
+        TBL_ROAD_INFO tri
+        WHERE
+        ROAD_ID = #{roadId}
+        ) t1
+        ON 1=1
+        WHERE
+        REGEXP_REPLACE( tdi.PILE_NO, '\D' ) <![CDATA[ >= ]]> t1. ORIGIN
+        AND REGEXP_REPLACE( tdi.PILE_NO, '\D' ) <![CDATA[ <= ]]> t1.DESTINATION
+        AND tdi.DEVICE_TYPE = 10
+    </select>
+</mapper>

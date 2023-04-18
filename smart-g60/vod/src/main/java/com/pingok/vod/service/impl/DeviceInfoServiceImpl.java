@@ -25,6 +25,8 @@ public class DeviceInfoServiceImpl implements IDeviceInfoService {
     private TblDeviceInfoMapper tblDeviceInfoMapper;
     @Autowired
     private RemoteIdProducerService remoteIdProducerService;
+    @Autowired
+    private MonitorPresetServiceImpl monitorPresetService;
 
 
     @Override
@@ -90,4 +92,12 @@ public class DeviceInfoServiceImpl implements IDeviceInfoService {
             }
         }
     }
+
+    @Override
+    public List<Long> getDeviceByPileNo(Integer roadId) {
+        return tblDeviceInfoMapper.getDeviceByPileNo(roadId);
+    }
+
+
+
 }

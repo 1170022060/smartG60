@@ -14,20 +14,25 @@ import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.IdUtils;
 import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import lombok.extern.slf4j.Slf4j;
 import org.bytedeco.javacpp.avcodec;
 import org.bytedeco.javacv.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 设备信息 服务层处理
@@ -45,9 +50,11 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
     private RemoteIdProducerService remoteIdProducerService;
     @Autowired
     private IDeviceInfoService iDeviceInfoService;
+    @Autowired
+    private RedisService redisService;
 
     @Override
-    public void downloadVod(HttpServletResponse response,  String url) {
+    public void downloadVod(HttpServletResponse response, String url) {
         FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(url);
         FFmpegFrameRecorder recorder = null;
         File outFile = null;
@@ -455,5 +462,34 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
                 }
             }
         }
+    }
+
+    @Override
+    public void stop(Integer roadId) {
+        if (redisService.hasKey("keepalive:" + roadId)) {
+            redisService.deleteObject("keepalive:" + roadId);
+        }
+    }
+
+    @Override
+    public JSONArray getCameraStreamList(Integer roadId) {
+        // 获取设备id
+        List<Long> deviceByPileNo = iDeviceInfoService.getDeviceByPileNo(roadId);
+        // 准备保活
+        redisService.setCacheSet("keepalive:" + roadId, deviceByPileNo.stream().collect(Collectors.toSet()));
+        // 获取视频流
+        JSONArray objects = startLive(deviceByPileNo);
+        return objects;
+    }
+
+    @Scheduled(cron = "0/25 * * * * ?")
+    public void keepalive() {
+        Collection<String> keys = redisService.keys("keepalive:**");
+        log.info("-----------视频保活定时--------,{}", keys);
+        keys.stream().forEach(key -> {
+            Set<Long> cacheList = redisService.getCacheSet(key);
+            log.info("-----------视频保活--------,{}", cacheList.toString());
+            streamAlive(cacheList.stream().collect(Collectors.toList()));
+        });
     }
 }
