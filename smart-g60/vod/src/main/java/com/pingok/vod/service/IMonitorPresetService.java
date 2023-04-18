@@ -21,7 +21,7 @@ public interface IMonitorPresetService {
 
     JSONObject getVodCurtime(Long id);
 
-    JSONObject vodControl(Long id,String type,String playSpeed,String seekTime);
+    JSONObject vodControl(Long id, String type, String playSpeed, String seekTime);
 
     JSONObject stopVod(Long id);
 
@@ -42,4 +42,8 @@ public interface IMonitorPresetService {
     JSONArray getCameraList();
 
     void streamAlive(List<Long> ids);
+
+    JSONArray getCameraStreamList(Integer roadId);
+
+    void stop(Integer roadId);
 }

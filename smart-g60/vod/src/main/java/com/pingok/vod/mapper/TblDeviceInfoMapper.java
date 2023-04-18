@@ -16,5 +16,11 @@ import java.util.Map;
  */
 @Mapper
 public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
-
+    /**
+     * 根据路段查询相机设备的id
+     *
+     * @param roadId
+     * @return
+     */
+    List<Long> getDeviceByPileNo(@Param(value = "roadId") Integer roadId);
 }

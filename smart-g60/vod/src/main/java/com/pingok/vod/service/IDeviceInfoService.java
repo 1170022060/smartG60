@@ -3,6 +3,7 @@ package com.pingok.vod.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.pingok.vod.domain.TblDeviceInfo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -25,4 +26,11 @@ public interface IDeviceInfoService {
     TblDeviceInfo findByDeviceId(String deviceId);
 
     void updateCameraList(JSONArray jsonArray);
+
+    /**
+     *
+     * @param roadId
+     * @return
+     */
+    List<Long> getDeviceByPileNo(Integer roadId);
 }
