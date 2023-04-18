@@ -4,4 +4,6 @@ public interface IArtemisService {
     String httpRequest(String api,String body);
 
     void updateStatus();
+
+    String getVideoUrl(String deviceId);
 }

@@ -128,4 +128,16 @@ public class ArtemisServiceImpl implements IArtemisService {
             }
         }
     }
+
+    @Override
+    public String getVideoUrl(String deviceId) {
+        JSONObject params = new JSONObject();
+        params.put("cameraIndexCode", deviceId);//监控点唯一标识
+        params.put("protocol", "hls");//取流协议
+        params.put("streamType", 0);//码流类型 0:主码 1:子码 2:第三码流
+        params.put("transmode", 1);//传输协议（传输层协议），0:UDP 1:TCP
+        params.put("streamform", "ps");//输出码流转封装格式
+        String result = httpRequest("/api/video/v2/cameras/previewURLs", params.toJSONString());
+        return result;
+    }
 }
