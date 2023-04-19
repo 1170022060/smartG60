@@ -86,6 +86,7 @@ public class DeviceInfoController extends BaseController {
         Boolean success = deviceInfoResult.getSuccess();
         Page<DeviceInfo> data = deviceInfoResult.getData();
         List<DeviceInfo> records = data.getRecords();
+
         System.out.println(success);
     }
 }
