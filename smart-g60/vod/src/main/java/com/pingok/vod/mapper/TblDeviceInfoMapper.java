@@ -1,5 +1,6 @@
 package com.pingok.vod.mapper;
 
+import com.pingok.vod.domain.DeviceDto;
 import com.pingok.vod.domain.TblDeviceInfo;
 import com.ruoyi.common.core.mapper.CommonRepository;
 import org.apache.ibatis.annotations.Mapper;
@@ -19,8 +20,8 @@ public interface TblDeviceInfoMapper extends CommonRepository<TblDeviceInfo> {
     /**
      * 根据路段查询相机设备的id
      *
-     * @param roadId
+     * @param roadIds
      * @return
      */
-    List<Long> getDeviceByPileNo(@Param(value = "roadId") Integer roadId);
+    List<DeviceDto> getDeviceByRoadIds(@Param(value = "roadIds") List<Integer> roadIds);
 }

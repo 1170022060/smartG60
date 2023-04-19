@@ -1,10 +1,12 @@
 package com.pingok.vod.service.impl;
 
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingok.vod.config.VodConfig;
+import com.pingok.vod.domain.DeviceDto;
 import com.pingok.vod.domain.TblDeviceInfo;
 import com.pingok.vod.domain.TblMonitorPreset;
 import com.pingok.vod.mapper.TblMonitorPresetMapper;
@@ -28,10 +30,8 @@ import tk.mybatis.mapper.entity.Example;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -472,14 +472,41 @@ public class MonitorPresetServiceImpl implements IMonitorPresetService {
     }
 
     @Override
-    public JSONArray getCameraStreamList(Integer roadId) {
-        // 获取设备id
-        List<Long> deviceByPileNo = iDeviceInfoService.getDeviceByPileNo(roadId);
+    public List<DeviceDto> getCameraStreamList(List<Integer> roadId) {
+        // 获取设备信息
+        List<DeviceDto> deviceList = iDeviceInfoService.getDeviceByRoadIds(roadId);
+
+        // 根据路段id 进行视频保活 路段id -> 设备列表
+        Map<Integer, List<Long>> deviceMap = deviceList
+                .stream()
+                .collect(Collectors.groupingBy(DeviceDto::getRoadId, Collectors.mapping(DeviceDto::getId, Collectors.toList())));
+
+        // 获取所有视频id
+        List<Long> deviceIds = deviceList.stream().map(DeviceDto::getId).distinct().collect(Collectors.toList());
         // 准备保活
-        redisService.setCacheSet("keepalive:" + roadId, deviceByPileNo.stream().collect(Collectors.toSet()));
+        for (Map.Entry<Integer, List<Long>> integerListEntry : deviceMap.entrySet()) {
+            Integer key = integerListEntry.getKey();
+            List<Long> value = integerListEntry.getValue();
+            redisService.setCacheSet("keepalive:" + key, value.stream().collect(Collectors.toSet()));
+            // 设置保活时间2分钟
+            redisService.expire("keepalive:" + key, 2, TimeUnit.MINUTES);
+        }
+
         // 获取视频流
-        JSONArray objects = startLive(deviceByPileNo);
-        return objects;
+        JSONArray objects = startLive(deviceIds);
+        log.info("获取到的视频流媒体：{}", objects);
+        // 数据处理成map
+        List<DeviceDto> deviceDtos = objects.toJavaList(DeviceDto.class);
+        Map<Long, String> streamList = deviceDtos.stream().collect(Collectors.toMap(DeviceDto::getId, DeviceDto::getUrl));
+        // 包装数据
+        deviceList.forEach(item -> {
+            Long id = item.getId();
+            if (streamList.containsKey(id)) {
+                item.setUrl(streamList.get(id));
+            }
+
+        });
+        return deviceList;
     }
 
     @Scheduled(cron = "0/25 * * * * ?")

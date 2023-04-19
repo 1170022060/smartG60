@@ -174,8 +174,8 @@ public class VodController extends BaseController {
     }
 
     @GetMapping("getStreamList")
-    public AjaxResult getStreamList(Integer roadId) {
-        return AjaxResult.success(iMonitorPresetService.getCameraStreamList(roadId));
+    public AjaxResult getStreamList(@RequestParam("roadIds")List<Integer> roadIds) {
+        return AjaxResult.success(iMonitorPresetService.getCameraStreamList(roadIds));
     }
     @GetMapping("stop")
     public AjaxResult stop(Integer roadId) {
