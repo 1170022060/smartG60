@@ -31,7 +31,7 @@ public class ForecastConsumer implements RocketMQListener<String> {
 
     @Override
     public void onMessage(String message) {
-        log.info("预测流量流速监听：message:{}", message);
+        log.info("长短时预测流量流速监听：message:{}", message);
         JSONObject object = JSON.parseObject(message);
         JSONArray flowArray = object.getJSONArray("flow");
         JSONArray velocityArray = object.getJSONArray("velocity");
