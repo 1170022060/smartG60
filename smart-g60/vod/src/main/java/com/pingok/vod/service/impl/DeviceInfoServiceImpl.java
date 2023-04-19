@@ -2,6 +2,7 @@ package com.pingok.vod.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.vod.domain.DeviceDto;
 import com.pingok.vod.domain.TblDeviceInfo;
 import com.pingok.vod.mapper.TblDeviceInfoMapper;
 import com.pingok.vod.service.IDeviceInfoService;
@@ -94,8 +95,8 @@ public class DeviceInfoServiceImpl implements IDeviceInfoService {
     }
 
     @Override
-    public List<Long> getDeviceByPileNo(Integer roadId) {
-        return tblDeviceInfoMapper.getDeviceByPileNo(roadId);
+    public List<DeviceDto> getDeviceByRoadIds(List<Integer> roadIds) {
+        return tblDeviceInfoMapper.getDeviceByRoadIds(roadIds);
     }
 
 

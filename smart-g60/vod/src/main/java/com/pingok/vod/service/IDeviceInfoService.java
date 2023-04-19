@@ -2,6 +2,7 @@ package com.pingok.vod.service;
 
 
 import com.alibaba.fastjson.JSONArray;
+import com.pingok.vod.domain.DeviceDto;
 import com.pingok.vod.domain.TblDeviceInfo;
 import org.apache.ibatis.annotations.Param;
 
@@ -32,5 +33,5 @@ public interface IDeviceInfoService {
      * @param roadId
      * @return
      */
-    List<Long> getDeviceByPileNo(Integer roadId);
+    List<DeviceDto> getDeviceByRoadIds(List<Integer> roadIds);
 }

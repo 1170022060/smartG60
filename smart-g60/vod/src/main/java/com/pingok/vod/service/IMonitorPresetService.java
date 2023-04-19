@@ -3,6 +3,7 @@ package com.pingok.vod.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.vod.domain.DeviceDto;
 import com.pingok.vod.domain.TblMonitorPreset;
 
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +44,7 @@ public interface IMonitorPresetService {
 
     void streamAlive(List<Long> ids);
 
-    JSONArray getCameraStreamList(Integer roadId);
+    List<DeviceDto> getCameraStreamList(List<Integer> roadId);
 
     void stop(Integer roadId);
 }

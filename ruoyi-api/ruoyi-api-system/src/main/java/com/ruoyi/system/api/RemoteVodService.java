@@ -6,6 +6,8 @@ import com.ruoyi.system.api.factory.RemoteVodFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * vod服务
  *
@@ -20,4 +22,7 @@ public interface RemoteVodService {
 
     @PostMapping("/vod/heartbeat")
     R heartbeat();
+
+    @GetMapping("/vod/getStreamList")
+    R getVodStremList(@RequestParam(value = "roadIds") List<Integer> roadIds);
 }

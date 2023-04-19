@@ -1,5 +1,6 @@
 package com.pingok.algorithmBeiJing.service.impl;
 
+import cn.hutool.core.date.LocalDateTimeUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -13,6 +14,9 @@ import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +39,11 @@ public class RocketMqServiceImpl implements IRocketMqService {
 
     @Override
     public void trajectoryData(String plate, String instanceId, String startTime, String endTime) {
-        String year = DateUtils.getYear(DateUtils.parseDate(startTime));
+        LocalDateTime start = LocalDateTimeUtil.of(Long.valueOf(startTime));
+        LocalDateTime end = LocalDateTimeUtil.of(Long.valueOf(endTime));
+        startTime = start.format(DateTimeFormatter.ISO_LOCAL_DATE);
+        endTime = end.format(DateTimeFormatter.ISO_LOCAL_DATE);
+        String year = String.valueOf(start.getYear());
         List<Map> list = gantryMapper.trajectoryData(year, plate, startTime, endTime);
         if (list != null && list.size() > 0) {
             JSONObject object = new JSONObject();
@@ -85,8 +93,8 @@ public class RocketMqServiceImpl implements IRocketMqService {
                     array.add(m.get("lastGantryTime") != null ? m.get("lastGantryTime") : "");
                     array.add(m.get("fee") != null ? m.get("fee") : "");
                     vehicle = new JSONObject();
-                    vehicle.put("plate_color",m.get("vehicleColor"));
-                    switch (Integer.parseInt(m.get("vehicleType").toString())){
+                    vehicle.put("plate_color", m.get("vehicleColor"));
+                    switch (Integer.parseInt(m.get("vehicleType").toString())) {
                         case 1:
                         case 2:
                         case 3:
@@ -117,8 +125,8 @@ public class RocketMqServiceImpl implements IRocketMqService {
                             special = false;
                             break;
                     }
-                    vehicle.put("coach_or_truck",coachOrTruck);
-                    vehicle.put("special",special);
+                    vehicle.put("coach_or_truck", coachOrTruck);
+                    vehicle.put("special", special);
                     array.add(vehicle);
                     record.add(array);
                 }

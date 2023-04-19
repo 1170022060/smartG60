@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * vod服务降级处理
  * 
@@ -31,6 +33,11 @@ public class RemoteVodFallbackFactory implements FallbackFactory<RemoteVodServic
 
             @Override
             public R heartbeat() {
+                return null;
+            }
+
+            @Override
+            public R getVodStremList(List<Integer> roadIds) {
                 return null;
             }
         };
