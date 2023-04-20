@@ -3,8 +3,10 @@ package com.pingok.event.service.impl;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.pingok.event.domain.TblEventAlarm;
 import com.pingok.event.domain.TblEventRecord;
 //import com.pingok.event.domain.device.TblDeviceInfo;
+import com.pingok.event.mapper.TblEventAlarmMapper;
 import com.ruoyi.system.api.domain.device.TblDeviceInfo;
 import com.pingok.event.domain.videoEvent.*;
 import com.pingok.event.mapper.TblEventRecordMapper;
@@ -35,6 +37,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author
@@ -88,6 +91,9 @@ public class VideoEventServiceImpl implements IVideoEventService {
     @Autowired
     private TblDeviceInfoMapper tblDeviceInfoMapper;
 
+    @Autowired
+    private TblEventAlarmMapper tblEventAlarmMapper;
+
 
     @Override
     public void faceInfo(TblFaceInfo tblFaceInfo) {
@@ -107,24 +113,29 @@ public class VideoEventServiceImpl implements IVideoEventService {
             noMask.setStatus(0);
             tblEventRecordMapper.insert(noMask);
 
-            event = new JSONObject();
+            List<TblEventAlarm> list = tblEventAlarmMapper.selectAll();
+            List<Integer> eventAlarmList = list.stream().map(TblEventAlarm::getEventType).collect(Collectors.toList());
 
-            event.put("id", noMask.getId());
-            event.put("eventType", tblEventRecordMapper.translateEventType(noMask.getEventType()));
-            event.put("eventTime", noMask.getEventTime());
-            event.put("locationInterval", noMask.getLocationInterval());
-            event.put("deviceId", noMask.getSzSourceCode());
-            event.put("img", noMask.getEventPhoto());
-            event.put("video", noMask.getVideo());
+            if (eventAlarmList.contains(Integer.parseInt(noMask.getEventType()))) {
+                event = new JSONObject();
 
-            data = new JSONObject();
+                event.put("id", noMask.getId());
+                event.put("eventType", tblEventRecordMapper.translateEventType(noMask.getEventType()));
+                event.put("eventTime", noMask.getEventTime());
+                event.put("locationInterval", noMask.getLocationInterval());
+                event.put("deviceId", noMask.getSzSourceCode());
+                event.put("img", noMask.getEventPhoto());
+                event.put("video", noMask.getVideo());
 
-            data.put("type", "eventOccur");
-            data.put("data", event.toJSONString());
-            KafkaEnum kafkaEnum = new KafkaEnum();
-            kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-            kafkaEnum.setData(data.toJSONString());
-            remoteKafkaService.send(kafkaEnum);
+                data = new JSONObject();
+
+                data.put("type", "eventOccur");
+                data.put("data", event.toJSONString());
+                KafkaEnum kafkaEnum = new KafkaEnum();
+                kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+                kafkaEnum.setData(data.toJSONString());
+                remoteKafkaService.send(kafkaEnum);
+            }
         }
 
         Long fieldId = 0l;
