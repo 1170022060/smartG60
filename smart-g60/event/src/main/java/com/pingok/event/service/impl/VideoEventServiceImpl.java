@@ -91,9 +91,41 @@ public class VideoEventServiceImpl implements IVideoEventService {
 
     @Override
     public void faceInfo(TblFaceInfo tblFaceInfo) {
+        JSONObject data;
+        JSONObject event;
 
         tblFaceInfo.setId(remoteIdProducerService.nextId());
         tblFaceInfoMapper.insert(tblFaceInfo);
+
+        if (tblFaceInfo.getUiMask() == 1){
+            TblEventRecord noMask = new TblEventRecord();
+            noMask.setId(remoteIdProducerService.nextId());
+            noMask.setEventType("56");
+            noMask.setEventTime(DateUtils.timestampToDate(tblFaceInfo.getUbiTime()));
+            noMask.setEventPhoto(tblFaceInfo.getSzImg());
+            noMask.setSzSourceCode(tblFaceInfo.getSzSourceCode());
+            noMask.setStatus(0);
+            tblEventRecordMapper.insert(noMask);
+
+            event = new JSONObject();
+
+            event.put("id", noMask.getId());
+            event.put("eventType", tblEventRecordMapper.translateEventType(noMask.getEventType()));
+            event.put("eventTime", noMask.getEventTime());
+            event.put("locationInterval", noMask.getLocationInterval());
+            event.put("deviceId", noMask.getSzSourceCode());
+            event.put("img", noMask.getEventPhoto());
+            event.put("video", noMask.getVideo());
+
+            data = new JSONObject();
+
+            data.put("type", "eventOccur");
+            data.put("data", event.toJSONString());
+            KafkaEnum kafkaEnum = new KafkaEnum();
+            kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+            kafkaEnum.setData(data.toJSONString());
+            remoteKafkaService.send(kafkaEnum);
+        }
 
         Long fieldId = 0l;
         String workDate = DateUtils.dateTime(new Date(tblFaceInfo.getUbiTime()), DateUtils.YYYY_MM_DD);
