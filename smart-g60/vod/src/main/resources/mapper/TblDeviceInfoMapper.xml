@@ -11,6 +11,7 @@
         TBL_DEVICE_INFO tdi LEFT JOIN (
         SELECT
         tri.ROAD_ID,
+        tri.DIRECTION,
         ( SELECT REGEXP_REPLACE( PILE_NO, '\D' ) FROM TBL_ROAD_NODES_INFO WHERE ID = tri.ORIGIN ) AS ORIGIN,
         ( SELECT REGEXP_REPLACE( PILE_NO, '\D' ) FROM TBL_ROAD_NODES_INFO WHERE ID = tri.DESTINATION ) AS DESTINATION
         FROM
@@ -23,9 +24,11 @@
         ) t1
         ON 1=1
         WHERE
-        REGEXP_REPLACE( tdi.PILE_NO, '\D' ) <![CDATA[ >= ]]> t1. ORIGIN
-        AND REGEXP_REPLACE( tdi.PILE_NO, '\D' ) <![CDATA[ <= ]]> t1.DESTINATION
+        1=1
+        AND ((REGEXP_REPLACE( tdi.PILE_NO, '\D' ) <![CDATA[ >= ]]> t1. ORIGIN) AND (REGEXP_REPLACE( tdi.PILE_NO, '\D' ) <![CDATA[ <= ]]> t1.DESTINATION))
+        OR ((REGEXP_REPLACE( tdi.PILE_NO, '\D' ) <![CDATA[ >= ]]> t1. DESTINATION) AND (REGEXP_REPLACE( tdi.PILE_NO, '\D' ) <![CDATA[ <= ]]> t1.ORIGIN))
         AND tdi.DEVICE_TYPE = 10
         AND tdi.DIRECTION != 0
+        AND tdi.DIRECTION=t1.DIRECTION
     </select>
 </mapper>
