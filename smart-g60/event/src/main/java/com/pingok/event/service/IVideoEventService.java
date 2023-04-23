@@ -2,6 +2,10 @@ package com.pingok.event.service;
 
 import com.pingok.event.domain.videoEvent.*;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 public interface IVideoEventService {
 
     /**
@@ -28,4 +32,12 @@ public interface IVideoEventService {
 
     void parkVehInfo(TblEventPlateInfo tblEventPlateInfo);
     void parkingStatistics(TblEventPlateInfo tblEventPlateInfo);
+
+    /**
+     * 查询未戴口罩详情
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<Map> searchNoMask(Date startTime, Date endTime);
 }
