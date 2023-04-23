@@ -307,4 +307,11 @@ public class EventController extends BaseController {
         map.put("downstream", iEventService.filterDownEvent());
         return AjaxResult.success(map);
     }
+
+    @GetMapping("/searchNoMask")
+    public TableDataInfo searchNoMask(@RequestParam(required = false)Date startTime, @RequestParam(required = false)Date endTime){
+        startPage();
+        List<Map> info = iVideoEventService.searchNoMask(startTime,endTime);
+        return getDataTable(info);
+    }
 }

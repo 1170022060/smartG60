@@ -33,6 +33,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -87,6 +88,9 @@ public class VideoEventServiceImpl implements IVideoEventService {
     private TblFaceInfoMapper tblFaceInfoMapper;
 
     @Autowired
+    private TblFaceInfoDetailMapper tblFaceInfoDetailMapper;
+
+    @Autowired
     private TblDeviceInfoMapper tblDeviceInfoMapper;
 
     @Autowired
@@ -104,38 +108,44 @@ public class VideoEventServiceImpl implements IVideoEventService {
         tblFaceInfo.setId(remoteIdProducerService.nextId());
         tblFaceInfoMapper.insert(tblFaceInfo);
 
-        if (tblFaceInfo.getUiMask() == 1){
-            TblEventRecord noMask = new TblEventRecord();
-            noMask.setId(remoteIdProducerService.nextId());
-            noMask.setEventType("56");
-            noMask.setEventTime(DateUtils.timestampToDate(tblFaceInfo.getUbiTime()));
-            noMask.setEventPhoto(tblFaceInfo.getSzImg());
+        if (tblFaceInfo.getUiMask() == 1) {
+            TblFaceInfoDetail noMask = new TblFaceInfoDetail();
+            noMask.setUbiLogicId(tblFaceInfo.getUbiLogicId());
+            noMask.setUbiTime(tblFaceInfo.getUbiTime());
             noMask.setSzSourceCode(tblFaceInfo.getSzSourceCode());
-            noMask.setStatus(0);
-            tblEventRecordMapper.insert(noMask);
+            noMask.setUbiSourceId(tblFaceInfo.getUbiSourceId());
+            noMask.setSzImg(tblFaceInfo.getSzImg());
+            noMask.setUiAge(tblFaceInfo.getUiAge());
+            noMask.setUiSex(tblFaceInfo.getUiSex());
+            noMask.setUiMask(tblFaceInfo.getUiMask());
+            tblFaceInfoDetailMapper.insert(noMask);
 
-            List<TblEventAlarm> list = tblEventAlarmMapper.selectAll();
-            List<Integer> eventAlarmList = list.stream().map(TblEventAlarm::getEventType).collect(Collectors.toList());
+            R re;
+            int use=1;
+            re = remoteConfigService.getConfigKey("start.noMask");
+            if (re.getCode() == R.SUCCESS){
+                use = new Integer(re.getMsg());
+                if (use == 0){
+//                    对未戴口罩进行告警
+                    event = new JSONObject();
 
-            if (eventAlarmList.contains(Integer.parseInt(noMask.getEventType()))) {
-                event = new JSONObject();
+                    event.put("id", noMask.getUbiLogicId());
+                    event.put("eventType", "未戴口罩");
+                    event.put("eventTime", DateUtils.timestampToDate(tblFaceInfo.getUbiTime()));
+                    event.put("locationInterval", "");
+                    event.put("deviceId", noMask.getSzSourceCode());
+                    event.put("img", noMask.getSzImg());
+                    event.put("video", "");
 
-                event.put("id", noMask.getId());
-                event.put("eventType", tblEventRecordMapper.translateEventType(noMask.getEventType()));
-                event.put("eventTime", noMask.getEventTime());
-                event.put("locationInterval", noMask.getLocationInterval());
-                event.put("deviceId", noMask.getSzSourceCode());
-                event.put("img", noMask.getEventPhoto());
-                event.put("video", noMask.getVideo());
+                    data = new JSONObject();
 
-                data = new JSONObject();
-
-                data.put("type", "eventOccur");
-                data.put("data", event.toJSONString());
-                KafkaEnum kafkaEnum = new KafkaEnum();
-                kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
-                kafkaEnum.setData(data.toJSONString());
-                remoteKafkaService.send(kafkaEnum);
+                    data.put("type", "eventOccur");
+                    data.put("data", event.toJSONString());
+                    KafkaEnum kafkaEnum = new KafkaEnum();
+                    kafkaEnum.setTopIc(KafkaTopIc.WEBSOCKET_BROADCAST);
+                    kafkaEnum.setData(data.toJSONString());
+                    remoteKafkaService.send(kafkaEnum);
+                }
             }
         }
 
@@ -560,10 +570,10 @@ public class VideoEventServiceImpl implements IVideoEventService {
             statistics.setEntry(statistics.getEntry() + entry);
             statistics.setOut(statistics.getOut() + out);
 
-            if(Objects.isNull(statistics.getInAmount())){
+            if (Objects.isNull(statistics.getInAmount())) {
                 statistics.setInAmount(0);
             }
-            statistics.setInAmount((statistics.getInAmount()  + entry - out) >= 0 ? (statistics.getInAmount() + entry - out) : 0);
+            statistics.setInAmount((statistics.getInAmount() + entry - out) >= 0 ? (statistics.getInAmount() + entry - out) : 0);
             tblEventPassengerStatisticsMapper.updateByPrimaryKey(statistics);
         }
     }
@@ -648,7 +658,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                     v.setUpdateTime(DateUtils.getNowDate());
                     tblParkingVehicleInfoMapper.updateByPrimaryKey(v);
                 }
-                if (infoList.size()!=0){
+                if (infoList.size() != 0) {
                     tblParkingLot = tblParkingLotMapper.selectByPrimaryKey(infoList.get(0).getParkingId());
                     tblParkingLot.setSurplus((tblParkingLot.getSurplus() + 1) <= tblParkingLot.getTotal() ? (tblParkingLot.getSurplus() + 1) : tblParkingLot.getTotal());
                     tblParkingLotMapper.updateByPrimaryKey(tblParkingLot);
@@ -716,7 +726,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         }
     }
 
-    private void mainFunc(){
+    private void mainFunc() {
         R<TblDeviceInfo> r1;//1级引导屏
         R<TblDeviceInfo> r2A;//2级引导屏A区
         R<TblDeviceInfo> r2BC;//2级引导屏BC区
@@ -726,7 +736,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
         Example example = new Example(TblParkingLot.class);
         example.createCriteria().andEqualTo("fieldId", 3940);
         List<TblParkingLot> list = tblParkingLotMapper.selectByExample(example);
-        int HA = 0, HB = 0, KA = 0,model = 1;
+        int HA = 0, HB = 0, KA = 0, model = 1;
         for (TblParkingLot tblParkingLot : list) {
             if (tblParkingLot.getRegionNum().equals("K-A")) {
                 KA = tblParkingLot.getSurplus();
@@ -742,18 +752,18 @@ public class VideoEventServiceImpl implements IVideoEventService {
         re = remoteConfigService.getConfigKey("publish.guideScreen");
         if (re.getCode() == R.SUCCESS) {
             model = new Integer(re.getMsg());
-            if (model == 1){
-                sendData1(HA,HB,KA,r1,r2A,r2BC);
-            }else if (model == 2){
-                sendData2(HA,HB,KA,r1,r2A,r2BC);
-            }else if (model == 3){
-                sendData3(HA,HB,KA,r1,r2A,r2BC);
+            if (model == 1) {
+                sendData1(HA, HB, KA, r1, r2A, r2BC);
+            } else if (model == 2) {
+                sendData2(HA, HB, KA, r1, r2A, r2BC);
+            } else if (model == 3) {
+                sendData3(HA, HB, KA, r1, r2A, r2BC);
             }
         }
     }
 
     //模式1：空32，拥挤
-    private void sendData1(int HA,int HB ,int KA,R<TblDeviceInfo> r1,R<TblDeviceInfo> r2A,R<TblDeviceInfo> r2BC) {
+    private void sendData1(int HA, int HB, int KA, R<TblDeviceInfo> r1, R<TblDeviceInfo> r2A, R<TblDeviceInfo> r2BC) {
         JSONObject params1 = new JSONObject();//1级引导屏
         JSONObject params2A = new JSONObject();//2级引导屏A区
         JSONObject params2BC = new JSONObject();//2级引导屏BC区
@@ -767,7 +777,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 params1.put("text1_ke", "拥挤");
                 params1.put("color1_ke", 1);
             } else {
-                params1.put("text1_ke","空" + String.format("%02d", KA));
+                params1.put("text1_ke", "空" + String.format("%02d", KA));
                 params1.put("color1_ke", 2);
             }
             int sum = HA + HB;
@@ -775,7 +785,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 params1.put("text1_huo", "拥挤");
                 params1.put("color1_huo", 1);
             } else {
-                params1.put("text1_huo","空" + String.format("%02d", sum));
+                params1.put("text1_huo", "空" + String.format("%02d", sum));
                 params1.put("color1_huo", 2);
             }
         }
@@ -793,21 +803,21 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 //  0123-黑红绿黄
                 params2A.put("color2A_huoA", 1);
             } else {
-                params2A.put("text2A_huoA","空" + String.format("%02d", HA));
+                params2A.put("text2A_huoA", "空" + String.format("%02d", HA));
                 params2A.put("color2A_huoA", 2);
             }
             if (HB < 5) {
                 params2A.put("text2BC_huoB", "拥挤");
                 params2A.put("color2BC_huoB", 1);
             } else {
-                params2A.put("text2BC_huoB","空" + String.format("%02d", HB));
+                params2A.put("text2BC_huoB", "空" + String.format("%02d", HB));
                 params2A.put("color2BC_huoB", 2);
             }
             if (KA < 10) {
                 params2A.put("text2BC_ke", "拥挤");
                 params2A.put("color2BC_ke", 1);
             } else {
-                params2A.put("text2BC_ke","空" + String.format("%02d", KA));
+                params2A.put("text2BC_ke", "空" + String.format("%02d", KA));
                 params2A.put("color2BC_ke", 2);
             }
         }
@@ -826,7 +836,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 params2BC.put("text2BC_huoB", "拥挤");
                 params2BC.put("color2BC_huoB", 1);
             } else {
-                params2BC.put("text2BC_huoB","空" + String.format("%02d", HB));
+                params2BC.put("text2BC_huoB", "空" + String.format("%02d", HB));
                 params2BC.put("color2BC_huoB", 2);
             }
 
@@ -834,7 +844,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 params2BC.put("text2BC_ke", "拥挤");
                 params2BC.put("color2BC_ke", 1);
             } else {
-                params2BC.put("text2BC_ke","空" + String.format("%02d", KA));
+                params2BC.put("text2BC_ke", "空" + String.format("%02d", KA));
                 params2BC.put("color2BC_ke", 2);
             }
         }
@@ -845,7 +855,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
     }
 
     //模式2：0032，拥挤
-    private void sendData2(int HA,int HB ,int KA,R<TblDeviceInfo> r1,R<TblDeviceInfo> r2A,R<TblDeviceInfo> r2BC){
+    private void sendData2(int HA, int HB, int KA, R<TblDeviceInfo> r1, R<TblDeviceInfo> r2A, R<TblDeviceInfo> r2BC) {
         JSONObject params1 = new JSONObject();//1级引导屏
         JSONObject params2A = new JSONObject();//2级引导屏A区
         JSONObject params2BC = new JSONObject();//2级引导屏BC区
@@ -859,7 +869,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 params1.put("text1_ke", "拥挤");
                 params1.put("color1_ke", 1);
             } else {
-                params1.put("text1_ke",String.format("%04d", KA));
+                params1.put("text1_ke", String.format("%04d", KA));
                 params1.put("color1_ke", 2);
             }
             int sum = HA + HB;
@@ -867,7 +877,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 params1.put("text1_huo", "拥挤");
                 params1.put("color1_huo", 1);
             } else {
-                params1.put("text1_huo",String.format("%04d", sum));
+                params1.put("text1_huo", String.format("%04d", sum));
                 params1.put("color1_huo", 2);
             }
         }
@@ -885,14 +895,14 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 //  0123-黑红绿黄
                 params2A.put("color2A_huoA", 1);
             } else {
-                params2A.put("text2A_huoA",String.format("%04d", HA));
+                params2A.put("text2A_huoA", String.format("%04d", HA));
                 params2A.put("color2A_huoA", 2);
             }
             if (HB < 5) {
                 params2A.put("text2BC_huoB", "拥挤");
                 params2A.put("color2BC_huoB", 1);
             } else {
-                params2A.put("text2BC_huoB",String.format("%04d", HB));
+                params2A.put("text2BC_huoB", String.format("%04d", HB));
                 params2A.put("color2BC_huoB", 2);
             }
             if (KA < 10) {
@@ -918,7 +928,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 params2BC.put("text2BC_huoB", "拥挤");
                 params2BC.put("color2BC_huoB", 1);
             } else {
-                params2BC.put("text2BC_huoB",String.format("%04d", HB));
+                params2BC.put("text2BC_huoB", String.format("%04d", HB));
                 params2BC.put("color2BC_huoB", 2);
             }
 
@@ -926,7 +936,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 params2BC.put("text2BC_ke", "拥挤");
                 params2BC.put("color2BC_ke", 1);
             } else {
-                params2BC.put("text2BC_ke",String.format("%04d", KA));
+                params2BC.put("text2BC_ke", String.format("%04d", KA));
                 params2BC.put("color2BC_ke", 2);
             }
         }
@@ -937,7 +947,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
     }
 
     //模式3:0032,0004
-    private void sendData3(int HA,int HB ,int KA,R<TblDeviceInfo> r1,R<TblDeviceInfo> r2A,R<TblDeviceInfo> r2BC){
+    private void sendData3(int HA, int HB, int KA, R<TblDeviceInfo> r1, R<TblDeviceInfo> r2A, R<TblDeviceInfo> r2BC) {
         JSONObject params1 = new JSONObject();//1级引导屏
         JSONObject params2A = new JSONObject();//2级引导屏A区
         JSONObject params2BC = new JSONObject();//2级引导屏BC区
@@ -953,7 +963,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 params1.put("color1_ke", 2);
             }
             int sum = HA + HB;
-            params1.put("text1_huo",String.format("%04d", sum));
+            params1.put("text1_huo", String.format("%04d", sum));
             if (HA + HB < 10) {
                 params1.put("color1_huo", 1);
             } else {
@@ -976,13 +986,13 @@ public class VideoEventServiceImpl implements IVideoEventService {
             } else {
                 params2A.put("color2A_huoA", 2);
             }
-            params2A.put("text2BC_huoB",String.format("%04d", HB));
+            params2A.put("text2BC_huoB", String.format("%04d", HB));
             if (HB < 5) {
                 params2A.put("color2BC_huoB", 1);
             } else {
                 params2A.put("color2BC_huoB", 2);
             }
-            params2A.put("text2BC_ke",String.format("%04d", KA));
+            params2A.put("text2BC_ke", String.format("%04d", KA));
             if (KA < 10) {
                 params2A.put("color2BC_ke", 1);
             } else {
@@ -999,13 +1009,13 @@ public class VideoEventServiceImpl implements IVideoEventService {
             params2BC.put("devIp", r2BC.getData().getDeviceIp());
             params2BC.put("devPos", 3);
             // 货B
-            params2BC.put("text2BC_huoB",String.format("%04d", HB));
+            params2BC.put("text2BC_huoB", String.format("%04d", HB));
             if (HB < 5) {
                 params2BC.put("color2BC_huoB", 1);
             } else {
                 params2BC.put("color2BC_huoB", 2);
             }
-            params2BC.put("text2BC_ke",String.format("%04d", KA));
+            params2BC.put("text2BC_ke", String.format("%04d", KA));
             if (KA < 10) {
                 params2BC.put("color2BC_ke", 1);
             } else {
@@ -1124,5 +1134,10 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 tblParkingStatisticsMapper.updateByPrimaryKey(statistics);
             }
         }
+    }
+
+    @Override
+    public List<Map> searchNoMask(Date startTime, Date endTime) {
+        return tblFaceInfoDetailMapper.getNoMask(startTime,endTime);
     }
 }
