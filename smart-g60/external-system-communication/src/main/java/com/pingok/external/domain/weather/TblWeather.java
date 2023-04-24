@@ -43,4 +43,8 @@ public class TblWeather implements Serializable {
     private String cloud;
 
     private String dew;
+
+    private String tempMin;
+    private String tempMax;
+    private String category;
 }
