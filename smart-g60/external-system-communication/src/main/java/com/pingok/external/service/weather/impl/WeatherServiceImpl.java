@@ -16,7 +16,6 @@ import com.pingok.external.service.weather.IWeatherService;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.system.api.RemoteIdProducerService;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -59,7 +58,7 @@ public class WeatherServiceImpl implements IWeatherService {
     @Override
     public void getWeather() {
         getWeatherByHF("上海");
-        get3tdWeatherByHF("浙江");
+        getWeatherByHF("浙江");
     }
 
     /**
@@ -75,7 +74,6 @@ public class WeatherServiceImpl implements IWeatherService {
     public List<Map> getStatus() {
         return tblWeather2Mapper.selectStatus();
     }
-
 
 
     /**
@@ -101,7 +99,7 @@ public class WeatherServiceImpl implements IWeatherService {
         ListenableFuture<List<TblWeather>> listListenableFuture = Futures.allAsList(listenableFuture, listenableFuture1, listenableFuture2);
         Futures.addCallback(listListenableFuture, new FutureCallback<List<TblWeather>>() {
             @Override
-            public void onSuccess(@Nullable List<TblWeather> tblWeathers) {
+            public void onSuccess(List<TblWeather> tblWeathers) {
                 TblWeather2 tblWeather2 = new TblWeather2();
                 tblWeathers.forEach(item -> {
                     // 和风天气数据转换为阿里天气格式
