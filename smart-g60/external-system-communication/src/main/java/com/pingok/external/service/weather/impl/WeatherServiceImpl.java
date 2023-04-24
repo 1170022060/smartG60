@@ -122,11 +122,10 @@ public class WeatherServiceImpl implements IWeatherService {
                         tblWeather2.setWeather(item.getText());
                         tblWeather2.setTemp(item.getTemp());
                         tblWeather2.setHumidity(item.getHumidity());
-                        tblWeather2.setPressure(item.getPrecip());
-                        tblWeather2.setPressure(item.getPrecip());
+                        tblWeather2.setPressure(item.getPressure());
                         tblWeather2.setWindspeed(item.getWindSpeed());
                         tblWeather2.setWinddirect(item.getWindDir());
-                        tblWeather2.setWindpower(item.getWindScale());
+                        tblWeather2.setWindpower(item.getWindScale()+"级");
                         tblWeather2.setUpdatetime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                         tblWeather2.setCity(city);
                         // TODO: 2023/4/24 0024 icon 编码转换
