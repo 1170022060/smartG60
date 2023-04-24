@@ -5,6 +5,10 @@ import java.util.Map;
 
 public interface IWeatherService {
     void getWeather();
+
     void getWeather2();
+
     List<Map> getStatus();
+
+
 }

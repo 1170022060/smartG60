@@ -17,7 +17,7 @@ public class WeatherController extends BaseController {
 
     @GetMapping
     public AjaxResult getWeather() {
-        iWeatherService.getWeather2();
+        iWeatherService.getWeather();
         return AjaxResult.success();
     }
 

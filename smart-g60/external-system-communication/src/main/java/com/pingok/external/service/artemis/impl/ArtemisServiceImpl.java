@@ -44,11 +44,11 @@ public class ArtemisServiceImpl implements IArtemisService {
         String contentType = "application/json";
         String result = null;
         try {
-            result = ArtemisHttpUtil.doPostStringArtemis(ArtemisConfig,path, body, null, null, contentType, null);
+//            result = ArtemisHttpUtil.doPostStringArtemis(ArtemisConfig,path, body, null, null, contentType, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result;
+        return null;
 
     }
 
