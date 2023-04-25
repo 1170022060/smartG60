@@ -614,6 +614,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 info.setVehClass(tblEventPlateInfo.getUiStatType());
                 info.setVehColor(tblEventPlateInfo.getUiColor());
                 info.setParkingId(1L);
+                info.setStatus(0);
                 info.setVehClassSub(tblEventPlateInfo.getUiSubType());
                 info.setCreateTime(DateUtils.getNowDate());
                 tblParkingVehicleInfoMapper.insert(info);
@@ -634,6 +635,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 info.setVehClass(tblEventPlateInfo.getUiStatType());
                 info.setVehColor(tblEventPlateInfo.getUiColor());
                 info.setParkingId(2L);
+                info.setStatus(0);
                 info.setVehClassSub(tblEventPlateInfo.getUiSubType());
                 info.setCreateTime(DateUtils.getNowDate());
                 tblParkingVehicleInfoMapper.insert(info);
@@ -656,6 +658,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 for (TblParkingVehicleInfo v : infoList) {
                     v.setExTime(DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS, dateTime));
                     v.setUpdateTime(DateUtils.getNowDate());
+                    v.setStatus(1);
                     tblParkingVehicleInfoMapper.updateByPrimaryKey(v);
                 }
                 if (infoList.size() != 0) {
@@ -673,6 +676,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 for (TblParkingVehicleInfo v : infoList) {
                     v.setParkingId(4L);
                     v.setUpdateTime(DateUtils.getNowDate());
+                    v.setStatus(1);
                     tblParkingVehicleInfoMapper.updateByPrimaryKey(v);
                 }
 
@@ -692,6 +696,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 infoList = tblParkingVehicleInfoMapper.selectByExample(example);
                 for (TblParkingVehicleInfo v : infoList) {
                     v.setParkingId(3L);
+                    v.setStatus(1);
                     v.setUpdateTime(DateUtils.getNowDate());
                     tblParkingVehicleInfoMapper.updateByPrimaryKey(v);
                 }
@@ -714,6 +719,7 @@ public class VideoEventServiceImpl implements IVideoEventService {
                 for (TblParkingVehicleInfo v : infoList) {
                     v.setExTime(DateUtils.dateTime(DateUtils.YYYY_MM_DD_HH_MM_SS, dateTime));
                     v.setUpdateTime(DateUtils.getNowDate());
+                    v.setStatus(1);
                     tblParkingVehicleInfoMapper.updateByPrimaryKey(v);
                 }
                 example = new Example(TblParkingLot.class);

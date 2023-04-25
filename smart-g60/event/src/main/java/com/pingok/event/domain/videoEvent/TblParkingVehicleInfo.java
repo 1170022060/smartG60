@@ -57,4 +57,6 @@ public class TblParkingVehicleInfo implements java.io.Serializable {
 
     /** 车型细分 */
     private Integer vehClassSub;
+
+    private Integer status;
 }
