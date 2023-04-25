@@ -29,7 +29,7 @@ public interface IParkingLotService {
     List<Map> parkingPlace();
     List<Map> passengerFlow(Date date) throws ParseException;
     List<Map> parkMonitor(String fieldNum,String regionName);
-    List<Map> overtimeInfo(String fieldNum,String regionName);
+    List<Map> overtimeInfo(String fieldNum,String regionName,Integer status);
     List<Map> selectRegionName(String fieldNum);
     List<Map> traffic(String fieldNum,Integer vehType,Date startDate,Date endDate,Integer statisticsType);
     Map trafficCount(String fieldNum,Integer vehType,Date startDate,Date endDate);

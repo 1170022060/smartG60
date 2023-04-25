@@ -211,8 +211,8 @@ public class ParkingLotServiceImpl implements IParkingLotService {
     }
 
     @Override
-    public List<Map> overtimeInfo(String fieldNum, String regionName) {
-        return tblParkingVehicleInfoMapper.overtimeInfo(fieldNum,regionName);
+    public List<Map> overtimeInfo(String fieldNum, String regionName,Integer status) {
+        return tblParkingVehicleInfoMapper.overtimeInfo(fieldNum,regionName,status);
     }
 
     @Override
