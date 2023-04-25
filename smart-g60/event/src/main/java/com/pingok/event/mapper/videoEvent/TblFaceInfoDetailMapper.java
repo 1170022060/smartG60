@@ -30,7 +30,8 @@ public interface TblFaceInfoDetailMapper extends CommonRepository<TblFaceInfoDet
             "</when>"+
             "<when test='endTime != null'> " +
             " and UBI_TIME / (1000 * 60 * 60 * 24) + TO_DATE('1970-01-01 08:00:00', 'yyyy-MM-dd hh24:mi:ss') &lt;= #{endTime} " +
-            "</when>"+
+            "</when>" +
+            "order by UBI_TIME / (1000 * 60 * 60 * 24) + TO_DATE('1970-01-01 08:00:00', 'yyyy-MM-dd hh24:mi:ss') DESC "+
             "</script>"})
     List<Map> getNoMask(@Param("startTime")Date startTime,@Param("endTime")Date endTime);
 }

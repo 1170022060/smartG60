@@ -2,6 +2,7 @@ package com.pingok.vocational.mapper.parkingLot;
 
 import com.pingok.vocational.domain.parkingLot.TblParkingVehicleInfo;
 import com.ruoyi.common.core.mapper.CommonRepository;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -13,6 +14,7 @@ import java.util.Map;
  *
  * @author qiu
  */
+@Mapper
 public interface TblParkingVehicleInfoMapper extends CommonRepository<TblParkingVehicleInfo> {
 
     @Select("SELECT \"current\"," +
@@ -26,7 +28,7 @@ public interface TblParkingVehicleInfoMapper extends CommonRepository<TblParking
             "TBL_PARKING_VEHICLE_INFO pvi " +
             "LEFT JOIN TBL_PARKING_LOT tpl ON tpl.ID = pvi.PARKING_ID  " +
             "WHERE " +
-            "pvi.EX_TIME IS NULL  " +
+            "pvi.EX_TIME IS NULL AND STATUS = 0 " +
             "AND tpl.FIELD_ID = #{fieldId})")
     Map trafficCurrent(@Param("fieldId") Long fieldId);
 
@@ -65,7 +67,8 @@ public interface TblParkingVehicleInfoMapper extends CommonRepository<TblParking
     @Select({"<script>" +
             "SELECT " +
             "pvi.ID AS \"id\", " +
-            "pvi.VEH_PLATE AS \"vehPlate\", " +
+            "pvi.VEH_PLATE AS \"vehPlate\"," +
+            "case pvi.STATUS when 0 then '未驶离' when 1 then '正常驶离' when 2 then '系统判定驶离' end as \"status\", " +
             "sdd.DICT_LABEL AS \"vehClass\", " +
             "sdd1.DICT_LABEL AS \"vehColor\", " +
             "tfi.FIELD_NAME || ':' || tpl.REGION_NAME AS \"place\", " +
@@ -78,7 +81,7 @@ public interface TblParkingVehicleInfoMapper extends CommonRepository<TblParking
             "AND sdd1.DICT_TYPE = 'park_veh_color'  " +
             "JOIN TBL_PARKING_LOT tpl ON tpl.ID = pvi.PARKING_ID " +
             "JOIN TBL_FIELD_INFO tfi ON tfi.ID = tpl.FIELD_ID " +
-            "WHERE " +
+            "WHERE pvi.STATUS = 0 AND " +
             "pvi.EX_TIME IS NULL  " +
             "AND CEIL( ( SYSDATE - pvi.EN_TIME ) * 24 ) > (SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.timeout') " +
             "<when test='fieldNum != null'> " +

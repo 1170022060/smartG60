@@ -43,6 +43,7 @@ public class ParkingLotServiceImpl implements IParkingLotService {
     public void driveAway(Long id) {
         TblParkingVehicleInfo tblParkingVehicleInfo = tblParkingVehicleInfoMapper.selectByPrimaryKey(id);
         tblParkingVehicleInfo.setExTime(DateUtils.getNowDate());
+        tblParkingVehicleInfo.setStatus(1);
         tblParkingVehicleInfo.setUpdateTime(DateUtils.getNowDate());
         tblParkingVehicleInfo.setUpdateUserId(SecurityUtils.getUserId());
         tblParkingVehicleInfoMapper.updateByPrimaryKey(tblParkingVehicleInfo);
