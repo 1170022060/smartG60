@@ -78,7 +78,7 @@ public interface TblParkingVehicleInfoMapper extends CommonRepository<TblParking
             "AND sdd1.DICT_TYPE = 'park_veh_color'  " +
             "JOIN TBL_PARKING_LOT tpl ON tpl.ID = pvi.PARKING_ID " +
             "JOIN TBL_FIELD_INFO tfi ON tfi.ID = tpl.FIELD_ID " +
-            "WHERE " +
+            "WHERE pvi.STATUS = 0 AND " +
             "pvi.EX_TIME IS NULL  " +
             "AND CEIL( ( SYSDATE - pvi.EN_TIME ) * 24 ) > (SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.timeout') " +
             "<when test='fieldNum != null'> " +
