@@ -72,11 +72,11 @@ public class ParkingLotServiceImpl implements IParkingLotService {
         List<Map> trafficList=tblParkingStatisticsMapper.trafficSum(date);
         for(Map map :trafficList)
         {
-            Map trafficCurrent=tblParkingVehicleInfoMapper.trafficCurrent(Long.parseLong(map.get("fieldId").toString()));
+            Map trafficCurrent=tblParkingVehicleInfoMapper.trafficCurrent(Long.parseLong(map.get("fieldId").toString()));//当前车流
             map.putAll(trafficCurrent);
 
             Map map1=new HashMap<>();
-            Integer trafficDailyBus=tblParkingStatisticsMapper.trafficDaily(date,Long.parseLong(map.get("fieldId").toString()),1);
+            Integer trafficDailyBus=tblParkingStatisticsMapper.trafficDaily(date,Long.parseLong(map.get("fieldId").toString()),1);//客车日统计
             Integer trafficDailyTruck=tblParkingStatisticsMapper.trafficDaily(date,Long.parseLong(map.get("fieldId").toString()),2);
             map1.put("dailyCumulativeBus",trafficDailyBus);
             map1.put("dailyCumulativeTruck",trafficDailyTruck);
