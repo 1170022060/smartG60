@@ -45,7 +45,8 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
             "and tph.TRANS_DATE= #{date} " +
             "</when>" +
             "GROUP BY tph.ID,tfi.FIELD_NAME,t.FIELD_NAME,tph.SERVICE_ID,tph.NORMAL_NUM,tph.TRANS_DATE,tph.CREATE_TIME,tph.UPDATE_TIME," +
-            "tph.ABNORMAL_NUM,tph.CREATE_USER_ID,tph.UPDATE_USER_ID,b.NICK_NAME,c.NICK_NAME"+
+            "tph.ABNORMAL_NUM,tph.CREATE_USER_ID,tph.UPDATE_USER_ID,b.NICK_NAME,c.NICK_NAME " +
+            "order by tph.TRANS_DATE DESC "+
             "</script>"})
     List<Map> selectPersonnelHealth(@Param("serviceId") Long serviceId, @Param("fieldId") Long fieldId, @Param("date") Date date);
 
@@ -93,13 +94,13 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
     List<Map> selectHealthStatistics(@Param("type") Integer type, @Param("fieldId") Long fieldId, @Param("date") Date date);
 
     @Select("SELECT " +
-            "NVL(sum(NORMAL_NUM+ABNORMAL_NUM),0) as \"count\"," +
-            "NVL(NORMAL_NUM,0)as \"normalNum\",NVL(ABNORMAL_NUM,0)as \"abnormalNum\"," +
-            "NVL(round(100*NORMAL_NUM/decode(SUM(NORMAL_NUM+ABNORMAL_NUM),0,1,SUM(NORMAL_NUM+ABNORMAL_NUM))),0) as \"normalRateA\"," +
-            "NVL(100-round(100*NORMAL_NUM/decode(SUM(NORMAL_NUM+ABNORMAL_NUM),0,1,SUM(NORMAL_NUM+ABNORMAL_NUM))),0) as \"abnormalRateA\" " +
-            "FROM TBL_PERSONNEL_HEALTH " +
-            "where TRANS_DATE= #{date}" +
-            "GROUP BY NORMAL_NUM,ABNORMAL_NUM ")
+            "NVL(sum(NORMAL_NUM+ABNORMAL_NUM),0) as \"count\", " +
+            "NVL(sum(NORMAL_NUM),0)as \"normalNum\", " +
+            "NVL(sum(ABNORMAL_NUM),0)as \"abnormalNum\", " +
+            "NVL(round(100*sum(NORMAL_NUM)/decode(SUM(NORMAL_NUM+ABNORMAL_NUM),0,1,SUM(NORMAL_NUM+ABNORMAL_NUM))),0) as \"normalRateA\", " +
+            "NVL(100-round(100*sum(NORMAL_NUM)/decode(SUM(NORMAL_NUM+ABNORMAL_NUM),0,1,SUM(NORMAL_NUM+ABNORMAL_NUM))),0) as \"abnormalRateA\" " +
+            " FROM TBL_PERSONNEL_HEALTH " +
+            "where TRANS_DATE= #{date}")
     List<Map> selectHealthMonitor(@Param("date") Date date);
 
 }

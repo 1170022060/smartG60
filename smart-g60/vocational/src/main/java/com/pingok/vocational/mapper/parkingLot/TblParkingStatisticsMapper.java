@@ -33,8 +33,8 @@ public interface TblParkingStatisticsMapper extends CommonRepository<TblParkingS
             "where DAY = #{date} " +
             "and FIELD_ID = #{fieldId} " +
             "and VEH_TYPE = #{vehType} " +
-            "and rownum<=8" +
             "order by HOUR desc) " +
+            "WHERE rownum<9" +
             "order by \"hour\" ")
     List<Map> trafficStatistics(@Param("date") Date date, @Param("fieldId") Long fieldId, @Param("vehType") Integer vehType);
 

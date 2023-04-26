@@ -70,9 +70,9 @@ public class ParkingLotController extends BaseController {
 
     @Log(title = "超时车辆", businessType = BusinessType.OTHER)
     @GetMapping("/overtime")
-    public TableDataInfo overtime(@RequestParam(name = "fieldNum",required = false) String fieldNum, @RequestParam(name = "regionName",required = false) String regionName){
+    public TableDataInfo overtime(@RequestParam(name = "fieldNum",required = false) String fieldNum, @RequestParam(name = "regionName",required = false) String regionName,@RequestParam(name = "status",required = false) Integer status){
         startPage();
-        return getDataTable(iParkingLotService.overtimeInfo(fieldNum,regionName));
+        return getDataTable(iParkingLotService.overtimeInfo(fieldNum,regionName,status));
     }
 
     @Log(title = "车流统计(页面)", businessType = BusinessType.OTHER)

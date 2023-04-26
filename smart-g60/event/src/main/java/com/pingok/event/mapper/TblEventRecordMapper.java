@@ -136,6 +136,9 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "<when test='status != null'>" +
             "AND ter.STATUS = #{status} " +
             "</when>" +
+            "<when test='locationInterval != null'>" +
+            "AND ter.PILE_NO like '%' || #{locationInterval} || '%' " +
+            "</when>" +
             "<when test='startTime != null'> " +
             " and ter.EVENT_TIME &gt;= #{startTime} " +
             "</when>"+
@@ -147,7 +150,7 @@ public interface TblEventRecordMapper extends CommonRepository<TblEventRecord> {
             "</when>"+
             "ORDER BY ter.EVENT_TIME DESC" +
             "</script>")
-    List<Map> search(@Param("status") Integer status, @Param("startTime")Date startTime,@Param("endTime")Date endTime,@Param("eventType")String eventType);
+    List<Map> search(@Param("status") Integer status,@Param("locationInterval")String locationInterval, @Param("startTime")Date startTime,@Param("endTime")Date endTime,@Param("eventType")String eventType);
 
 
     @Select("SELECT DICT_LABEL FROM SYS_DICT_DATA WHERE DICT_TYPE = 'event_type' AND DICT_VALUE = #{eventType}")

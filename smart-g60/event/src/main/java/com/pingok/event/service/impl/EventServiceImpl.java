@@ -577,8 +577,8 @@ public class EventServiceImpl implements IEventService {
     }
 
     @Override
-    public List<Map> search(Integer status,Date startTime,Date endTime,String eventType) {
-        return tblEventRecordMapper.search(status,startTime,endTime,eventType);
+    public List<Map> search(Integer status,String locationInterval,Date startTime,Date endTime,String eventType) {
+        return tblEventRecordMapper.search(status,locationInterval,startTime,endTime,eventType);
     }
 
     @Override

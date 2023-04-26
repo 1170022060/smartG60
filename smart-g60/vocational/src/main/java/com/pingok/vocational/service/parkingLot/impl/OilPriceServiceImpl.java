@@ -38,6 +38,7 @@ public class OilPriceServiceImpl implements IOilPriceService {
     public List<TblOilPrice> selectOilPriceList(Date date) {
         Example example = new Example(TblOilPrice.class);
         example.createCriteria().andEqualTo("transDate", date);
+        example.setOrderByClause("transDate desc");
         return tblOilPriceMapper.selectByExample(example);
     }
 

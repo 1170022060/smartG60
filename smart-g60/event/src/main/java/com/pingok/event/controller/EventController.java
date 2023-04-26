@@ -176,9 +176,9 @@ public class EventController extends BaseController {
 //    @RequiresPermissions("event:eventControl:list")
 //    @Log(title = "事件管理", businessType = BusinessType.OTHER)
     @GetMapping("/list")
-    public TableDataInfo list(Integer status, Date startTime, Date endTime, String eventType) {
+    public TableDataInfo list(Integer status,String locationInterval, Date startTime, Date endTime, String eventType) {
         startPage();
-        List<Map> list = iEventService.search(status, startTime, endTime, eventType);
+        List<Map> list = iEventService.search(status,locationInterval, startTime, endTime, eventType);
         return getDataTable(list);
     }
 

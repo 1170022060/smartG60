@@ -102,7 +102,7 @@ public interface IEventService {
      * @param status
      * @return
      */
-    List<Map> search(Integer status, Date startTime,Date endTime,String eventType);
+    List<Map> search(Integer status,String locationInterval, Date startTime,Date endTime,String eventType);
 
     /**
      * 根据id查询事件

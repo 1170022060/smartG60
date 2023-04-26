@@ -21,8 +21,8 @@ public interface TblRoadStatisEventMapper {
             "when a.CONGESTION <![CDATA[ >= ]]> 3 AND a.CONGESTION <![CDATA[ < ]]> 4 then '拥堵' when a.CONGESTION <![CDATA[ >= ]]> 4 AND a.CONGESTION <![CDATA[ <= ]]> 5 then '严重拥堵' end as \"congestion\", " +
             "a.EXCEED_CAR as \"vehPlate\", " +
             "case when a.PREDICTION ='true' then '预测事件' else '历史或实时事件' end as \"prediction\", " +
-            "a.START_TIME as \"startTime\", " +
-            "a.END_TIME as \"endTime\" " +
+            "to_char(a.START_TIME,'yyyy-mm-dd hh24:mi:ss') as \"startTime\", " +
+            "to_char(a.END_TIME,'yyyy-mm-dd hh24:mi:ss') as \"endTime\" " +
             "FROM TBL_ROAD_STATIS_EVENT_INFO a " +
             "LEFT JOIN TBL_ROAD_INFO b on a.ROAD_ID = b.ROAD_ID " +
             "where 1=1" +

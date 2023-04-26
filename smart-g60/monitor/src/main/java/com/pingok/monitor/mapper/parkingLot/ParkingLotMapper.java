@@ -23,7 +23,8 @@ public interface ParkingLotMapper extends CommonRepository<TblParkingVehicleInfo
             "pvi.ID AS \"id\", " +
             "pvi.VEH_PLATE AS \"vehPlate\", " +
             "sdd.DICT_LABEL AS \"vehClass\", " +
-            "sdd1.DICT_LABEL AS \"vehColor\", " +
+            "sdd1.DICT_LABEL AS \"vehColor\"," +
+            "case pvi.STATUS when 0 then '未驶离' when 1 then '正常驶离' when 2 then '系统判定驶离' end as \"status\", " +
             "to_char(pvi.EN_TIME,'yyyy-mm-dd hh24:mi:ss') AS \"enTime\"  " +
             "FROM " +
             "TBL_PARKING_VEHICLE_INFO pvi " +
@@ -34,7 +35,7 @@ public interface ParkingLotMapper extends CommonRepository<TblParkingVehicleInfo
             "WHERE " +
             "pvi.EX_TIME IS NULL  " +
             "AND CEIL( ( SYSDATE - pvi.EN_TIME ) * 24 ) > (SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.timeout') " +
-            "AND pvi.PARKING_ID = #{parkingId}")
+            "AND pvi.PARKING_ID = #{parkingId} order by pvi.EN_TIME ")
     List<Map> findByParkingId(@Param("parkingId") Long parkingId);
 
     @Select("SELECT " +
