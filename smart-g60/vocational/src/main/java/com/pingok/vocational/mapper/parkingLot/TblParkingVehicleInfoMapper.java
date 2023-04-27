@@ -59,7 +59,7 @@ public interface TblParkingVehicleInfoMapper extends CommonRepository<TblParking
             "TBL_PARKING_VEHICLE_INFO pvi " +
             "LEFT JOIN TBL_PARKING_LOT tpl ON tpl.ID = pvi.PARKING_ID  " +
             "WHERE " +
-            "pvi.EX_TIME IS NULL  " +
+            "pvi.EX_TIME IS NULL AND pvi.STATUS=0 " +
             "AND tpl.FIELD_ID = #{fieldId})")
     Map humanFlow(@Param("fieldId") Long fieldId);
 
