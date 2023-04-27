@@ -962,19 +962,29 @@ public class VideoEventServiceImpl implements IVideoEventService {
         if (r1.getCode() == R.SUCCESS && r1.getData() != null) {
             params1.put("devIp", r1.getData().getDeviceIp());
             params1.put("devPos", 1);
-            params1.put("text1_ke", String.format("%04d", KA));
-            if (KA < 10) {//  0123-黑红绿黄
-                params1.put("color1_ke", 1);
-            } else {
-                params1.put("color1_ke", 2);
+            if (KA < 10){
+                params1.put("text1_ke", String.format("%04d", 10));
+            }else {
+                params1.put("text1_ke", String.format("%04d", KA));
             }
+            params1.put("color1_ke", 2);
+//            if (KA < 10) {//  0123-黑红绿黄
+//                params1.put("color1_ke", 1);
+//            } else {
+//                params1.put("color1_ke", 2);
+//            }
             int sum = HA + HB;
-            params1.put("text1_huo", String.format("%04d", sum));
             if (HA + HB < 10) {
-                params1.put("color1_huo", 1);
-            } else {
-                params1.put("color1_huo", 2);
+                params1.put("text1_huo", String.format("%04d", 10));
+            }else {
+                params1.put("text1_huo", String.format("%04d", sum));
             }
+            params1.put("color1_huo", 2);
+//            if (HA + HB < 10) {
+//                params1.put("color1_huo", 1);
+//            } else {
+//                params1.put("color1_huo", 2);
+//            }
         }
         KafkaEnum kafkaEnum1 = new KafkaEnum();
         kafkaEnum1.setTopIc(KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PARKING);
@@ -985,25 +995,40 @@ public class VideoEventServiceImpl implements IVideoEventService {
         if (r2A.getCode() == R.SUCCESS && r2A.getData() != null) {
             params2A.put("devIp", r2A.getData().getDeviceIp());
             params2A.put("devPos", 2);
-            params2A.put("text2A_huoA", String.format("%04d", HA));
-            if (HA < 5) {
-                //  0123-黑红绿黄
-                params2A.put("color2A_huoA", 1);
-            } else {
-                params2A.put("color2A_huoA", 2);
+            if (HA < 10) {
+                params2A.put("text2A_huoA", String.format("%04d", 10));
+            }else {
+                params2A.put("text2A_huoA", String.format("%04d", HA));
             }
-            params2A.put("text2BC_huoB", String.format("%04d", HB));
-            if (HB < 5) {
-                params2A.put("color2BC_huoB", 1);
-            } else {
-                params2A.put("color2BC_huoB", 2);
+            params2A.put("color2A_huoA", 2);
+//            if (HA < 5) {
+//                //  0123-黑红绿黄
+//                params2A.put("color2A_huoA", 1);
+//            } else {
+//                params2A.put("color2A_huoA", 2);
+//            }
+            if (HB < 10) {
+                params2A.put("text2BC_huoB", String.format("%04d", 10));
+            }else{
+                params2A.put("text2BC_huoB", String.format("%04d", HB));
             }
-            params2A.put("text2BC_ke", String.format("%04d", KA));
+            params2A.put("color2BC_huoB", 2);
+//            if (HB < 5) {
+//                params2A.put("color2BC_huoB", 1);
+//            } else {
+//                params2A.put("color2BC_huoB", 2);
+//            }
             if (KA < 10) {
-                params2A.put("color2BC_ke", 1);
-            } else {
-                params2A.put("color2BC_ke", 2);
+                params2A.put("text2BC_ke", String.format("%04d", 10));
+            }else {
+                params2A.put("text2BC_ke", String.format("%04d", KA));
             }
+            params2A.put("color2BC_ke", 2);
+//            if (KA < 10) {
+//                params2A.put("color2BC_ke", 1);
+//            } else {
+//                params2A.put("color2BC_ke", 2);
+//            }
         }
         KafkaEnum kafkaEnum2A = new KafkaEnum();
         kafkaEnum2A.setTopIc(KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PARKING);
@@ -1015,18 +1040,28 @@ public class VideoEventServiceImpl implements IVideoEventService {
             params2BC.put("devIp", r2BC.getData().getDeviceIp());
             params2BC.put("devPos", 3);
             // 货B
-            params2BC.put("text2BC_huoB", String.format("%04d", HB));
-            if (HB < 5) {
-                params2BC.put("color2BC_huoB", 1);
-            } else {
-                params2BC.put("color2BC_huoB", 2);
+            if (HB < 10) {
+                params2BC.put("text2BC_huoB", String.format("%04d", 10));
+            }else{
+                params2BC.put("text2BC_huoB", String.format("%04d", HB));
             }
-            params2BC.put("text2BC_ke", String.format("%04d", KA));
+            params2BC.put("color2BC_huoB", 2);
+//            if (HB < 5) {
+//                params2BC.put("color2BC_huoB", 1);
+//            } else {
+//                params2BC.put("color2BC_huoB", 2);
+//            }
             if (KA < 10) {
-                params2BC.put("color2BC_ke", 1);
-            } else {
-                params2BC.put("color2BC_ke", 2);
+                params2BC.put("text2BC_ke", String.format("%04d", 10));
+            }else {
+                params2BC.put("text2BC_ke", String.format("%04d", KA));
             }
+            params2BC.put("color2BC_ke", 2);
+//            if (KA < 10) {
+//                params2BC.put("color2BC_ke", 1);
+//            } else {
+//                params2BC.put("color2BC_ke", 2);
+//            }
         }
         KafkaEnum kafkaEnum2BC = new KafkaEnum();
         kafkaEnum2BC.setTopIc(KafkaTopIc.MONITOR_SIGNAL_INFOBOARD_PARKING);
