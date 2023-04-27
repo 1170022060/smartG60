@@ -35,7 +35,7 @@ public interface ParkingLotMapper extends CommonRepository<TblParkingVehicleInfo
             "WHERE " +
             "pvi.EX_TIME IS NULL  " +
             "AND CEIL( ( SYSDATE - pvi.EN_TIME ) * 24 ) > (SELECT CONFIG_VALUE FROM  SYS_CONFIG sc WHERE sc.CONFIG_KEY='parking.timeout') " +
-            "AND pvi.PARKING_ID = #{parkingId} order by pvi.EN_TIME ")
+            "AND pvi.PARKING_ID = #{parkingId} order by pvi.EN_TIME DESC ")
     List<Map> findByParkingId(@Param("parkingId") Long parkingId);
 
     @Select("SELECT " +

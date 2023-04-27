@@ -39,9 +39,9 @@ public class DeviceController extends BaseController {
 //    @RequiresPermissions("monitor:device:search")
 //    @Log(title = "设备监控服务", businessType = BusinessType.OTHER)
     @GetMapping("/search")
-    public TableDataInfo search(Long deviceCategory, String deviceName, String deviceId) {
+    public TableDataInfo search(Long deviceCategory, String deviceName, String deviceId,Integer status) {
         startPage();
-        List<Map> list = iDeviceStatusService.list(deviceCategory, deviceName, deviceId);
+        List<Map> list = iDeviceStatusService.list(deviceCategory, deviceName, deviceId,status);
         return getDataTable(list);
     }
 

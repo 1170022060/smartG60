@@ -16,7 +16,7 @@ public interface IDeviceStatusService {
      * 检查设备离线状态
      */
     void checkStatus();
-    List<Map> list(Long deviceCategory,String deviceName,String deviceId);
+    List<Map> list(Long deviceCategory,String deviceName,String deviceId,Integer status);
     List<Map> selectBaseStation();
     List<Map> selectBridgeInfo();
     List<Map> selectGantry();

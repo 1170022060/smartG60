@@ -44,8 +44,11 @@ public interface TblDeviceStatusMapper extends CommonRepository<TblDeviceStatus>
             "<when test='deviceId != null'> " +
             "and tdi.DEVICE_ID like CONCAT(CONCAT('%',#{deviceId}),'%') " +
             "</when>"+
-            "order by tds.STATUS desc " +
+            "<when test='status != null'> " +
+            "and tds.STATUS = #{status} " +
+            "</when>" +
+            "order by tds.TIME desc " +
             "</script>")
-    List<Map> list(@Param("deviceCategory") Long deviceCategory,@Param("deviceName") String deviceName,@Param("deviceId") String deviceId);
+    List<Map> list(@Param("deviceCategory") Long deviceCategory,@Param("deviceName") String deviceName,@Param("deviceId") String deviceId,@Param("status")Integer status);
 
 }
