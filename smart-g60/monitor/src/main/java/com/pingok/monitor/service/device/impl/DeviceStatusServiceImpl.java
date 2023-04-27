@@ -44,8 +44,8 @@ public class DeviceStatusServiceImpl implements IDeviceStatusService {
     }
 
     @Override
-    public List<Map> list(Long deviceCategory, String deviceName, String deviceId) {
-        List<Map> maps = tblDeviceStatusMapper.list(deviceCategory, deviceName, deviceId);
+    public List<Map> list(Long deviceCategory, String deviceName, String deviceId,Integer status) {
+        List<Map> maps = tblDeviceStatusMapper.list(deviceCategory, deviceName, deviceId,status);
         for (Map m : maps) {
             if (m.get("statusDetails") != null) {
                 m.put("statusDetails", JSONObject.parseObject(String.valueOf(m.get("statusDetails"))));
