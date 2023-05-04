@@ -15,6 +15,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 今日油价 服务层实现层
@@ -35,11 +36,8 @@ public class OilPriceServiceImpl implements IOilPriceService {
     }
 
     @Override
-    public List<TblOilPrice> selectOilPriceList(Date date) {
-        Example example = new Example(TblOilPrice.class);
-        example.createCriteria().andEqualTo("transDate", date);
-        example.setOrderByClause("transDate desc");
-        return tblOilPriceMapper.selectByExample(example);
+    public List<Map> selectOilPriceList(Date date) {
+        return tblOilPriceMapper.getOilList(date);
     }
 
     @Override

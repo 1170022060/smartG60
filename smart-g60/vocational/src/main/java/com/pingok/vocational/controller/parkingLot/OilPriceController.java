@@ -15,6 +15,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 今日油价
@@ -41,7 +43,8 @@ public class OilPriceController extends BaseController {
     public TableDataInfo search(@RequestParam(name = "date",required = false) Date date)
     {
         startPage();
-        return getDataTable(iOilPriceService.selectOilPriceList(date));
+        List<Map> info = iOilPriceService.selectOilPriceList(date);
+        return getDataTable(info);
     }
 
     @Log(title = "今日油价-根据ID查询", businessType = BusinessType.OTHER)

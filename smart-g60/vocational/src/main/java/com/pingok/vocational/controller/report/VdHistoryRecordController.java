@@ -35,4 +35,12 @@ public class VdHistoryRecordController extends BaseController {
     public AjaxResult getPileNo(){
         return AjaxResult.success(iVdHistoryRecordService.selectPileNo());
     }
+
+    @GetMapping("/getTotal")
+    public AjaxResult getTotal(@RequestParam(name = "deviceName",required = false) String deviceName,
+                               @RequestParam(name = "statisticsType",required = false) Integer statisticsType,
+                               @RequestParam(name = "startDate",required = false) Date startDate,
+                               @RequestParam(name = "endDate",required = false) Date endDate){
+        return AjaxResult.success(iVdHistoryRecordService.getTotal(deviceName,statisticsType,startDate,endDate));
+    }
 }

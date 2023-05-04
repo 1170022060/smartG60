@@ -100,7 +100,7 @@ public interface TblPersonnelHealthMapper extends CommonRepository<TblPersonnelH
             "NVL(round(100*sum(NORMAL_NUM)/decode(SUM(NORMAL_NUM+ABNORMAL_NUM),0,1,SUM(NORMAL_NUM+ABNORMAL_NUM))),0) as \"normalRateA\", " +
             "NVL(100-round(100*sum(NORMAL_NUM)/decode(SUM(NORMAL_NUM+ABNORMAL_NUM),0,1,SUM(NORMAL_NUM+ABNORMAL_NUM))),0) as \"abnormalRateA\" " +
             " FROM TBL_PERSONNEL_HEALTH " +
-            "where TRANS_DATE= #{date}")
+            "where rownum=1 order by TRANS_DATE DESC")
     List<Map> selectHealthMonitor(@Param("date") Date date);
 
 }
