@@ -94,10 +94,10 @@ public interface TblEventPassengerFlowMapper extends CommonRepository<TblEventPa
             "and eps.AREA_ID = #{areaId}" +
             "</when>"+
             "<when test='startDate != null'> " +
-            " and to_date(eps.WORK_DATE,'yyyy-mm-dd') &gt;= #{startDate} " +
+            " and to_date(substr(eps.WORK_DATE,1,10),'yyyy-mm-dd') &gt;= #{startDate} " +
             "</when>"+
             "<when test='endDate != null'> " +
-            " and to_date(eps.WORK_DATE,'yyyy-mm-dd') &lt;= #{endDate} " +
+            " and to_date(substr(eps.WORK_DATE,1,10),'yyyy-mm-dd') &lt;= #{endDate} " +
             "</when>"+
             " group by tfi.FIELD_NAME," +
             "case eps.AREA_ID " +
@@ -149,10 +149,10 @@ public interface TblEventPassengerFlowMapper extends CommonRepository<TblEventPa
             "and eps.AREA_ID = #{areaId}" +
             "</when>"+
             "<when test='startDate != null'> " +
-            " and to_date(eps.WORK_DATE,'yyyy-mm-dd') &gt;= #{startDate} " +
+            " and to_date(substr(eps.WORK_DATE,1,10),'yyyy-mm-dd') &gt;= #{startDate} " +
             "</when>"+
             "<when test='endDate != null'> " +
-            " and to_date(eps.WORK_DATE,'yyyy-mm-dd') &lt;= #{endDate} " +
+            " and to_date(substr(eps.WORK_DATE,1,10),'yyyy-mm-dd') &lt;= #{endDate} " +
             "</when>"+
             "</script>"})
     Map humanFlowCount(@Param("fieldNum") String fieldNum,@Param("areaId") Integer areaId ,@Param("startDate") Date startDate,@Param("endDate") Date endDate);

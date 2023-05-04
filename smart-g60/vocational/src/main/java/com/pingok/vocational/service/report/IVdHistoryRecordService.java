@@ -17,4 +17,6 @@ public interface IVdHistoryRecordService {
     List<Map> selectVdHistory(String deviceName, Integer statisticsType, Date startDate,Date endTime);
 
     List<Map> selectPileNo();
+
+    int getTotal(String deviceName, Integer statisticsType, Date startDate,Date endTime);
 }
