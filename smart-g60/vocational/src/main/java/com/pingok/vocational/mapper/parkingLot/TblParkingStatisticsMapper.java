@@ -104,8 +104,8 @@ public interface TblParkingStatisticsMapper extends CommonRepository<TblParkingS
 
     @Select({"<script>" +
             "SELECT " +
-            "sum(ENTER) AS \"enter\", " +
-            "sum(OUT) AS \"out\" " +
+            "NVL(sum(ENTER),0) AS \"enter\", " +
+            "NVL(sum(OUT),0) AS \"out\" " +
             "FROM " +
             "TBL_PARKING_STATISTICS tps " +
             "JOIN TBL_FIELD_INFO tfi ON tfi.ID = tps.FIELD_ID " +

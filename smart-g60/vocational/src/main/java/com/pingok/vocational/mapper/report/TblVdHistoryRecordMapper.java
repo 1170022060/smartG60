@@ -71,7 +71,7 @@ public interface TblVdHistoryRecordMapper {
                               @Param("startDate")Date startDate,@Param("endDate") Date endDate);
 
     @Select({"<script>" +
-            "SELECT sum(vd.VOLUME) as \"totalFlow\" from TBL_VD_HISTORY_RECORD vd "+
+            "SELECT NVL(sum(vd.VOLUME),0) as \"totalFlow\" from TBL_VD_HISTORY_RECORD vd "+
             "where 1=1" +
             "<when test='deviceName != null'> " +
             " and vd.DEVICE_ID = #{deviceName} " +

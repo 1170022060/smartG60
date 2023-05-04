@@ -137,7 +137,7 @@ public interface TblEventPassengerFlowMapper extends CommonRepository<TblEventPa
 
     @Select({"<script>" +
             "SELECT " +
-            "sum(eps.ENTRY) AS \"flow\" " +
+            "NVL(sum(eps.ENTRY),0) AS \"flow\" " +
             "FROM " +
             "TBL_EVENT_PASSENGER_STATISTICS eps " +
             "JOIN TBL_FIELD_INFO tfi ON tfi.ID = eps.FIELD_ID " +
