@@ -4,6 +4,7 @@ import com.pingok.monitor.service.lane.ILaneService;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
+import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
@@ -17,6 +18,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 车道 信息操作处理
@@ -58,5 +61,12 @@ public class LaneController extends BaseController {
     @GetMapping("/getDeviceStatus")
     public AjaxResult getDeviceStatus(String stationHex){
         return AjaxResult.success(iLaneService.getDeviceStatus(stationHex));
+    }
+
+    @GetMapping("/getSpecialList")
+    public TableDataInfo getList(@RequestParam String stationId,@RequestParam String laneId){
+        startPage();
+        List<Map> info = iLaneService.getList(stationId,laneId);
+        return getDataTable(info);
     }
 }

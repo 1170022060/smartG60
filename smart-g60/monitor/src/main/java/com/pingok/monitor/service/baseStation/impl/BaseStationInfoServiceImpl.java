@@ -54,6 +54,7 @@ public class BaseStationInfoServiceImpl implements IBaseStationInfoService {
         Example example = new Example(TblBaseStationInfo.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andIn("deptId", deptIds);
+        criteria.andNotEqualTo("stationName","上海枫泾站沪昆(省界)");
         List<TblBaseStationInfo> baseStationInfos = new ArrayList<>();
         List<TblBaseStationInfo> bsi = baseStationInfoMapper.selectByExample(example);
         baseStationInfos.addAll(bsi);

@@ -41,4 +41,12 @@ public interface ILaneService {
      * @return
      */
     Object getDeviceStatus(String stationHex);
+
+    /**
+     * 获取特情列表
+     * @param stationId
+     * @param laneId
+     * @return
+     */
+    List<Map> getList(String stationId,String laneId);
 }
