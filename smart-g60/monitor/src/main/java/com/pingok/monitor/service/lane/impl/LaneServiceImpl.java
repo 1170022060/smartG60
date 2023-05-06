@@ -40,13 +40,13 @@ public class LaneServiceImpl implements ILaneService {
         List<Map> enLane = tblLaneStatusMapper.findByStationId(stationId, 1);
         int size = enLane.size();
         for (int i = 0; i < size; i++) {
-            example = new Example(TblSpecialRecord.class);
-            criteria = example.createCriteria();
-            criteria.andEqualTo("stationId", stationId);
-            criteria.andEqualTo("status", 0);
-            criteria.andEqualTo("laneId", enLane.get(i).get("laneId"));
-            Object obj=tblSpecialRecordMapper.selectByExample(example);
-            enLane.get(i).put("specialRecords", obj);
+//            List<Map>list=tblSpecialRecordMapper.getSpecialList(stationId,(String) enLane.get(i).get("laneId"));
+//            for (int j=0;j<list.size();j++){
+//                if (list.get(j).containsKey("message") && list.get(j).get("message") !=null){
+//                    list.get(j).put("messageJson",JSONObject.parseObject(list.get(j).get("message").toString()));
+//                }
+//            }
+            enLane.get(i).put("specialRecords", null);
 
             enLane.get(i).put("cameraArr",tblLaneStatusMapper.getCameraId(enLane.get(i).get("laneHex").toString()));
         }
@@ -55,12 +55,13 @@ public class LaneServiceImpl implements ILaneService {
         List<Map> exLane = tblLaneStatusMapper.findByStationId(stationId, 2);
         size = exLane.size();
         for (int i = 0; i < size; i++) {
-            example = new Example(TblSpecialRecord.class);
-            criteria = example.createCriteria();
-            criteria.andEqualTo("stationId", stationId);
-            criteria.andEqualTo("status", 0);
-            criteria.andEqualTo("laneId", exLane.get(i).get("laneId"));
-            exLane.get(i).put("specialRecords", tblSpecialRecordMapper.selectByExample(example));
+//            List<Map>list=tblSpecialRecordMapper.getSpecialList(stationId,(String) exLane.get(i).get("laneId"));
+//            for (int j=0;j<list.size();j++){
+//                if (list.get(j).containsKey("message") && list.get(j).get("message") !=null){
+//                    list.get(j).put("messageJson",JSONObject.parseObject(list.get(j).get("message").toString()));
+//                }
+//            }
+            exLane.get(i).put("specialRecords", null);
             exLane.get(i).put("cameraArr",tblLaneStatusMapper.getCameraId(exLane.get(i).get("laneHex").toString()));
         }
         laneEnum.setExtLane(exLane);
@@ -192,5 +193,16 @@ public class LaneServiceImpl implements ILaneService {
         obj.put("laneList", info);
 
         return obj;
+    }
+
+    @Override
+    public List<Map> getList(String stationId, String laneId) {
+        List<Map>list=tblSpecialRecordMapper.getSpecialList(stationId,laneId);
+        for (int j=0;j<list.size();j++){
+            if (list.get(j).containsKey("message") && list.get(j).get("message") !=null){
+                list.get(j).put("messageJson",JSONObject.parseObject(list.get(j).get("message").toString()));
+            }
+        }
+        return list;
     }
 }
